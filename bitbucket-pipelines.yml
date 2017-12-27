@@ -1,0 +1,23 @@
+clone:
+  depth: 1
+
+pipelines:
+  default:
+    - step:
+        name: pipeline features and introspection
+        script:
+          - echo "test" || true
+          - dist/pipelines/environment.sh
+
+  custom:
+    lint-php-5.3:
+      - step:
+          image: php:5.3
+          script:
+            - dist/pipelines/lint.sh
+    unit-tests: # run phpunit suite
+      - step:
+          image: php:7.0
+          script:
+            - dist/pipelines/phpunit.sh
+

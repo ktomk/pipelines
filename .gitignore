@@ -1,0 +1,8 @@
+# Phpunit HTML report
+/build/html/
+
+# pipelines Phar build
+/build/pipelines.phar
+
+# Composer
+/vendor/

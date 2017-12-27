@@ -1,0 +1,95 @@
+# this file is part of pipelines
+#
+# fixture file for a full featured bitbucket-pipelines.yml
+clone:
+  depth: 1
+
+pipelines:
+  default:
+    - step:
+        name: pipeline features and introspection
+        script:
+          - echo "test" || true
+          - dist/pipelines/environment.sh
+
+  branches: # (Git and Mercurial)
+    feature/*:
+      - step:
+          name: "feature/*"
+          script:
+            - echo "any feature/* branch"
+    feature/bb-123-fix-links:
+      - step:
+          name: "feature/bb-123-fix-links"
+          script:
+            - echo "concrete feature/bb-123-fix-links"
+    '*':
+      - step:
+          name: "single star"
+          script:
+            - echo "single star"
+    '**':
+      - step:
+          name: "double star"
+          script:
+            - echo "double star"
+    '*/feature':
+      - step:
+          name: "*/feature"
+          script:
+            - echo "anything /feature"
+    'master': # avoid duplicate names (1)
+      - step:
+          name: "master"
+          script:
+            - echo "master (in quotes)"
+    master: # avoid duplicate names (2)
+      - step:
+          name: "master duplicate" # always wins in the known PHP YAML parsers
+          script:
+            - echo "master duplicate"
+    '{foo,bar}': # glob pattern with braces (TODO)
+      - step:
+          script:
+            - echo "foo and bar branches"
+
+  tags: # (Git)
+    v1.0.0:
+      - step:
+          name: "tag v1.0.0"
+          script:
+            - echo "tag v1.0.0"
+
+  bookmarks: # (Mercurial)
+      v1.0.0:
+        - step:
+            script:
+              - echo "bookmark v1.0.0"
+
+  custom:
+    lint-php: # lint against diverse PHP versions
+      - step:
+          image: php:5.3
+          script:
+            - dist/pipelines/before_install.sh
+            - dist/pipelines/lint.sh
+      - step:
+          image: php:5.6
+          script:
+            - dist/pipelines/before_install.sh
+            - dist/pipelines/lint.sh
+      - step:
+          image: php:7.1
+          script:
+            - dist/pipelines/before_install.sh
+            - dist/pipelines/lint.sh
+      - step:
+          image: php:7.1
+          script:
+            - dist/pipelines/before_install.sh
+            - dist/pipelines/lint.sh
+    unit-tests: # run phpunit suite
+      - step:
+          image: php:7.0
+          script:
+            - dist/pipelines/phpunit.sh

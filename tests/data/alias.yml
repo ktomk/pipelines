@@ -1,0 +1,16 @@
+# this file is part of pipelines
+#
+# fixture file for aliases inside a yaml to re-use a pipeline
+clone:
+  depth: 1
+
+pipelines:
+  default: &default
+    - step:
+        name: pipeline features and introspection
+        script:
+          - echo "test" || true
+          - dist/pipelines/environment.sh
+
+  branches:
+    feature/*: *default

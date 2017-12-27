@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * pipelines - run bitbucket pipelines wherever they dock
+ *
+ * Copyright 2017, 2018 Tom Klingenberg <ktomk@github.com>
+ *
+ * Licensed under GNU Affero General Public License v3.0 or later
+ */
+
+if (PHP_SAPI !== 'cli') fprintf(
+    defined('STDERR')
+        ? constant('STDERR')
+        : fopen('php://stderr', 'w')
+    , "warn: pipelines should be invoked via the CLI version of PHP, " .
+    "not the '%s' SAPI"
+    , PHP_SAPI
+);
+
+error_reporting(-1);
+if (function_exists('init_set')) {
+    ini_set('display_errors', '1');
+}
+
+require __DIR__ . '/../src/bootstrap.php';
+
+exit(\Ktomk\Pipelines\Cli\App::create()->main($argv));

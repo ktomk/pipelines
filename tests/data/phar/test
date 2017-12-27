@@ -1,0 +1,12 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * this file is part of pipelines
+ */
+
+# ordinary PHP shell command, when archived inside a phar the
+# shebang on top would echo and needs to be removed inside
+# the phar archive.
+
+require __DIR__ . '/test.php';
