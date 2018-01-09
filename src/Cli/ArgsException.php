@@ -4,15 +4,19 @@
 
 namespace Ktomk\Pipelines\Cli;
 
-
+/**
+ * Pipelines cli arguments exception
+ */
 class ArgsException extends \Exception
 {
     /**
-     * @param $message
+     * Abstract method to throw this exception
+     *
+     * @param string $message
      * @param int $code
      * @throws ArgsException
      */
-    public static function give($message, $code = 1)
+    public static function __($message, $code = 1)
     {
         throw new ArgsException($message, $code);
     }

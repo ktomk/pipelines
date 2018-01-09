@@ -25,10 +25,13 @@ class Step
      */
     public function __construct(Pipeline $pipeline, array $step)
     {
+        // quick validation: image name
+        File::validateImageName($step);
+
+        // quick validation: script
         if (!isset($step['script'])) {
             ParseException::__("'step' requires a script");
         }
-
         if (!count($step['script']) || !is_array($step['script'])) {
             ParseException::__("'script' requires a list of commands");
         }

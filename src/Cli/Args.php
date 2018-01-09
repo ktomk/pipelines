@@ -123,7 +123,7 @@ class Args
                 continue;
             }
             if (!isset($this->arguments[$index+1]) || $this->arguments[$index+1] === '--') {
-                ArgsException::give(
+                ArgsException::__(
                     sprintf("error: option '%s' requires an argument", $option)
                 );
             }
@@ -141,7 +141,7 @@ class Args
 
         if ($result === null) {
             if ($required) {
-                ArgsException::give(
+                ArgsException::__(
                     sprintf("error: option '%s' is not optional", $option)
                 );
             }

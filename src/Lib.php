@@ -180,4 +180,27 @@ class Lib
         }
         return 0;
     }
+
+    /**
+     * Is a Docker image name (optionally with a tag) syntactically
+     * valid?
+     *
+     * @see doc/DOCKER-NAME-TAG.md
+     *
+     * @param string $name of docker image
+     * @return bool
+     */
+    public static function validDockerImage($name)
+    {
+        $pattern =
+            '{^' .
+                '([^_\x00-\x20\x7F-\xFF]+(:[0-9]+)?/)?' . # <prefix>
+                '([a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)' . # <name-components>
+                '(:[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127})?' . # <tag-name>
+            '$}';
+
+        $result = preg_match($pattern, $name);
+
+        return 1 === $result;
+    }
 }

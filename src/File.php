@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use InvalidArgumentException;
 use Ktomk\Pipelines\File\BbplMatch;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\Runner\Reference;
@@ -45,16 +46,34 @@ class File
         return new self($result);
     }
 
+    /**
+     * if an 'image' entry is set, validate it's a string and a valid Docker
+     * image name.
+     *
+     * @param array $array
+     * @throw ParseException if the image name is invalid
+     */
+    public static function validateImageName(array $array)
+    {
+        if (array_key_exists('image', $array) && !is_string($array['image'])) {
+            ParseException::__("'image' requires a Docker image name");
+        }
+        if (isset($array['image']) && ! Lib::validDockerImage($array['image'])) {
+            ParseException::__(
+                sprintf("'image' invalid Docker image name: '%s'", $array['image'])
+            );
+        }
+    }
+
     public function __construct(array $array)
     {
         // quick validation: pipelines require
         if (!isset($array['pipelines']) || !is_array($array['pipelines'])) {
             ParseException::__("Missing required property 'pipelines'");
         };
-        // quick validation: image name - if set - requires a Docker image name
-        if (array_key_exists('image', $array) && !is_string($array['image'])) {
-            ParseException::__("'image' requires a Docker image name");
-        }
+
+        // quick validation: image name
+        self::validateImageName($array);
 
         $this->pipelines = $this->parseReferences($array['pipelines']);
 
@@ -185,11 +204,13 @@ class File
     /**
      * @param string $id
      * @return Pipeline|null
+     * @throws InvalidArgumentException
+     * @throws ParseException
      */
     public function getById($id)
     {
         if (!preg_match('~^(default|(branches|tags|bookmarks|custom)/[^\x00-\x1F]*)$~', $id)) {
-            throw new \InvalidArgumentException(sprintf("Invalid id '%s'", $id));
+            throw new InvalidArgumentException(sprintf("Invalid id '%s'", $id));
         }
 
         if (!isset($this->pipelines[$id])) {
@@ -274,7 +295,7 @@ class File
     {
         $scopes = array('branches', 'tags', 'bookmarks');
         if (!in_array($type, $scopes, true)) {
-            throw new \InvalidArgumentException(sprintf("Invalid type '%s'", $type));
+            throw new InvalidArgumentException(sprintf("Invalid type '%s'", $type));
         }
     }
 }

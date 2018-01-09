@@ -51,10 +51,19 @@ class BuilderTest extends TestCase
         $this->assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $builder);
     }
 
+    /**
+     * @expectedException \PharException
+     * @expectedExceptionMessageRegExp ~^illegal stub for phar "/[a-zA-Z0-9/.]+\.phar"$~
+     */
     public function testIllegalStub()
     {
-        $this->markTestIncomplete('illegal stub test (for the docs)');
-        # TODO test: $this->assertRegExp('(illegal stub for phar "/[a-z0-9.]+\.phar")', $e->getMessage());
+        if ("0" !== ini_get('phar.readonly')) {
+            $this->markTestSkipped('pnar.readonly is active');
+        }
+        $builder = Builder::create('fake.phar');
+        $builder->stubfile(__FILE__);
+        $builder->add(basename(__FILE__), null, __DIR__);
+        $builder->build();
     }
 
     public function testReplaceFileCallback()

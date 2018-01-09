@@ -18,6 +18,6 @@ class ParseException extends InvalidArgumentException
      */
     static function __($message)
     {
-        throw new self($message);
+        throw new ParseException($message);
     }
 }

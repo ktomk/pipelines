@@ -5,6 +5,8 @@
 namespace Ktomk\Pipelines;
 
 use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\Cli\ExecTester;
+use Ktomk\Pipelines\Cli\Streams;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -12,6 +14,35 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class RunnerTest extends UnitTestCase
 {
+    function testFailOnContainerCreation()
+    {
+        $exec = new ExecTester($this);
+        $exec->expect('capture', 'docker', 126);
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+            ))
+        ));
+
+        // TODO set output expectation (now possible thanks to Streams)
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            null,
+            null,
+            new Streams()
+        );
+
+        $actual = $runner->run($pipeline);
+        $this->assertNotSame(0, $actual);
+    }
+
     function testRunning()
     {
         /** @var MockObject|Exec $exec */
@@ -28,37 +59,18 @@ class RunnerTest extends UnitTestCase
             ))
         ));
 
-        $runner = new Runner('pipelines-unit-test', '/tmp', $exec);
+        $this->expectOutputRegex('{^\x1d\+\+\+ step #0\n}');
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            null,
+            null,
+            new Streams(null, 'php://output')
+        );
 
-        $this->setOutputCallback(function() {});
         $actual = $runner->run($pipeline);
         $this->assertSame(0, $actual);
-    }
-
-    function testFailOnContainerCreation()
-    {
-        /** @var MockObject|Exec $exec */
-        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
-        $exec->expects($this->exactly(1))
-            ->method('capture')->willReturnCallback(function($cmd, $args, &$out, &$err) {
-                return 126;
-            });
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
-
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $runner = new Runner('pipelines-unit-test', '/tmp', $exec);
-
-        $this->setOutputCallback(function() {});
-        $actual = $runner->run($pipeline);
-        $this->assertNotSame(0, $actual);
     }
 
     function testErrorStatusWithPipelineHavingEmptySteps()
@@ -69,8 +81,39 @@ class RunnerTest extends UnitTestCase
 
         $exec = new Exec();
         $exec->setActive(false);
-        $runner = new Runner('pipelines-unit-test', '/tmp', $exec);
+        // TODO set output expectation (now possible thanks to Streams)
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            null,
+            null,
+            new Streams()
+        );
         $status = $runner->run($pipeline);
-        $this->assertEquals(255, $status);
+        $this->assertEquals($runner::STATUS_NO_STEPS, $status);
+    }
+
+    function testHitRecursion()
+    {
+        $env = $this->createMock('\Ktomk\Pipelines\Runner\Env');
+        $env->method('setPipelinesId')->willReturn(true);
+
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        // TODO set output expectation (now possible thanks to Streams)
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            null,
+            $env,
+            new Streams()
+        );
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $status = $runner->run($pipeline);
+        $this->assertSame(127, $status);
     }
 }

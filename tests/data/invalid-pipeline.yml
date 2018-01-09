@@ -1,0 +1,13 @@
+# this file is part of pipelines
+#
+# fixture bitbucket-pipelines.yml w/ invalid image name
+clone:
+  depth: 1
+
+pipelines:
+  custom:
+    unit-tests:
+      - step:
+          image: invalid image
+          script:
+            - dist/pipelines/phpunit.sh

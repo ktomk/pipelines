@@ -2,12 +2,14 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Cli;
+namespace Ktomk\Pipelines\Utility;
 
 use Exception;
-use InvalidArgumentException;
+use Ktomk\Pipelines\Cli\Args;
+use Ktomk\Pipelines\Cli\ArgsException;
+use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File;
-use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Step;
@@ -24,6 +26,11 @@ class App
     private $arguments;
 
     /**
+     * @var Streams
+     */
+    private $streams;
+
+    /**
      * @var bool
      */
     private $verbose = true;
@@ -38,19 +45,29 @@ class App
      */
     static function create()
     {
-        return new self();
+        $streams = Streams::create();
+
+        return new self($streams);
     }
 
+    public function __construct(Streams $streams)
+    {
+        $this->streams = $streams;
+    }
+
+    private $versionShown = false;
     private function showVersion()
     {
-        $this->info(sprintf('pipelines version %s', self::VERSION));
+        $this->versionShown
+        || $this->versionShown = null
+            === $this->info(sprintf('pipelines version %s', self::VERSION));
 
         return 0;
     }
 
     private function showUsage()
     {
-        echo <<<EOD
+        $this->streams->out(<<<EOD
 usage: pipelines [<options>...] [--version | [-h | --help]]
        pipelines [-v | --verbose] [--working-dir <path>] [--keep] 
                  [--prefix <prefix>] [--basename <basename>] 
@@ -59,13 +76,14 @@ usage: pipelines [<options>...] [--version | [-h | --help]]
        pipelines [-v | --verbose] [--docker-list] [--docker-kill] 
                  [--docker-clean]
 
-EOD;
+EOD
+        );
     }
 
     private function showHelp()
     {
         $this->showUsage();
-        echo <<<EOD
+        $this->streams->out(<<<EOD
 
     -h, --help            show usage and help information
     -v, --verbose         show commands executed
@@ -77,7 +95,7 @@ Common options
                           pipeline step
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
-    --basename <basename> set basename for pipelines file, 
+    --basename <basename> set basename for pipelines file,
                           default is 'bitbucket-pipelines.yml'
     --file <path>         path to the pipelines file, overrides
                           looking up the <basename> file from 
@@ -91,9 +109,9 @@ Common options
                           of use, w/o duplicate names and exit
     --pipeline <id>       run pipeline with <id>, see --list
     --no-run              do not run the pipeline
-    --dry-run             do not start containers and run in 
-                          them, with --verbose to show the 
-                          commands that would be run
+    --dry-run             do not invoke docker or run containers,
+                          with --verbose shows the commands that
+                          would have run w/o the --dry-run flag
 
 Docker container maintenance options
       usage might leave containers on the system. either by 
@@ -116,7 +134,8 @@ Docker container maintenance options
 Less documented options
     --debug               flag for trouble-shooting fatal errors
 
-EOD;
+EOD
+        );
         return 0;
     }
 
@@ -140,14 +159,12 @@ EOD;
             $status = 2;
             $message = sprintf('fatal: pipelines file: %s', $e->getMessage());
             $this->error($message);
-        } catch (InvalidArgumentException $e) {
+        } catch (Exception $e) { // @codeCoverageIgnoreStart
+            // catch unexpected exceptions for user-friendly message
             $status = 2;
             $message = sprintf('fatal: %s', $e->getMessage());
             $this->error($message);
-        } catch (Exception $e) {
-            $status = 2;
-            $message = $e->getMessage();
-            $this->error($message);
+            // @codeCoverageIgnoreEnd
         }
 
         if (isset($e) && $this->debug) {
@@ -175,7 +192,9 @@ EOD;
     {
         $args = $this->arguments;
 
-        $this->verbose = $args->hasOption(array('v', 'verbose'));
+        if ($this->verbose = $args->hasOption(array('v', 'verbose'))) {
+            $this->showVersion();
+        };
 
         # quickly handle version
         if ($args->hasOption('version')) {
@@ -187,21 +206,26 @@ EOD;
             return $this->showHelp();
         }
 
-        $debugPrinter = null;
-        if ($this->verbose) {
-            $debugPrinter = function ($message) {
-                printf("%s\n", $message);
-            };
-        }
-
         $prefix = $args->getOptionArgument('prefix', 'pipelines');
         if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
-            ArgsException::give(sprintf("error: invalid prefix: '%s'", $prefix));
+            ArgsException::__(sprintf("Invalid prefix: '%s'", $prefix));
         }
 
+        $debugPrinter = null;
+        if ($this->verbose) {
+            $debugPrinter = $this->streams;
+        }
         $exec = new Exec($debugPrinter);
-        if ($array = $this->dockerOptions($args, $exec, $prefix) and $array[0]) {
-            return $array[1];
+
+        if ($dryRun = $args->hasOption('dry-run')) {
+            $exec->setActive(false);
+        }
+
+        if (
+            null !== $status
+                = DockerOptions::bind($args, $exec, $prefix, $this->streams)->run()
+        ) {
+            return $status;
         }
 
         /** @var bool $keep containers */
@@ -209,33 +233,36 @@ EOD;
 
         /** @var string $basename for bitbucket-pipelines.yml */
         $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
+        // FIXME: must actually be a basename to prevent accidental traversal
         if (!strlen($basename)) {
-            $this->error(sprintf('Basename can not be empty'));
+            $this->error('Empty basename');
             return 1;
         }
 
         if (false !== $buffer = $args->getOptionArgument('working-dir', false)) {
             $result = chdir($buffer);
             if ($result === false) {
-                $this->error(sprintf('fatal: could not change working directory to: %s', $buffer));
-                return 1;
+                $this->error(sprintf('fatal: change working directory to %s', $buffer));
+                return 2;
             }
         }
 
         $workingDir = getcwd();
         if ($workingDir === false) {
-            $this->error('fatal: failed to obtain working directory');
+            // @codeCoverageIgnoreStart
+            $this->error('fatal: obtain working directory');
             return 1;
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var string $file as bitbucket-pipelines.yml to process */
         $file = $args->getOptionArgument('file', $basename);
         if (!strlen($file)) {
-            $this->error(sprintf('File can not be empty'));
+            $this->error('File can not be empty');
             return 1;
         }
-        if ($this->verbose && $file !== $basename && $basename !== self::BBPL_BASENAME) {
-            $this->verbose("info: --file overrides non-default --basename");
+        if ($file !== $basename && $basename !== self::BBPL_BASENAME) {
+            $this->verbose('info: --file overrides non-default --basename');
         }
 
         // TODO: obtain project dir information etc. from VCS, also traverse for basename file
@@ -254,9 +281,6 @@ EOD;
         unset($file);
 
         $noRun = $args->hasOption('no-run');
-        if ($dryRun = $args->hasOption('dry-run')) {
-            $exec->setActive(false);
-        }
 
         $show = $args->hasOption('show');
         $list = $args->hasOption('list');
@@ -295,9 +319,12 @@ EOD;
 
         try {
             $pipeline = $pipelines->getById($pipelineId);
+        } catch (File\ParseException $e) {
+            $this->error(sprintf("error: pipeline id '%s'", $pipelineId));
+            throw $e;
         } catch (\InvalidArgumentException $e) {
-            $this->error(sprintf("error: no pipeline id '%s'", $pipelineId));
-            $this->info('pipelines are:');
+            $this->error(sprintf("Pipeline '%s' unavailable", $pipelineId));
+            $this->info('Pipelines are:');
             $this->showPipelines($pipelines);
             return 1;
         }
@@ -312,7 +339,7 @@ EOD;
         if ($keep) {
             $flags &= ~(Runner::FLAG_KILL | Runner::FLAG_REMOVE);
         }
-        $runner = new Runner($prefix, $dir, $exec, $flags, $env);
+        $runner = new Runner($prefix, $dir, $exec, $flags, $env, $this->streams);
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');
             $status = 0;
@@ -323,81 +350,18 @@ EOD;
         return $status;
     }
 
-    /**
-     * Process docker related options
-     *
-     * --docker-list  - list containers
-     * --docker-kill  - kill (running) containers
-     * --docker-clean - remove (stopped) containers
-     *
-     * @param Args $args
-     * @param $exec
-     * @param $prefix
-     * @return array|null if any of the commands were execute array with number of commands, last status
-     */
-    private function dockerOptions(Args $args, Exec $exec, $prefix)
-    {
-        $count = 0;
-        $status = 0;
-
-        if (!$status && $args->hasOption('docker-list')) {
-            $count++;
-            $status = $exec->pass(
-                'docker ps --no-trunc -a',
-                array('--filter', "name=^/$prefix-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$")
-            );
-        }
-
-        $hasKill = $args->hasOption('docker-kill');
-        $hasClean = $args->hasOption('docker-clean');
-
-        $ids = null;
-        if ($hasClean || $hasKill) {
-            $count++;
-            $status = $exec->capture(
-                'docker',
-                array('ps', '-qa', '--filter', "name=^/$prefix-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"),
-                $result
-            );
-
-            $status || $ids = Lib::lines($result);
-        }
-
-        if (!$status && $hasKill) {
-            $count++;
-            $status = $exec->capture(
-                'docker',
-                array('ps', '-q', '--filter', "name=^/$prefix-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"),
-                $result
-            );
-            $running = $status ? $ids : Lib::lines($result);
-            if ($running) {
-                $status = $exec->pass('docker', Lib::merge('kill', $running));
-            } else {
-                $this->info("no containers to kill");
-            }
-        }
-
-        if (!$status && $hasClean) {
-            $count++;
-            if ($ids) {
-                $status = $exec->pass('docker', Lib::merge('rm', $ids));
-            } else {
-                $this->info("no containers to remove");
-            }
-        }
-
-        return $count ? array($count, $status) : null;
-    }
-
     private function error($message)
     {
-        fprintf(STDERR, "%s\n", $message);
+        $this->streams->err(
+            sprintf("%s\n", $message)
+        );
     }
 
     private function info($message)
     {
-        printf("%s\n", $message);
+        $this->streams->out(
+            sprintf("%s\n", $message)
+        );
     }
 
     private function verbose($message)
@@ -430,7 +394,7 @@ EOD;
         }
 
         foreach ($images as $image) {
-            printf("%s\n", $image);
+            $this->info($image);
         }
 
         return 0;
@@ -439,7 +403,7 @@ EOD;
     private function showPipelineIds(File $pipelines)
     {
         foreach ($pipelines->getPipelineIds() as $id) {
-            printf("%s\n", $id);
+            $this->info($id);
         }
 
         return 0;
@@ -451,6 +415,7 @@ EOD;
      */
     private function showPipelines(File $pipelines)
     {
+        $errors = 0;
         $table = array(array('PIPELINE ID', 'IMAGES', 'STEPS'));
         foreach ($pipelines->getPipelineIds() as $id) {
             $images = array();
@@ -460,6 +425,7 @@ EOD;
                 $pipeline = $pipelines->getById($id);
                 $steps = $pipeline->getSteps();
             } catch (Exception $e) {
+                $errors++;
                 $table[] = array($id, 'ERROR', $e->getMessage());
                 continue;
             }
@@ -479,7 +445,7 @@ EOD;
 
         $this->textTable($table);
 
-        return 0;
+        return $errors ? 1 : 0;
     }
 
     private function textTable(array $table)
@@ -496,12 +462,14 @@ EOD;
         }
 
         foreach ($table as $row) {
+            $line = '';
             foreach ($row as $index => $column) {
                 $len = strlen($column);
-                $index && printf("    ");
-                echo $column, str_repeat(' ', $sizes[$index] - $len);
+                $index && $line .= "    ";
+                $line .= $column;
+                $line .= str_repeat(' ', $sizes[$index] - $len);
             }
-            echo "\n";
+            $this->info($line);
         }
     }
 }

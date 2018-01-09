@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines;
 
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\Runner\Env;
 
 /**
@@ -16,6 +17,10 @@ class Runner
     const FLAGS = 3;
     const FLAG_REMOVE = 1;
     const FLAG_KILL = 2;
+
+    const STATUS_NO_STEPS = 1;
+    const STATUS_RECURSION_DETECTED = 127;
+
 
     /**
      * @var string
@@ -41,6 +46,10 @@ class Runner
      * @var Env
      */
     private $env;
+    /**
+     * @var Streams
+     */
+    private $streams;
 
     /**
      * DockerSession constructor.
@@ -49,16 +58,25 @@ class Runner
      * @param string $directory source repository root
      * @param Exec $exec
      * @param int $flags [optional]
-     * @param Env|null $env
+     * @param Env $env [optional]
+     * @param Streams $streams [optional]
      */
-    public function __construct($prefix, $directory, Exec $exec, $flags = null, Env $env = null)
+    public function __construct(
+        $prefix,
+        $directory,
+        Exec $exec,
+        $flags = null,
+        Env $env = null,
+        Streams $streams = null
+    )
     {
         $this->prefix = $prefix;
 
         $this->directory = $directory;
         $this->exec = $exec;
         $this->flags = $flags === null ? self::FLAGS : $flags;
-        $this->env = $env;
+        $this->env = null === $env ? Env::create() : $env;
+        $this->streams = null === $streams ? Streams::create() : $streams;
     }
 
     public function run(Pipeline $pipeline)
@@ -66,17 +84,17 @@ class Runner
         $prefix = $this->prefix;
         $dir = $this->directory;
         $exec = $this->exec;
+        $env = $this->env;
+        $streams = $this->streams;
         $docker = new Docker($exec);
-        $env = $this->env ?: $env = Env::create();;
         $hasId = $env->setPipelinesId($pipeline->getId()); # TODO give Env an addPipeline() method (compare addReference)
         if ($hasId) {
-            printf(
+            $streams->err(sprintf(
                 "fatal: won't start pipeline '%s'; pipeline inside pipelines recursion detected\n",
                 $pipeline->getId()
-            );
-            return 127;
+            ));
+            return self::STATUS_RECURSION_DETECTED;
         }
-
 
         $steps = $pipeline->getSteps();
         foreach ($steps as $index => $step) {
@@ -84,19 +102,18 @@ class Runner
             $image = $step->getImage();
             $env->setContainerName($name);
 
-
             # launch container
-            printf(
+            $streams->out(sprintf(
                 "\x1D+++ step #%d\n\n    name...........: %s\n    effective-image: %s\n    container......: %s\n",
                 $index,
                 $step->getName() ? '"' . $step->getName() . '"' : '(unnamed)',
                 $step->getImage(),
                 $name
-            );
+            ));
 
 
             // docker client inside docker
-            // TODO give controlling options
+            // FIXME give controlling options, this is serious /!\
             $mountDockerSock = array();
             if (file_exists('/var/run/docker.sock')) {
                 $mountDockerSock = array(
@@ -116,20 +133,22 @@ class Runner
                 '--workdir', '/app', '--detach', $image
             ), $out, $err);
             if ($status !== 0) {
-                printf("\n\nfatal: setting up the container failed.\n");
-                echo $out, "\n", $err, "\n";
-                printf("exit status: %d\n", $status);
+                $streams->out(sprintf("    container-id...: %s\n\n", '*failure*'));
+                $streams->out(sprintf("fatal: setting up the container failed.\n"));
+                $streams->err(sprintf("%s\n", $err));
+                $streams->out(sprintf("%s\n", $out));
+                $streams->out(sprintf("exit status: %d\n", $status));
                 break;
             }
-            $id = rtrim($out);
-            printf("    container-id...: %s\n\n", substr($id, 0, 12));
+            $id = rtrim($out) ?: "*dry-run*";
+            $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
             $script = $step->getScript();
             foreach ($script as $line => $command) {
-                printf("\x1D+ %s\n", $command);
+                $streams->out(sprintf("\x1D+ %s\n", $command));
                 $status = $exec->pass('docker', array(
                     'exec', '-i', $name, '/bin/sh', '-c', $command,
                 ));
-                printf("\n");
+                $streams->out(sprintf("\n"));
                 if ($status !== 0) {
                     break;
                 }
@@ -145,7 +164,8 @@ class Runner
         }
 
         if (!isset($status)) {
-            return 255;
+            $this->streams->err("error: pipeline with no step to execute\n");
+            return self::STATUS_NO_STEPS;
         }
 
         return $status;

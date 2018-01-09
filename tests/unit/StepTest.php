@@ -60,6 +60,18 @@ class StepTest extends UnitTestCase
         $this->assertSame('expected', $step->getImage());
     }
 
+    /**
+     * @expectedException \Ktomk\Pipelines\File\ParseException
+     * @expectedExceptionMessage invalid Docker image name
+     */
+    public function testInvalidImageName()
+    {
+        $this->createStep(array(
+            'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
+            'script' => array(":"),
+        ));
+    }
+
     public function testGetImageFallback()
     {
         $step = $this->createStep();

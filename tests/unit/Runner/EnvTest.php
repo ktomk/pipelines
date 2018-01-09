@@ -34,6 +34,14 @@ class EnvTest extends TestCase
         $this->assertCount(10, $array);
     }
 
+    function testUserInheritance()
+    {
+        $user = 'adele';
+        $env = Env::create(array('USER' => $user));
+        $this->assertNull($env->getValue('USER'));
+        $this->assertSame($user, $env->getValue('BITBUCKET_REPO_OWNER'));
+    }
+
     function testInheritionOnInit()
     {
         $env = new Env();

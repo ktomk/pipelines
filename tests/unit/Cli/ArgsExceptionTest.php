@@ -18,6 +18,6 @@ class ArgsExceptionTest extends TestCase
      */
     public function testGive()
     {
-        ArgsException::give('test');
+        ArgsException::__('test');
     }
 }

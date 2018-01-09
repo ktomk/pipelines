@@ -6,6 +6,8 @@ namespace Ktomk\Pipelines\Cli;
 
 /**
  * VCS adapter - default implementation is Git
+ *
+ * @codeCoverageIgnore
  */
 class Vcs
 {

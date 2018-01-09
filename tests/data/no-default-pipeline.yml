@@ -1,0 +1,13 @@
+# this file is part of pipelines
+#
+# fixture bitbucket-pipelines.yml w/o default
+clone:
+  depth: 1
+
+pipelines:
+  custom:
+    unit-tests: # run phpunit suite
+      - step:
+          image: php:7.0
+          script:
+            - dist/pipelines/phpunit.sh

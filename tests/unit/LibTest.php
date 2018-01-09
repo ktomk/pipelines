@@ -107,4 +107,28 @@ class LibTest extends TestCase
     {
         $this->assertSame($expected, Lib::expandBrace($subject), $subject);
     }
+
+    public function provideDockerImageNames()
+    {
+        return array(
+            array('', false),
+            array('php', true),
+            array('php:5.6', true),
+            array('fedora/httpd:version1.0', true),
+            array('my-registry-host:5000/fedora/httpd:version1.0', true),
+            array('my registry host:5000/fedora/httpd:version1.0', false),
+            array('vendor/group/repo/flavor:tag', true),
+        );
+    }
+
+    /**
+     * @param string $subject
+     * @param bool $expected
+     * @dataProvider provideDockerImageNames
+     */
+    public function testValidDockerImage($subject, $expected)
+    {
+        $actual = Lib::validDockerImage($subject);
+        $this->assertSame($expected, $actual, $subject);
+    }
 }

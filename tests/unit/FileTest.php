@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\Runner\Reference;
 use PHPUnit\Framework\TestCase;
 
@@ -337,6 +336,18 @@ class FileTest extends TestCase
         $pipeline = new Pipeline($file, array(array('step' => array('script' => array(':')))));
         $this->assertNull($file->getIdFrom($pipeline));
 
+    }
+
+    /**
+     * @expectedException \Ktomk\Pipelines\File\ParseException
+     * @expectedExceptionMessage invalid Docker image name
+     */
+    public function testInvalidImageName()
+    {
+        new File(array(
+            'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
+            'pipelines' => array('default' => array()),
+        ));
     }
 
     /**
