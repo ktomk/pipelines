@@ -130,4 +130,15 @@ class AppTest extends TestCase
         $status = $app->main($args);
         $this->assertSame(1, $status);
     }
+
+    function testCopyDeployMode()
+    {
+        $app = new App(new Streams(null, null, null));
+        $args = array(
+            'pipelines-test',
+            '--deploy', 'copy', '--dry-run'
+        );
+        $status = $app->main($args);
+        $this->assertSame(0, $status);
+    }
 }

@@ -72,9 +72,10 @@ usage: pipelines [<options>...] [--version | [-h | --help]]
        pipelines [-v | --verbose] [--working-dir <path>] [--keep] 
                  [--prefix <prefix>] [--basename <basename>] 
                  [--file <path>] [--dry-run] [--no-run] [--list]
-                 [--show] [--images] [--pipeline <id>]
-       pipelines [-v | --verbose] [--docker-list] [--docker-kill] 
-                 [--docker-clean]
+                 [--deploy mount | copy ] [--show] [--images]
+                 [--pipeline <id>]
+       pipelines [-v | --verbose] [--dry-run] [--docker-list]
+                 [--docker-kill] [--docker-clean]
 
 EOD
         );
@@ -102,6 +103,16 @@ Common options
                           the current working directory
     --working-dir <path>  run as if pipelines was started in
                           <path>
+    --deploy mount|copy   how files from the working directory
+                          are placed into the pipeline container:
+                          mount    (default) the working dir is
+                                 mounted. fastest, no isolation
+                          copy     working directory is copied
+                                 into the container. slower,
+                                 stronger isolation as the
+                                 pipeline scripts can change
+                                 all files without side-effects
+                                 in the working directory
     --list                list pipeline <id>s in file and exit
     --show                show information about pipelines in
                           file and exit
@@ -282,6 +293,12 @@ EOD
 
         $noRun = $args->hasOption('no-run');
 
+        $deployMode = $args->getOptionArgument('deploy', 'mount');
+        if (!in_array($deployMode, array('mount', 'copy'))) {
+            $this->error(sprintf("Unknown deploy mode '%s'\n", $deployMode));
+            return 1;
+        }
+
         $show = $args->hasOption('show');
         $list = $args->hasOption('list');
         $images = $args->hasOption('images');
@@ -337,8 +354,13 @@ EOD
         $dir = $workingDir;
         $flags = Runner::FLAGS;
         if ($keep) {
-            $flags &= ~(Runner::FLAG_KILL | Runner::FLAG_REMOVE);
+            $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
         }
+
+        if ($deployMode === 'copy') {
+            $flags |= Runner::FLAG_DEPLOY_COPY;
+        }
+
         $runner = new Runner($prefix, $dir, $exec, $flags, $env, $this->streams);
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');

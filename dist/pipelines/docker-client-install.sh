@@ -7,10 +7,10 @@ IFS="$(printf '\n\t ')"
 
 cd build/store/http-cache
 
-package="docker-17.03.1-ce.tgz"
+package="docker-17.12.0-ce.tgz"
 
 if [ ! -f "${package}" ]; then
-    curl -fsSLO "https://get.docker.com/builds/Linux/x86_64/${package}"
+    curl -fsSLO "https://download.docker.com/linux/static/stable/x86_64/${package}"
     chmod a+rw "${package}"
 fi
 

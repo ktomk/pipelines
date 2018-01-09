@@ -21,6 +21,7 @@ pipelines:
           image: cespi/php-5.3:cli-latest
           script:
             - command -v composer || dist/pipelines/composer-install.sh
+            - composer global require hirak/prestissimo
             - composer require --no-suggest --dev phpunit/phpunit ^4 --update-with-dependencies
             - composer update --no-suggest
             - dist/pipelines/phpunit.sh
@@ -44,7 +45,9 @@ pipelines:
           image: php:7.0
           script:
             - dist/pipelines/docker-client-install.sh
+            - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
+            - docker cp --help
             - bin/pipelines --pipeline custom/recursion/middle
     recursion/middle:
       - step:

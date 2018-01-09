@@ -96,4 +96,12 @@ class AppTest extends TestCase
         $actual = $app->main(array('cmd', '--file', 'tests/data/invalid-pipeline.yml', '--show'));
         $this->assertSame(1, $actual);
     }
+
+    public function testUnknownDeployMode()
+    {
+        $this->expectOutputRegex('{^Unknown deploy mode \'flux-compensate\'}');
+        $app = new App(new Streams(null, null, 'php://output'));
+        $actual = $app->main(array('cmd', '--deploy', 'flux-compensate'));
+        $this->assertSame(1, $actual);
+    }
 }

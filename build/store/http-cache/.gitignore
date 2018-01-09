@@ -1,5 +1,7 @@
 # cache directory for in-pipeline storage
 #
+# works with the --deploy mount argument (default)
+#
 # scripts should make assets a+rw otherwise root is needed to
 # clean up cache files.
 #

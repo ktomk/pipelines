@@ -15,12 +15,12 @@ use Ktomk\Pipelines\Runner\Env;
 class Runner
 {
     const FLAGS = 3;
-    const FLAG_REMOVE = 1;
-    const FLAG_KILL = 2;
+    const FLAG_DOCKER_REMOVE = 1;
+    const FLAG_DOCKER_KILL = 2;
+    const FLAG_DEPLOY_COPY = 4; # copy working dir into container
 
     const STATUS_NO_STEPS = 1;
     const STATUS_RECURSION_DETECTED = 127;
-
 
     /**
      * @var string
@@ -111,6 +111,7 @@ class Runner
                 $name
             ));
 
+            $copy = (bool) ($this->flags & self::FLAG_DEPLOY_COPY);
 
             // docker client inside docker
             // FIXME give controlling options, this is serious /!\
@@ -125,10 +126,14 @@ class Runner
             $checkMount = $mountDockerSock && null !== $parentName;
             $deviceDir = $checkMount ? $docker->hostDevice($parentName, $dir) : $dir;
 
+            $mountWorkingDirectory = $copy
+                ? array()
+                : array('--volume', "$deviceDir:/app");
+
             $status = $exec->capture('docker', array(
                 'run', '-i', '--name', $name,
                 $env->getArgs('-e'),
-                '--volume', "$deviceDir:/app", '-e', 'BITBUCKET_CLONE_DIR=/app',
+                $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
                 $mountDockerSock,
                 '--workdir', '/app', '--detach', $image
             ), $out, $err);
@@ -140,8 +145,22 @@ class Runner
                 $streams->out(sprintf("exit status: %d\n", $status));
                 break;
             }
-            $id = rtrim($out) ?: "*dry-run*";
+            $id = rtrim($out) ?: "*dry-run*"; # side-effect: internal exploit of no output with true exit status
             $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
+
+            # TODO: different deployments, mount (default), mount-ro, copy
+            if ($copy) {
+                $streams->out("\x1D+++ copying files into container...\n");
+                $status = $exec->pass('docker', array(
+                    'cp', '-a', $dir . '/.', $id . ':/app')
+                );
+                if ($status !== 0) {
+                    $streams->err('Deploy copy failure\n');
+                    break;
+                }
+                $streams("");
+            }
+
             $script = $step->getScript();
             foreach ($script as $line => $command) {
                 $streams->out(sprintf("\x1D+ %s\n", $command));
@@ -155,10 +174,10 @@ class Runner
             }
 
             # remove container
-            if ($this->flags & self::FLAG_KILL) {
+            if ($this->flags & self::FLAG_DOCKER_KILL) {
                 $exec->capture('docker', array('kill', $name));
             }
-            if ($this->flags & self::FLAG_REMOVE) {
+            if ($this->flags & self::FLAG_DOCKER_REMOVE) {
                 $exec->capture('docker', array('rm', $name));
             }
         }

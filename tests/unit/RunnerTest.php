@@ -116,4 +116,65 @@ class RunnerTest extends UnitTestCase
         $status = $runner->run($pipeline);
         $this->assertSame(127, $status);
     }
+
+    function testCopy()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+        ;
+
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
+    }
+
+    function testCopyFails()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', 'docker', 1);
+
+        $this->expectOutputRegex('{Deploy copy failure}');
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(1, $status);
+    }
 }
