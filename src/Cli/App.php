@@ -76,7 +76,7 @@ Common options
                           kill and remove containers after each
                           pipeline step
     --prefix <prefix>     use a different prefix for container
-                          names, default is 'pipeline'
+                          names, default is 'pipelines'
     --basename <basename> set basename for pipelines file, 
                           default is 'bitbucket-pipelines.yml'
     --file <path>         path to the pipelines file, overrides
@@ -87,7 +87,7 @@ Common options
     --list                list pipeline <id>s in file and exit
     --show                show information about pipelines in
                           file and exit
-    --images              list all images in file, on order 
+    --images              list all images in file, in order
                           of use, w/o duplicate names and exit
     --pipeline <id>       run pipeline with <id>, see --list
     --no-run              do not run the pipeline
@@ -101,7 +101,7 @@ Docker container maintenance options
       running containers (--keep).
       
       pipelines uses a prefix followed by '-' and a UUID for 
-      container names. the prefix is either 'pipeline' or the
+      container names. the prefix is either 'pipelines' or the
       one set by --prefix <prefix>.
       
       three options are built-in to monitor and deal with 
@@ -190,11 +190,11 @@ EOD;
         $debugPrinter = null;
         if ($this->verbose) {
             $debugPrinter = function ($message) {
-                $this->info($message);
+                printf("%s\n", $message);
             };
         }
 
-        $prefix = $args->getOptionArgument('prefix', 'pipeline');
+        $prefix = $args->getOptionArgument('prefix', 'pipelines');
         if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
             ArgsException::give(sprintf("error: invalid prefix: '%s'", $prefix));
         }
@@ -276,7 +276,7 @@ EOD;
             $args->getOptionArgument('trigger')
         );
 
-        $env = Env::create();
+        $env = Env::create($_SERVER);
         $env->addReference($reference);
 
         $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';
@@ -397,7 +397,7 @@ EOD;
 
     private function info($message)
     {
-        fprintf(STDOUT, "%s\n", $message);
+        printf("%s\n", $message);
     }
 
     private function verbose($message)

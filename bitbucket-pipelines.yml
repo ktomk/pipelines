@@ -15,9 +15,42 @@ pipelines:
           image: php:5.3
           script:
             - dist/pipelines/lint.sh
+    unit-tests-php-5.3:
+      - step:
+          # has no zip: tomsowerby/php-5.3:cli
+          image: cespi/php-5.3:cli-latest
+          script:
+            - command -v composer || dist/pipelines/composer-install.sh
+            - composer require --no-suggest --dev phpunit/phpunit ^4 --update-with-dependencies
+            - composer update --no-suggest
+            - dist/pipelines/phpunit.sh
     unit-tests: # run phpunit suite
       - step:
           image: php:7.0
           script:
             - dist/pipelines/phpunit.sh
-
+    docker:
+      - step:
+          image: php:7.0
+          name: default pipeline inside pipelines pipeline
+          script:
+            - dist/pipelines/docker-client-install.sh
+            - docker version
+            - docker version --format {{.Client.Version}}
+            - docker version --format {{.Server.Version}}
+            - bin/pipelines --keep
+    recursion:
+      - step:
+          image: php:7.0
+          script:
+            - dist/pipelines/docker-client-install.sh
+            - docker version --format {{.Server.Version}}
+            - bin/pipelines --pipeline custom/recursion/middle
+    recursion/middle:
+      - step:
+          image: php:7.0
+          script:
+            - dist/pipelines/docker-client-install.sh
+            - docker version --format {{.Client.Version}}
+            - docker version --format {{.Server.Version}}
+            - bin/pipelines --pipeline custom/recursion --dry-run # must fail

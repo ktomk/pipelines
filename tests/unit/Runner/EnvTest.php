@@ -93,4 +93,69 @@ class EnvTest extends TestCase
 
         $this->assertTrue(in_array('BITBUCKET_TAG=inherit', $actual, true));
     }
+
+    function testSetContainerName()
+    {
+        $env = Env::create();
+        $count = count($env->getArgs('-e'));
+
+        $env->setContainerName('blue-seldom');
+        $args = $env->getArgs('-e');
+        $this->assertCount($count + 2, $args);
+        $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=blue-seldom', $args, true));
+
+
+        $env->setContainerName('solar-bottom');
+        $args = $env->getArgs('-e');
+        $this->assertCount($count + 4, $args);
+        $this->assertTrue(in_array('PIPELINES_PARENT_CONTAINER_NAME=blue-seldom', $args, true));
+        $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=solar-bottom', $args, true));
+    }
+
+    function testInheritedContainerName()
+    {
+        $inherit = array(
+            'PIPELINES_CONTAINER_NAME' => 'cloud-sea',
+        );
+        $env = Env::create($inherit);
+        $env->setContainerName('dream-blue');
+        $args = $env->getArgs('-e');
+        $this->assertTrue(in_array('PIPELINES_PARENT_CONTAINER_NAME=cloud-sea', $args, true));
+        $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=dream-blue', $args, true));
+    }
+
+    function testGetVar()
+    {
+        $env = Env::create();
+        $actual = $env->getValue('BITBUCKET_BUILD_NUMBER');
+        $this->assertSame('0', $actual);
+        $actual = $env->getValue('BITBUCKET_BRANCH');
+        $this->assertNull($actual);
+    }
+
+    function testSetPipelinesId()
+    {
+        $env = Env::create();
+        $this->assertNull($env->getValue('PIPELINES_ID'));
+        $this->assertNull($env->getValue('PIPELINES_IDS'));
+
+        // set the first id
+        $result = $env->setPipelinesId('default');
+        $this->assertFalse($result);
+        $this->assertSame('default', $env->getValue('PIPELINES_ID'));
+
+        // set the second id (next run)
+        $result = $env->setPipelinesId('default');
+        $this->assertTrue($result);
+        $actual = $env->getValue('PIPELINES_IDS');
+        $this->assertNotNull($actual);
+        $this->assertRegExp('~^([a-z0-9]+) \1$~', $actual, 'list of hashes');
+    }
+
+    function testInheritPipelinesId()
+    {
+        $inherit = array('PIPELINES_ID', 'custom/the-other-day');
+        $env = Env::create($inherit);
+        $this->assertNull($env->getValue('PIPELINES_ID'));
+    }
 }

@@ -15,12 +15,8 @@ class Env
      * @param array|null $inherit
      * @return Env
      */
-    public static function create(array $inherit = null)
+    public static function create(array $inherit = array())
     {
-        if (null === $inherit) {
-            $inherit = $_SERVER;
-        }
-
         $env = new Env();
         $env->initDefaultVars($inherit);
 
@@ -36,7 +32,7 @@ class Env
      */
     public function initDefaultVars(array $inherit)
     {
-        $vars = array(
+        $inheritable = array(
             'BITBUCKET_BOOKMARK' => null,
             'BITBUCKET_BRANCH' => null,
             'BITBUCKET_BUILD_NUMBER' => '0',
@@ -45,13 +41,23 @@ class Env
             'BITBUCKET_REPO_SLUG' => 'local-has-no-slug',
             'BITBUCKET_TAG' => null,
             'CI' => 'true',
+            'PIPELINES_CONTAINER_NAME' => null,
+            'PIPELINES_IDS' => null,
+            'PIPELINES_PARENT_CONTAINER_NAME' => null,
         );
 
-        foreach ($vars as $name => $value) {
-            isset($inherit[$name]) ? $vars[$name] = $inherit[$name] : null;
+        $invariant = array(
+            'PIPELINES_ID' => null,
+        );
+
+        foreach ($inheritable as $name => $value) {
+            isset($inherit[$name]) ? $inheritable[$name] = $inherit[$name] : null;
         }
 
-        $this->vars = $vars;
+        $var = $invariant + $inheritable;
+        ksort($var);
+
+        $this->vars = $var;
     }
 
     /**
@@ -81,6 +87,19 @@ class Env
         }
     }
 
+    /**
+     * @param string $name of container
+     */
+    public function setContainerName($name)
+    {
+        if (isset($this->vars['PIPELINES_CONTAINER_NAME'])) {
+            $this->vars['PIPELINES_PARENT_CONTAINER_NAME']
+                = $this->vars['PIPELINES_CONTAINER_NAME'];
+        }
+
+        $this->vars['PIPELINES_CONTAINER_NAME'] = $name;
+    }
+
     private function r(&$v, $d)
     {
         if (isset($v)) {
@@ -89,6 +108,28 @@ class Env
 
         unset($v);
         return $d;
+    }
+
+    /**
+     * set the pipelines environment's running pipeline id
+     *
+     * @param string $id of pipeline, e.g. "default" or "branch/feature/*"
+     * @return bool whether was used before (endless pipelines in pipelines loop)
+     */
+    public function setPipelinesId($id)
+    {
+        $list = $this->getValue('PIPELINES_IDS');
+        $hashes = preg_split('~\s+~', $list, -1, PREG_SPLIT_NO_EMPTY);
+        $hashes = array_map('strtolower', $hashes);
+
+        $idHash = md5($id);
+        $hasId = in_array($idHash, $hashes, true);
+        $hashes[] = $idHash;
+
+        $this->vars['PIPELINES_ID'] = $id;
+        $this->vars['PIPELINES_IDS'] = implode(' ', $hashes);
+
+        return $hasId;
     }
 
     /**
@@ -105,6 +146,19 @@ class Env
         }
 
         return $args;
+    }
+
+    /**
+     * get a variables value or null if not set
+     *
+     * @param string $name
+     * @return string|null
+     */
+    public function getValue($name)
+    {
+        return isset($this->vars[$name])
+            ? $this->vars[$name]
+            : null;
     }
 
     /**

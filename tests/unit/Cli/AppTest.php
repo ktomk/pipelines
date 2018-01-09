@@ -28,4 +28,12 @@ class AppTest extends TestCase
         $status = $app->main(array('cmd', '--help'));
         $this->assertSame(0, $status);
     }
+
+    public function testShowVersion()
+    {
+        $app = new App();
+
+        $this->expectOutputString("pipelines version @.@.@\n");
+        $app->main(array('cmd', '--version'));
+    }
 }

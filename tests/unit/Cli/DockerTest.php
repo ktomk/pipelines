@@ -19,7 +19,7 @@ class DockerTest extends UnitTestCase
         $procGood = $this->createMock('Ktomk\Pipelines\Cli\Proc');
         $procGood->method('getStatus')->willReturn(0);
         $procGood->method('getStandardOutput')->willReturnCallback(
-            function() use (&$procGoodOutput) {
+            function () use (&$procGoodOutput) {
                 return $procGoodOutput;
             }
         );
@@ -57,5 +57,58 @@ class DockerTest extends UnitTestCase
 
         $procGoodOutput = "17.09.1-ce\n";
         $this->assertSame('17.09.1-ce', $docker->getVersion());
+    }
+
+    function testHostDeviceMount()
+    {
+        /** @var MockObject|Exec $exec */
+        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $exec->method('capture')->willReturnCallback(function ($cmd, $args, &$stdout) {
+            $stdout = file_get_contents(__DIR__ . '/../../data/docker-inspect.json');
+            return 0;
+        });
+
+        $docker = new Docker($exec);
+        $actual = $docker->hostDevice('container-name', '/app');
+        $this->assertSame('/home/user/workspace/projects/pipelines', $actual, 'extraction from json fixture');
+    }
+
+    function testHostDeviceMountOnNonMountPoint()
+    {
+        /** @var MockObject|Exec $exec */
+        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $exec->method('capture')->willReturnCallback(function ($cmd, $args, &$stdout) {
+            $stdout = file_get_contents(__DIR__ . '/../../data/docker-inspect.json');
+            return 0;
+        });
+
+        $docker = new Docker($exec);
+        $actual = $docker->hostDevice('container-name', '/thanks-for-the-fish');
+        $this->assertSame('/thanks-for-the-fish', $actual, 'fall back on non-mount-point');
+    }
+
+    function testHostDeviceMountDockerInspectFails()
+    {
+        /** @var MockObject|Exec $exec */
+        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $exec->method('capture')->willReturn(1);
+
+        $docker = new Docker($exec);
+        $actual = $docker->hostDevice('container-name', '/app');
+        $this->assertSame('/app', $actual, 'docker command fails');
+    }
+
+    function testHostDeviceMountJsonParseFailure()
+    {
+        /** @var MockObject|Exec $exec */
+        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $exec->method('capture')->willReturnCallback(function ($cmd, $args, &$stdout) {
+            $stdout = 'Error: file not found or whatever';
+            return 0;
+        });
+
+        $docker = new Docker($exec);
+        $actual = $docker->hostDevice('container-name', '/app');
+        $this->assertSame('/app', $actual, 'extraction from json fixture');
     }
 }

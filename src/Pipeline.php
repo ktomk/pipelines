@@ -54,6 +54,16 @@ class Pipeline
     }
 
     /**
+     * get id of pipeline within the corresponding file object
+     *
+     * @return string|null id, can be null in fake/test conditions
+     */
+    public function getId()
+    {
+        return $this->file->getIdFrom($this);
+    }
+
+    /**
      * @return array|Step[]
      */
     public function getSteps()

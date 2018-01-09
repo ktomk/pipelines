@@ -4,12 +4,8 @@
 
 namespace Ktomk\Pipelines\Cli;
 
-use Ktomk\Pipelines\Lib;
-
 /**
  * Run command non-interactively and capture standard output and error
- *
- * @package Ktomk\Pipelines\Cli
  */
 class Proc
 {
@@ -22,12 +18,6 @@ class Proc
 
     private $buffers;
 
-    public static function create($command, array $arguments)
-    {
-        $buffer = Lib::cmd($command, $arguments);
-        return new self($buffer);
-    }
-
     public function __construct($command)
     {
         $this->command = $command;
@@ -39,7 +29,7 @@ class Proc
 
         # do nothing placeholder
         if ($command === ':') {
-            $this->buffers['stdout'] = $this->buffers['stderr'] = "\n";
+            $this->buffers['stdout'] = $this->buffers['stderr'] = "";
             return $this->status = 0;
         }
 
@@ -57,10 +47,11 @@ class Proc
         $this->buffers['stdout'] = stream_get_contents($pipes[1]);
         $this->buffers['stderr'] = stream_get_contents($pipes[2]);
 
-        # consume
+        # consume pipes
         foreach ($descriptors as $number => $descriptor) {
             if ($descriptor[0] === "pipe") {
                 $result = fclose($pipes[$number]);
+                unset($result); # intentionally ignore errors (fail safe)
             }
         }
 

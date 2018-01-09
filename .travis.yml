@@ -9,20 +9,37 @@ git:
   depth: 3
 
 php:
-  - '7.1'
-  - '7.0'
   - '5.6'
+  - '7.0'
+  - '7.1'
+  - '7.2'
+  - '7.0snapshot'
+  - '7.1snapshot'
+  - '7.2snapshot'
+  - 'master'
+
+matrix:
+  allow_failures:
+    - php: 'master'
 
 install:
   - echo "${TRAVIS_PHP_VERSION}"
-  - if [[ "${TRAVIS_PHP_VERSION}" == "7.1" ]]; then composer install; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == "7.0snapshot" ]]; then composer update; fi
   - if [[ "${TRAVIS_PHP_VERSION}" == "7.0" ]]; then composer update; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "5.6" ]]; then composer require --dev phpunit/phpunit ^5 --update-with-dependencies; composer update; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == "5.6" ]]; then composer require --dev phpunit/phpunit ^5 --update-with-dependencies --no-suggest; composer update --no-suggest; fi
+  - composer install
+  - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
 
 script:
   - vendor/bin/phpunit tests
+  - composer build
   - bin/pipelines --version
-  - bin/pipelines --verbose --debug --show
   - bin/pipelines
-  - bin/pipelines --pipeline custom/unit-tests || [[ "${TRAVIS_PHP_VERSION}" == "5.6" ]] # known to fail
+  - bin/pipelines --verbose --debug --show
+  - bin/pipelines --pipeline custom/docker
+  - bin/pipelines --pipeline custom/unit-tests
   - bin/pipelines --pipeline custom/lint-php-5.3
+  - bin/pipelines --pipeline custom/unit-tests-php-5.3
+
+notifications:
+  email: false

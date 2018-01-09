@@ -1,0 +1,8 @@
+# cache directory for in-pipeline storage
+#
+# scripts should make assets a+rw otherwise root is needed to
+# clean up cache files.
+#
+# usage example: dist/pipelines/docker-client-install.sh
+/*
+!.gitignore

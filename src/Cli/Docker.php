@@ -71,4 +71,42 @@ class Docker
 
         return $matches[1];
     }
+
+    /**
+     * inspect a container for a mount on $mountPoint on the host system and
+     * return it (the "device").
+     *
+     * @param string $container name to inspect
+     * @param string $mountPoint absolute path to search for a host mount for
+     * @return bool|string
+     */
+    public function hostDevice($container, $mountPoint)
+    {
+        $exec = $this->exec;
+
+        $status = $exec->capture('docker', array(
+            'inspect', $container
+        ), $out);
+        if ($status !== 0) {
+            return $mountPoint;
+        }
+
+        $data = json_decode($out, true);
+        if (!isset($data[0]['HostConfig']['Binds'])) {
+            return $mountPoint;
+        }
+
+        $binds = $data[0]['HostConfig']['Binds'];
+
+        $end = ":$mountPoint";
+
+        foreach ($binds as $bind) {
+            if (substr($bind, -strlen($end)) === $end) {
+                $hostDir = substr($bind, 0, -strlen($end));
+                return $hostDir;
+            }
+        }
+
+        return $mountPoint;
+    }
 }

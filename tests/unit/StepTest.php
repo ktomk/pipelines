@@ -37,6 +37,19 @@ class StepTest extends UnitTestCase
         $this->createStep(array());
     }
 
+    /**
+     * @expectedException \Ktomk\Pipelines\File\ParseException
+     * @expectedExceptionMessage 'script' requires a list of commands, step #1 is not a command
+     */
+    public function testRequiresScriptAsListOfCommands()
+    {
+        $this->createStep(array(
+            'script' => array(
+                ": # valid",
+                array("" => "step #1 is broken"),
+            ),
+        ));
+    }
 
     public function testGetImage()
     {

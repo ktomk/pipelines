@@ -69,4 +69,14 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline($file, $definition);
         $this->assertSame($file, $pipeline->getFile());
     }
+
+    public function testGetPipelineId()
+    {
+        $file = new File(array('pipelines' => array('default' => array(
+            array('step' => array('script' => array(':')))
+        ))));
+        $pipeline = $file->getById('default');
+        $actual = $pipeline->getId();
+        $this->assertSame('default', $actual);
+    }
 }

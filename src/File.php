@@ -38,7 +38,11 @@ class File
      */
     static function createFromFile($path)
     {
-        return new self(Yaml::file($path));
+        $result = Yaml::file($path);
+        if (!$result) {
+            ParseException::__(sprintf("YAML error: %s; verify the file contains valid YAML", $path));
+        }
+        return new self($result);
     }
 
     public function __construct(array $array)
@@ -205,6 +209,17 @@ class File
         $ref[2] = $pipeline;
 
         return $pipeline;
+    }
+
+    public function getIdFrom(Pipeline $pipeline)
+    {
+        foreach ($this->pipelines as $id => $reference) {
+            if ($pipeline === $reference[2]) {
+                return $id;
+            }
+        }
+
+        return null;
     }
 
     private function parseReferences(array &$array)

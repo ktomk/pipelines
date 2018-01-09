@@ -11,12 +11,12 @@ use Ktomk\Pipelines\PharBuild\Builder;
 
 chdir('tests/data/phar') || exit('could not change directory');
 
-$builder = Builder::create('/dev/null');
+$builder = Builder::create('build');
 $builder
     ->build()
 ;
 
 __HALT_COMPILER(); ?>
 --EXPECTF--
-Warning: unlink(/dev/null): Permission denied in %s on line %d
-could not unlink existing file '/dev/null'
+Warning: unlink(build): %s in %s on line %d
+could not unlink existing file 'build'

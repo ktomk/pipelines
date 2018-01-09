@@ -76,4 +76,35 @@ class LibTest extends TestCase
     {
         $this->assertEquals(array(), Lib::merge());
     }
+
+    public function provideBracePattern()
+    {
+        return array(
+            array(array(""), ""),
+            array(array("{}"), "{}"),
+            'no duplicates' => array(array(""), "{,}"),
+            'no duplicates 2' => array(array("ab"), "a{,}b"),
+            array(array("acb", "adb"), "a{c,d}b"),
+            'hangover left' => array(array("a{cb", "a{db"), "a{{c,d}b"),
+            'hangover right' => array(array("ac}b", "ad}b"), "a{c,d}}b"),
+            array(array("abe", "ace", "ade"), "a{b,{c,d}}e"),
+            'brace' => array(array("ab", "ac"), "a{b,c}"),
+            'escaped brace' => array(array("a{b,c}"), "a\{b,c}"),
+            'escaped comma' => array(array("a,", "ab"), "a{\,,b}"),
+            'multiple' => array(
+                array('abdh', 'abefh', 'abgh', 'abcdh', 'abcefh', 'abcgh'),
+                "ab{,c}{d,{ef,g}}h"
+            )
+        );
+    }
+
+    /**
+     * @param $subject
+     * @param $expected
+     * @dataProvider provideBracePattern
+     */
+    public function testExpandBrace($expected, $subject)
+    {
+        $this->assertSame($expected, Lib::expandBrace($subject), $subject);
+    }
 }

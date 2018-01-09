@@ -100,4 +100,84 @@ class Lib
 
         return call_user_func_array('array_merge', $arrays);
     }
+
+    /**
+     * expand brace "{}" in pattern
+     *
+     * @param string $pattern
+     * @return array of all patterns w/o braces, no duplicates
+     */
+    public static function expandBrace($pattern)
+    {
+        $stack = array($pattern);
+
+        for ($i = 0; isset($stack[$i]); $i++) {
+            $subject = $stack[$i];
+            $result = self::expandBraceInnerMatch($subject, $matches);
+            if (0 === $result) {
+                continue;
+            }
+            // match
+            foreach (array_unique(preg_split('~\\\\.(*SKIP)(*FAIL)|,~', $matches[2])) as $segment) {
+                $permutation = $matches[1] . $segment . $matches[3];
+                in_array($permutation, $stack, true) || $stack[] = $permutation;
+            }
+            unset($stack[$i]);
+        }
+
+        // inline escaped brace characters
+        $stack = array_map(function ($str) {
+            return strtr($str, array(
+                '\\\\' => '\\\\',
+                '\\{' => '{', '\\}' => '}', '\\,' => ','
+            ));
+        }, $stack);
+
+        return array_values($stack);
+    }
+
+    /**
+     * @param string $subject
+     * @param array $matches
+     * @return false|int
+     */
+    private static function expandBraceInnerMatch($subject, &$matches)
+    {
+        $result = preg_match_all(
+            '~(\\\\.(*SKIP)(*FAIL)|(?P<token>[,{}]))~',
+            $subject,
+            $lookup,
+            PREG_OFFSET_CAPTURE
+        );
+
+        if (false === $result) {
+            throw new \UnexpectedValueException('regex pattern failure'); // @codeCoverageIgnore
+        }
+
+        if (0 === $result) {
+            return $result;
+        }
+
+        $open = null;
+        $comma = null;
+
+        foreach ($lookup['token'] as $token) {
+            list($type, $pos) = $token;
+            if ($type === '{') {
+                $open = $token;
+                $comma = null;
+            } elseif ($type === ',') {
+                $comma = $token;
+            } elseif ($open && $comma) {
+                $matches = array(
+                    $subject,
+                    substr($subject, 0, $open[1]),
+                    substr($subject, $open[1] + 1, $token[1] - $open[1] - 1),
+                    substr($subject, $token[1] + 1),
+                );
+                return 1;
+            }
+        }
+        return 0;
+    }
 }

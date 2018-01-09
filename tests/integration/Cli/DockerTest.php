@@ -28,12 +28,22 @@ class DockerTest extends TestCase
         $docker = new Docker($exec);
         $actual = $docker->hasCommand();
         $this->assertInternalType('bool', $actual);
+
+        return $actual;
     }
 
-    function testVersion()
+    /**
+     * @depends testHasCommand
+     */
+    function testVersion($hasCommand)
     {
+        if (!$hasCommand) {
+            $this->markTestSkipped('no docker command in test system');
+        }
+
         $exec = new Exec();
         $docker = new Docker($exec);
+
         $version = $docker->getVersion();
         $this->assertInternalType('string', $version);
     }

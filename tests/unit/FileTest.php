@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\Runner\Reference;
 use PHPUnit\Framework\TestCase;
 
@@ -21,6 +22,17 @@ class FileTest extends TestCase
         $this->assertNotNull($file);
 
         return $file;
+    }
+
+    /**
+     * @expectedException \Ktomk\Pipelines\File\ParseException
+     * @expectedExceptionMessage /error.yml; verify the file contains valid YAML
+     */
+    function testCreateFromFileWithError()
+    {
+        $path = __DIR__ . '/../data/error.yml';
+
+        File::createFromFile($path);
     }
 
     /**
@@ -303,6 +315,28 @@ class FileTest extends TestCase
             ),
         ));
         $file->getById('custom/0');
+    }
+
+    public function testGetIdFrom()
+    {
+        $file = new File(array('pipelines' => array('default' => array(
+            array('step' => array('script' => array(':')))
+        ))));
+        $pipeline = $file->getById('default');
+        $this->assertNotNull($pipeline);
+        $actual = $file->getIdFrom($pipeline);
+        $this->assertSame('default', $actual);
+    }
+
+    public function testGetIdFromNonFilePipeline()
+    {
+        $file = new File(array('pipelines' => array('default' => array(
+            array('step' => array('script' => array(':')))
+        ))));
+
+        $pipeline = new Pipeline($file, array(array('step' => array('script' => array(':')))));
+        $this->assertNull($file->getIdFrom($pipeline));
+
     }
 
     /**

@@ -33,6 +33,17 @@ class Step
             ParseException::__("'script' requires a list of commands");
         }
 
+        foreach ($step['script'] as $index => $line) {
+            if (!is_scalar($line) && !is_null($line)) {
+                ParseException::__(
+                    sprintf(
+                        "'script' requires a list of commands, step #%d is not a command",
+                        $index
+                    )
+                );
+            }
+        }
+
         $this->pipeline = $pipeline;
         $this->step = $step;
     }

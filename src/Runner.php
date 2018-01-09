@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Runner\Env;
 
@@ -65,35 +66,63 @@ class Runner
         $prefix = $this->prefix;
         $dir = $this->directory;
         $exec = $this->exec;
+        $docker = new Docker($exec);
         $env = $this->env ?: $env = Env::create();;
+        $hasId = $env->setPipelinesId($pipeline->getId()); # TODO give Env an addPipeline() method (compare addReference)
+        if ($hasId) {
+            printf(
+                "fatal: won't start pipeline '%s'; pipeline inside pipelines recursion detected\n",
+                $pipeline->getId()
+            );
+            return 127;
+        }
+
 
         $steps = $pipeline->getSteps();
         foreach ($steps as $index => $step) {
             $name = $prefix . '-' . Lib::generateUuid();
             $image = $step->getImage();
+            $env->setContainerName($name);
+
 
             # launch container
             printf(
-                "\x1D+++ step #%d\n\n    name...........: %s\n    effective-image: %s\n    container......: %s\n\n",
+                "\x1D+++ step #%d\n\n    name...........: %s\n    effective-image: %s\n    container......: %s\n",
                 $index,
                 $step->getName() ? '"' . $step->getName() . '"' : '(unnamed)',
                 $step->getImage(),
                 $name
             );
 
+
+            // docker client inside docker
+            // TODO give controlling options
+            $mountDockerSock = array();
+            if (file_exists('/var/run/docker.sock')) {
+                $mountDockerSock = array(
+                    '-v', '/var/run/docker.sock:/var/run/docker.sock',
+                );
+            }
+
+            $parentName = $env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
+            $checkMount = $mountDockerSock && null !== $parentName;
+            $deviceDir = $checkMount ? $docker->hostDevice($parentName, $dir) : $dir;
+
             $status = $exec->capture('docker', array(
                 'run', '-i', '--name', $name,
                 $env->getArgs('-e'),
-                '--volume', "$dir:/app", '-e', 'BITBUCKET_CLONE_DIR=/app',
+                '--volume', "$deviceDir:/app", '-e', 'BITBUCKET_CLONE_DIR=/app',
+                $mountDockerSock,
                 '--workdir', '/app', '--detach', $image
             ), $out, $err);
             if ($status !== 0) {
-                printf("fatal: setting up the container failed.\n");
+                printf("\n\nfatal: setting up the container failed.\n");
                 echo $out, "\n", $err, "\n";
                 printf("exit status: %d\n", $status);
                 break;
             }
-
+            $id = rtrim($out);
+            printf("    container-id...: %s\n\n", substr($id, 0, 12));
             $script = $step->getScript();
             foreach ($script as $line => $command) {
                 printf("\x1D+ %s\n", $command);

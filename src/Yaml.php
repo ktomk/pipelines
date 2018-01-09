@@ -4,10 +4,16 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\File\ParseException;
 use Spyc;
 
 class Yaml
 {
+
+    /**
+     * @param $path
+     * @return array|null on error
+     */
     public static function file($path)
     {
         if (!is_file($path) || !is_readable($path)) {
@@ -16,9 +22,15 @@ class Yaml
             );
         }
 
+        $error = false;
+        $last = error_get_last();
+        $level = error_reporting();
+        error_reporting(0);
         $array = Spyc::YAMLLoad($path);
+        $error = error_get_last() !== $last;
+        error_reporting($level);
 
-        return $array;
+        return $error ? null : $array;
     }
 
     public static function buffer($buffer)
