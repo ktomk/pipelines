@@ -69,9 +69,9 @@ class AppTest extends TestCase
     function testFileOverridesBasenameVerbose()
     {
         $app = new App(new Streams(null, 'php://output'));
-        $this->expectOutputString(
-            "pipelines version @.@.@\n" .
-            "info: --file overrides non-default --basename\n"
+        $this->expectOutputRegex(
+            "{^pipelines version (@\.@\.@|[a-f0-9]{7}|\d+\.\d+\.\d+)\+?\n" .
+            "info: --file overrides non-default --basename\n}"
         );
         $args = array(
             'pipelines-test',

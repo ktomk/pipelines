@@ -21,7 +21,6 @@ pipelines:
           image: cespi/php-5.3:cli-latest
           script:
             - command -v composer || dist/pipelines/composer-install.sh
-            - composer global require hirak/prestissimo
             - composer require --no-suggest --dev phpunit/phpunit ^4 --update-with-dependencies
             - composer update --no-suggest
             - dist/pipelines/phpunit.sh

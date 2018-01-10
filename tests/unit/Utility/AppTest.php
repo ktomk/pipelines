@@ -34,7 +34,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams(null, 'php://output'));
 
-        $this->expectOutputString("pipelines version @.@.@\n");
+        $this->expectOutputRegex("{^pipelines version (@\.@\.@|[a-f0-9]{7}|\d+\.\d+\.\d+)\+?\n}");
         $app->main(array('cmd', '--version'));
     }
 
@@ -63,7 +63,7 @@ class AppTest extends TestCase
     public function testMainVerbosePrinter()
     {
         $app = new App(new Streams(null, 'php://output', null));
-        $this->expectOutputRegex('{^pipelines version @\.@\.@\n}');
+        $this->expectOutputRegex('{^pipelines version (@\.@\.@|[a-f0-9]{7}|\d+\.\d+\.\d+)\+?\n}');
         $actual = $app->main(array('cmd', '--verbose', '--prefix'));
         $this->assertSame(1, $actual);
     }

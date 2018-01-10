@@ -14,6 +14,8 @@ require __DIR__ . '/../../src/bootstrap.php';
 
 $version = exec('echo $(git describe --tags --always --first-parent)$(git diff-index --quiet HEAD -- || echo +)');
 
+printf("building %s ...\n", $version);
+
 $builder = Builder::create('build/pipelines.phar');
 $builder
     ->stubfile(__DIR__ . '/stub.php')

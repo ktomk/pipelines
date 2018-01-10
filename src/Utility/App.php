@@ -21,6 +21,12 @@ class App
     const VERSION = '@.@.@';
 
     /**
+     * @var bool whether version has been shown or not
+     * @see App::showVersion()
+     */
+    private $versionShown = false;
+
+    /**
      * @var Args|string[]
      */
     private $arguments;
@@ -55,14 +61,58 @@ class App
         $this->streams = $streams;
     }
 
-    private $versionShown = false;
     private function showVersion()
     {
-        $this->versionShown
-        || $this->versionShown = null
-            === $this->info(sprintf('pipelines version %s', self::VERSION));
+        if (!$this->versionShown) {
+            $version = $this->translateSourceVersion(self::VERSION);
+            $this->info(sprintf('pipelines version %s', $version));
+            $this->versionShown = true;
+        }
 
         return 0;
+    }
+
+    /**
+     * obtain utility version for the source edition
+     *
+     * @param string $version
+     * @return string
+     */
+    private function translateSourceVersion($version)
+    {
+        // version is build version
+        if ('@.' . '@.@' !== $version) {
+            return $version; // @codeCoverageIgnore
+        }
+
+        // as composer module
+        $installedFile = __DIR__ . '/../../../../composer/installed.json';
+        if (is_file($installedFile) && is_readable($installedFile)) {
+            // @codeCoverageIgnoreStart
+            $buffer = file_get_contents($installedFile);
+            $struct = json_decode($buffer);
+            foreach ((array) $struct as $package) {
+                if (!isset($package->name) || $package->name !== 'ktomk/pipelines') {
+                    continue;
+                }
+                if (!isset($package->version)) {
+                    break;
+                }
+                return $package->version;
+            }
+            // @codeCoverageIgnoreEnd
+        }
+
+        // as git repository
+        $buffer = exec(sprintf(
+            'cd %s && echo $(git describe --tags --always --first-parent 2>/dev/null)$(git diff-index --quiet HEAD -- 2>/dev/null || echo +)',
+            escapeshellarg(__DIR__)
+        ));
+        if ($buffer !== '+') {
+            return $buffer;
+        }
+
+        return $version; // @codeCoverageIgnore
     }
 
     private function showUsage()
