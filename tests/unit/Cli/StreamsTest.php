@@ -65,4 +65,24 @@ class StreamsTest extends TestCase
         $streams = new Streams(null, 'php://output');
         $streams("test");
     }
+
+    public function testCopyHandle()
+    {
+        $this->expectOutputString("test\nme");
+        $streams = new Streams(null, 'php://output');
+        $other = new Streams();
+        $other->copyHandle($streams, 1);
+        $other->out("test\n");
+        unset($other);
+        $streams->out("me");
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage failed to open '/this-is-no-file-to/open/really' for reading
+     */
+    public function testExceptionOnOpening()
+    {
+        @new Streams('/this-is-no-file-to/open/really');
+    }
 }

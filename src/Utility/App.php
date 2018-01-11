@@ -374,6 +374,13 @@ EOD
 
         $pipelineId = $args->getOptionArgument('pipeline', $pipelineId);
 
+        // --verbatim show only errors for own runner actions, show everything from pipeline verbatim
+        $streams = $this->streams;
+        if ($args->hasOption('verbatim')) {
+            $streams = new Streams();
+            $streams->copyHandle($this->streams,2);
+        }
+
         if ($option = $args->getFirstRemainingOption()) {
             $this->error("Unknown option: $option");
             $this->showUsage();
@@ -411,7 +418,7 @@ EOD
             $flags |= Runner::FLAG_DEPLOY_COPY;
         }
 
-        $runner = new Runner($prefix, $dir, $exec, $flags, $env, $this->streams);
+        $runner = new Runner($prefix, $dir, $exec, $flags, $env, $streams);
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');
             $status = 0;

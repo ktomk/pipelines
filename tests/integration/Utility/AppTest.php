@@ -25,6 +25,7 @@ class AppTest extends TestCase
             array(array('--verbose', '--dry-run')),
             array(array('--keep', '--no-run')),
             array(array('--docker-list', '--dry-run')),
+            array(array('--verbatim', '--dry-run')),
         );
     }
 

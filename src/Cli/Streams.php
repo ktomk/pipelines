@@ -68,13 +68,30 @@ class Streams
     public function out($string)
     {
         $handle = $this->handles[1][0];
-        $handle && fputs($handle, $string);
+        is_resource($handle) && fputs($handle, $string);
     }
 
     public function err($string)
     {
         $handle = $this->handles[2][0];
-        $handle && fputs($handle, $string);
+        is_resource($handle) && fputs($handle, $string);
+    }
+
+    /**
+     * @param Streams $streams
+     * @param int $handle
+     */
+    public function copyHandle(Streams $streams, $handle)
+    {
+        $array = $streams->handles[$handle];
+
+        // just in case the resource was opened by streams, remove the
+        // association to the path
+        if (is_resource($array[0])) {
+            $array[1] = null;
+        }
+
+        $this->handles[$handle] = $array;
     }
 
     /**
@@ -82,13 +99,25 @@ class Streams
      */
     private function addHandle($context)
     {
-        $new = array(null, null);
         $num = count($this->handles);
         if (null === $context || is_resource($context)) {
-            $new[0] = $context;
+            $new = array(
+                $context,
+                null,
+            );
         } else {
-            $new[0] = fopen($context, 0 === $num ? 'r' : 'w');
-            $new[1] = $context;
+            $resource = fopen($context, 0 === $num ? 'r' : 'w');
+            if (false === $resource) {
+                throw new \RuntimeException(sprintf(
+                    "failed to open '%s' for %s",
+                    $context,
+                    0 === $num ? 'reading' : 'writing'
+                ));
+            }
+            $new = array(
+                $resource,
+                $context,
+            );
         }
 
         $this->handles[$num] = $new;
@@ -97,8 +126,8 @@ class Streams
     public function __destruct()
     {
         foreach ($this->handles as $handle => $descriptor) {
-            list($resource, $reference) = $descriptor;
-            if ($resource && $reference && is_resource($resource)) {
+            list($resource, $context) = $descriptor;
+            if ($resource && is_string($context) && is_resource($resource)) {
                 fclose($resource);
                 $this->handles[$handle][0] = null;
             }
