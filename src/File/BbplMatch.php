@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\Lib;
+
 /**
  * Library for pattern matching
  *
@@ -11,7 +13,7 @@ namespace Ktomk\Pipelines\File;
  */
 class BbplMatch
 {
-    static $map = array(
+    private static $map = array(
         '\\\\' => '[\\\\]', '\\*' => '[*]', '\\?' => '[?]', '\\' => '[\\\\]',
         '^' => '\\^', '$' => '[$]',
         '|' => '[|]', '+' => '[+]',
@@ -33,9 +35,19 @@ class BbplMatch
      * @return bool
      */
     public static function match($pattern, $subject) {
+        $regex = implode(
+            '|',
+            array_map(array('self', 'map'), Lib::expandBrace($pattern))
+        );
+
         return (bool)preg_match(
-            '~^' . strtr($pattern, self::$map) . '$~',
+            '~^(' . $regex . ')$~',
             $subject
         );
+    }
+
+    private static function map($pattern)
+    {
+        return strtr($pattern, self::$map);
     }
 }

@@ -49,6 +49,8 @@ PIPELINES_PARENT_CONTAINER_NAME \
                            name of the parent container (pipelines run inside \
                            a pipeline, if docker client is available) \
                            otherwise not set.
+USER                       current user name, informative
+HOME                       current home directory, informative
 "
 
 print_var()

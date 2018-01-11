@@ -43,7 +43,17 @@ class BbplMatchTest extends TestCase
                 '** matches' => array('**', 'feature/blue', true),
                 '** partially' => array('**ue', 'feature/blue', true),
                 '** partially no match' => array('**zz', 'feature/blue', false),
-            )
+            ),
+            # brace support
+            'level-3' => array(
+                'as seen t1' => array('{foo,bar}', 'foo', true),
+                'as seen t2' => array('{foo,bar}', 'bar', true),
+                'as seen t3' => array('{foo,bar}', 'foo,bar', false),
+                'braces {,} do match' => array('feature/{red,blue}', 'feature/blue', true),
+                'empty braces not' => array('{}', '{}', true),
+                'recursive' => array('{f{,o,{oo,o}},bar}', 'foo', true),
+                'recursive end' => array('{f{,o,{oo,o}},bar}', 'bar', true),
+            ),
         );
 
         parent::__construct($name, $data, $dataName);
@@ -59,6 +69,11 @@ class BbplMatchTest extends TestCase
         return $this->levels['level-2'];
     }
 
+    public function provideMatchPatternLevel3()
+    {
+        return $this->levels['level-3'];
+    }
+
     /**
      * @dataProvider provideMatchPatternLevel1
      */
@@ -71,6 +86,14 @@ class BbplMatchTest extends TestCase
      * @dataProvider provideMatchPatternLevel2
      */
     public function testMatchLevel2($pattern, $subject, $expected)
+    {
+        $this->assert($pattern, $subject, $expected);
+    }
+
+    /**
+     * @dataProvider provideMatchPatternLevel3
+     */
+    public function testMatchLevel3($pattern, $subject, $expected)
     {
         $this->assert($pattern, $subject, $expected);
     }
