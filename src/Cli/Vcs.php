@@ -31,7 +31,7 @@ class Vcs
             return null;
         }
 
-        $path = substr($out, 0,-1);
+        $path = substr($out, 0, -1);
 
         if (!is_dir($path)) {
             return null;

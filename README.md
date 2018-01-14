@@ -288,6 +288,7 @@ Check the version by invoking it:
 
 - Phar build as Github releases
 - Check Docker existence before running
+- Override the default user
 - Pass environment variable file(s) (`--env-file`)
 - Stop at manual steps (`--no-manual` to override)
 - Run specific steps of a pipeline only

@@ -328,12 +328,14 @@ class Builder
             return array();
             // @codeCoverageIgnoreEnd
         }
-        if ($result === array()) $this->err(sprintf(
-            "ineffective pattern: %s",
-            $pattern === $glob
-                ? $pattern
-                : sprintf("'%s' -> '%s'", $pattern, $glob)
-        ));
+        if ($result === array()) {
+            $this->err(sprintf(
+                "ineffective pattern: %s",
+                $pattern === $glob
+                    ? $pattern
+                    : sprintf("'%s' -> '%s'", $pattern, $glob)
+            ));
+        }
         if (!is_array($result)) {
             // @codeCoverageIgnoreStart
             throw new \UnexpectedValueException(

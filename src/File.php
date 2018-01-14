@@ -58,7 +58,7 @@ class File
         if (array_key_exists('image', $array) && !is_string($array['image'])) {
             ParseException::__("'image' requires a Docker image name");
         }
-        if (isset($array['image']) && ! Lib::validDockerImage($array['image'])) {
+        if (isset($array['image']) && !Lib::validDockerImage($array['image'])) {
             ParseException::__(
                 sprintf("'image' invalid Docker image name: '%s'", $array['image'])
             );
@@ -275,7 +275,9 @@ class File
         }
 
         foreach ($array as $section => $refs) {
-            if (!in_array($section, $sections, true)) continue;
+            if (!in_array($section, $sections, true)) {
+                continue;
+            }
             if (!is_array($refs)) {
                 ParseException::__("'$section' requires a list");
             }

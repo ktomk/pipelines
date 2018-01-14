@@ -111,7 +111,7 @@ class Runner
                 $name
             ));
 
-            $copy = (bool) ($this->flags & self::FLAG_DEPLOY_COPY);
+            $copy = (bool)($this->flags & self::FLAG_DEPLOY_COPY);
 
             // docker client inside docker
             // FIXME give controlling options, this is serious /!\
