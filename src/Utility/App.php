@@ -10,9 +10,9 @@ use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File;
+use Ktomk\Pipelines\Pipeline;
 use Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Runner\Env;
-use Ktomk\Pipelines\Step;
 
 class App
 {
@@ -349,17 +349,14 @@ EOD
             return 1;
         }
 
-        $show = $args->hasOption('show');
-        $list = $args->hasOption('list');
-        $images = $args->hasOption('images');
-
         $this->verbose(sprintf("info: pipelines file is '%s'", $path));
 
         $pipelines = File::createFromFile($path);
 
-        if ($images) return $this->showImages($pipelines);
-        if ($show) return $this->showPipelines($pipelines);
-        if ($list) return $this->showPipelineIds($pipelines);
+        $fileOptions = FileOptions::bind($args, $this->streams, $pipelines);
+        if (null !== $status = $fileOptions->run()) {
+            return $status;
+        }
 
         ###
 
@@ -389,6 +386,33 @@ EOD
 
         ###
 
+        $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions);
+        if (!$pipeline instanceof Pipeline) {
+            return $pipeline;
+        }
+
+        $flags = $this->getRunFlags($keep, $deployMode);
+
+        $runner = new Runner($prefix, $workingDir, $exec, $flags, $env, $streams);
+        if ($noRun) {
+            $this->verbose('info: not running the pipeline per --no-run option');
+            $status = 0;
+        } else {
+            $status = $runner->run($pipeline);
+        }
+
+        return $status;
+    }
+
+    /**
+     * Obtain pipeline to run from file while handling error output
+     *
+     * @param File $pipelines
+     * @param $pipelineId
+     * @param FileOptions $fileOptions
+     * @return int|Pipeline on success, integer on error as exit status
+     */
+    private function getRunPipeline(File $pipelines, $pipelineId, FileOptions $fileOptions) {
         $this->verbose(sprintf("info: running pipeline '%s'", $pipelineId));
 
         try {
@@ -399,7 +423,7 @@ EOD
         } catch (\InvalidArgumentException $e) {
             $this->error(sprintf("Pipeline '%s' unavailable", $pipelineId));
             $this->info('Pipelines are:');
-            $this->showPipelines($pipelines);
+            $fileOptions->showPipelines($pipelines);
             return 1;
         }
 
@@ -408,25 +432,7 @@ EOD
             return 1;
         }
 
-        $dir = $workingDir;
-        $flags = Runner::FLAGS;
-        if ($keep) {
-            $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
-        }
-
-        if ($deployMode === 'copy') {
-            $flags |= Runner::FLAG_DEPLOY_COPY;
-        }
-
-        $runner = new Runner($prefix, $dir, $exec, $flags, $env, $streams);
-        if ($noRun) {
-            $this->verbose('info: not running the pipeline per --no-run option');
-            $status = 0;
-        } else {
-            $status = $runner->run($pipeline);
-        }
-
-        return $status;
+        return $pipeline;
     }
 
     private function error($message)
@@ -448,107 +454,21 @@ EOD
         $this->verbose && $this->info($message);
     }
 
-    private function showImages(File $pipelines)
-    {
-        /**
-         * @param File $file
-         * @return array|Step[]
-         */
-        $iter = function (File $file) {
-            $ids = $file->getPipelineIds();
-            $return = array();
-            foreach ($ids as $id) {
-                foreach ($file->getById($id)->getSteps() as $index => $step) {
-                    $return["$id:/step/$index"] = $step;
-                }
-            }
-
-            return $return;
-        };
-
-        $images = array();
-        foreach ($iter($pipelines) as $step) {
-            $image = $step->getImage();
-            $images[$image] = $image;
-        }
-
-        foreach ($images as $image) {
-            $this->info($image);
-        }
-
-        return 0;
-    }
-
-    private function showPipelineIds(File $pipelines)
-    {
-        foreach ($pipelines->getPipelineIds() as $id) {
-            $this->info($id);
-        }
-
-        return 0;
-    }
-
     /**
-     * @param $pipelines
-     * @return int
+     * @param $keep
+     * @param $deployMode
+     * @return bool|int
      */
-    private function showPipelines(File $pipelines)
+    private function getRunFlags($keep, $deployMode)
     {
-        $errors = 0;
-        $table = array(array('PIPELINE ID', 'IMAGES', 'STEPS'));
-        foreach ($pipelines->getPipelineIds() as $id) {
-            $images = array();
-            $names = array();
-
-            try {
-                $pipeline = $pipelines->getById($id);
-                $steps = $pipeline->getSteps();
-            } catch (Exception $e) {
-                $errors++;
-                $table[] = array($id, 'ERROR', $e->getMessage());
-                continue;
-            }
-
-            foreach ($steps as $step) {
-                $image = $step->getImage();
-                if ($image !== $pipelines::DEFAULT_IMAGE) {
-                    $images[] = $image;
-                }
-                $name = $step->getName();
-                $name && $names[] = $name;
-            }
-            $images = $images ? implode(', ', $images) : '';
-            $steps = sprintf('%d%s', count($steps), $names ? ' ("' . implode('""; "', $names) . '")' : '');
-            $table[] = array($id, $images, $steps);
+        $flags = Runner::FLAGS;
+        if ($keep) {
+            $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
         }
 
-        $this->textTable($table);
-
-        return $errors ? 1 : 0;
-    }
-
-    private function textTable(array $table)
-    {
-        $sizes = array();
-        foreach ($table[0] as $index => $cell) {
-            $sizes[$index] = 0;
+        if ($deployMode === 'copy') {
+            $flags |= Runner::FLAG_DEPLOY_COPY;
         }
-
-        foreach ($table as $row) {
-            foreach ($row as $index => $column) {
-                $sizes[$index] = max($sizes[$index], strlen($column));
-            }
-        }
-
-        foreach ($table as $row) {
-            $line = '';
-            foreach ($row as $index => $column) {
-                $len = strlen($column);
-                $index && $line .= "    ";
-                $line .= $column;
-                $line .= str_repeat(' ', $sizes[$index] - $len);
-            }
-            $this->info($line);
-        }
+        return $flags;
     }
 }

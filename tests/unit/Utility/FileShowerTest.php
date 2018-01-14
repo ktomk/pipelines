@@ -1,0 +1,52 @@
+<?php
+
+/* this file is part of pipelines */
+
+namespace Ktomk\Pipelines\Utility;
+
+use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\File;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Class FileShowerTest
+ *
+ * @covers \Ktomk\Pipelines\Utility\FileShower
+ */
+class FileShowerTest extends TestCase
+{
+    public function testCreation()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $shower = new FileShower(new Streams(), $file);
+        $this->assertInstanceOf('Ktomk\Pipelines\Utility\FileShower', $shower);
+    }
+
+    public function testShowImages()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $shower = new FileShower(new Streams(), $file);
+        $this->assertSame(0, $shower->showImages());
+    }
+
+    public function testShowPipelineIds()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $shower = new FileShower(new Streams(), $file);
+        $this->assertSame(0, $shower->showPipelineIds());
+    }
+
+    public function testShowPipelines()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $shower = new FileShower(new Streams(), $file);
+        $this->assertSame(0, $shower->showPipelines());
+    }
+
+    public function testShowPipelinesWithErrors()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../data/invalid-pipeline.yml');
+        $shower = new FileShower(new Streams(), $file);
+        $this->assertSame(1, $shower->showPipelines());
+    }
+}
