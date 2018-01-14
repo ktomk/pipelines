@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class InvocationTest extends TestCase
 {
-    function provideCommands()
+    public function provideCommands()
     {
         return array(
             array('--help'),
@@ -27,7 +27,7 @@ class InvocationTest extends TestCase
      * @param string $command
      * @dataProvider provideCommands
      */
-    function testSuccessfulCommands($command)
+    public function testSuccessfulCommands($command)
     {
         $this->assert("bin/pipelines $command");
     }

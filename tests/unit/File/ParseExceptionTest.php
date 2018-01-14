@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ParseExceptionTest extends TestCase
 {
-    function testCreation()
+    public function testCreation()
     {
         $exception = new ParseException('message string');
         $this->assertInstanceOf('Ktomk\Pipelines\File\ParseException', $exception);
@@ -20,7 +20,7 @@ class ParseExceptionTest extends TestCase
      * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage message string
      */
-    function testThrowing()
+    public function testThrowing()
     {
         ParseException::__('message string');
     }

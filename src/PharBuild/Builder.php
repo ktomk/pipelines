@@ -18,9 +18,9 @@ use Phar;
 class Builder
 {
     /**
-     * @var string phar file to build
+     * @var string path of the phar file to build
      */
-    private $fphar;
+    private $fPhar;
 
     /**
      * @var array to collect files to build the phar from $localName => $descriptor
@@ -74,7 +74,7 @@ class Builder
         $this->files = array();
         $this->errors = array();
         $this->limit(9);
-        $this->fphar = $fphar;
+        $this->fPhar = $fphar;
     }
 
     /**
@@ -134,7 +134,11 @@ class Builder
         if (null !== $alias) {
             $result = trim($alias, '/');
             if ($result === '') {
-                $this->err(sprintf('%s: ineffective alias: %s', $pattern, $alias));
+                $this->err(sprintf(
+                    '%s: ineffective alias: %s',
+                    is_array($pattern) ? implode(';', $pattern) : $pattern,
+                    $alias
+                ));
                 $alias = null;
             } else {
                 $alias = $result . '/';
@@ -193,6 +197,10 @@ class Builder
     {
         return function ($file) {
             $lines = file($file);
+            if (false === $lines) {
+                $this->err(sprintf('error reading file: %s', $file));
+                return null;
+            }
             array_shift($lines);
             $buffer = implode("", $lines);
 
@@ -371,7 +379,7 @@ class Builder
      */
     public function build($params = null)
     {
-        $file = $this->fphar;
+        $file = $this->fPhar;
         $files = $this->files;
 
         $temp = $this->_tempname('.phar');
@@ -391,11 +399,11 @@ class Builder
             $this->err("phar: writing phar files is disabled by the php.ini setting 'phar.readonly'");
         }
 
-        if (!$files) {
+        if (empty($files)) {
             $this->err('no files, add some or do not remove all');
         }
 
-        if ($this->errors) {
+        if (!empty($this->errors)) {
             $this->err('fatal: build has errors, not building');
             return $this;
         }
@@ -447,7 +455,7 @@ class Builder
      */
     public function timestamps($timestamp = null)
     {
-        $file = $this->fphar;
+        $file = $this->fPhar;
         if (!file_exists($file)) {
             $this->err(sprintf('no such file: %s', $file));
             return $this;
@@ -455,7 +463,7 @@ class Builder
         require_once __DIR__ . '/Timestamps.php';
         $ts = new Timestamps($file);
         $ts->updateTimestamps($timestamp);
-        $ts->save($this->fphar, Phar::SHA1);
+        $ts->save($this->fPhar, Phar::SHA1);
 
         return $this;
     }
@@ -465,7 +473,7 @@ class Builder
      */
     public function info()
     {
-        $filename = $this->fphar;
+        $filename = $this->fPhar;
 
         if (!is_file($filename)) {
             $this->err(sprintf('no such file: %s', $filename));
@@ -493,7 +501,7 @@ class Builder
      */
     public function remove($pattern)
     {
-        if (!$this->files) {
+        if (empty($this->files)) {
             $this->err(sprintf("can not remove from no files (pattern: '%s')", $pattern));
             return $this;
         }
@@ -519,8 +527,8 @@ class Builder
     /**
      * execute a system command
      *
-     * @param $command
-     * @param null $return
+     * @param string $command
+     * @param string $return [by-ref] last line of the output (w/o newline/white space at end)
      * @return $this
      */
     public function exec($command, &$return = null)
@@ -529,6 +537,8 @@ class Builder
         if ($status !== 0) {
             $this->err(sprintf('command failed: %s (exit status: %d)', $command, $status));
         }
+
+        $return = rtrim($return);
 
         return $this;
     }
@@ -614,21 +624,52 @@ class Builder
     }
 
     /**
+     * public to allow injection in tests
+     *
+     * @var null|resource to write errors to (if not set, standard error)
+     */
+    public $errHandle;
+
+    /**
      * @param string $message [optional]
      */
     private function err($message = null)
     {
-        static $handle;
-
         // fallback to global static: if STDIN is used for PHP
         // process, the default constants aren't ignored.
-        if (null === $handle) {
-            $handle = defined('STDERR')
-                ? constant('STDERR') : fopen('php://stderr', 'w');
+        if (null === $this->errHandle) {
+            $this->errHandle = $this->errHandleFromEnvironment();
         }
 
         $this->errors[] = $message;
-        fprintf($handle, "%s\n", $message);
+        is_resource($this->errHandle) && fprintf($this->errHandle, "%s\n", $message);
+    }
+
+    private function errHandleFromEnvironment()
+    {
+        if (defined('STDERR')) {
+            // @codeCoverageIgnoreStart
+            // phpunit can't tests this cleanly as it is always not defined in
+            // phpt tests
+            $handle = constant('STDERR');
+            if (false === is_resource($handle)) {
+                $message = 'fatal i/o error: failed to acquire stream from STDERR';
+                $this->errors[] = $message;
+                throw new \RuntimeException($message);
+            }
+            // @codeCoverageIgnoreEnd
+        } else {
+            $handle = fopen('php://stderr', 'w');
+            if (false === $handle) {
+                // @codeCoverageIgnoreStart
+                $message = 'fatal i/o error: failed to open php://stderr';
+                $this->errors[] = $message;
+                throw new \RuntimeException($message);
+                // @codeCoverageIgnoreEnd
+            }
+        }
+
+        return $handle;
     }
 
     public function __destruct()

@@ -22,7 +22,6 @@ class Yaml
             );
         }
 
-        $error = false;
         $last = error_get_last();
         $level = error_reporting();
         error_reporting(0);

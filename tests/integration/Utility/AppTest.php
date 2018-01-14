@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
  */
 class AppTest extends TestCase
 {
-    function provideArguments()
+    public function provideArguments()
     {
         return array(
             array(array('--version')),
@@ -33,7 +33,7 @@ class AppTest extends TestCase
      * @param array $arguments
      * @dataProvider provideArguments
      */
-    function testSuccessfulCommands(array $arguments)
+    public function testSuccessfulCommands(array $arguments)
     {
         $app = new App(new Streams());
         $args = array_merge((array)'pipelines-test', $arguments);
@@ -41,7 +41,7 @@ class AppTest extends TestCase
         $this->assertSame(0, $status);
     }
 
-    function testInvalidPrefixGivesError()
+    public function testInvalidPrefixGivesError()
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString("Invalid prefix: '!\$\"'\n");
@@ -54,7 +54,7 @@ class AppTest extends TestCase
         $this->assertSame(1, $status);
     }
 
-    function testEmptyBasenameGivesError()
+    public function testEmptyBasenameGivesError()
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString("Empty basename\n");
@@ -67,7 +67,7 @@ class AppTest extends TestCase
         $this->assertSame(1, $status);
     }
 
-    function testFileOverridesBasenameVerbose()
+    public function testFileOverridesBasenameVerbose()
     {
         $app = new App(new Streams(null, 'php://output'));
         $this->expectOutputRegex(
@@ -87,7 +87,7 @@ class AppTest extends TestCase
         $this->assertSame(1, $status);
     }
 
-    function testNonReadableFilename()
+    public function testNonReadableFilename()
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString(
@@ -104,7 +104,7 @@ class AppTest extends TestCase
         $this->assertSame(1, $status);
     }
 
-    function testUnknownOption()
+    public function testUnknownOption()
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString(
@@ -118,7 +118,7 @@ class AppTest extends TestCase
         $this->assertSame(1, $status);
     }
 
-    function testInvalidWrongPipelineNameArgumentException()
+    public function testInvalidWrongPipelineNameArgumentException()
     {
         $this->expectOutputString(
             "Pipeline 'test/more' unavailable\n"
@@ -132,7 +132,7 @@ class AppTest extends TestCase
         $this->assertSame(1, $status);
     }
 
-    function testCopyDeployMode()
+    public function testCopyDeployMode()
     {
         $app = new App(new Streams(null, null, null));
         $args = array(

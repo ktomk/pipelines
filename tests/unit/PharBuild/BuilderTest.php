@@ -66,6 +66,19 @@ class BuilderTest extends TestCase
         $builder->build();
     }
 
+    public function testDropFirstLineCallbackFileReadError()
+    {
+        $this->builder = $builder = Builder::create('fake.phar');
+        $this->assertFNE($builder);
+        $this->expectOutputString("error reading file: data:no-comma-in-URL\n");
+        $builder->errHandle = fopen('php://output', 'w');
+        $callback = $builder->dropFirstLine();
+        $this->assertTrue(is_callable($callback));
+        // violate rfc2397 by intention to provoke read error
+        $actual = @call_user_func($callback, 'data:no-comma-in-URL');
+        $this->assertNull($actual);
+    }
+
     public function testReplaceFileCallback()
     {
         $this->builder = $builder = Builder::create('fake.phar');

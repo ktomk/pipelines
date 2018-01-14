@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class YamlTest extends TestCase
 {
-    function testFileParsing()
+    public function testFileParsing()
     {
         $path = __DIR__ . '/../../bitbucket-pipelines.yml';
 
@@ -24,7 +24,7 @@ class YamlTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage not a readable file: 'xxx'
      */
-    function testCreateFromNonExistentFile()
+    public function testCreateFromNonExistentFile()
     {
         Yaml::file("xxx");
     }
@@ -32,14 +32,14 @@ class YamlTest extends TestCase
     /**
      * Non-YAML files normally parse again to some array
      */
-    function testNonYamlFile()
+    public function testNonYamlFile()
     {
         $array = Yaml::file(__FILE__);
 
         $this->assertInternalType('array', $array);
     }
 
-    function testYamlNull()
+    public function testYamlNull()
     {
         $array = Yaml::buffer('first: ~');
 

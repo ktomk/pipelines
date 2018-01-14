@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
  */
 class FileTest extends TestCase
 {
-    function testCreateFromFile()
+    public function testCreateFromFile()
     {
         $path = __DIR__ . '/../../' . File::FILE_NAME;
 
@@ -27,7 +27,7 @@ class FileTest extends TestCase
      * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage /error.yml; verify the file contains valid YAML
      */
-    function testCreateFromFileWithError()
+    public function testCreateFromFileWithError()
     {
         $path = __DIR__ . '/../data/error.yml';
 
@@ -38,7 +38,7 @@ class FileTest extends TestCase
      * @depends testCreateFromFile
      * @param File $file
      */
-    function testGetImage(File $file)
+    public function testGetImage(File $file)
     {
         $image = $file->getImage();
         $this->assertInternalType('string', $image);
@@ -46,7 +46,7 @@ class FileTest extends TestCase
         $this->assertEquals($expectedImage, $image);
     }
 
-    function testGetImageSet()
+    public function testGetImageSet()
     {
         $expected = 'php:5.6';
         $image = array(
@@ -58,7 +58,7 @@ class FileTest extends TestCase
     }
 
 
-    function testMinimalFileStructureAndDefaultValues()
+    public function testMinimalFileStructureAndDefaultValues()
     {
         $minimal = array(
             'pipelines' => array('tags' => array()),
@@ -77,12 +77,12 @@ class FileTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Missing required property 'pipelines'
      */
-    function testMissingPipelineException()
+    public function testMissingPipelineException()
     {
         new File(array());
     }
 
-    function testClone()
+    public function testClone()
     {
         $file = new File(array(
             'clone' => 666,
@@ -91,7 +91,7 @@ class FileTest extends TestCase
         $this->assertSame(666, $file->getClone());
     }
 
-    function testDefaultPipeline()
+    public function testDefaultPipeline()
     {
         $default = array(
             'pipelines' => array(
@@ -119,7 +119,7 @@ class FileTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage 'image' requires a Docker image name
      */
-    function testImageNameRequired()
+    public function testImageNameRequired()
     {
          new File(
             array(
@@ -129,7 +129,7 @@ class FileTest extends TestCase
         );
     }
 
-    function testGetPipilineIds()
+    public function testGetPipilineIds()
     {
         $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
         $ids = $file->getPipelineIds();
@@ -138,7 +138,7 @@ class FileTest extends TestCase
         $this->assertSame('custom/unit-tests', $ids[11]);
     }
 
-    function testGetReference()
+    public function testGetReference()
     {
         $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
 
@@ -155,7 +155,7 @@ class FileTest extends TestCase
      * data gets referenced to the concrete pipeline object
      * when it once hast been acquired.
      */
-    function testFlyweightPatternWithPatternSection()
+    public function testFlyweightPatternWithPatternSection()
     {
         $withBranch = array(
             'pipelines' => array(
@@ -184,7 +184,7 @@ class FileTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Invalid id 'branch/master'
      */
-    function testInvalidReferenceName()
+    public function testInvalidReferenceName()
     {
         File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml')
             ->getById('branch/master'); # must be branch_es_
@@ -194,7 +194,7 @@ class FileTest extends TestCase
      * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage section
      */
-    function testNoSectionException()
+    public function testNoSectionException()
     {
         new File(array('pipelines' => array()));
     }
@@ -203,7 +203,7 @@ class FileTest extends TestCase
      * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage 'default' requires a list of steps
      */
-    function testNoListInSectionException()
+    public function testNoListInSectionException()
     {
         new File(array('pipelines' => array('default' => 1)));
     }
@@ -212,12 +212,12 @@ class FileTest extends TestCase
      * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage 'branches' requires a list
      */
-    function testNoListInBranchesSectionException()
+    public function testNoListInBranchesSectionException()
     {
         new File(array('pipelines' => array('branches' => 1)));
     }
 
-    function testSearchReference()
+    public function testSearchReference()
     {
         $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
 
@@ -228,7 +228,7 @@ class FileTest extends TestCase
         $this->asPlFiStName('*/feature', $pipeline);
     }
 
-    function testDefaultAsFallBack()
+    public function testDefaultAsFallBack()
     {
         $withDefault = array(
             'pipelines' => array(
@@ -260,7 +260,7 @@ class FileTest extends TestCase
         $this->asPlFiStName('default', $pipeline);
     }
 
-    function testNoDefaultAsFallBack()
+    public function testNoDefaultAsFallBack()
     {
         $withoutDefault = array(
             'pipelines' => array(
@@ -294,7 +294,7 @@ class FileTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Invalid type 'invalid'
      */
-    function testSearchReferenceInvalidScopeException()
+    public function testSearchReferenceInvalidScopeException()
     {
         $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
         $file->searchTypeReference('invalid', '');
@@ -304,7 +304,7 @@ class FileTest extends TestCase
      * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage custom/0: named pipeline required
      */
-    function testParseErrorOnGetById()
+    public function testParseErrorOnGetById()
     {
         $file = new File(array(
             'pipelines' => array(

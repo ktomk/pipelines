@@ -11,24 +11,31 @@ namespace Ktomk\Pipelines\Cli;
  */
 class Vcs
 {
+    /**
+     * @var Exec
+     */
     private $exec;
 
-    public function __construct()
+    public function __construct(Exec $exec)
     {
-        $this->exec = new Exec();
+        $this->exec = $exec;
     }
 
     /**
-     * @return false|null|string
+     * @return null|string
      */
-    public function getToplevelDirectory()
+    public function getTopLevelDirectory()
     {
-        $result = $this->exec->capture('git', array('rev-parse', '--show-toplevel'));
-        if ($result->getStatus() !== 0) {
+        $result = $this->exec->capture('git', array('rev-parse', '--show-toplevel'), $out);
+        if ($result !== 0) {
             return null;
         }
 
-        $path = substr($result->getStandardOutput(), -1);
+        $path = substr($out, 0,-1);
+
+        if (!is_dir($path)) {
+            return null;
+        }
 
         return $path;
     }

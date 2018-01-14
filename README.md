@@ -89,8 +89,8 @@ Use `--no-run` to not run the pipeline at all.
 
 ----
 
-\* Mercurial support: No yet; TODO(VCS): Git is planned to be 
-  used as first VCS test case, after VCS interaction is more 
+\* Mercurial support: No yet; TODO(VCS): Git is planned to be
+  used as first VCS test case, after VCS interaction is more
   clear and/or demand is high, others (e.g. Mercurial) should be
   supported. VCS integration is yet on the TODO list. However
   all references can be used to `--trigger` a specific pipeline
@@ -138,7 +138,7 @@ Atlassian Bitbucket Pipeline service. Features include:
   default mounted into the container (implicit `--deploy mount`).
 
 * **Ready for Offline**: On the plane? Or just a rainy day on
-  a remote location with broken net? Coding while abroad? Or 
+  a remote location with broken net? Coding while abroad? Or
   just Bitbucket down again? Before going into offline mode, make
   use of `--images` and the shell:
 
@@ -213,7 +213,7 @@ Portability Utilities option.
 
 Docker needs to be available locally as `docker` command as it is
 used to run pipelines and the working directory is used as volume
-in the container (by default as a mount unless `--deploy` with 
+in the container (by default as a mount unless `--deploy` with
 `copy` instead of the implicit `mount`). (1)
 
 A recent PHP version is favored, the `pipelines` command needs
@@ -228,8 +228,8 @@ a pipelines file development option (TODO).
 
 ### User Tests
 
-Successful use on Ubuntu 16.04 LTS and Mac OS X High Sierra with
-PHP and Docker installed.
+Successful use on Ubuntu 16.04 LTS and Mac OS X Sierra and High
+Sierra with PHP and Docker installed.
 
 ### Known Bugs
 
@@ -295,7 +295,6 @@ Check the version by invoking it:
 ### Todo
 
 - Phar build as Github releases
-- Braces support for string pattern matching
 - Check Docker existence before running
 - Pass environment variable file(s) (`--env-file`)
 - Stop at manual steps (`--no-manual` to override)
@@ -313,7 +312,7 @@ Check the version by invoking it:
 - Validation command for bitbucket-pipelines.yml files (so far
   `--show` gives error on parts it runs over and non zero exit
   code)
-- Verify steps if a single command to see if it matches an
+- Verify steps of a single command to see if it matches an
   executable script file or not in the project.
 - Write exit status section about used exit codes
 

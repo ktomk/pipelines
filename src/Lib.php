@@ -8,9 +8,9 @@ namespace Ktomk\Pipelines;
 class Lib
 {
     /**
-     * @return string
+     * @return string UUID version 4
      */
-    static function generateUuid()
+    public static function generateUuid()
     {
         return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
@@ -34,7 +34,7 @@ class Lib
         );
     }
 
-    static function cmd($command, array $arguments)
+    public static function cmd($command, array $arguments)
     {
         $buffer = $command;
 
@@ -118,7 +118,9 @@ class Lib
                 continue;
             }
             // match
-            foreach (array_unique(preg_split('~\\\\.(*SKIP)(*FAIL)|,~', $matches[2])) as $segment) {
+            $segments = preg_split('~\\\\.(*SKIP)(*FAIL)|,~', $matches[2]);
+            $segments = array_unique(/** @scrutinizer ignore-type */ $segments);
+            foreach ($segments as $segment) {
                 $permutation = $matches[1] . $segment . $matches[3];
                 in_array($permutation, $stack, true) || $stack[] = $permutation;
             }

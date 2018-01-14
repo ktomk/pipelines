@@ -6,7 +6,6 @@ namespace Ktomk\Pipelines\Cli;
 
 /**
  * Php wrapper for the Docker CLI
- *
  */
 class Docker
 {
@@ -37,14 +36,10 @@ class Docker
      */
     public function getVersion()
     {
-        if (false === $this->hasCommand()) {
-            return null;
-        }
-
         $status = $this->exec->capture(
             $this->name,
             array('version', '--format', '{{.Server.Version}}'),
-            $buffer
+            $out
         );
 
         if ($status !== 0) {
@@ -54,7 +49,7 @@ class Docker
         # parse version string
         $return = preg_match(
             '~^(\d+\\.\d+\\.\d+(?:-ce)?)\\n$~',
-            $buffer,
+            $out,
             $matches
         );
 
@@ -64,7 +59,7 @@ class Docker
 
         if (0 === $return) {
             trigger_error(
-                sprintf('Failed to parse "%s" for Docker version', $buffer)
+                sprintf('Failed to parse "%s" for Docker version', $out)
             );
             return "0.0.0-err";
         }

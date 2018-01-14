@@ -47,7 +47,7 @@ class Timestamps
      *
      * The PHAR signature can then be produced in a reproducible manner.
      *
-     * @param int|DateTime|string $timestamp Date string or DateTime or unix timestamp to use
+     * @param int|\DateTime|string $timestamp Date string or DateTime or unix timestamp to use
      */
     public function updateTimestamps($timestamp = null)
     {
@@ -141,12 +141,12 @@ class Timestamps
 
         $this->contents = substr($this->contents, 0, $pos) . $signature;
 
-        return file_put_contents($path, $this->contents);
+        return (bool) file_put_contents($path, $this->contents);
     }
 
     private function readUint($pos, $bytes)
     {
-        $res = unpack("L", substr($this->contents, $pos, $bytes));
+        $res = /** @scrutinizer ignore-call */ unpack("L", substr($this->contents, $pos, $bytes));
 
         return $res[1];
     }

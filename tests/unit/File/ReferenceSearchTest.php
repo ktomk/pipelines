@@ -26,21 +26,21 @@ class ReferenceSearchTest extends TestCase
         $this->file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
     }
 
-    function searchReference($ref = null)
+    public function searchReference($ref = null)
     {
         return $this->file->searchReference(
             Reference::create($ref)
         );
     }
 
-    function testSearching()
+    public function testSearching()
     {
         $actual = $this->searchReference('branch:feature/unicorns');
         $this->assertNotNull($actual);
 
     }
 
-    function testSearchDirect()
+    public function testSearchDirect()
     {
         $actual = $this->searchReference('branch:feature/unicorns');
         $this->assertSame('feature/*', $this->getFirstStepName($actual));
@@ -49,13 +49,13 @@ class ReferenceSearchTest extends TestCase
         $this->assertSame('feature/bb-123-fix-links', $this->getFirstStepName($actual));
     }
 
-    function testSearchFirstPatternNoHit()
+    public function testSearchFirstPatternNoHit()
     {
         $actual = $this->searchReference('tag:blue-moon-unicorn-release');
         $this->assertDefault($actual);
     }
 
-    function testSearchNothing()
+    public function testSearchNothing()
     {
         $actual = $this->searchReference();
         $this->assertDefault($actual);

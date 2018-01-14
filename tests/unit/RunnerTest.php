@@ -14,7 +14,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class RunnerTest extends UnitTestCase
 {
-    function testFailOnContainerCreation()
+    public function testFailOnContainerCreation()
     {
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', 126);
@@ -43,7 +43,7 @@ class RunnerTest extends UnitTestCase
         $this->assertNotSame(0, $actual);
     }
 
-    function testRunning()
+    public function testRunning()
     {
         /** @var MockObject|Exec $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
@@ -73,7 +73,7 @@ class RunnerTest extends UnitTestCase
         $this->assertSame(0, $actual);
     }
 
-    function testErrorStatusWithPipelineHavingEmptySteps()
+    public function testErrorStatusWithPipelineHavingEmptySteps()
     {
         /** @var Pipeline|MockObject $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
@@ -94,7 +94,7 @@ class RunnerTest extends UnitTestCase
         $this->assertEquals($runner::STATUS_NO_STEPS, $status);
     }
 
-    function testHitRecursion()
+    public function testHitRecursion()
     {
         $env = $this->createMock('\Ktomk\Pipelines\Runner\Env');
         $env->method('setPipelinesId')->willReturn(true);
@@ -117,7 +117,7 @@ class RunnerTest extends UnitTestCase
         $this->assertSame(127, $status);
     }
 
-    function testCopy()
+    public function testCopy()
     {
         $exec = new ExecTester($this);
         $exec
@@ -148,7 +148,7 @@ class RunnerTest extends UnitTestCase
         $this->assertSame(0, $status);
     }
 
-    function testCopyFails()
+    public function testCopyFails()
     {
         $exec = new ExecTester($this);
         $exec

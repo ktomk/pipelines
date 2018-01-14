@@ -33,6 +33,10 @@ class Args
         $this->arguments = $arguments;
     }
 
+    /**
+     * @param string|string[] $option
+     * @return bool
+     */
     public function hasOption($option)
     {
         $options = (array)$option;
@@ -61,9 +65,12 @@ class Args
         return (bool)$consume;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFirstRemainingOption()
     {
-        foreach($this->arguments as $argument) {
+        foreach ($this->arguments as $argument) {
             if (strlen($argument) < 2) {
                 continue;
             }
@@ -103,9 +110,9 @@ class Args
 
     /**
      * @param $option
-     * @param null $default
-     * @param bool $required
-     * @return mixed|null
+     * @param string|bool|null $default [optional]
+     * @param bool $required [optional]
+     * @return string|null
      * @throws ArgsException
      */
     public function getOptionArgument($option, $default = null, $required = false)
@@ -122,13 +129,13 @@ class Args
             if ($argument !== $compare) {
                 continue;
             }
-            if (!isset($this->arguments[$index+1]) || $this->arguments[$index+1] === '--') {
+            if (!isset($this->arguments[$index + 1]) || $this->arguments[$index + 1] === '--') {
                 ArgsException::__(
                     sprintf("error: option '%s' requires an argument", $option)
                 );
             }
 
-            $result = $this->arguments[$index+1];
+            $result = $this->arguments[$index + 1];
             $consume = array($index, $index + 1);
         }
 

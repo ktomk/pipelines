@@ -16,7 +16,7 @@ class ParseException extends InvalidArgumentException
      *
      * @param string $message
      */
-    static function __($message)
+    public static function __($message)
     {
         throw new ParseException($message);
     }

@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ProcTest extends TestCase
 {
-    function testRun()
+    public function testRun()
     {
         $command = 'pwd -P';
 
@@ -36,7 +36,7 @@ class ProcTest extends TestCase
         $this->assertSame('', $errorBuffer);
     }
 
-    function testFailRun()
+    public function testFailRun()
     {
         $command = '/dev/null';
         $proc = new Proc($command);

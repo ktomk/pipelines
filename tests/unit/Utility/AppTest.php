@@ -12,15 +12,12 @@ use PHPUnit\Framework\TestCase;
  */
 class AppTest extends TestCase
 {
-    function testCreation()
+    public function testCreation()
     {
         $app = App::create();
         $this->assertNotNull($app);
     }
 
-    /**
-     * @outputBuffering
-     */
     public function testHelpOption()
     {
         $app = new App(new Streams(null, 'php://output'));
@@ -103,5 +100,33 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--deploy', 'flux-compensate'));
         $this->assertSame(1, $actual);
+    }
+
+    public function provideArguments()
+    {
+        return array(
+            array(array('--version')),
+            array(array('--help')),
+            array(array('--show')),
+            array(array('--images')),
+            array(array('--list')),
+            array(array('--dry-run')),
+            array(array('--verbose', '--dry-run')),
+            array(array('--keep', '--no-run')),
+            array(array('--docker-list', '--dry-run')),
+            array(array('--verbatim', '--dry-run')),
+        );
+    }
+
+    /**
+     * @param array $arguments
+     * @dataProvider provideArguments
+     */
+    public function testSuccessfulCommands(array $arguments)
+    {
+        $app = new App(new Streams());
+        $args = array_merge((array)'pipelines-test', $arguments);
+        $status = $app->main($args);
+        $this->assertSame(0, $status);
     }
 }

@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Runner;
 
-
 class Reference
 {
     const BRANCH_TAG_BOOKMARK = '~^(branch|tag|bookmark):(.+)$~';
@@ -22,7 +21,7 @@ class Reference
     );
 
     /**
-     * @param null $string
+     * @param string|null $string [optional] use null for a null reference
      * @return Reference
      */
     public static function create($string = null)
@@ -32,6 +31,7 @@ class Reference
 
     /**
      * Validates if a string is a valid (non-null) reference
+     *
      * @param $string
      * @return bool
      */
@@ -42,11 +42,19 @@ class Reference
         return (bool)$result;
     }
 
+    /**
+     * Reference constructor
+     *
+     * @param string|null $string [optional] use null for a null reference
+     */
     public function __construct($string = null)
     {
         $this->parse($string);
     }
 
+    /**
+     * @param string|null $string
+     */
     private function parse($string)
     {
         $this->string = $string;

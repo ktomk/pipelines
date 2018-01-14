@@ -12,10 +12,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class DockerTest extends UnitTestCase
 {
-    function testCommandDetectionAndVersionPaths()
+    public function testCommandDetectionAndVersionPaths()
     {
         $procFail = $this->createMock('Ktomk\Pipelines\Cli\Proc');
-
         $procGood = $this->createMock('Ktomk\Pipelines\Cli\Proc');
         $procGood->method('getStatus')->willReturn(0);
         $procGood->method('getStandardOutput')->willReturnCallback(
@@ -29,7 +28,6 @@ class DockerTest extends UnitTestCase
         $results = array(
             $procFail,
             $procFail,
-            $procGood,
             $procFail,
             $procGood,
             $procGood,
@@ -57,9 +55,10 @@ class DockerTest extends UnitTestCase
 
         $procGoodOutput = "17.09.1-ce\n";
         $this->assertSame('17.09.1-ce', $docker->getVersion());
+        unset($procGoodOutput);
     }
 
-    function testHostDeviceMount()
+    public function testHostDeviceMount()
     {
         /** @var MockObject|Exec $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
@@ -73,7 +72,7 @@ class DockerTest extends UnitTestCase
         $this->assertSame('/home/user/workspace/projects/pipelines', $actual, 'extraction from json fixture');
     }
 
-    function testHostDeviceMountOnNonMountPoint()
+    public function testHostDeviceMountOnNonMountPoint()
     {
         /** @var MockObject|Exec $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
@@ -87,7 +86,7 @@ class DockerTest extends UnitTestCase
         $this->assertSame('/thanks-for-the-fish', $actual, 'fall back on non-mount-point');
     }
 
-    function testHostDeviceMountDockerInspectFails()
+    public function testHostDeviceMountDockerInspectFails()
     {
         /** @var MockObject|Exec $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
@@ -98,7 +97,7 @@ class DockerTest extends UnitTestCase
         $this->assertSame('/app', $actual, 'docker command fails');
     }
 
-    function testHostDeviceMountJsonParseFailure()
+    public function testHostDeviceMountJsonParseFailure()
     {
         /** @var MockObject|Exec $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');

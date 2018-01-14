@@ -15,14 +15,14 @@ use PHPUnit\Framework\TestCase;
  */
 class DockerTest extends TestCase
 {
-    function testCreation()
+    public function testCreation()
     {
         $exec = new Exec();
         $docker = new Docker($exec);
         $this->assertInstanceOf('Ktomk\Pipelines\Cli\Docker', $docker);
     }
 
-    function testHasCommand()
+    public function testHasCommand()
     {
         $exec = new Exec();
         $docker = new Docker($exec);
@@ -32,19 +32,16 @@ class DockerTest extends TestCase
         return $actual;
     }
 
-    /**
-     * @depends testHasCommand
-     */
-    function testVersion($hasCommand)
+    public function testVersion()
     {
-        if (!$hasCommand) {
-            $this->markTestSkipped('no docker command in test system');
-        }
-
         $exec = new Exec();
         $docker = new Docker($exec);
 
         $version = $docker->getVersion();
-        $this->assertInternalType('string', $version);
+        if ($version === null) {
+            $this->assertNull($version);
+        } else {
+            $this->assertInternalType('string', $version);
+        }
     }
 }

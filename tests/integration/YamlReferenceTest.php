@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 
 class YamlReferenceTest extends TestCase
 {
-    function testFileWithAliasParses()
+    public function testFileWithAliasParses()
     {
         $file = File::createFromFile(__DIR__ . '/../data/alias.yml');
         $actual = $file->getPipelineIds();

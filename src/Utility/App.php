@@ -27,7 +27,7 @@ class App
     private $versionShown = false;
 
     /**
-     * @var Args|string[]
+     * @var Args
      */
     private $arguments;
 
@@ -91,7 +91,7 @@ class App
             // @codeCoverageIgnoreStart
             $buffer = file_get_contents($installedFile);
             $struct = json_decode($buffer);
-            foreach ((array) $struct as $package) {
+            foreach ((array)$struct as $package) {
                 if (!isset($package->name) || $package->name !== 'ktomk/pipelines') {
                     continue;
                 }
@@ -278,7 +278,7 @@ EOD
         }
         $exec = new Exec($debugPrinter);
 
-        if ($dryRun = $args->hasOption('dry-run')) {
+        if ($args->hasOption('dry-run')) {
             $exec->setActive(false);
         }
 
@@ -378,7 +378,7 @@ EOD
         $streams = $this->streams;
         if ($args->hasOption('verbatim')) {
             $streams = new Streams();
-            $streams->copyHandle($this->streams,2);
+            $streams->copyHandle($this->streams, 2);
         }
 
         if ($option = $args->getFirstRemainingOption()) {
@@ -423,7 +423,7 @@ EOD
             $this->verbose('info: not running the pipeline per --no-run option');
             $status = 0;
         } else {
-            $status = $runner->run($pipeline, $env);
+            $status = $runner->run($pipeline);
         }
 
         return $status;

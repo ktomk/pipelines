@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class EnvTest extends TestCase
 {
-    function testCreation()
+    public function testCreation()
     {
         $env = new Env();
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Env', $env);
@@ -22,7 +22,7 @@ class EnvTest extends TestCase
         $this->assertNotNull($env->getArgs('-e'));
     }
 
-    function testDefaultEnvsEmptyUnlessInitialized()
+    public function testDefaultEnvsEmptyUnlessInitialized()
     {
         $env = new Env();
         $array = $env->getArgs('-e');
@@ -34,7 +34,7 @@ class EnvTest extends TestCase
         $this->assertCount(10, $array);
     }
 
-    function testUserInheritance()
+    public function testUserInheritance()
     {
         $user = 'adele';
         $env = Env::create(array('USER' => $user));
@@ -42,7 +42,7 @@ class EnvTest extends TestCase
         $this->assertSame($user, $env->getValue('BITBUCKET_REPO_OWNER'));
     }
 
-    function testInheritionOnInit()
+    public function testInheritionOnInit()
     {
         $env = new Env();
         $env->initDefaultVars(array('BITBUCKET_BUILD_NUMBER' => '123'));
@@ -50,7 +50,7 @@ class EnvTest extends TestCase
         $this->assertTrue(in_array('BITBUCKET_BUILD_NUMBER=123', $array, true));
     }
 
-    function testGetOptionArgs()
+    public function testGetOptionArgs()
     {
         $env = Env::create();
         $args = $env->getArgs('-e');
@@ -65,7 +65,7 @@ class EnvTest extends TestCase
         }
     }
 
-    function testUnsetVariables()
+    public function testUnsetVariables()
     {
         $env = new Env();
         $env->initDefaultVars(array());
@@ -78,7 +78,7 @@ class EnvTest extends TestCase
         $this->assertEquals($default + 2, $new);
     }
 
-    function testAddRefType()
+    public function testAddRefType()
     {
         $env = Env::create();
         $default = count($env->getArgs('-e'));
@@ -90,7 +90,7 @@ class EnvTest extends TestCase
         $this->assertSame($default + 2, count($env->getArgs('-e')), 'full refrence does add variables');
     }
 
-    function testAddRefTypeIfSet()
+    public function testAddRefTypeIfSet()
     {
         $env = Env::create(array('BITBUCKET_TAG' => 'inherit'));
         $default = count($env->getArgs('-e'));
@@ -102,7 +102,7 @@ class EnvTest extends TestCase
         $this->assertTrue(in_array('BITBUCKET_TAG=inherit', $actual, true));
     }
 
-    function testSetContainerName()
+    public function testSetContainerName()
     {
         $env = Env::create();
         $count = count($env->getArgs('-e'));
@@ -120,7 +120,7 @@ class EnvTest extends TestCase
         $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=solar-bottom', $args, true));
     }
 
-    function testInheritedContainerName()
+    public function testInheritedContainerName()
     {
         $inherit = array(
             'PIPELINES_CONTAINER_NAME' => 'cloud-sea',
@@ -132,7 +132,7 @@ class EnvTest extends TestCase
         $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=dream-blue', $args, true));
     }
 
-    function testGetVar()
+    public function testGetVar()
     {
         $env = Env::create();
         $actual = $env->getValue('BITBUCKET_BUILD_NUMBER');
@@ -141,7 +141,7 @@ class EnvTest extends TestCase
         $this->assertNull($actual);
     }
 
-    function testSetPipelinesId()
+    public function testSetPipelinesId()
     {
         $env = Env::create();
         $this->assertNull($env->getValue('PIPELINES_ID'));
@@ -160,7 +160,7 @@ class EnvTest extends TestCase
         $this->assertRegExp('~^([a-z0-9]+) \1$~', $actual, 'list of hashes');
     }
 
-    function testInheritPipelinesId()
+    public function testInheritPipelinesId()
     {
         $inherit = array('PIPELINES_ID', 'custom/the-other-day');
         $env = Env::create($inherit);

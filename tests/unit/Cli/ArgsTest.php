@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
  */
 class ArgsTest extends TestCase
 {
-    function testCreation()
+    public function testCreation()
     {
         $args = new Args(array('test'));
         $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args', $args);
@@ -24,18 +24,18 @@ class ArgsTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage There must be at least one argument (the command name)
      */
-    function testMissingCommand()
+    public function testMissingCommand()
     {
         Args::create(array());
     }
 
-    function testUtility()
+    public function testUtility()
     {
         $args = Args::create(array('cmd'));
         $this->assertSame('cmd', $args->getUtility());
     }
 
-    function testHasOption()
+    public function testHasOption()
     {
         $args = new Args(array('cmd', '--verbose', '-v', '--', "--operand"));
         $this->assertFalse($args->hasOption('cmd'));
@@ -45,7 +45,7 @@ class ArgsTest extends TestCase
         $this->assertFalse($args->hasOption('operand'));
     }
 
-    function testOptionConsumption()
+    public function testOptionConsumption()
     {
         $args = new Args(array('cmd', '--verbose'));
         $this->assertCount(1, $args->getRemaining());
@@ -54,7 +54,7 @@ class ArgsTest extends TestCase
         $this->assertCount(0, $args->getRemaining());
     }
 
-    function provideFirstRemainingOptions()
+    public function provideFirstRemainingOptions()
     {
         return array(
             array(array('cmd', '--verbose'), '--verbose'),
@@ -71,20 +71,20 @@ class ArgsTest extends TestCase
     /**
      * @dataProvider provideFirstRemainingOptions
      */
-    function testGetFirstRemainingOption($arguments, $expected)
+    public function testGetFirstRemainingOption($arguments, $expected)
     {
         $args = new Args($arguments);
         $this->assertSame($expected, $args->getFirstRemainingOption());
     }
 
-    function testOptionArgument()
+    public function testOptionArgument()
     {
         $args = new Args(array('cmd', '--prefix', 'value'));
         $actual = $args->getOptionArgument('prefix');
         $this->assertSame('value', $actual);
     }
 
-    function testOptionalOptionArgument()
+    public function testOptionalOptionArgument()
     {
         $args = new Args(array('cmd', '--prefix', 'value'));
         $actual = $args->getOptionArgument('volume', 100);
@@ -99,13 +99,13 @@ class ArgsTest extends TestCase
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
      * @expectedExceptionMessage error: option 'volume' is not optional
      */
-    function testMandatoryOption()
+    public function testMandatoryOption()
     {
         $args = new Args(array('cmd', '--prefix', 'value'));
         $args->getOptionArgument('volume', null, true);
     }
 
-    function testNonMandatoryOption()
+    public function testNonMandatoryOption()
     {
         $args = new Args(array('cmd', '--prefix', 'value'));
         $this->assertNull($args->getOptionArgument('volumne', null));
@@ -115,7 +115,7 @@ class ArgsTest extends TestCase
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
      * @expectedExceptionMessage error: option 'prefix' requires an argument
      */
-    function testMandatorOptionArgument()
+    public function testMandatorOptionArgument()
     {
         $args = new Args(array('cmd', '--prefix'));
         $args->getOptionArgument('prefix', 100);
@@ -125,13 +125,13 @@ class ArgsTest extends TestCase
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
      * @expectedExceptionMessage error: option 'prefix' requires an argument
      */
-    function testMandatorOptionArgumentWithParameters()
+    public function testMandatorOptionArgumentWithParameters()
     {
         $args = new Args(array('cmd', '--prefix', '--'));
         $args->getOptionArgument('prefix', 100);
     }
 
-    function provideInvalidOptions()
+    public function provideInvalidOptions()
     {
         return array(
             array(''),
@@ -151,7 +151,7 @@ class ArgsTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage invalid option '
      */
-    function testInvalidOptions($option)
+    public function testInvalidOptions($option)
     {
         $args = new Args(array(''));
         $args->hasOption($option);

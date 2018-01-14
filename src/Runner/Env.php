@@ -118,9 +118,9 @@ class Env
      */
     public function setPipelinesId($id)
     {
-        $list = $this->getValue('PIPELINES_IDS');
+        $list = (string)$this->getValue('PIPELINES_IDS');
         $hashes = preg_split('~\s+~', $list, -1, PREG_SPLIT_NO_EMPTY);
-        $hashes = array_map('strtolower', $hashes);
+        $hashes = array_map('strtolower', /** @scrutinizer ignore-type */ $hashes);
 
         $idHash = md5($id);
         $hasId = in_array($idHash, $hashes, true);

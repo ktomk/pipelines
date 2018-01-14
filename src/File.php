@@ -196,6 +196,9 @@ class File
         return $id !== null ? $this->getById($id) : null;
     }
 
+    /**
+     * @return array
+     */
     public function getPipelineIds()
     {
         return array_keys($this->pipelines);

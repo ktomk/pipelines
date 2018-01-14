@@ -11,13 +11,13 @@ use PHPUnit\Framework\TestCase;
  */
 class ProcTest extends TestCase
 {
-    function testCreation()
+    public function testCreation()
     {
         $proc = new Proc('');
         $this->assertInstanceOf('Ktomk\Pipelines\Cli\Proc', $proc);
     }
 
-    function testGetStatus()
+    public function testGetStatus()
     {
         $proc = new Proc(':');
         $this->assertNull($proc->getStatus());
@@ -32,7 +32,7 @@ class ProcTest extends TestCase
         $this->assertSame(0, $proc->getStatus());
     }
 
-    function testGetBuffer()
+    public function testGetBuffer()
     {
         $proc = new Proc(':');
         $this->assertNull($proc->getStandardOutput());
@@ -40,5 +40,15 @@ class ProcTest extends TestCase
         $proc->run();
         $this->assertSame("", $proc->getStandardOutput());
         $this->assertSame("", $proc->getStandardError());
+    }
+
+    /**
+     * PHP_BINARY available since 5.4.0
+     * @requires PHP 5.4.0
+     */
+    public function testRun()
+    {
+        $proc = new Proc(PHP_BINARY . ' -v');
+        $this->assertSame(0, $proc->run());
     }
 }
