@@ -66,6 +66,10 @@ class BuilderTest extends TestCase
         $builder->build();
     }
 
+    /**
+     * php 5.3 crashes with this test (exit status 255)
+     * @requires PHP 5.4.0
+     */
     public function testDropFirstLineCallbackFileReadError()
     {
         $this->builder = $builder = Builder::create('fake.phar');
