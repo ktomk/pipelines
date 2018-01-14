@@ -47,22 +47,13 @@ exits with non-zero status.
 overrides pipeline from `--trigger` but `--trigger` still
 influences the container environment variables.
 
-TODO: get revision from working directory (VCS)
-
 To specify a different file use the  `--basename <basename>`
 or `--file <path>` option and/or set the working directory
 `--working-dir <path>` in which the file is looked for unless
 an absolute path is set by `--file <path>`.
 
-TOOD Use a different project directory `--project-dir <path>` for
-the working tree to operate on which otherwise is the working
-directory.
-
-By default it operates on the current working tree, TODO(VCS): to
-run on a specific revision, reference it (`--revision <ref>`). TODO: The
-pipeline is then run against a clean temporary checkout of
-the current (Git*) repository or TODO: a copy of the working directory
-(`--vcs "none"`; `--working-dir <directory>`; `--project-dir`).
+By default it operates on the current working tree which is mounted
+directly into the container (implicit `--deploy mount`).
 
 Isolate files by copying them into the container instead of the
 mount by using `--deploy copy`. This requires `docker copy` with
@@ -70,7 +61,8 @@ the `-a` / `--archive` option (e.g. docker client 17.12.0-ce).
 
 Use `--keep` flag to keep containers after the pipeline has
 finished for further inspection. By default all containers are
-destroyed on successful pipeline step execution.
+destroyed on successful pipeline step execution and kept in
+case of error.
 
 Manage leftover containers with `--docker-list` showing all
 pipeline containers, `--docker-kill` to kill running containers
@@ -86,16 +78,8 @@ Inspect your pipeline with `--dry-run` which will process the
 pipeline but not execute anything. Combine with `--verbose` to
 show the commands which would have run verbatim.
 
-Use `--no-run` to not run the pipeline at all.
-
-----
-
-\* Mercurial support: No yet; TODO(VCS): Git is planned to be
-  used as first VCS test case, after VCS interaction is more
-  clear and/or demand is high, others (e.g. Mercurial) should be
-  supported. VCS integration is yet on the TODO list. However
-  all references can be used to `--trigger` a specific pipeline
-  including Mercurial bookmarks.
+Use `--no-run` to not run the pipeline at all, this can be used
+to test the utilities options.
 
 ### Usage Scenario
 
@@ -157,8 +141,7 @@ Atlassian Bitbucket Pipeline service. Features include:
 
 * **Default Image**: The pipelines command uses the default
   image like Bitbucket Pipelines does. Get started out of the
-  box, but keep in mind it has roughly 2 GB. TODO: The default
-  image can even be overridden (`--default-image`).
+  box, but keep in mind it has roughly 2 GB.
 
 * **Pipelines inside Pipeline**: As a special feature and by
   default pipelines mounts the docker socket into each container
@@ -167,7 +150,7 @@ Atlassian Bitbucket Pipeline service. Features include:
   is available in the pipeline's container.
   This feature is similar to [run Docker commands in Bitbucket
   Pipelines][BBPL-DCK] \[BBPL-DCK\] but w/o mounting the Docker
-  CLI executable in the container (TODO: provide on option).
+  CLI executable in the container.
   The pipelines inside pipeline feature serves pipelines itself
   well for integration testing on Travis. In combination with
   `--deploy mount` (the default), the original working-directory
@@ -301,7 +284,6 @@ Check the version by invoking it:
     $ build/pipelines.phar --version
     pipelines version 0.0.1
 
-
 ### Todo
 
 - Phar build as Github releases
@@ -318,13 +300,23 @@ Check the version by invoking it:
     - step.trigger (1)
     - artifacts (1)
     - definitions (1)
-- Automatically keep container if step failed, use `--no-fail-keep` to prevent
+- Full keep control (`--keep [always|error|never]`) to be able to
+  prevent keeping containers on error.
 - Validation command for bitbucket-pipelines.yml files (so far
   `--show` gives error on parts it runs over and non zero exit
   code)
 - Verify steps of a single command to see if it matches an
   executable script file or not in the project.
 - Write exit status section about used exit codes
+- Get VCS revision from working directory
+- Use a different project directory `--project-dir <path>` for the
+  working tree to operate on which otherwise is the working
+  directory.
+- Run on a specific revision, reference it (`--revision <ref>`).
+  Needs a clean VCS checkout in a temporary folder which then 
+  should be copied into the container.
+- The default image can even be overridden (`--default-image`).
+- Option to not mount docker.sock
 
 (1) if it is considered that it applies to running local
 
