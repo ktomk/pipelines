@@ -68,8 +68,9 @@ Isolate files by copying them into the container instead of the
 mount by using `--deploy copy`. This requires `docker copy` with
 the `-a` / `--archive` option (e.g. docker client 17.12.0-ce).
 
-Use `--keep` flag to keep containers after the pipeline has 
-finished for further inspection.
+Use `--keep` flag to keep containers after the pipeline has
+finished for further inspection. By default all containers are
+destroyed on successful pipeline step execution.
 
 Manage leftover containers with `--docker-list` showing all
 pipeline containers, `--docker-kill` to kill running containers
@@ -125,9 +126,18 @@ Atlassian Bitbucket Pipeline service. Features include:
   different pipelines file (`--file`) or swap the "repository" by
   changing the working directory (`--working-dir`).
 
-  Containers can be kept for debugging and manual testing of
-  pipelines (`--keep`). Afterwards manage left overs with
-  `--docker-list|kill|clean`. Debugging options to dream for.
+  If a pipeline step fails, the steps container will be
+  automatically kept for further inspection. The container id is
+  shown which makes it easy to spawn a shell inside:
+
+      $ docker exec -it $ID /bin/sh
+
+  Containers can be always kept for debugging and manual testing
+  of a pipeline with `--keep`.
+
+  Afterwards manage left overs with `--docker-list|kill|clean`.
+
+  Debugging options to dream for.
 
 * **Container Isolation**: There is one container per step, like
   it is on Bitbucket.

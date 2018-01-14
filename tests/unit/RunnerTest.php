@@ -177,4 +177,35 @@ class RunnerTest extends UnitTestCase
         $status = $runner->run($pipeline);
         $this->assertSame(1, $status);
     }
+
+    public function testKeepContainerOnError()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', 'docker', 255)
+        ;
+
+        $this->expectOutputRegex('{exit status 255, keeping container id \*dry-run\*}');
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp',
+            $exec,
+            null, # default flags are important here
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array('fatal me an error'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(255, $status);
+    }
 }

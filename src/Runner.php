@@ -173,12 +173,21 @@ class Runner
                 }
             }
 
-            # remove container
-            if ($this->flags & self::FLAG_DOCKER_KILL) {
-                $exec->capture('docker', array('kill', $name));
-            }
-            if ($this->flags & self::FLAG_DOCKER_REMOVE) {
-                $exec->capture('docker', array('rm', $name));
+            if (0 !== $status) {
+                # keep container
+                $this->streams->err(sprintf(
+                    "exit status %d, keeping container id %s\n",
+                    $status,
+                    substr($id, 0, 12)
+                ));
+            } else {
+                # remove container
+                if ($this->flags & self::FLAG_DOCKER_KILL) {
+                    $exec->capture('docker', array('kill', $name));
+                }
+                if ($this->flags & self::FLAG_DOCKER_REMOVE) {
+                    $exec->capture('docker', array('rm', $name));
+                }
             }
         }
 

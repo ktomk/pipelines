@@ -143,7 +143,10 @@ EOD
 Common options
     --keep                keep docker containers. default is to
                           kill and remove containers after each
-                          pipeline step
+                          pipeline step unless the pipeline
+                          step failed. then the non-zero exit
+                          status is given and an error message
+                          showing the container id
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
     --basename <basename> set basename for pipelines file,
