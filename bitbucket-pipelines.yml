@@ -4,6 +4,7 @@ clone:
 pipelines:
   default:
     - step:
+        image: busybox
         name: pipeline features and introspection
         script:
           - echo "test" || true
