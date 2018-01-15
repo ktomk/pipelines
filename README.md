@@ -57,7 +57,7 @@ directly into the container (implicit `--deploy mount`).
 
 Isolate files by copying them into the container instead of the
 mount by using `--deploy copy`. This requires `docker copy` with
-the `-a` / `--archive` option (e.g. docker client 17.12.0-ce).
+the `-a` / `--archive` option (since docker 17.06).
 
 Use `--keep` flag to keep containers after the pipeline has
 finished for further inspection. By default all containers are
