@@ -5,12 +5,12 @@
 [![Build Status](https://travis-ci.org/ktomk/pipelines.svg?branch=master)](https://travis-ci.org/ktomk/pipelines)
 [![Code Coverage](https://scrutinizer-ci.com/g/ktomk/pipelines/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ktomk/pipelines/)
 
-Command line pipeline runner written in PHP, easy to install with
-Composer.
+Command line pipeline runner written in PHP. Available from
+Github or Packagist.
 
 ## Usage
 
-From anywhere within a project or (Git*) repository with a
+From anywhere within a project or (Git) repository with a
 Bitbucket Pipeline file:
 
 ~~~
@@ -202,8 +202,7 @@ can not be injected.
 
 ### Requirements
 
-Pipelines requires a POSIX compatible system supporting the User
-Portability Utilities option.
+Pipelines requires a POSIX compatible system.
 
 Docker needs to be available locally as `docker` command as it is
 used to run pipelines and the working directory is used as volume
@@ -227,19 +226,32 @@ Sierra with PHP and Docker installed.
 
 ### Known Bugs
 
-- Version number shows only the revision hash (`--version`) for
-  phar builds and a placeholder for the development version;
-  should be gone with a tagged release for phar files (TODO:
-  version for development version).
-- The command ':' in pipelines exec layer is never really exec'ed
-  and just has exit status 0 and no standard or error output. It
-  is intended for pipelines testing.
+- The command "`:`" in pipelines exec layer is never really
+  executed but emulated having exit status 0 and no standard or
+  error output. It is intended for pipelines testing.
 
 ### Installation
 
-Installation is available via Composer. Suggested is to install
-it globally (and to have the global composer bin in PATH) so that
-there are no dependencies in a local project:
+Installation is available by downloading the phar archive or via
+Composer.
+
+#### Download the PHAR File (PHP Archive)
+
+Downloads are available on Github. Change the tag in the URL to
+get the preferred version:
+
+    https://github.com/ktomk/pipelines/releases/download/0.0.4/pipelines.phar
+    
+Rename the phar file to just "pipelines", set the executable bit
+and move it into a directory where executables are found.
+
+Downloads from Github are available since version 0.0.4.
+
+#### Install with Composer
+
+Suggested is to install it globally (and to have the global 
+composer vendor/bin in PATH) so that it can be called with ease
+and there are no dependencies in a local project:
 
     $ composer global require ktomk/pipelines
 
@@ -253,6 +265,8 @@ version:
 To uninstall remove the package:
 
     $ composer global remove ktomk/pipelines
+    
+#### Install from Source
 
 Alternatively checkout the source repository and symlink the
 executable bin/pipelines into a segment of PATH, e.g. your
@@ -287,7 +301,6 @@ Check the version by invoking it:
 
 ### Todo
 
-- Phar build as Github releases
 - Check Docker existence before running
 - Override the default user
 - Pass environment variable file(s) (`--env-file`)
