@@ -3,6 +3,7 @@
 ## Run Bitbucket Pipelines Wherever They Dock
 
 [![Build Status](https://travis-ci.org/ktomk/pipelines.svg?branch=master)](https://travis-ci.org/ktomk/pipelines)
+[![Code Coverage](https://scrutinizer-ci.com/g/ktomk/pipelines/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ktomk/pipelines/)
 
 Command line pipeline runner written in PHP, easy to install with
 Composer.
