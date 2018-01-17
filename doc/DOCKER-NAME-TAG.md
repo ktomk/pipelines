@@ -20,7 +20,7 @@ Encoding is US-ASCII.
       <prefix>? <name-components>
 
       <prefix>   := <hostname> <port>? "/"
-      <hostname> := [^_\x00-\x20\x7F-\xFF]+
+      <hostname> := [a-zA-Z0-9.-]+
       <port>     := ":" [0-9]+
 
       "/" := ASCII 47 slash
@@ -67,9 +67,14 @@ contain a maximum of 128 characters.
 
 ## Known Issues
 
-* The hostname part is not RFC conform and has not yet been 
-  double checked with standard DNS rules. Often this part is not 
-  needed for pipelines and should pass the validation.
+* The hostname part is not RFC conform (also depending on which
+  RFC) and has not yet been double checked with standard DNS
+  rules.
+  Often this part is not needed for pipelines so prone to errors
+  in the validation which do get a pass but docker is not able
+  to pull an image then even if the regular expression based
+  validation in the pipelines utility will let it pass as valid.
+  double check the hostname then.
 
 ## References
 

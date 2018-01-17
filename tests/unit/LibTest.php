@@ -118,6 +118,8 @@ class LibTest extends TestCase
             array('my-registry-host:5000/fedora/httpd:version1.0', true),
             array('my registry host:5000/fedora/httpd:version1.0', false),
             array('vendor/group/repo/flavor:tag', true),
+            array('/', false),
+            array('aws-account-id.dkr.ecr.aws-region.amazonaws.com/java:8u66', true),
         );
     }
 
