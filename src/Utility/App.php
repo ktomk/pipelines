@@ -95,7 +95,7 @@ EOD
 
     -h, --help            show usage and help information
     -v, --verbose         show commands executed
-    --version             show version information
+    --version             show version information only and exit
 
 Common options
     --basename <basename> set basename for pipelines file,
@@ -152,10 +152,10 @@ Docker container maintenance options
       leftovers. if one or more of these are given, the following
       operations are executed in the order from top to down:
 
+    --docker-list         list prefixed containers
+    --docker-kill         kills prefixed containers
     --docker-clean        remove (non-running) containers with
                           pipelines prefix
-    --docker-kill         kills prefixed containers
-    --docker-list         list prefixed containers
 
 Less common options
     --debug               flag for trouble-shooting fatal errors
