@@ -64,7 +64,7 @@ class FileShower
         $images = array();
         foreach ($iter($file) as $step) {
             $image = $step->getImage();
-            $images[$image] = $image;
+            $images[(string)$image] = $image;
         }
 
         foreach ($images as $image) {
@@ -142,12 +142,12 @@ class FileShower
         $names = array();
 
         foreach ($steps as $step) {
-            $image = $step->getImage();
+            $image = $step->getImage()->getName();
             if ($image !== File::DEFAULT_IMAGE) {
                 $images[] = $image;
             }
             $name = $step->getName();
-            $name && $names[] = $name;
+            (null !== $name) && $names[] = $name;
         }
 
         return array($images, $names);

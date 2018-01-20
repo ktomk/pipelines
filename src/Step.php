@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\ParseException;
 
 class Step
@@ -26,9 +27,22 @@ class Step
     public function __construct(Pipeline $pipeline, array $step)
     {
         // quick validation: image name
-        File::validateImageName($step);
+        File::validateImage($step);
 
         // quick validation: script
+        $this->parseScript($step);
+
+        $this->pipeline = $pipeline;
+        $this->step = $step;
+    }
+
+    /**
+     * Parse a step script section
+     *
+     * @param array $step
+     */
+    private function parseScript(array $step)
+    {
         if (!isset($step['script'])) {
             ParseException::__("'step' requires a script");
         }
@@ -46,18 +60,15 @@ class Step
                 );
             }
         }
-
-        $this->pipeline = $pipeline;
-        $this->step = $step;
     }
 
     /**
-     * @return string
+     * @return Image
      */
     public function getImage()
     {
         return isset($this->step['image'])
-            ? (string)$this->step['image']
+            ? new Image($this->step['image'])
             : $this->pipeline->getFile()->getImage();
     }
 

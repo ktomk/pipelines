@@ -6,6 +6,8 @@ namespace Ktomk\Pipelines;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\File\BbplMatch;
+use Ktomk\Pipelines\File\Image;
+use Ktomk\Pipelines\File\ImageName;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\Runner\Reference;
 
@@ -47,20 +49,37 @@ class File
     }
 
     /**
-     * if an 'image' entry is set, validate it's a string and a valid Docker
-     * image name.
+     * if an 'image' entry is set, validate it is a string or a section.
+     *
+     * TODO(tk): move into Image class
      *
      * @param array $array
      * @throw ParseException if the image name is invalid
      */
-    public static function validateImageName(array $array)
+    public static function validateImage(array $array)
     {
-        if (array_key_exists('image', $array) && !is_string($array['image'])) {
+        if (!array_key_exists('image', $array)) {
+            return;
+        }
+
+        $image = $array['image'];
+
+        if (is_array($image) && isset($image['name'])) {
+            if (!ImageName::validate($image['name'])) {
+                ParseException::__(sprintf(
+                    "'image' invalid Docker image name: '%s'",
+                    $image['name']
+                ));
+            }
+            return;
+        }
+
+        if (!is_string($image)) {
             ParseException::__("'image' requires a Docker image name");
         }
-        if (isset($array['image']) && !Lib::validDockerImage($array['image'])) {
+        if (!ImageName::validate($image)) {
             ParseException::__(
-                sprintf("'image' invalid Docker image name: '%s'", $array['image'])
+                sprintf("'image' invalid Docker image name: '%s'", $image)
             );
         }
     }
@@ -73,21 +92,23 @@ class File
         };
 
         // quick validation: image name
-        self::validateImageName($array);
+        self::validateImage($array);
 
-        $this->pipelines = $this->parseReferences($array['pipelines']);
+        $this->pipelines = $this->parsePipelineReferences($array['pipelines']);
 
         $this->array = $array;
     }
 
     /**
-     * @return string
+     * @return Image
      */
     public function getImage()
     {
-        return isset($this->array['image'])
+        $imageData = isset($this->array['image'])
             ? $this->array['image']
             : self::DEFAULT_IMAGE;
+
+        return new Image($imageData);
     }
 
     public function getClone()
@@ -246,7 +267,7 @@ class File
         return null;
     }
 
-    private function parseReferences(array &$array)
+    private function parsePipelineReferences(array &$array)
     {
         // quick validation: pipeline sections
         $sections = array('branches', 'tags', 'bookmarks', 'custom');

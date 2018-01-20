@@ -158,7 +158,7 @@ class Runner
             $env->getArgs('-e'),
             $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
             $mountDockerSock,
-            '--workdir', '/app', '--detach', $image
+            '--workdir', '/app', '--detach', $image->getName()
         ), $out, $err);
         if ($status !== 0) {
             $streams->out(sprintf("    container-id...: %s\n\n", '*failure*'));

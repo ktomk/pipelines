@@ -1,0 +1,40 @@
+# this file is part of pipelines
+#
+# fixture file for various image formats
+
+image:
+  name: docker.someprovider.com/account-name/java:8u66
+
+pipelines:
+  custom:
+    fallback:
+      - step:
+          name: fallback to default image name in file
+          script:
+            - ":"
+    string-image-name:
+      - step:
+          name: string image name
+          image: docker.someprovider.com/account-name/java:8u66
+          script:
+            - ":"
+    docker-hub-private:
+      - step:
+          name: private images hosted by docker hub
+          image:
+            name: account-name/java:8u66
+            username: $DOCKER_HUB_USERNAME
+            password: $DOCKER_HUB_PASSWORD
+            email: $DOCKER_HUB_EMAIL
+          script:
+            - ":"
+    aws-hosted-private:
+      - step:
+          name: private images hosted by aws ecr
+          image:
+            name: aws_account_id.dkr.ecr.aws_region.amazonaws.com/java:8u66
+            aws:
+              access-key: $AWS_ACCESS_KEY
+              secret-key: $AWS_SECRET_KEY
+          script:
+            - ":"

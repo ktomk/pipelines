@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\Runner\Reference;
 use PHPUnit\Framework\TestCase;
 
@@ -41,9 +42,11 @@ class FileTest extends TestCase
     public function testGetImage(File $file)
     {
         $image = $file->getImage();
-        $this->assertInternalType('string', $image);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
+        $imageString = (string) $image;
+        $this->assertInternalType('string', $imageString);
         $expectedImage = File::DEFAULT_IMAGE;
-        $this->assertEquals($expectedImage, $image);
+        $this->assertEquals($expectedImage, $imageString);
     }
 
     public function testGetImageSet()
@@ -54,7 +57,7 @@ class FileTest extends TestCase
             'pipelines' => array('tags' => array()),
         );
         $file = new File($image);
-        $this->assertSame($expected, $file->getImage());
+        $this->assertSame($expected, (string) $file->getImage());
     }
 
 
@@ -66,7 +69,7 @@ class FileTest extends TestCase
 
         $file = new File($minimal);
 
-        $this->assertSame(File::DEFAULT_IMAGE, $file->getImage());
+        $this->assertSame(File::DEFAULT_IMAGE, (string) $file->getImage());
         $this->assertSame(File::DEFAULT_CLONE, $file->getClone());
 
         $steps = $file->getDefault();
@@ -129,7 +132,7 @@ class FileTest extends TestCase
         );
     }
 
-    public function testGetPipilineIds()
+    public function testGetPipelineIds()
     {
         $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
         $ids = $file->getPipelineIds();
@@ -349,6 +352,29 @@ class FileTest extends TestCase
             'pipelines' => array('default' => array()),
         ));
     }
+
+    /**
+     * @expectedException \Ktomk\Pipelines\File\ParseException :
+     * @expectedExceptionMessage 'image' invalid Docker image name: '/'
+     */
+    public function testValidateImageSectionInvalidName()
+    {
+        $image = array(
+            'image' => array('name' => '/'),
+        );
+        File::validateImage($image);
+    }
+
+    public function testValidateImageSectionValidName()
+    {
+        $image = array(
+            'image' => array('name' => 'php/5.6:latest'),
+        );
+        File::validateImage($image);
+        $this->addToAssertionCount(1);
+    }
+
+
 
     /**
      * assertPipelineFirstStepName

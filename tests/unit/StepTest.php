@@ -57,7 +57,7 @@ class StepTest extends UnitTestCase
             'image' => 'expected',
             'script' => array(":"),
         ));
-        $this->assertSame('expected', $step->getImage());
+        $this->assertSame('expected', (string) $step->getImage());
     }
 
     /**

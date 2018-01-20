@@ -46,7 +46,8 @@ class FileShowerTest extends TestCase
     public function testShowPipelinesWithErrors()
     {
         $file = File::createFromFile(__DIR__ . '/../../data/invalid-pipeline.yml');
-        $shower = new FileShower(new Streams(), $file);
+        $this->expectOutputRegex('~custom/unit-tests    ERROR     \'image\' invalid Docker image name: \'invalid image\'~');
+        $shower = new FileShower(new Streams(null, 'php://output'), $file);
         $this->assertSame(1, $shower->showPipelines());
     }
 }
