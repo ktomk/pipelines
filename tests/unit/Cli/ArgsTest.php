@@ -37,7 +37,7 @@ class ArgsTest extends TestCase
 
     public function testHasOption()
     {
-        $args = new Args(array('cmd', '--verbose', '-v', '--', "--operand"));
+        $args = Args::create(array('cmd', '--verbose', '-v', '--', "--operand"));
         $this->assertFalse($args->hasOption('cmd'));
         $this->assertFalse($args->hasOption('f'));
         $this->assertTrue($args->hasOption('verbose'));
@@ -47,7 +47,7 @@ class ArgsTest extends TestCase
 
     public function testOptionConsumption()
     {
-        $args = new Args(array('cmd', '--verbose'));
+        $args = new Args(array('--verbose'));
         $this->assertCount(1, $args->getRemaining());
 
         $this->assertTrue($args->hasOption(array('v', 'verbose')));
@@ -57,57 +57,62 @@ class ArgsTest extends TestCase
     public function provideFirstRemainingOptions()
     {
         return array(
-            array(array('cmd', '--verbose'), '--verbose'),
-            array(array('cmd', 'test', '--verbose'), '--verbose'),
-            array(array('cmd', 'verbose'), null),
-            array(array('cmd', '--'), null),
-            array(array('cmd', '--', '--me-is-parameter'), null),
-            array(array('cmd', '-'), null),
-            array(array('cmd', ''), null),
-            array(array('cmd', '', '--force'), '--force'),
+            array(array('--verbose'), '--verbose'),
+            array(array('test', '--verbose'), '--verbose'),
+            array(array('verbose'), null),
+            array(array('--'), null),
+            array(array('--', '--me-is-parameter'), null),
+            array(array('-'), null),
+            array(array(''), null),
+            array(array('', '--force'), '--force'),
         );
     }
 
     /**
      * @dataProvider provideFirstRemainingOptions
+     * @param array $arguments
+     * @param string $expected first remaining option
      */
-    public function testGetFirstRemainingOption($arguments, $expected)
+    public function testGetFirstRemainingOption(array $arguments, $expected)
     {
         $args = new Args($arguments);
         $this->assertSame($expected, $args->getFirstRemainingOption());
     }
 
+    /**
+     * @throws ArgsException
+     */
     public function testOptionArgument()
     {
-        $args = new Args(array('cmd', '--prefix', 'value'));
+        $args = new Args(array('--prefix', 'value'));
         $actual = $args->getOptionArgument('prefix');
         $this->assertSame('value', $actual);
     }
 
     public function testOptionalOptionArgument()
     {
-        $args = new Args(array('cmd', '--prefix', 'value'));
+        $args = new Args(array('--prefix', 'value'));
         $actual = $args->getOptionArgument('volume', 100);
         $this->assertSame(100, $actual);
 
-        $args = new Args(array('cmd', '--prefix', 'value', '--', 'operand'));
+        $args = new Args(array('--prefix', 'value', '--', 'operand'));
         $actual = $args->getOptionArgument('volume', 100);
         $this->assertSame(100, $actual);
     }
 
     /**
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage error: option 'volume' is not optional
+     * @expectedExceptionMessage error: option --volume is not optional
      */
     public function testMandatoryOption()
     {
-        $args = new Args(array('cmd', '--prefix', 'value'));
+        $args = new Args(array('--prefix', 'value'));
         $args->getOptionArgument('volume', null, true);
     }
 
     public function testNonMandatoryOption()
     {
-        $args = new Args(array('cmd', '--prefix', 'value'));
+        $args = new Args(array('--prefix', 'value'));
         $this->assertNull($args->getOptionArgument('volumne', null));
     }
 
@@ -115,9 +120,9 @@ class ArgsTest extends TestCase
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
      * @expectedExceptionMessage error: option 'prefix' requires an argument
      */
-    public function testMandatorOptionArgument()
+    public function testMandatoryOptionArgument()
     {
-        $args = new Args(array('cmd', '--prefix'));
+        $args = new Args(array('--prefix'));
         $args->getOptionArgument('prefix', 100);
     }
 
@@ -127,33 +132,7 @@ class ArgsTest extends TestCase
      */
     public function testMandatorOptionArgumentWithParameters()
     {
-        $args = new Args(array('cmd', '--prefix', '--'));
+        $args = new Args(array('--prefix', '--'));
         $args->getOptionArgument('prefix', 100);
-    }
-
-    public function provideInvalidOptions()
-    {
-        return array(
-            array(''),
-            array(' '),
-            array('-'),
-            array('foo bar'),
-            array('-5000'),
-            array('?'),
-            array('!'),
-            array('='),
-            array('.'),
-        );
-    }
-
-    /**
-     * @dataProvider provideInvalidOptions
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage invalid option '
-     */
-    public function testInvalidOptions($option)
-    {
-        $args = new Args(array(''));
-        $args->hasOption($option);
     }
 }

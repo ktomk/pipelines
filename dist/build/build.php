@@ -21,7 +21,7 @@ $builder
     ->stubfile(__DIR__ . '/stub.php')
     ->add('bin/pipelines', $builder->dropFirstLine())
     ->add('COPYING')
-    ->add('src/**.php')
+    ->add('src/{**/,}*.php')
     ->add('src/Utility/App.php', $builder->replace('@.@.@', $version))
     // FIXME ;!pattern
     // clean up a bit of mess

@@ -65,6 +65,26 @@ class AppTest extends TestCase
         $this->assertSame(1, $actual);
     }
 
+    /**
+     * --prefix has invalid argument so exit status is 1
+     */
+    public function testInvalidPrefix() {
+        $app = new App(new Streams(null, null, 'php://output'));
+        $this->expectOutputRegex('{^Invalid prefix: \'123\'\n}');
+        $actual = $app->main(array('cmd', '--prefix', '123'));
+        $this->assertSame(1, $actual);
+    }
+
+    /**
+     * --basename has invalid argument so exit status is 1
+     */
+    public function testInvalidEmptyBasename() {
+        $app = new App(new Streams(null, null, 'php://output'));
+        $this->expectOutputRegex('{^Empty basename\n}');
+        $actual = $app->main(array('cmd', '--basename', ''));
+        $this->assertSame(1, $actual);
+    }
+
     public function testEmptyFileStatus()
     {
         $app = new App(new Streams());

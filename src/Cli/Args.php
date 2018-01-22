@@ -4,65 +4,65 @@
 
 namespace Ktomk\Pipelines\Cli;
 
-class Args
-{
-    /**
-     * @var array
-     */
-    private $arguments;
+use Ktomk\Pipelines\Cli\Args\Args as ArgsArgs;
+use Ktomk\Pipelines\Cli\Args\OptionFilterIterator;
+use Ktomk\Pipelines\Cli\Args\OptionIterator;
 
+/**
+ * Class Args
+ *
+ * Facade class to access arguments related functionality
+ *
+ * @package Ktomk\Pipelines\Cli
+ */
+class Args extends ArgsArgs
+{
     /**
      * @var string $utility name
      */
     private $utility;
 
+    /**
+     * create from $argv
+     *
+     * @param array $argv
+     * @return Args
+     */
     public static function create(array $argv)
     {
-        return new self($argv);
+        if (0 === count($argv)) {
+            throw new \InvalidArgumentException('There must be at least one argument (the command name)');
+        }
+
+        $command = (string)array_shift($argv);
+        $args = new self($argv);
+        $args->utility = $command;
+
+        return $args;
     }
 
     public function __construct(array $arguments)
     {
-        if (!count($arguments)) {
-            throw new \InvalidArgumentException('There must be at least one argument (the command name)');
-        }
-
-        $command = array_shift($arguments);
-
-        $this->utility = (string)$command;
         $this->arguments = $arguments;
     }
 
     /**
+     * test for option and consume any of them. these options
+     * are all w/o option argument. e.g. check for -v/--verbose.
+     *
      * @param string|string[] $option
      * @return bool
      */
     public function hasOption($option)
     {
-        $options = (array)$option;
-        $consume = array();
-
-        foreach ($options as $option) {
-            $compare = $this->compareOption($option);
-
-            foreach ($this->arguments as $index => $argument) {
-                if ($argument === '--') {
-                    break;
-                }
-                if ($argument === $compare) {
-                    $consume[] = $index;
-                }
-            }
-        }
+        $options = new OptionFilterIterator($this, $option);
 
         # consume arguments
-        if ($consume) {
-            foreach ($consume as $index) {
-                unset($this->arguments[$index]);
-            }
+        foreach ($options as $index => $argument) {
+            unset($this->arguments[$index]);
         }
 
-        return (bool)$consume;
+        return isset($index);
     }
 
     /**
@@ -70,87 +70,45 @@ class Args
      */
     public function getFirstRemainingOption()
     {
-        foreach ($this->arguments as $argument) {
-            if (strlen($argument) < 2) {
-                continue;
-            }
-            if ($argument === '--') {
-                break;
-            }
-            if ($argument[0] === '-') {
-                return $argument;
-            }
+        foreach (new OptionIterator($this) as $option) {
+            return $option;
         }
 
         return null;
     }
 
     /**
-     * turn an option into a compare string (long-switch if applicable)
+     * Get the argument of an option.
      *
-     * verifies to the need of the args parser, throws an exception if
-     * non-fitting.
+     * NOTE: returns only the first option value if multiple options would match
      *
-     * @param $option
-     * @return string
-     */
-    private function compareOption($option)
-    {
-        if (!preg_match('~^[a-z0-9][a-z0-9-]*$~i', $option)) {
-            throw new \InvalidArgumentException(
-                sprintf("invalid option '%s'", $option)
-            );
-        }
-
-        $compare = (strlen($option) === 1 ? '-' : '--')
-            . $option;
-
-        return $compare;
-    }
-
-    /**
-     * @param $option
+     * @param string|string[] $option
      * @param string|bool|null $default [optional]
      * @param bool $required [optional]
-     * @return string|null
+     * @return string|bool|null
      * @throws ArgsException
      */
     public function getOptionArgument($option, $default = null, $required = false)
     {
-        $compare = $this->compareOption($option);
 
         $result = null;
-        $consume = array();
-        foreach ($this->arguments as $index => $argument)
-        {
-            if ($argument === '--') {
-                break;
-            }
-            if ($argument !== $compare) {
-                continue;
-            }
-            if (!isset($this->arguments[$index + 1]) || $this->arguments[$index + 1] === '--') {
-                ArgsException::__(
-                    sprintf("error: option '%s' requires an argument", $option)
-                );
-            }
 
-            $result = $this->arguments[$index + 1];
-            $consume = array($index, $index + 1);
-        }
-
-        # consume arguments
-        if ($consume) {
-            foreach ($consume as $index) {
-                unset($this->arguments[$index]);
-            }
+        /** @var OptionFilterIterator|OptionIterator $options */
+        $options = new OptionFilterIterator($this, $option);
+        foreach ($options as $index => $argument) {
+            /** @scrutinizer ignore-call */
+            $result = $options->getArgument();
+            unset($this->arguments[$index]);
+            unset($this->arguments[$index + 1]);
+            break; # first match
         }
 
         if ($result === null) {
             if ($required) {
-                ArgsException::__(
-                    sprintf("error: option '%s' is not optional", $option)
-                );
+                ArgsException::__(sprintf(
+                    "error: option %s is not optional",
+                    $options->getOptionDescription()
+                ));
             }
 
             $result = $default;
