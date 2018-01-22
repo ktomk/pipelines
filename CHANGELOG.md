@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- Docker environment variables options: `-e`, `--env` for 
+  variables and `--env-file` for files
 ### Fixed
 - Image name validation
 - Image as a section

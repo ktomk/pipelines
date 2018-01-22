@@ -78,6 +78,7 @@ class App
 usage: pipelines [<options>...] [--version | [-h | --help]]
        pipelines [-v | --verbose] [--working-dir <path>] [--keep]
                  [--prefix <prefix>] [--basename <basename>]
+                 [[-e | --env] <variable>] [--env-file <path>]
                  [--file <path>] [--dry-run] [--no-run] [--list]
                  [--deploy mount | copy ] [--show] [--images]
                  [--pipeline <id>] [--verbatim]
@@ -110,6 +111,10 @@ Common options
                                  pipeline scripts can change
                                  all files without side-effects
                                  in the working directory
+    -e, --env <variable>  pass or set an environment variables
+                          for the docker container
+    --env-file <path>     pass variables from environment file
+                          to the docker container
     --file <path>         path to the pipelines file, overrides
                           looking up the <basename> file from
                           the current working directory
@@ -333,6 +338,7 @@ EOD
 
         $env = Env::create($_SERVER);
         $env->addReference($reference);
+        $env->collect($args, array('e', 'env', 'env-file'));
 
         $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';
 

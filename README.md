@@ -18,7 +18,7 @@ pipelines
 ~~~
 
 Runs pipeline commands from [`bitbucket-pipelines.yml`][BBPL]
-\[BBPL\].
+\[BBPL].
 
 Memory and time limits are ignored. Press ctrl+c to quit.
 
@@ -88,7 +88,7 @@ Give your project and pipeline changes a quick test run from the
 staging area. As pipelines are normally executed far away,
 setting them up becomes cumbersome, especially with the guide
 given in [Bitbucket Pipelines documentation][BBPL-LOCAL-RUN]
-\[BBPL-LOCAL-RUN\].
+\[BBPL-LOCAL-RUN].
 
 This is where the `pipelines` command jumps in.
 
@@ -150,7 +150,7 @@ Atlassian Bitbucket Pipeline service. Features include:
   launch pipelines from a pipeline as long as the docker client
   is available in the pipeline's container.
   This feature is similar to [run Docker commands in Bitbucket
-  Pipelines][BBPL-DCK] \[BBPL-DCK\] but w/o mounting the Docker
+  Pipelines][BBPL-DCK] \[BBPL-DCK] but w/o mounting the Docker
   CLI executable in the container.
   The pipelines inside pipeline feature serves pipelines itself
   well for integration testing on Travis. In combination with
@@ -162,7 +162,7 @@ Atlassian Bitbucket Pipeline service. Features include:
 ## Environment
 
 Pipelines mimics all of the [Bitbucket Pipeline in-container
-environment variables][BBPL-ENV] \[BBPL-ENV\]:
+environment variables][BBPL-ENV] \[BBPL-ENV]:
 
 
 * `BITBUCKET_BOOKMARK` - conditionally set by `--target`
@@ -197,6 +197,12 @@ introspection:
 
 These environment variables are managed by pipelines itself and
 can not be injected.
+
+Next to these special purpose environment variables, any other
+environment variable can be imported into or set in the container
+via the `-e`, `--env` and `--env-file` options. These behave
+exactly as documented for the [`docker run` command][DCK-RN]
+\[DCK-RN].
 
 ## Details
 
@@ -340,9 +346,11 @@ Check the version by invoking it:
 * \[BBPL]: https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
 * \[BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 * \[BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
-* \[BBPL-DCK\]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+* \[BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+* \[DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
 
 [BBPL]: https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
 [BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 [BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 [BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+[DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/

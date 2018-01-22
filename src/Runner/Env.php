@@ -3,6 +3,8 @@
 /* this file is part of pipelines */
 
 namespace Ktomk\Pipelines\Runner;
+use Ktomk\Pipelines\Cli\Args\Args;
+use Ktomk\Pipelines\Cli\Args\Collector;
 
 /**
  * Pipeline environment collaborator
@@ -10,6 +12,11 @@ namespace Ktomk\Pipelines\Runner;
 class Env
 {
     private $vars;
+
+    /**
+     * @var array
+     */
+    private $collected = array();
 
     /**
      * @param array|null $inherit
@@ -138,11 +145,11 @@ class Env
      */
     public function getArgs($option)
     {
-        $args = array();
+        $args = $this->collected;
 
-        foreach ($this->getVarDefs() as $varDef) {
+        foreach ($this->getVarDefinitions() as $definition) {
             $args[] = $option;
-            $args[] = $varDef;
+            $args[] = $definition;
         }
 
         return $args;
@@ -162,9 +169,22 @@ class Env
     }
 
     /**
+     * @param Args $args
+     * @param string|string[] $option
+     *
+     * @throws \Ktomk\Pipelines\Cli\ArgsException
+     */
+    public function collect(Args $args, $option)
+    {
+        $collector = new Collector($args);
+        $collector->collect($option);
+        $this->collected = array_merge($this->collected, $collector->getArgs());
+    }
+
+    /**
      * @return array w/ a string variable definition (name=value) per value
      */
-    private function getVarDefs()
+    private function getVarDefinitions()
     {
         $array = array();
 

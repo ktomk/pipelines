@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Args\ArgsTester;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -165,5 +166,25 @@ class EnvTest extends TestCase
         $inherit = array('PIPELINES_ID', 'custom/the-other-day');
         $env = Env::create($inherit);
         $this->assertNull($env->getValue('PIPELINES_ID'));
+    }
+
+    public function testCollect()
+    {
+        $env = Env::create();
+        $env->collect(new ArgsTester(), array());
+        $expected = array (
+            0 => 'e',
+            1 => 'BITBUCKET_BUILD_NUMBER=0',
+            2 => 'e',
+            3 => 'BITBUCKET_COMMIT=0000000000000000000000000000000000000000',
+            4 => 'e',
+            5 => 'BITBUCKET_REPO_OWNER=nobody',
+            6 => 'e',
+            7 => 'BITBUCKET_REPO_SLUG=local-has-no-slug',
+            8 => 'e',
+            9 => 'CI=true',
+        );
+        $actual = $env->getArgs('e');
+        $this->assertSame($expected, $actual);
     }
 }
