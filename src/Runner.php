@@ -14,10 +14,11 @@ use Ktomk\Pipelines\Runner\Env;
  */
 class Runner
 {
-    const FLAGS = 3;
+    const FLAGS = 11;
     const FLAG_DOCKER_REMOVE = 1;
     const FLAG_DOCKER_KILL = 2;
     const FLAG_DEPLOY_COPY = 4; # copy working dir into container
+    const FLAG_KEEP_ON_ERROR = 8;
 
     const STATUS_NO_STEPS = 1;
     const STATUS_RECURSION_DETECTED = 127;
@@ -196,15 +197,15 @@ class Runner
             }
         }
 
-        if (0 !== $status) {
-            # keep container
+        if (0 !== $status && $this->flags & self::FLAG_KEEP_ON_ERROR) {
+            # keep container on error
             $this->streams->err(sprintf(
                 "exit status %d, keeping container id %s\n",
                 $status,
                 substr($id, 0, 12)
             ));
         } else {
-            # remove container
+            # keep or remove container
             if ($this->flags & self::FLAG_DOCKER_KILL) {
                 $exec->capture('docker', array('kill', $name));
             }

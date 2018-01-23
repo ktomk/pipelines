@@ -32,7 +32,12 @@
   "scripts": {
     "build": "@php -dphar.readonly=0 -fdist/build/build.php # build phar file",
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
-    "test": "@php -dphar.readonly=0 -fvendor/bin/phpunit"
+    "test": "@php -dphar.readonly=0 -fvendor/bin/phpunit -- tests",
+    "ci": [
+      "bin/pipelines --no-keep --verbatim --pipeline custom/lint-php-5.3",
+      "@test",
+      "@build"
+    ]
   },
   "config": {
     "autoloader-suffix": "pipelines"

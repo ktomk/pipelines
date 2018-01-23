@@ -149,4 +149,13 @@ class AppTest extends TestCase
         $status = $app->main($args);
         $this->assertSame(0, $status);
     }
+
+    public function testKeepAndNoKeepExclusivity()
+    {
+        $this->expectOutputString("--keep and --no-keep are exclusive\n");
+        $app = new App(new Streams(null, null, 'php://output'));
+        $args = array('pipelines-test', '--keep', '--no-keep', '--no-run');
+        $status = $app->main($args);
+        $this->assertSame(1, $status);
+    }
 }

@@ -76,7 +76,7 @@ class App
     {
         $this->streams->out(<<<EOD
 usage: pipelines [<options>...] [--version | [-h | --help]]
-       pipelines [-v | --verbose] [--working-dir <path>] [--keep]
+       pipelines [-v | --verbose] [--working-dir <path>] [--[no-]keep]
                  [--prefix <prefix>] [--basename <basename>]
                  [[-e | --env] <variable>] [--env-file <path>]
                  [--file <path>] [--dry-run] [--no-run] [--list]
@@ -118,12 +118,13 @@ Common options
     --file <path>         path to the pipelines file, overrides
                           looking up the <basename> file from
                           the current working directory
-    --keep                keep docker containers. default is to
-                          kill and remove containers after each
-                          pipeline step unless the pipeline
-                          step failed. then the non-zero exit
-                          status is given and an error message
-                          showing the container id
+    --[no-]keep           (do not) keep docker containers.
+                          default is to kill and remove
+                          containers after each pipeline step
+                          unless the pipeline step failed. then
+                          the non-zero exit status is given and
+                          an error message showing the container
+                          id of the kept container
     --pipeline <id>       run pipeline with <id>, see --list
     --verbatim            only give verbatim output of the
                           pipeline, no other information around
@@ -153,7 +154,7 @@ Docker container maintenance options
       container names. the prefix is either 'pipelines' or the
       one set by --prefix <prefix>.
 
-      three options are built-in to monitor and deal with
+      three options are built-in to monitor and interact with
       leftovers. if one or more of these are given, the following
       operations are executed in the order from top to down:
 
@@ -263,6 +264,12 @@ EOD
 
         /** @var bool $keep containers */
         $keep = $args->hasOption('keep');
+        /** @var bool $noKeep do not keep on errors */
+        $noKeep = $args->hasOption('no-keep');
+        if ($keep && $noKeep) {
+            $this->error('--keep and --no-keep are exclusive');
+            return 1;
+        }
 
         /** @var string $basename for bitbucket-pipelines.yml */
         $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
@@ -364,7 +371,7 @@ EOD
             return $pipeline;
         }
 
-        $flags = $this->getRunFlags($keep, $deployMode);
+        $flags = $this->getRunFlags($keep, $noKeep, $deployMode);
 
         $runner = new Runner($prefix, $workingDir, $exec, $flags, $env, $streams);
         if ($noRun) {
@@ -429,15 +436,18 @@ EOD
     }
 
     /**
-     * @param $keep
+     * @param bool $keep
+     * @param bool $noKeep
      * @param $deployMode
      * @return bool|int
      */
-    private function getRunFlags($keep, $deployMode)
+    private function getRunFlags($keep, $noKeep, $deployMode)
     {
         $flags = Runner::FLAGS;
         if ($keep) {
             $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
+        } elseif ($noKeep) {
+            $flags &= ~Runner::FLAG_KEEP_ON_ERROR;
         }
 
         if ($deployMode === 'copy') {

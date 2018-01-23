@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Docker environment variables options: `-e`, `--env` for 
   variables and `--env-file` for files
+- Composer "ci" script to integrate continuously
+- `--no-keep` option to never keep containers, even on error
 ### Fixed
 - Image name validation
 - Image as a section
