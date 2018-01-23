@@ -53,6 +53,10 @@ pipelines:
       - step:
           image: php:7.0
           script:
+            - php --version
+      - step:
+          image: php:7.0
+          script:
             - dist/pipelines/docker-client-install.sh
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}

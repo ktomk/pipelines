@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Fixed
 - Image name validation
 - Image as a section
+- Show same image name only once
 
 ## [0.0.4] - 2018-01-16
 ### Added

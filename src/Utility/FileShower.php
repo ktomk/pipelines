@@ -150,6 +150,8 @@ class FileShower
             (null !== $name) && $names[] = $name;
         }
 
+        $images = array_unique($images);
+
         return array($images, $names);
     }
 
