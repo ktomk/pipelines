@@ -21,12 +21,6 @@ class App
     const VERSION = '@.@.@';
 
     /**
-     * @var bool whether version has been shown or not
-     * @see App::showVersion()
-     */
-    private $versionShown = false;
-
-    /**
      * @var Args
      */
     private $arguments;
@@ -63,11 +57,8 @@ class App
 
     private function showVersion()
     {
-        if (!$this->versionShown) {
-            $version = Version::resolve(self::VERSION);
-            $this->info(sprintf('pipelines version %s', $version));
-            $this->versionShown = true;
-        }
+        $version = Version::resolve(self::VERSION);
+        $this->info(sprintf('pipelines version %s', $version));
 
         return 0;
     }
@@ -226,9 +217,7 @@ EOD
     {
         $args = $this->arguments;
 
-        if ($this->verbose = $args->hasOption(array('v', 'verbose'))) {
-            $this->showVersion();
-        };
+        $this->verbose = $args->hasOption(array('v', 'verbose'));
 
         # quickly handle version
         if ($args->hasOption('version')) {

@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Image name validation
 - Image as a section
 - Show same image name only once
+- Remove version output from -v, --verbose
 
 ## [0.0.4] - 2018-01-16
 ### Added

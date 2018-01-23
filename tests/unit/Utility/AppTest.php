@@ -60,7 +60,7 @@ class AppTest extends TestCase
     public function testMainVerbosePrinter()
     {
         $app = new App(new Streams(null, 'php://output', null));
-        $this->expectOutputRegex('{^pipelines version (@\.@\.@|[a-f0-9]{7}|\d+\.\d+\.\d+)(-\d+-g[a-f0-9]{7})?\+?\n}');
+        $this->expectOutputRegex('{^usage: pipelines }');
         $actual = $app->main(array('cmd', '--verbose', '--prefix'));
         $this->assertSame(1, $actual);
     }
@@ -133,6 +133,7 @@ class AppTest extends TestCase
             array(array('--dry-run')),
             array(array('--verbose', '--dry-run')),
             array(array('--keep', '--no-run')),
+            array(array('--no-keep', '--no-run')),
             array(array('--docker-list', '--dry-run')),
             array(array('--verbatim', '--dry-run')),
         );
