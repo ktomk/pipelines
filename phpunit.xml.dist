@@ -1,8 +1,6 @@
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
-        backupGlobals="true"
-        backupStaticAttributes="false"
         bootstrap="vendor/autoload.php"
         cacheTokens="false"
         defaultTestSuite="unit"
@@ -24,5 +22,6 @@
     </filter>
     <logging>
         <log type="coverage-html" target="build/html"/>
+        <log type="testdox-html" target="build/html/testdox.html"/>
     </logging>
 </phpunit>

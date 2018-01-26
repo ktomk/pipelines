@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\Runner\ArtifactSource;
 use Ktomk\Pipelines\Runner\Env;
 
 /**
@@ -131,7 +132,7 @@ class Runner
             "\x1D+++ step #%d\n\n    name...........: %s\n    effective-image: %s\n    container......: %s\n",
             $index,
             $step->getName() ? '"' . $step->getName() . '"' : '(unnamed)',
-            $step->getImage(),
+            $image->getName(),
             $name
         ));
 
@@ -152,7 +153,7 @@ class Runner
 
         $mountWorkingDirectory = $copy
             ? array()
-            : array('--volume', "$deviceDir:/app");
+            : array('--volume', "$deviceDir:/app"); // FIXME(tk): hard encoded /app
 
         $status = $exec->capture('docker', array(
             'run', '-i', '--name', $name,
@@ -173,19 +174,60 @@ class Runner
         $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
 
         # TODO: different deployments, mount (default), mount-ro, copy
-        if ($copy) {
-            $streams->out("\x1D+++ copying files into container...\n");
-            $status = $exec->pass('docker', array(
-                    'cp', '-a', $dir . '/.', $id . ':/app')
-            );
-            if ($status !== 0) {
-                $streams->err('Deploy copy failure\n');
-                return $status;
-            }
-            $streams("");
+        if (null !== $result = $this->deployCopy($copy, $id, $dir)) {
+            return $result;
         }
 
+        $status = $this->runStepScript($step, $streams, $exec, $name);
+
+        $this->captureStepArtifacts($step, $copy, $id, $dir);
+
+        $this->shutdownStepContainer($status, $id, $exec, $name);
+
+        return $status;
+    }
+
+    /**
+     * @param bool $copy
+     * @param string $id container id
+     * @param string $dir directory to copy contents into container
+     * @return int|null null if all clear, integer for exit status
+     */
+    private function deployCopy($copy, $id, $dir)
+    {
+        if (!$copy) {
+            return null;
+        }
+
+        $streams = $this->streams;
+        $exec = $this->exec;
+
+        $streams->out("\x1D+++ copying files into container...\n");
+        $status = $exec->pass('docker', array(
+                'cp', '-a', $dir . '/.', $id . ':/app')
+        );
+        if ($status !== 0) {
+            $streams->err('Deploy copy failure\n');
+            return $status;
+        }
+
+        $streams("");
+
+        return null;
+    }
+
+    /**
+     * @param Step $step
+     * @param Streams $streams
+     * @param Exec $exec
+     * @param string $name container name
+     * @return int|null should never be null, status, non-zero if a command failed
+     */
+    private function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
+    {
         $script = $step->getScript();
+        $status = null;
+
         foreach ($script as $line => $command) {
             $streams->out(sprintf("\x1D+ %s\n", $command));
             $status = $exec->pass('docker', array(
@@ -197,23 +239,101 @@ class Runner
             }
         }
 
-        if (0 !== $status && $this->flags & self::FLAG_KEEP_ON_ERROR) {
-            # keep container on error
+        return $status;
+    }
+
+    /**
+     * @param Step $step
+     * @param bool $copy
+     * @param string $id container id
+     * @param string $dir to put artifacts in (project directory)
+     */
+    private function captureStepArtifacts(Step $step, $copy, $id, $dir)
+    {
+        # capturing artifacts is only supported for deploy copy
+        if (!$copy) {
+            return;
+        }
+
+        $artifacts = $step->getArtifacts();
+
+        if (null === $artifacts) {
+            return;
+        }
+
+        $exec = $this->exec;
+        $streams = $this->streams;
+
+        $streams->out("\x1D+++ copying artifacts from container...\n");
+
+        $source = new ArtifactSource($exec, $id, $dir);
+
+        $patterns = $artifacts->getPatterns();
+        foreach ($patterns as $pattern) {
+            $this->captureArtifactPattern($source, $pattern, $id, $dir);
+        }
+
+        $streams("");
+    }
+
+    /**
+     * @see Runner::captureStepArtifacts()
+     *
+     * @param string $pattern
+     * @param string $id
+     * @param string $dir
+     */
+    private function captureArtifactPattern(ArtifactSource $source, $pattern, $id, $dir)
+    {
+        $exec = $this->exec;
+        $streams = $this->streams;
+
+        $paths = $source->findByPattern($pattern);
+        if (empty($paths)) {
+            return;
+        }
+
+        $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
+        $docker = Lib::cmd('docker', array('exec', '-w', '/app', $id));
+        $unTar = Lib::cmd('tar', array('x', '-f', '-', '-C', $dir));
+
+        $status = $exec->pass($docker . ' ' . $tar . ' | ' . $unTar, array());
+
+        if ($status !== 0) {
+            $streams->err(
+                sprintf("Artifact failure: '%s'\n", $pattern)
+            );
+        }
+    }
+
+    /**
+     * @param int $status
+     * @param string $id container id
+     * @param Exec $exec
+     * @param string $name container name
+     */
+    private function shutdownStepContainer($status, $id, Exec $exec, $name)
+    {
+        $flags = $this->flags;
+
+        # keep container on error
+        if (0 !== $status && $flags & self::FLAG_KEEP_ON_ERROR) {
             $this->streams->err(sprintf(
                 "exit status %d, keeping container id %s\n",
                 $status,
                 substr($id, 0, 12)
             ));
-        } else {
-            # keep or remove container
-            if ($this->flags & self::FLAG_DOCKER_KILL) {
-                $exec->capture('docker', array('kill', $name));
-            }
-            if ($this->flags & self::FLAG_DOCKER_REMOVE) {
-                $exec->capture('docker', array('rm', $name));
-            }
+
+            return;
         }
 
-        return $status;
+        # keep or remove container
+        if ($flags & self::FLAG_DOCKER_KILL) {
+            $exec->capture('docker', array('kill', $name));
+        }
+
+        if ($flags & self::FLAG_DOCKER_REMOVE) {
+            $exec->capture('docker', array('rm', $name));
+        }
     }
 }

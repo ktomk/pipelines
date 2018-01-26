@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\File\Artifacts;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -15,6 +16,26 @@ class StepTest extends UnitTestCase
     {
         $step = $this->createStep();
         $this->assertInstanceOf('Ktomk\Pipelines\Step', $step);
+    }
+
+    public function testGetArtifacts()
+    {
+        $array = array(
+            'script' => array(":"),
+            'artifacts' => array("build/html/testdox.html"),
+        );
+        $step = $this->createStep($array);
+        $actual = $step->getArtifacts();
+        $this->assertInstanceOf(
+            'Ktomk\Pipelines\File\Artifacts',
+            $actual
+        );
+    }
+
+    public function testGetArtifactsWithNoArtifactsNode()
+    {
+        $step = $this->createStep();
+        $this->assertNull($step->getArtifacts());
     }
 
     /**

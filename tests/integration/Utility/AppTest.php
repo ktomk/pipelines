@@ -141,4 +141,16 @@ class AppTest extends TestCase
         $status = $app->main($args);
         $this->assertSame(0, $status);
     }
+
+    public function testArtifacts()
+    {
+        $app = new App(new Streams(null, null, null));
+        $args = array(
+            'pipelines-test',
+            '--deploy', 'copy', '--pipeline', 'custom/artifact-tests',
+            '--dry-run',
+        );
+        $status = $app->main($args);
+        $this->assertSame(0, $status);
+    }
 }

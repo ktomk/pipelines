@@ -29,7 +29,14 @@ pipelines:
       - step:
           image: php:7.0
           script:
-            - dist/pipelines/phpunit.sh
+            - vendor/bin/phpunit
+    artifact-tests: # run phpunit suite w/ artifact
+      - step:
+          image: php:7.0
+          script:
+            - vendor/bin/phpunit
+          artifacts:
+            - build/html/testdox.html
     docker:
       - step:
           image: php:7.0

@@ -32,7 +32,7 @@ class RunnerTest extends UnitTestCase
         // TODO set output expectation (now possible thanks to Streams)
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             null,
             null,
@@ -62,7 +62,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{^\x1d\+\+\+ step #0\n}');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             null,
             null,
@@ -71,6 +71,16 @@ class RunnerTest extends UnitTestCase
 
         $actual = $runner->run($pipeline);
         $this->assertSame(0, $actual);
+    }
+
+    public static function setUpBeforeClass()
+    {
+        // this test-case operates on a (clean) temporary directory
+        if (is_dir('/tmp/pipelines-test-suite')) {
+            shell_exec('rm -rf "/tmp/pipelines-test-suite/"');
+            mkdir('/tmp/pipelines-test-suite');
+        }
+        parent::setUpBeforeClass();
     }
 
     public function testErrorStatusWithPipelineHavingEmptySteps()
@@ -84,7 +94,7 @@ class RunnerTest extends UnitTestCase
         // TODO set output expectation (now possible thanks to Streams)
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             null,
             null,
@@ -105,7 +115,7 @@ class RunnerTest extends UnitTestCase
         // TODO set output expectation (now possible thanks to Streams)
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             null,
             $env,
@@ -128,11 +138,11 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
-            new Streams(null, null, 'php://output')
+            new Streams()
         );
 
         /** @var MockObject|Pipeline $pipeline */
@@ -158,7 +168,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{Deploy copy failure}');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -189,7 +199,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{exit status 255, keeping container id \*dry-run\*}');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp',
+            '/tmp/pipelines-test-suite',
             $exec,
             null, # default flags are important here
             null,
@@ -207,5 +217,107 @@ class RunnerTest extends UnitTestCase
 
         $status = $runner->run($pipeline);
         $this->assertSame(255, $status);
+    }
+
+    public function testArtifacts()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('capture', 'docker',"./build/foo-package.tgz")
+            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 0)
+        ;
+
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp/pipelines-test-suite',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams()
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+                'artifacts' => array('build/foo-package.tgz'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
+    }
+
+    public function testArtifactsNoMatch()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('capture', 'docker',"./build/foo-package.tgz")
+        ;
+
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp/pipelines-test-suite',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams()
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+                'artifacts' => array('build/bar-package.tgz'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
+    }
+
+    public function testArtifactsFailure()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('pass', 'docker', 0)
+            ->expect('capture', 'docker',"./build/foo-package.tgz")
+            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 1)
+        ;
+
+        $this->expectOutputString("Artifact failure: 'build/foo-package.tgz'\n");
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp/pipelines-test-suite',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+                'artifacts' => array('build/foo-package.tgz'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
     }
 }

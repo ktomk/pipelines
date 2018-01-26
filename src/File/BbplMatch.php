@@ -30,6 +30,8 @@ class BbplMatch
     );
 
     /**
+     * glob pattern match
+     *
      * @param string $pattern
      * @param string $subject
      * @return bool

@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\File\Artifacts;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\ParseException;
 
@@ -60,6 +61,16 @@ class Step
                 );
             }
         }
+    }
+
+    /**
+     * @return Artifacts|null
+     */
+    public function getArtifacts()
+    {
+        return isset($this->step['artifacts'])
+            ? new Artifacts($this->step['artifacts'])
+            : null;
     }
 
     /**
