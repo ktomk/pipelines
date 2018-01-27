@@ -33,6 +33,7 @@ class OptionFilterIterator extends FilterIterator
         $arguments = array();
 
         for ($this->rewind(); $this->valid(); $this->next()) {
+            /** @scrutinizer ignore-call */
             $arguments[] = $this->getArgument();
         }
 

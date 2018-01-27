@@ -421,7 +421,9 @@ EOD
 
     private function verbose($message)
     {
-        $this->verbose && $this->info($message);
+        if ($this->verbose) {
+            $this->info($message);
+        }
     }
 
     /**

@@ -49,7 +49,14 @@ class Lib
         return $buffer;
     }
 
-    static function quoteArg($argument)
+    /**
+     * quote an argument to preserve its value verbatim when used as
+     * a utility argument in shell
+     *
+     * @param string $argument
+     * @return string
+     */
+    public static function quoteArg($argument)
     {
         $parts = explode("'", $argument);
 
@@ -176,8 +183,8 @@ class Lib
                 $matches = array(
                     $subject,
                     substr($subject, 0, $open[1]),
-                    substr($subject, $open[1] + 1, $token[1] - $open[1] - 1),
-                    substr($subject, $token[1] + 1),
+                    substr($subject, $open[1] + 1, $pos - $open[1] - 1),
+                    substr($subject, $pos + 1),
                 );
                 return 1;
             }

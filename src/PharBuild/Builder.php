@@ -176,12 +176,22 @@ class Builder
                 // @codeCoverageIgnoreEnd
             }
 
-            stream_copy_to_stream($source, $target) || $this->err(sprintf('stream copy error: %s', $file));
-            fclose($source);
-
             $meta = stream_get_meta_data($target);
             $snapShotFile = $meta['uri'];
-            $this->unlink[$snapShotFile] = $target; # (preserve file from deletion)
+
+            if (false === (bool)stream_copy_to_stream($source, $target)) {
+                // @codeCoverageIgnoreStart
+                $this->err(sprintf('stream copy error: %s', $file));
+                fclose($source);
+                fclose($target);
+                unlink($snapShotFile);
+                return null;
+                // @codeCoverageIgnoreEnd
+            }
+            fclose($source);
+
+            # preserve file from deletion until later cleanup
+            $this->unlink[$snapShotFile] = $target;
 
             return array('fil', $snapShotFile);
         };

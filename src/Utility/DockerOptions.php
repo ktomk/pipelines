@@ -66,7 +66,6 @@ class DockerOptions
     {
         $args = $this->args;
         $exec = $this->exec;
-        $prefix = $this->prefix;
 
         $count = 0;
         $status = 0;
