@@ -26,6 +26,20 @@ class OptionFilterIterator extends FilterIterator
     }
 
     /**
+     * @return array
+     */
+    public function getArguments()
+    {
+        $arguments = array();
+
+        for ($this->rewind(); $this->valid(); $this->next()) {
+            $arguments[] = $this->getArgument();
+        }
+
+        return $arguments;
+    }
+
+    /**
      * get option descriptor
      *
      * @return string

@@ -187,4 +187,13 @@ class EnvTest extends TestCase
         $actual = $env->getArgs('e');
         $this->assertSame($expected, $actual);
     }
+
+    public function testGetResolver()
+    {
+        $env = new Env();
+        $this->assertInstanceOf(
+            'Ktomk\Pipelines\Runner\EnvResolver',
+            $env->getResolver()
+        );
+    }
 }

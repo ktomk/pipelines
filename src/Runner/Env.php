@@ -11,12 +11,30 @@ use Ktomk\Pipelines\Cli\Args\Collector;
  */
 class Env
 {
+    /**
+     * @var array pipelines (bitbucket) environment variables
+     */
     private $vars;
 
     /**
+     * collected arguments
+     *
      * @var array
      */
     private $collected = array();
+
+    /**
+     * environment variables to inherit from
+     *
+     * @var array
+     */
+    private $inherit = array();
+
+
+    /**
+     * @var EnvResolver|null
+     */
+    private $resolver;
 
     /**
      * @param array|null $inherit
@@ -39,6 +57,8 @@ class Env
      */
     public function initDefaultVars(array $inherit)
     {
+        $this->inherit = $inherit;
+
         $inheritable = array(
             'BITBUCKET_BOOKMARK' => null,
             'BITBUCKET_BRANCH' => null,
@@ -169,6 +189,11 @@ class Env
     }
 
     /**
+     * collect option arguments
+     *
+     * those options to be passed to docker client, normally -e,
+     * --env and --env-file.
+     *
      * @param Args $args
      * @param string|string[] $option
      *
@@ -179,6 +204,8 @@ class Env
         $collector = new Collector($args);
         $collector->collect($option);
         $this->collected = array_merge($this->collected, $collector->getArgs());
+
+        $this->getResolver()->addArguments($collector);
     }
 
     /**
@@ -195,5 +222,17 @@ class Env
         }
 
         return $array;
+    }
+
+    /**
+     * @return EnvResolver
+     */
+    public function getResolver()
+    {
+        if ($this->resolver === null) {
+            $this->resolver = new EnvResolver($this->inherit);
+        }
+
+        return $this->resolver;
     }
 }

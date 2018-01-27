@@ -68,4 +68,15 @@ class OptionFilterIteratorTest extends TestCase
         $actual = $iterator->getOptionDescription();
         $this->assertSame($expected, $actual);
     }
+
+    public function testGetArguments()
+    {
+        $args = new Args(
+            array('cmd', '--foo', 'blue', '-f', 'red', '--', '-f', 'silver')
+        );
+        $iterator = new OptionFilterIterator($args, array('f', 'foo'));
+        $expected = array('blue', 'red');
+        $actual = $iterator->getArguments();
+        $this->assertSame($expected, $actual);
+    }
 }
