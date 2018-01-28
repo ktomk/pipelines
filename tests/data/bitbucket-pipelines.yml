@@ -48,8 +48,9 @@ pipelines:
           name: "master duplicate" # always wins in the known PHP YAML parsers
           script:
             - echo "master duplicate"
-    '{foo,bar}': # glob pattern with braces (TODO)
+    '{foo,bar}': # glob pattern with braces
       - step:
+          name: "foo and bar branches"
           script:
             - echo "foo and bar branches"
 
