@@ -498,6 +498,7 @@ class Builder
         printf("SHA-256..: %s\n", hash_file('sha256', $filename));
 
         $pinfo = new \Phar($filename);
+        printf("api......: %s\n", $pinfo->getVersion());
         printf("count....: %d file(s)\n", $pinfo->count());
         $sig = $pinfo->getSignature();
         printf("signature: %s %s\n", $sig['hash_type'], $sig['hash']);
