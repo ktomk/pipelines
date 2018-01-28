@@ -10,6 +10,7 @@ use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File;
+use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\Pipeline;
 use Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Runner\Env;
@@ -262,9 +263,8 @@ EOD
 
         /** @var string $basename for bitbucket-pipelines.yml */
         $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
-        // FIXME: must actually be a basename to prevent accidental traversal
-        if (!strlen($basename)) {
-            $this->error('Empty basename');
+        if (!Lib::fsIsBasename($basename)) {
+            $this->error(sprintf("Not a basename: '%s'", $basename));
             return 1;
         }
 
@@ -298,8 +298,7 @@ EOD
         // $vcs = new Vcs();
 
         /** @var string $path full path as bitbucket-pipelines.yml to process */
-        // FIXME: try a variant with PHP stream wrapper prefixes support
-        $path = ('/' === $file[0])
+        $path = Lib::fsIsAbsolutePath($file)
             ? $file
             : $workingDir . '/' . $file;
 

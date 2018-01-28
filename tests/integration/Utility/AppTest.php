@@ -57,7 +57,7 @@ class AppTest extends TestCase
     public function testEmptyBasenameGivesError()
     {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputString("Empty basename\n");
+        $this->expectOutputString("Not a basename: ''\n");
         $args = array(
             'pipelines-test',
             '--basename',

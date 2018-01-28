@@ -5,8 +5,6 @@
 namespace Ktomk\Pipelines;
 
 
-use Ktomk\Pipelines\File\ImageName;
-
 class Lib
 {
     /**
@@ -190,5 +188,39 @@ class Lib
             }
         }
         return 0;
+    }
+
+    /**
+     * check if path is absolute
+     *
+     * @param string $path
+     * @return bool
+     */
+    public static function fsIsAbsolutePath($path)
+    {
+        // TODO: a variant with PHP stream wrapper prefix support
+
+        $count = strspn($path, '/', 0, 3) % 2;
+
+        return (bool)$count;
+    }
+
+    /**
+     * check if path is basename
+     *
+     * @param string $path
+     * @return bool
+     */
+    public static function fsIsBasename($path)
+    {
+        if (in_array($path, array('', '.', '..'), true)) {
+            return false;
+        }
+
+        if (false !== strpos($path, '/')) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -80,7 +80,7 @@ class AppTest extends TestCase
      */
     public function testInvalidEmptyBasename() {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputRegex('{^Empty basename\n}');
+        $this->expectOutputRegex('{^Not a basename: \'\'\n}');
         $actual = $app->main(array('cmd', '--basename', ''));
         $this->assertSame(1, $actual);
     }

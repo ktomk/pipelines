@@ -107,4 +107,49 @@ class LibTest extends TestCase
     {
         $this->assertSame($expected, Lib::expandBrace($subject), $subject);
     }
+
+    public function provideAbsolutePaths() {
+        return array(
+            array('foo.txt', false),
+            array('', false),
+            array('/', true),
+            array('//', false),
+            array('///', true),
+            array('/foo.txt', true),
+            array('bar/foo.txt', false),
+            array('/bar/foo.txt', true),
+        );
+    }
+
+    /**
+     * @dataProvider provideAbsolutePaths
+     * @param string $path
+     * @param bool $expected
+     */
+    public function testFsIsAbsolutePath($path, $expected)
+    {
+        $actual = Lib::fsIsAbsolutePath($path);
+        $this->assertSame($expected, $actual, "path '$path' is (not) absolute");
+
+    }
+
+    public function provideBasenamePaths() {
+        return array(
+            array('foo.txt', true),
+            array('', false),
+            array('/', false),
+            array('/foo.txt', false),
+            array('bar/foo.txt', false),
+        );
+    }
+    /**
+     * @dataProvider provideBasenamePaths
+     * @param string $path
+     * @param bool $expected
+     */
+    public function testFsIsBasename($path, $expected)
+    {
+        $actual = Lib::fsIsBasename($path);
+        $this->assertSame($expected, $actual, 'path is (not) basename');
+    }
 }
