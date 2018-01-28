@@ -80,7 +80,7 @@ class AppTest extends TestCase
      */
     public function testInvalidEmptyBasename() {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputRegex('{^Not a basename: \'\'\n}');
+        $this->expectOutputRegex('{^pipelines: not a basename: \'\'\n}');
         $actual = $app->main(array('cmd', '--basename', ''));
         $this->assertSame(1, $actual);
     }
@@ -116,7 +116,7 @@ class AppTest extends TestCase
 
     public function testUnknownDeployMode()
     {
-        $this->expectOutputRegex('{^Unknown deploy mode \'flux-compensate\'}');
+        $this->expectOutputRegex('{^pipelines: unknown deploy mode \'flux-compensate\'}');
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--deploy', 'flux-compensate'));
         $this->assertSame(1, $actual);
@@ -153,7 +153,7 @@ class AppTest extends TestCase
 
     public function testKeepAndNoKeepExclusivity()
     {
-        $this->expectOutputString("--keep and --no-keep are exclusive\n");
+        $this->expectOutputString("pipelines: --keep and --no-keep are exclusive\n");
         $app = new App(new Streams(null, null, 'php://output'));
         $args = array('pipelines-test', '--keep', '--no-keep', '--no-run');
         $status = $app->main($args);

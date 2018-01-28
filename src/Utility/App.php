@@ -183,7 +183,7 @@ EOD
             $this->showUsage();
         } catch (File\ParseException $e) {
             $status = 2;
-            $message = sprintf('fatal: pipelines file: %s', $e->getMessage());
+            $message = sprintf('pipelines: file parse error: %s', $e->getMessage());
             $this->error($message);
         } catch (Exception $e) { // @codeCoverageIgnoreStart
             // catch unexpected exceptions for user-friendly message
@@ -257,21 +257,21 @@ EOD
         /** @var bool $noKeep do not keep on errors */
         $noKeep = $args->hasOption('no-keep');
         if ($keep && $noKeep) {
-            $this->error('--keep and --no-keep are exclusive');
+            $this->error('pipelines: --keep and --no-keep are exclusive');
             return 1;
         }
 
         /** @var string $basename for bitbucket-pipelines.yml */
         $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
         if (!Lib::fsIsBasename($basename)) {
-            $this->error(sprintf("Not a basename: '%s'", $basename));
+            $this->error(sprintf("pipelines: not a basename: '%s'", $basename));
             return 1;
         }
 
         if (false !== $buffer = $args->getOptionArgument('working-dir', false)) {
             $result = chdir($buffer);
             if ($result === false) {
-                $this->error(sprintf('fatal: change working directory to %s', $buffer));
+                $this->error(sprintf('pipelines: fatal: change working directory to %s', $buffer));
                 return 2;
             }
         }
@@ -279,7 +279,7 @@ EOD
         $workingDir = getcwd();
         if ($workingDir === false) {
             // @codeCoverageIgnoreStart
-            $this->error('fatal: obtain working directory');
+            $this->error('pipelines: fatal: obtain working directory');
             return 1;
             // @codeCoverageIgnoreEnd
         }
@@ -287,7 +287,7 @@ EOD
         /** @var string $file as bitbucket-pipelines.yml to process */
         $file = $args->getOptionArgument('file', $basename);
         if (!strlen($file)) {
-            $this->error('File can not be empty');
+            $this->error('pipelines: file can not be empty');
             return 1;
         }
         if ($file !== $basename && $basename !== self::BBPL_BASENAME) {
@@ -303,7 +303,7 @@ EOD
             : $workingDir . '/' . $file;
 
         if (!is_file($path) && !is_readable($path)) {
-            $this->error(sprintf('Not a readable file: %s', $file));
+            $this->error(sprintf('pipelines: not a readable file: %s', $file));
             return 1;
         }
         unset($file);
@@ -312,7 +312,7 @@ EOD
 
         $deployMode = $args->getOptionArgument('deploy', 'mount');
         if (!in_array($deployMode, array('mount', 'copy'))) {
-            $this->error(sprintf("Unknown deploy mode '%s'\n", $deployMode));
+            $this->error(sprintf("pipelines: unknown deploy mode '%s'\n", $deployMode));
             return 1;
         }
 
@@ -347,7 +347,7 @@ EOD
         }
 
         if ($option = $args->getFirstRemainingOption()) {
-            $this->error("Unknown option: $option");
+            $this->error("pipelines: unknown option: $option");
             $this->showUsage();
             return 1;
         }
@@ -387,17 +387,17 @@ EOD
         try {
             $pipeline = $pipelines->getById($pipelineId);
         } catch (File\ParseException $e) {
-            $this->error(sprintf("error: pipeline id '%s'", $pipelineId));
+            $this->error(sprintf("pipelines: error: pipeline id '%s'", $pipelineId));
             throw $e;
         } catch (\InvalidArgumentException $e) {
-            $this->error(sprintf("Pipeline '%s' unavailable", $pipelineId));
+            $this->error(sprintf("pipelines: pipeline '%s' unavailable", $pipelineId));
             $this->info('Pipelines are:');
             $fileOptions->showPipelines($pipelines);
             return 1;
         }
 
         if (!$pipeline) {
-            $this->error("error: no pipeline to run!");
+            $this->error("pipelines: no pipeline to run!");
             return 1;
         }
 

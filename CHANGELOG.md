@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Show same image name only once
 - Remove version output from -v, --verbose
 - Validation of `--basename` actually being a basename
+- Error messages now show the utility name
 
 ## [0.0.4] - 2018-01-16
 ### Added

@@ -29,14 +29,14 @@ class RunnerTest extends UnitTestCase
             ))
         ));
 
-        // TODO set output expectation (now possible thanks to Streams)
+        $this->expectOutputRegex('~pipelines: setting up the container failed~');
         $runner = new Runner(
             'pipelines-unit-test',
             '/tmp/pipelines-test-suite',
             $exec,
             null,
             null,
-            new Streams()
+            new Streams(null, null, 'php://output')
         );
 
         $actual = $runner->run($pipeline);
@@ -91,14 +91,14 @@ class RunnerTest extends UnitTestCase
 
         $exec = new Exec();
         $exec->setActive(false);
-        // TODO set output expectation (now possible thanks to Streams)
+        $this->expectOutputRegex('~pipelines: pipeline with no step to execute~');
         $runner = new Runner(
             'pipelines-unit-test',
             '/tmp/pipelines-test-suite',
             $exec,
             null,
             null,
-            new Streams()
+            new Streams(null, null, 'php://output')
         );
         $status = $runner->run($pipeline);
         $this->assertEquals($runner::STATUS_NO_STEPS, $status);
@@ -112,14 +112,14 @@ class RunnerTest extends UnitTestCase
         $exec = new Exec();
         $exec->setActive(false);
 
-        // TODO set output expectation (now possible thanks to Streams)
+        $this->expectOutputRegex('~^pipelines: .* pipeline inside pipelines recursion detected~');
         $runner = new Runner(
             'pipelines-unit-test',
             '/tmp/pipelines-test-suite',
             $exec,
             null,
             $env,
-            new Streams()
+            new Streams(null, null, 'php://output')
         );
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
@@ -165,7 +165,7 @@ class RunnerTest extends UnitTestCase
             ->expect('capture', 'docker', 0)
             ->expect('pass', 'docker', 1);
 
-        $this->expectOutputRegex('{Deploy copy failure}');
+        $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $runner = new Runner(
             'pipelines-unit-test',
             '/tmp/pipelines-test-suite',

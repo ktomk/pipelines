@@ -86,7 +86,7 @@ class Runner
         $hasId = $this->env->setPipelinesId($pipeline->getId()); # TODO give Env an addPipeline() method (compare addReference)
         if ($hasId) {
             $this->streams->err(sprintf(
-                "fatal: won't start pipeline '%s'; pipeline inside pipelines recursion detected\n",
+                "pipelines: won't start pipeline '%s'; pipeline inside pipelines recursion detected\n",
                 $pipeline->getId()
             ));
             return self::STATUS_RECURSION_DETECTED;
@@ -101,7 +101,7 @@ class Runner
         }
 
         if (!isset($status)) {
-            $this->streams->err("error: pipeline with no step to execute\n");
+            $this->streams->err("pipelines: pipeline with no step to execute\n");
             return self::STATUS_NO_STEPS;
         }
 
@@ -164,7 +164,7 @@ class Runner
         ), $out, $err);
         if ($status !== 0) {
             $streams->out(sprintf("    container-id...: %s\n\n", '*failure*'));
-            $streams->out(sprintf("fatal: setting up the container failed.\n"));
+            $streams->err(sprintf("pipelines: setting up the container failed\n"));
             $streams->err(sprintf("%s\n", $err));
             $streams->out(sprintf("%s\n", $out));
             $streams->out(sprintf("exit status: %d\n", $status));
@@ -207,7 +207,7 @@ class Runner
                 'cp', '-a', $dir . '/.', $id . ':/app')
         );
         if ($status !== 0) {
-            $streams->err('Deploy copy failure\n');
+            $streams->err('pipelines: deploy copy failure\n');
             return $status;
         }
 

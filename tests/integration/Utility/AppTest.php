@@ -57,7 +57,7 @@ class AppTest extends TestCase
     public function testEmptyBasenameGivesError()
     {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputString("Not a basename: ''\n");
+        $this->expectOutputString("pipelines: not a basename: ''\n");
         $args = array(
             'pipelines-test',
             '--basename',
@@ -90,7 +90,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString(
-            "Not a readable file: " .
+            "pipelines: not a readable file: " .
             "/rooter/home/galore/not/found/super.yml\n"
         );
         $args = array(
@@ -107,7 +107,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString(
-            "Unknown option: --for-the-fish-thank-you\n"
+            "pipelines: unknown option: --for-the-fish-thank-you\n"
         );
         $args = array(
             'pipelines-test',
@@ -120,7 +120,7 @@ class AppTest extends TestCase
     public function testInvalidWrongPipelineNameArgumentException()
     {
         $this->expectOutputString(
-            "Pipeline 'test/more' unavailable\n"
+            "pipelines: pipeline 'test/more' unavailable\n"
         );
         $app = new App(new Streams(null, null, 'php://output'));
         $args = array(
