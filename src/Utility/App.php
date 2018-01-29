@@ -95,14 +95,14 @@ Common options
                           default is 'bitbucket-pipelines.yml'
     --deploy mount|copy   how files from the working directory
                           are placed into the pipeline container:
-                          mount    (default) the working dir is
-                                 mounted. fastest, no isolation
-                          copy     working directory is copied
-                                 into the container. slower,
+                          copy     (default) working dir is
+                                 copied into the container.
                                  stronger isolation as the
                                  pipeline scripts can change
                                  all files without side-effects
                                  in the working directory
+                          mount    the working directory is
+                                 mounted. fastest, no isolation
     -e, --env <variable>  pass or set an environment variables
                           for the docker container
     --env-file <path>     pass variables from environment file
@@ -310,7 +310,7 @@ EOD
 
         $noRun = $args->hasOption('no-run');
 
-        $deployMode = $args->getOptionArgument('deploy', 'mount');
+        $deployMode = $args->getOptionArgument('deploy', 'copy');
         if (!in_array($deployMode, array('mount', 'copy'))) {
             $this->error(sprintf("pipelines: unknown deploy mode '%s'\n", $deployMode));
             return 1;

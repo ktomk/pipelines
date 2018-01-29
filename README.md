@@ -53,17 +53,21 @@ or `--file <path>` option and/or set the working directory
 `--working-dir <path>` in which the file is looked for unless
 an absolute path is set by `--file <path>`.
 
-By default it operates on the current working tree which is mounted
-directly into the container (implicit `--deploy mount`).
+By default it operates on the current working tree which is
+copied into the container to isolate running the pipeline from
+the working directory by default (implicit `--deploy copy`).
 
-Isolate files by copying them into the container instead of the
-mount by using `--deploy copy`. This requires `docker copy` with
-the `-a` / `--archive` option (since docker 17.06).
+This requires `docker copy` with the `-a` / `--archive` option
+(since docker 17.06).
+
+Alternatively the working directory can be mounted into the
+pipelines container by using `--deploy mount`.
 
 Use `--keep` flag to keep containers after the pipeline has
 finished for further inspection. By default all containers are
 destroyed on successful pipeline step execution and kept in
-case of error.
+case of error. The `--no-keep` flag prevents keeping of
+containers even in case of error.
 
 Manage leftover containers with `--docker-list` showing all
 pipeline containers, `--docker-kill` to kill running containers

@@ -4,12 +4,14 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.5] - 2018-01-29
 ### Added
 - Docker environment variables options: `-e`, `--env` for 
   variables and `--env-file` for files
 - Composer "ci" script to integrate continuously
 - `--no-keep` option to never keep containers, even on error
+### Changed
+- Default `--deploy` mode is now `copy`, was `mount` previously
 ### Fixed
 - Image name validation
 - Image as a section
