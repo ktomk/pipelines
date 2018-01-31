@@ -86,6 +86,13 @@ show the commands which would have run verbatim.
 Use `--no-run` to not run the pipeline at all, this can be used
 to test the utilities options.
 
+Pipeline environment variables can be passed/exported to or set
+for your pipeline by name or file with `-e`, `--env` and
+`--env-file` options.
+
+A full display of the pipelines utility options and arguments is
+available via `-h`, `--help`.
+
 ### Usage Scenario
 
 Give your project and pipeline changes a quick test run from the
@@ -97,14 +104,20 @@ given in [Bitbucket Pipelines documentation][BBPL-LOCAL-RUN]
 This is where the `pipelines` command jumps in.
 
 The `pipelines` command closes the gap between local development
-and remote pipeline execution. As long as Docker is installed
-and running, the `bitbucket-pipelines.yml` file is parsed and
-it is taken care of to execute all steps and their commands
+and remote pipeline execution by executing any pipeline
+configured on your local development box. As long as Docker is
+accessible locally, the `bitbucket-pipelines.yml` file is parsed
+and it is taken care of to execute all steps and their commands
 within the container of choice.
 
 Pipelines YAML file parsing, container creation and script
 execution is done as closely as possible compared to the
-Atlassian Bitbucket Pipeline service. Features include:
+Atlassian Bitbucket Pipeline service. Environment variables can
+be passed into each pipeline as needed. You can even switch to a
+different CI/CD service like Github/Travis with little
+integration work fostering your agility and vendor independence.
+
+Features include:
 
 * **Dev Mode**: Pipeline from your working tree like never
   before. Pretend to be on any branch, tag or bookmark
@@ -113,7 +126,7 @@ Atlassian Bitbucket Pipeline service. Features include:
   Check if the reference matches a pipeline or just run the
   default (default) or a specific one (`--pipeline`). Use a
   different pipelines file (`--file`) or swap the "repository" by
-  changing the working directory (`--working-dir`).
+  changing the working directory (`--working-dir <path>`).
 
   If a pipeline step fails, the steps container will be
   automatically kept for further inspection. The container id is
@@ -131,10 +144,22 @@ Atlassian Bitbucket Pipeline service. Features include:
 * **Container Isolation**: There is one container per step, like
   it is on Bitbucket.
 
-  To isolate the files, use `--deploy` with `copy` to copy the
-  files into the container. This isolates file-changes done by
-  the pipeline from the working directory which is otherwise by
-  default mounted into the container (implicit `--deploy mount`).
+  The files are isolated by being copied into the container
+  before the pipeline step script is executed (implicit
+  `--deploy copy`).
+
+  Alternatively files can be mounted into the container instead
+  with `--deploy mount` which normally is faster, but the working
+  tree might become changed by the container script.
+
+* **Pipeline Integration**: Export files from the pipeline by
+  making use of artifacts, these are copied back into the working
+  tree while in (implicit) `--deploy copy` mode. Artifacts files
+  are always created by the user running pipelines. This also
+  (near) perfectly emulates the file format `artifacts` section
+  with the benefit/downside that you might want to prepare a
+  clean build in a step script while you can keep artifacts from
+  pipelines locally.
 
 * **Ready for Offline**: On the plane? Or just a rainy day on
   a remote location with broken net? Coding while abroad? Or
@@ -146,7 +171,8 @@ Atlassian Bitbucket Pipeline service. Features include:
 
 * **Default Image**: The pipelines command uses the default
   image like Bitbucket Pipelines does. Get started out of the
-  box, but keep in mind it has roughly 2 GB.
+  box, but keep in mind it has roughly 2 GB
+  ("`atlassian/default-image:latest`").
 
 * **Pipelines inside Pipeline**: As a special feature and by
   default pipelines mounts the docker socket into each container
@@ -156,12 +182,13 @@ Atlassian Bitbucket Pipeline service. Features include:
   This feature is similar to [run Docker commands in Bitbucket
   Pipelines][BBPL-DCK] \[BBPL-DCK] but w/o mounting the Docker
   CLI executable in the container.
+
   The pipelines inside pipeline feature serves pipelines itself
   well for integration testing on Travis. In combination with
-  `--deploy mount` (the default), the original working-directory
-  gets mounted from the host again. Additional protection against
-  recursion is implemented to prevent accidental endless loops
-  of pipelines inside pipeline invocations.
+  `--deploy mount`, the original working-directory gets mounted
+  from the host again. Additional protection against recursion
+  is implemented to prevent accidental endless loops of pipelines
+  inside pipeline invocations.
 
 ## Environment
 
@@ -172,14 +199,14 @@ environment variables][BBPL-ENV] \[BBPL-ENV]:
 * `BITBUCKET_BOOKMARK` - conditionally set by `--target`
 * `BITBUCKET_BUILD_NUMBER` - always set to '0'
 * `BITBUCKET_BRANCH` - conditionally set by `--target`
-* `BITBUCKET_CLONE_DIR` - always set to mount point in container
+* `BITBUCKET_CLONE_DIR` - always set to deploy point in container
 * `BITBUCKET_COMMIT` - faux as no revision triggers a build;
-    always set to '0000000000000000000000000000000000000000'
+    always set to "`0000000000000000000000000000000000000000`"
 * `BITBUCKET_REPO_OWNER` - current username from
-    environment or if not available 'nobody'
-* `BITBUCKET_REPO_SLUG` - always set to 'local-has-no-slug'
+    environment or if not available "`nobody`"
+* `BITBUCKET_REPO_SLUG` - always set to "`local-has-no-slug`"
 * `BITBUCKET_TAG` - conditionally set by `--target`
-* `CI` - always set to 'true'
+* `CI` - always set to "`true`"
 
 All of these (but not `BITBUCKET_CLONE_DIR`) can be set within
 the environment pipelines runs and are taken over into container
@@ -191,9 +218,9 @@ Additionally pipelines sets some environment variables for
 introspection:
 
 * `PIPELINES_CONTAINER_NAME` - name of the container itself
-* `PIPELINES_ID` - <id> of the pipeline that currently runs
+* `PIPELINES_ID` - `<id>` of the pipeline that currently runs
 * `PIPELINES_IDS` - list of space separated md5 hashes of so
-    far running <id>. used to detect pipelines inside pipelines
+    far running `<id>`s. used to detect pipelines inside pipeline
     recursion, preventing execution until system failure.
 * `PIPELINES_PARENT_CONTAINER_NAME` - name of the container name
     if it was already set when the pipeline started (pipelines
@@ -216,18 +243,12 @@ Pipelines requires a POSIX compatible system.
 
 Docker needs to be available locally as `docker` command as it is
 used to run pipelines and the working directory is used as volume
-in the container (by default as a mount unless `--deploy` with
-`copy` instead of the implicit `mount`). (1)
+in the container (with `--deploy mount`).
 
 A recent PHP version is favored, the `pipelines` command needs
 it to run. It should work with PHP 5.3+, the phar build requires
 PHP 5.4+. A development environment should have PHP 7, this is
 especially suggested for future releases.
-
-(1) There is the idea to allow bare-metal execution of pipeline
-commands, but this is more specific and can run against pipeline
-assumptions (there is no container environment) so is more of
-a pipelines file development option (TODO).
 
 ### User Tests
 
@@ -242,24 +263,24 @@ Sierra with PHP and Docker installed.
 
 ### Installation
 
-Installation is available by downloading the phar archive or via
-Composer.
+Installation is available by downloading the phar archive from
+Github or via Composer/Packagist.
 
-#### Download the PHAR File (PHP Archive)
+#### Download the PHAR (PHP Archive) File
 
 Downloads are available on Github. Change the tag in the URL to
 get the preferred version:
 
-    https://github.com/ktomk/pipelines/releases/download/0.0.4/pipelines.phar
-    
-Rename the phar file to just "pipelines", set the executable bit
-and move it into a directory where executables are found.
+    https://github.com/ktomk/pipelines/releases/download/0.0.5/pipelines.phar
+
+Rename the phar file to just "`pipelines`", set the executable
+bit and move it into a directory where executables are found.
 
 Downloads from Github are available since version 0.0.4.
 
 #### Install with Composer
 
-Suggested is to install it globally (and to have the global 
+Suggested is to install it globally (and to have the global
 composer vendor/bin in PATH) so that it can be called with ease
 and there are no dependencies in a local project:
 
@@ -270,21 +291,21 @@ Verify the installation by invoking pipelines and output the
 version:
 
     $ pipelines --version
-    pipelines version 0.0.1
+    pipelines version 0.0.5
 
 To uninstall remove the package:
 
     $ composer global remove ktomk/pipelines
-    
+
 #### Install from Source
 
 Alternatively checkout the source repository and symlink the
-executable bin/pipelines into a segment of PATH, e.g. your
+executable `bin/pipelines` into a segment of PATH, e.g. your
 HOME/bin directory or similar. Verify the installation by
 invoking pipelines and output the version:
 
     $ pipelines --version
-    pipelines version 0.0.1
+    pipelines version 0.0.5
 
 To create a phar archive from sources, invoke from within the
 projects root directory the build script:
@@ -311,36 +332,40 @@ Check the version by invoking it:
 
 ### Todo
 
+- Traverse up from the current working directory to find a file
+  with the basename (`--basename <basename>`) changing the
+  root directory to it.
+- Support for private Docker repositories
+- Caches support, first of all for Composer to better handle
+  offline scenarios
 - Check Docker existence before running
-- Override the default user
-- Pass environment variable file(s) (`--env-file`)
 - Stop at manual steps (`--no-manual` to override)
-- Run specific steps of a pipeline only
-- More accessible offline preparation (`--docker-pull-images`)
-- Write limitations section about the file-format support
+- Run specific steps of a pipeline (only)
+- More accessible offline preparation (e.g.
+  `--docker-pull-images`)
+- Write section about the file format support/limitations
 - Pipeline file properties support
     - clone (1)
     - max-time (1)
     - size (1)
     - step.trigger (1)
-    - artifacts (1)
     - definitions (1)
-- Full keep control (`--keep [always|error|never]`) to be able to
-  prevent keeping containers on error.
 - Validation command for bitbucket-pipelines.yml files (so far
   `--show` gives error on parts it runs over and non zero exit
   code)
 - Verify steps of a single command to see if it matches an
-  executable script file or not in the project.
-- Write exit status section about used exit codes
+  executable script file or not in the project
+- Write exit status section about used exit codes (1 for argument
+  input errors, 2 for system errors caused by argument input
+  values (if so), also `--show` file format validation etc.)
 - Get VCS revision from working directory
-- Use a different project directory `--project-dir <path>` for the
-  working tree to operate on which otherwise is the working
-  directory.
-- Run on a specific revision, reference it (`--revision <ref>`).
-  Needs a clean VCS checkout in a temporary folder which then 
-  should be copied into the container.
-- The default image can even be overridden (`--default-image`).
+- Use a different project directory `--project-dir <path>` to
+  specify the root path to deploy into the container, which
+  currently is the working directory (`--working-dir <path>`)
+- Run on a specific revision, reference it (`--revision <ref>`);
+  needs a clean VCS checkout in a temporary folder which then
+  should be copied into the container
+- Override the default image name (`--default-image <name>`)
 - Option to not mount docker.sock
 
 (1) if it is considered that it applies to running local

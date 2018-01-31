@@ -2,7 +2,7 @@
   "name": "ktomk/pipelines",
   "description": "bitbucket pipelines runner",
   "minimum-stability": "stable",
-  "license": "AGPL-3.0",
+  "license": "AGPL-3.0-or-later",
   "authors": [
     {
       "name": "Tom Klingenberg",
