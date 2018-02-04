@@ -163,10 +163,10 @@ class Runner
             '--workdir', '/app', '--detach', $image->getName()
         ), $out, $err);
         if ($status !== 0) {
-            $streams->out(sprintf("    container-id...: %s\n\n", '*failure*'));
-            $streams->err(sprintf("pipelines: setting up the container failed\n"));
-            $streams->err(sprintf("%s\n", $err));
-            $streams->out(sprintf("%s\n", $out));
+            $streams->out("    container-id...: *failure*\n\n");
+            $streams->err("pipelines: setting up the container failed\n");
+            $streams->err("$err\n");
+            $streams->out("$out\n");
             $streams->out(sprintf("exit status: %d\n", $status));
             return $status;
         }
@@ -279,6 +279,7 @@ class Runner
     /**
      * @see Runner::captureStepArtifacts()
      *
+     * @param ArtifactSource $source
      * @param string $pattern
      * @param string $id
      * @param string $dir
