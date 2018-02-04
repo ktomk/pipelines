@@ -75,7 +75,7 @@ class ImageTest extends TestCase
     {
         $expected = 'foo/bar:tag';
         $image = new Image($expected);
-        $this->assertSame($expected, (string) $image->getName());
+        $this->assertSame($expected, (string)$image->getName());
     }
 
     public function testNameAsString()
@@ -85,4 +85,12 @@ class ImageTest extends TestCase
         $this->assertSame($expected, $image->__toString());
     }
 
+    public function testGetProperties()
+    {
+        $expected = 'foo/bar:tag';
+        $image = new Image(array('name' => $expected));
+        $actual = $image->getProperties();
+        $class = 'Ktomk\Pipelines\Value\Properties';
+        $this->assertInstanceOf($class, $actual);
+    }
 }

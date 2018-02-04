@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\Value\Properties;
+
 /**
  * Class Image
  *
@@ -17,7 +19,7 @@ class Image
     private $name;
 
     /**
-     * @var array
+     * @var Properties
      */
     private $properties;
 
@@ -28,6 +30,7 @@ class Image
      */
     public function __construct($image)
     {
+        $this->properties = new Properties();
         $this->parse($image);
     }
 
@@ -59,7 +62,6 @@ class Image
         }
 
         $this->name = new ImageName($name);
-        $this->properties = array();
     }
 
     private function parseArray(array $image)
@@ -69,10 +71,9 @@ class Image
         }
         $this->parseString($image['name']);
         unset($image['name']);
+
         $entries = array('username', 'password', 'email', 'aws');
-        foreach ($entries as $key) {
-            $image = $this->parseArrayEntry($image, $key);
-        }
+        $image = $this->properties->import($image, $entries);
 
         if (!empty($image)) {
             ParseException::__(sprintf(
@@ -80,15 +81,6 @@ class Image
                 key($image)
             ));
         }
-    }
-
-    private function parseArrayEntry(array $image, $key)
-    {
-        if (isset($image[$key])) {
-            $this->properties[$key] = $image[$key];
-        }
-        unset($image[$key]);
-        return $image;
     }
 
     /**
@@ -102,5 +94,13 @@ class Image
     public function __toString()
     {
         return (string)$this->name;
+    }
+
+    /**
+     * @return Properties properties additional to name
+     */
+    public function getProperties()
+    {
+        return $this->properties;
     }
 }
