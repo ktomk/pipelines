@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\OptionFilterIterator;
+use UnexpectedValueException;
 
 /**
  * resolve environment variables against docker --env & --env-file arguments
@@ -109,5 +110,49 @@ class EnvResolver
         return isset($this->variables[$name])
             ? $this->variables[$name]
             : null;
+    }
+
+    /**
+     * replace variable with its content if it is a portable, Shell and
+     * Utilities variable name (see POSIX).
+     *
+     * zero-length string if the variable is undefined in the resolver
+     * context.
+     *
+     * @param $string
+     * @return string
+     */
+    public function resolveString($string)
+    {
+        $pattern = '~^\$([A-Z_]+[0-9A-Z_])*$~';
+        $result = preg_match($pattern, $string, $matches);
+        if (false === $result) {
+            throw new UnexpectedValueException('regex pattern error'); // @codeCoverageIgnore
+        }
+
+        if (0 === $result) {
+            return $string;
+        }
+
+        list(, $name) = $matches;
+        $value = $this->getValue($name);
+
+        return (string)$value;
+    }
+
+    /**
+     * resolve a string or an array of strings
+     *
+     * @param string|array $stringOrArray
+     * @return string|array
+     * @see resolveString
+     */
+    public function __invoke($stringOrArray)
+    {
+        if (is_array($stringOrArray)) {
+            return array_map(array($this, 'resolveString'), $stringOrArray);
+        }
+
+        return $this->resolveString($stringOrArray);
     }
 }

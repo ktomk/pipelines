@@ -55,4 +55,48 @@ class EnvResolverTest extends TestCase
         $resolver = new EnvResolver(array('UID' => '1000'));
         $resolver->addDefinition('$');
     }
+
+    public function testResolveString()
+    {
+        $resolver = new EnvResolver(array('UID' => '1000'));
+
+        $actual = $resolver->resolveString('UID');
+        $this->assertSame('UID', $actual, 'no variable');
+
+        $actual = $resolver->resolveString('$UID');
+        $this->assertSame('', $actual, 'undefined variable');
+
+        $resolver->addDefinition('UID');
+
+        $actual = $resolver->resolveString('$UID');
+        $this->assertSame('1000', $actual, 'defined variable');
+    }
+
+    public function testStringResolver()
+    {
+        $resolver = new EnvResolver(array('UID' => '1000'));
+        $resolver->addDefinition('UID');
+        $input = array(
+            'foo' => 'UID',
+            'bar' => '$BAR',
+            'baz' => 'baz',
+            'uid' => '$UID',
+        );
+        $expected = array(
+            'foo' => 'UID',
+            'bar' => '',
+            'baz' => 'baz',
+            'uid' => '1000',
+        );
+
+        $this->assertTrue(is_callable($resolver));
+
+        # string mode
+        $actual = array_map($resolver, $input);
+        $this->assertSame($expected, $actual);
+
+        # array mode
+        $actual = $resolver($input);
+        $this->assertSame($expected, $actual);
+    }
 }

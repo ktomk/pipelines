@@ -7,7 +7,9 @@ namespace Ktomk\Pipelines;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\Runner\ArtifactSource;
+use Ktomk\Pipelines\Runner\DockerLogin;
 use Ktomk\Pipelines\Runner\Env;
 
 /**
@@ -136,6 +138,9 @@ class Runner
             $name
         ));
 
+        # process docker login if image demands so, but continue on failure
+        $this->imageLogin($image);
+
         $copy = (bool)($this->flags & self::FLAG_DEPLOY_COPY);
 
         // docker client inside docker
@@ -185,6 +190,15 @@ class Runner
         $this->shutdownStepContainer($status, $id, $exec, $name);
 
         return $status;
+    }
+
+    /**
+     * @param Image $image
+     */
+    private function imageLogin(Image $image)
+    {
+        $login = new DockerLogin($this->exec, $this->env->getResolver());
+        $login->byImage($image);
     }
 
     /**

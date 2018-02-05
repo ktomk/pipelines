@@ -68,3 +68,13 @@ pipelines:
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
             - bin/pipelines --pipeline custom/recursion --dry-run # must fail
+    private/docker-hub:
+      - step:
+          image:
+            name: vicampotk/private
+            username: $DOCKER_ID_USER
+            password: $DOCKER_ID_PASSWORD
+            email: $DOCKER_ID_EMAIL
+          script:
+            - dist/pipelines/environment.sh
+            - env

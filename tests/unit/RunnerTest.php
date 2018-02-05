@@ -320,4 +320,36 @@ class RunnerTest extends UnitTestCase
         $status = $runner->run($pipeline);
         $this->assertSame(0, $status);
     }
+
+    public function testDockerHubImageLogin()
+    {
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        $this->expectOutputString("");
+        $runner = new Runner(
+            'pipelines-unit-test',
+            '/tmp/pipelines-test-suite',
+            $exec,
+            null,
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => array(
+                    'name' => 'foo/bar:latest',
+                    'username' => 'user',
+                    'password' => 'secret',
+                ),
+                'script' => array(':'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
+    }
 }
