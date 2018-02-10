@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- Support for .env / .env.dist file(s)
 - Support for Docker Hub private repositories incl. providing
   credentials via `--env` or `--env-file` environment variables
 ### Changed

@@ -333,6 +333,10 @@ EOD
 
         $env = Env::create($_SERVER);
         $env->addReference($reference);
+        $env->collectFiles(array(
+            $workingDir . '/.env.dist',
+            $workingDir . '/.env',
+        ));
         $env->collect($args, array('e', 'env', 'env-file'));
 
         $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';

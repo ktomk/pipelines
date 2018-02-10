@@ -20,12 +20,18 @@ class EnvResolverTest extends TestCase
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\EnvResolver', $resolver);
     }
 
+    public function testGetValue()
+    {
+        $resolver = new EnvResolver(array('UID' => '1000'));
+        $this->assertNull($resolver->getValue('UID'));
+    }
+
     public function testAddArgs()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
         $args = new Args(array(
             '-env', 'OVERRIDE=red', '-e', 'OVERRIDE=green',
-            '--env-file', 'tests/data/test.env', '-e', 'UID',
+            '--env-file', 'tests/data/env/test.env', '-e', 'UID',
             '-e', 'MOCHA'
         ));
         $resolver->addArguments($args);
@@ -36,14 +42,61 @@ class EnvResolverTest extends TestCase
         $this->assertNull($resolver->getValue('MOCHA'), 'unset, file override');
     }
 
+    public function testAddLines()
+    {
+        $lines = array(
+            '# comment',
+            'DOCKER_ID_USER',
+            'DOCKER_ID_PASSWORD',
+            'DOCKER_ID_EMAIL=foo@example.com',
+        );
+        $resolver = new EnvResolver(array('DOCKER_ID_USER' => 'electra'));
+        $resolver->addLines($lines);
+
+        $actual = $resolver->getValue('DOCKER_ID_PASSWORD');
+        $this->assertNull($actual, 'non-existing environment variable');
+
+        $actual = $resolver->getValue('DOCKER_ID_USER');
+        $this->assertSame('electra', $actual, 'existing variable');
+
+        $actual = $resolver->getValue('DOCKER_ID_EMAIL');
+        $this->assertSame('foo@example.com', $actual, 'set variable');
+    }
+
+    public function testAddFile()
+    {
+        $resolver = new EnvResolver(array('DOCKER_ID_USER' => 'electra'));
+        $resolver->addFile(__DIR__ . '/../../../.env.dist');
+
+        $actual = $resolver->getValue('DOCKER_ID_PASSWORD');
+        $this->assertNull($actual, 'non-existing environment variable');
+
+        $actual = $resolver->getValue('DOCKER_ID_USER');
+        $this->assertSame('electra', $actual, 'existing variable');
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage File read error: '/tmp/xyz/nada-kar-la-da'
      */
-    public function testInvalidFile()
+    public function testAddInvalidFile()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
         @$resolver->addFile('/tmp/xyz/nada-kar-la-da');
+    }
+
+    public function testAddFileIfExists1()
+    {
+        $resolver = new EnvResolver(array('UID' => '1000'));
+        $resolver->addFileIfExists('/tmp/xyz/nada-kar-la-da');
+        $this->assertNull($resolver->getValue('UID'));
+    }
+
+    public function testAddFileIfExists2()
+    {
+        $resolver = new EnvResolver(array('UID' => '1000'));
+        $resolver->addFileIfExists(__DIR__ . '/../../data/env/test.env');
+        $this->assertNull($resolver->getValue('UID'));
     }
 
     /**

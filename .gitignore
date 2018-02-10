@@ -6,3 +6,6 @@
 
 # Composer
 /vendor/
+
+# environment file
+/.env

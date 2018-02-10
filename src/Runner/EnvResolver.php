@@ -34,7 +34,8 @@ class EnvResolver
 
     /**
      * EnvResolver constructor.
-     * @param array|string[] $environment host environment variables (strings)
+     *
+     * @param array|string[] $environment host environment variables (name => string)
      */
     public function __construct(array $environment)
     {
@@ -68,6 +69,28 @@ class EnvResolver
                 )
             );
         }
+        $this->addLines($lines);
+    }
+
+    /**
+     * add a file but only if it exists (similar to --env-file option)
+     *
+     * @see addFile
+     * @param string $file path to (potentially existing) file
+     * @return bool file was added
+     */
+    public function addFileIfExists($file)
+    {
+        if (!is_file($file) || !is_readable($file)) {
+            return false;
+        }
+
+        $this->addFile($file);
+        return true;
+    }
+
+    public function addLines(array $lines)
+    {
         $definitions = preg_grep('~^(\s*#.*|\s*)$~', $lines, PREG_GREP_INVERT);
         foreach ($definitions as $definition) {
             $this->addDefinition($definition);
@@ -149,6 +172,7 @@ class EnvResolver
      */
     public function __invoke($stringOrArray)
     {
+        // TODO(tk): provide full environment (string) on NULL parameter
         if (is_array($stringOrArray)) {
             return array_map(array($this, 'resolveString'), $stringOrArray);
         }

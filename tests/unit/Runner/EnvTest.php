@@ -168,6 +168,9 @@ class EnvTest extends TestCase
         $this->assertNull($env->getValue('PIPELINES_ID'));
     }
 
+    /**
+     * @throws \Ktomk\Pipelines\Cli\ArgsException
+     */
     public function testCollect()
     {
         $env = Env::create();
@@ -185,6 +188,49 @@ class EnvTest extends TestCase
             9 => 'CI=true',
         );
         $actual = $env->getArgs('e');
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testCollectFiles1()
+    {
+        $env = Env::create(array('DOCKER_ID_USER' => 'electra'));
+        $env->collectFiles(array(
+            __DIR__ . '/../../data/env/.env.dist',
+            '/tmp/xyz/nada-kar-la-da',
+        ));
+        $actual = $env->getResolver()->getValue('DOCKER_ID_USER');
+        $this->assertSame('electra', $actual, '.dist imports');
+
+        $actual = $env->getResolver()->getValue('FOO');
+        $this->assertSame('BAR', $actual, '.dist sets');
+    }
+
+    public function testCollectFiles2()
+    {
+        $env = Env::create(array('DOCKER_ID_USER' => 'electra'));
+        $env->collectFiles(array(
+            '/tmp/xyz/nada-kar-la-da',
+            __DIR__ . '/../../data/env/.env.dist',
+            __DIR__ . '/../../data/env/.env',
+        ));
+        $resolver = $env->getResolver();
+        $actual = $resolver->getValue('DOCKER_ID_USER');
+        $this->assertSame('l-oracle-de-delphi', $actual, '.env sets');
+
+        $actual = $resolver->getValue('FOO');
+        $this->assertSame('BAZ', $actual, '.env overwrites');
+
+        $array = array(
+            'first' => '$DOCKER_ID_USER',
+            'second'=> '$FOO',
+            'third' => '$BAZ-LE-BAZ',
+        );
+        $expected = array(
+            'first' => 'l-oracle-de-delphi',
+            'second'=> 'BAZ',
+            'third' => '$BAZ-LE-BAZ',
+        );
+        $actual = $resolver($array);
         $this->assertSame($expected, $actual);
     }
 

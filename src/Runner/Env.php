@@ -208,6 +208,19 @@ class Env
         $this->getResolver()->addArguments($collector);
     }
 
+    public function collectFiles(array $paths)
+    {
+        $resolver = $this->getResolver();
+        foreach ($paths as $path) {
+            if ($resolver->addFileIfExists($path)) {
+                $this->collected = array_merge(
+                    $this->collected,
+                    array('--env-file', $path)
+                );
+            }
+        }
+    }
+
     /**
      * @return array w/ a string variable definition (name=value) per value
      */
@@ -229,7 +242,7 @@ class Env
      */
     public function getResolver()
     {
-        if ($this->resolver === null) {
+        if (null === $this->resolver) {
             $this->resolver = new EnvResolver($this->inherit);
         }
 
