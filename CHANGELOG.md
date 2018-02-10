@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   credentials via `--env` or `--env-file` environment variables
 ### Changed
 - Readme for corrections and coverage
+### Fixed
+- Deploy copy mode fail-safe against copying errors (e.g.
+  permission denied on a file to copy)
 
 ## [0.0.5] - 2018-01-29
 ### Added

@@ -14,6 +14,22 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class RunnerTest extends UnitTestCase
 {
+    /**
+     * @var string fixture of command for deploy mode copy
+     * @see setUp for initialization
+     */
+    private $deploy_copy_cmd;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->deploy_copy_cmd = "cd /tmp/pipelines-test-suite/. " .
+            "&& tar c -f - . " .
+            "| docker  cp -a - '*dry-run*:/app'";
+    }
+
+
     public function testFailOnContainerCreation()
     {
         $exec = new ExecTester($this);
@@ -132,7 +148,7 @@ class RunnerTest extends UnitTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 0)
-            ->expect('pass', 'docker', 0)
+            ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', 'docker', 0)
         ;
 
@@ -163,7 +179,7 @@ class RunnerTest extends UnitTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 0)
-            ->expect('pass', 'docker', 1);
+            ->expect('pass', $this->deploy_copy_cmd, 1);
 
         $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $runner = new Runner(
@@ -224,7 +240,7 @@ class RunnerTest extends UnitTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 0)
-            ->expect('pass', 'docker', 0)
+            ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker',"./build/foo-package.tgz")
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 0)
@@ -258,7 +274,7 @@ class RunnerTest extends UnitTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 0)
-            ->expect('pass', 'docker', 0)
+            ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker',"./build/foo-package.tgz")
         ;
@@ -291,7 +307,7 @@ class RunnerTest extends UnitTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 0)
-            ->expect('pass', 'docker', 0)
+            ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker',"./build/foo-package.tgz")
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 1)

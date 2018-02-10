@@ -217,9 +217,14 @@ class Runner
         $exec = $this->exec;
 
         $streams->out("\x1D+++ copying files into container...\n");
-        $status = $exec->pass('docker', array(
-                'cp', '-a', $dir . '/.', $id . ':/app')
+        $cd = Lib::cmd('cd', array($dir . '/.'));
+        $tar = Lib::cmd('tar', array(
+                'c', '-f', '-', '.')
         );
+        $dockerCp = Lib::cmd('docker ', array(
+                'cp', '-a', '-', $id . ':/app')
+        );
+        $status = $exec->pass("$cd && $tar | $dockerCp", array());
         if ($status !== 0) {
             $streams->err('pipelines: deploy copy failure\n');
             return $status;
