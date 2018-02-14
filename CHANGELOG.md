@@ -4,7 +4,7 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.6] - 2018-02-14
 ### Added
 - Support for .env / .env.dist file(s)
 - Support for Docker Hub private repositories incl. providing
@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Readme for corrections and coverage
 ### Fixed
+- Support for large number of artifacts files
+- Crash with image `run-as-user` property in pipelines file
 - Deploy copy mode fail-safe against copying errors (e.g.
   permission denied on a file to copy)
 

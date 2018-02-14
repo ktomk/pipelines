@@ -222,7 +222,7 @@ class Runner
                 'c', '-f', '-', '.')
         );
         $dockerCp = Lib::cmd('docker ', array(
-                'cp', '-a', '-', $id . ':/app')
+                'cp', '-', $id . ':/app')
         );
         $status = $exec->pass("$cd && $tar | $dockerCp", array());
         if ($status !== 0) {
@@ -313,16 +313,21 @@ class Runner
             return;
         }
 
-        $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
-        $docker = Lib::cmd('docker', array('exec', '-w', '/app', $id));
-        $unTar = Lib::cmd('tar', array('x', '-f', '-', '-C', $dir));
+        $chunkSize = 2048;
+        $chunks = array_chunk($paths, $chunkSize, true);
 
-        $status = $exec->pass($docker . ' ' . $tar . ' | ' . $unTar, array());
+        foreach ($chunks as $paths) {
+            $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
+            $docker = Lib::cmd('docker', array('exec', '-w', '/app', $id));
+            $unTar = Lib::cmd('tar', array('x', '-f', '-', '-C', $dir));
 
-        if ($status !== 0) {
-            $streams->err(
-                sprintf("Artifact failure: '%s'\n", $pattern)
-            );
+            $status = $exec->pass($docker . ' ' . $tar . ' | ' . $unTar, array());
+
+            if ($status !== 0) {
+                $streams->err(
+                    sprintf("pipelines: Artifact failure: '%s' (%d, %d paths)\n", $pattern, $status, count($paths))
+                );
+            }
         }
     }
 

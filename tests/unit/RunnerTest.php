@@ -26,7 +26,7 @@ class RunnerTest extends UnitTestCase
 
         $this->deploy_copy_cmd = "cd /tmp/pipelines-test-suite/. " .
             "&& tar c -f - . " .
-            "| docker  cp -a - '*dry-run*:/app'";
+            "| docker  cp - '*dry-run*:/app'";
     }
 
 
@@ -313,7 +313,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 1)
         ;
 
-        $this->expectOutputString("Artifact failure: 'build/foo-package.tgz'\n");
+        $this->expectOutputString("pipelines: Artifact failure: 'build/foo-package.tgz' (1, 1 paths)\n");
         $runner = new Runner(
             'pipelines-unit-test',
             '/tmp/pipelines-test-suite',

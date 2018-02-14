@@ -4,7 +4,12 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-
+/**
+ * Utility class to obtain version of a PHP bases CLI utility including but not
+ * limited to a Git project context
+ *
+ * @package Ktomk\Pipelines\Utility
+ */
 class Version
 {
     /**

@@ -40,9 +40,9 @@ located at registry-1.docker.io by default.
 
     <name-components>
                 := <name-comp> ( "/" <name-comp> )?
-    <name-comp> := <name> ( <sperator> <name> )*
+    <name-comp> := <name> ( <seperator> <name> )*
     <name>      := [a-z0-9]+
-    <sperator>  := "." | "_" "_"? | "-"+
+    <seperator> := "." | "_" "_"? | "-"+
 
     "-" := ASCII 45 dash
     "." := ASCII 46 period

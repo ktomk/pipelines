@@ -57,9 +57,6 @@ By default it operates on the current working tree which is
 copied into the container to isolate running the pipeline from
 the working directory by default (implicit `--deploy copy`).
 
-This requires `docker copy` with the `-a` / `--archive` option
-(since docker 17.06).
-
 Alternatively the working directory can be mounted into the
 pipelines container by using `--deploy mount`.
 

@@ -72,7 +72,7 @@ class Image
         $this->parseString($image['name']);
         unset($image['name']);
 
-        $entries = array('username', 'password', 'email', 'aws');
+        $entries = array('run-as-user', 'username', 'password', 'email', 'aws');
         $image = $this->properties->import($image, $entries);
 
         if (!empty($image)) {
