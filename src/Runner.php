@@ -185,7 +185,7 @@ class Runner
 
         $status = $this->runStepScript($step, $streams, $exec, $name);
 
-        $this->captureStepArtifacts($step, $copy, $id, $dir);
+        $this->captureStepArtifacts($step, $copy && 0 === $status, $id, $dir);
 
         $this->shutdownStepContainer($status, $id, $exec, $name);
 
