@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Build directory owner and attributes for deploy copy mode
 - Do not capture artifacts files after failed step
 
 ## [0.0.6] - 2018-02-14

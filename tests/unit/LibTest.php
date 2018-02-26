@@ -152,4 +152,58 @@ class LibTest extends TestCase
         $actual = Lib::fsIsBasename($path);
         $this->assertSame($expected, $actual, 'path is (not) basename');
     }
+
+    /**
+     * @requires PHPUnit 5.7
+     */
+    public function testFsMkdir()
+    {
+        $baseDir = sys_get_temp_dir() . '/pipelines-fs-tests';
+        $testDir = $baseDir . '/test';
+        if (is_dir($testDir)) {
+            rmdir($testDir);
+        }
+
+        if (is_dir($baseDir)) {
+            rmdir($baseDir);
+        }
+
+        Lib::fsMkdir($testDir);
+        $this->assertDirectoryExists($testDir);
+        Lib::fsMkdir($testDir);
+        $this->assertDirectoryExists($testDir);
+
+        # clean up
+        rmdir($testDir);
+        rmdir($baseDir);
+        $this->assertDirectoryNotExists($testDir);
+        $this->assertDirectoryNotExists($baseDir);
+    }
+
+    /**
+     * @requires PHPUnit 5.7
+     */
+    public function testFsSymlinkAndUnlink()
+    {
+        $baseDir = sys_get_temp_dir() . '/pipelines-fs-tests';
+        $testDir = $baseDir . '/test';
+        $link = $baseDir . '/link';
+        Lib::fsUnlink($link);
+        $this->assertFileNotExists($link);
+
+        Lib::fsMkdir($testDir);
+        Lib::fsSymlink($testDir, $link);
+        $this->assertFileExists($link);
+        Lib::fsSymlink($testDir, $link);
+        $this->assertFileExists($link);
+
+        Lib::fsUnlink($link);
+        $this->assertFileNotExists($link);
+
+        # clean up
+        rmdir($testDir);
+        rmdir($baseDir);
+        $this->assertDirectoryNotExists($testDir);
+        $this->assertDirectoryNotExists($baseDir);
+    }
 }

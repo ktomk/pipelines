@@ -217,6 +217,24 @@ class Runner
         $exec = $this->exec;
 
         $streams->out("\x1D+++ copying files into container...\n");
+
+        $tmpDir = sys_get_temp_dir() . '/pipelines/cp';
+        Lib::fsMkdir($tmpDir);
+        Lib::fsSymlink($dir, $tmpDir . '/app');
+        $cd = Lib::cmd('cd', array($tmpDir . '/.'));
+        $tar = Lib::cmd('tar', array(
+                'c', '-h', '-f', '-', '--no-recursion', 'app')
+        );
+        $dockerCp = Lib::cmd('docker ', array(
+                'cp', '-', $id . ':/.')
+        );
+        $status = $exec->pass("$cd && echo 'app' | $tar | $dockerCp", array());
+        Lib::fsUnlink($tmpDir . '/app');
+        if ($status !== 0) {
+            $streams->err('pipelines: deploy copy failure\n');
+            return $status;
+        }
+
         $cd = Lib::cmd('cd', array($dir . '/.'));
         $tar = Lib::cmd('tar', array(
                 'c', '-f', '-', '.')

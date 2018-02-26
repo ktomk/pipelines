@@ -223,4 +223,38 @@ class Lib
 
         return true;
     }
+
+    /**
+     * create directory if not yet exists
+     *
+     * @param string $path
+     */
+    public static function fsMkdir($path)
+    {
+        if (!is_dir($path)) {
+            mkdir($path, 0777, true);
+        }
+    }
+
+    /**
+     * @param string $link
+     */
+    public static function fsUnlink($link)
+    {
+        if (is_link($link)) {
+            unlink($link);
+        }
+    }
+
+    /**
+     * create symbolic link, recreate if it exists
+     *
+     * @param string $target
+     * @param string $link
+     */
+    public static function fsSymlink($target, $link)
+    {
+        self::fsUnlink($link);
+        symlink($target, $link);
+    }
 }
