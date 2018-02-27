@@ -211,6 +211,37 @@ class RunnerTest extends UnitTestCase
         $this->assertSame(1, $status);
     }
 
+    public function testCopyFailsAtSecondStage()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', $this->deploy_copy_cmd, 0)
+            ->expect('pass', $this->deploy_copy_cmd_2, 1);
+
+        $this->expectOutputRegex('{^pipelines: deploy copy failure}');
+        $runner = new Runner(
+            'pipelines-unit-test',
+            sys_get_temp_dir() . '/pipelines-test-suite',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(1, $status);
+    }
+
     public function testKeepContainerOnError()
     {
         $exec = new ExecTester($this);
