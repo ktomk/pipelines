@@ -329,9 +329,6 @@ Check the version by invoking it:
 
 ### Todo
 
-- Traverse up from the current working directory to find a file
-  with the basename (`--basename <basename>`) changing the
-  root directory to it.
 - Support for private Docker repositories
 - Caches support, first of all for Composer to better handle
   offline scenarios

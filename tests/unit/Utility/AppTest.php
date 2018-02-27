@@ -92,6 +92,31 @@ class AppTest extends TestCase
         $this->assertSame(1, $actual);
     }
 
+    public function testFileNonDefaultBasenameChange()
+    {
+        $this->expectOutputRegex('{^info: --file overrides non-default --basename}');
+        $app = new App(new Streams(null, 'php://output'));
+        $actual = $app->main(array('cmd', '--basename', 'pipelines.yml', '--file', 'my-pipelines.yml', '-v'));
+        $this->assertSame(1, $actual);
+    }
+
+    public function testFileAbsolutePath()
+    {
+        $file = __DIR__ . '/my-pipelines.yml';
+        $this->expectOutputRegex(sprintf('{^pipelines: not a readable file: %s}', preg_quote($file)));
+        $app = new App(new Streams(null, null, 'php://output'));
+        $actual = $app->main(array('cmd', '--file', $file));
+        $this->assertSame(1, $actual);
+    }
+
+    public function testBasenameLookupWorkingDirectoryChange()
+    {
+        $this->expectOutputRegex(sprintf('{^info: changing working directory to %s$}m', preg_quote(dirname(dirname(dirname(__DIR__))))));
+        $app = new App(new Streams(null, 'php://output'));
+        $actual = $app->main(array('cmd', '--working-dir', __DIR__, '-v', '--no-run'));
+        $this->assertSame(0, $actual);
+    }
+
     public function testInvalidWorkingDirStatus()
     {
         $app = new App(new Streams());
@@ -119,6 +144,15 @@ class AppTest extends TestCase
         $this->expectOutputRegex('{^pipelines: unknown deploy mode \'flux-compensate\'}');
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--deploy', 'flux-compensate'));
+        $this->assertSame(1, $actual);
+    }
+
+    public function testUnknownOption()
+    {
+        $option = '--meltdown-trampoline-kernel-patch';
+        $this->expectOutputRegex(sprintf('{^pipelines: unknown option: %s}', preg_quote($option)));
+        $app = new App(new Streams(null, null, 'php://output'));
+        $actual = $app->main(array('cmd', $option));
         $this->assertSame(1, $actual);
     }
 

@@ -206,4 +206,32 @@ class LibTest extends TestCase
         $this->assertDirectoryNotExists($testDir);
         $this->assertDirectoryNotExists($baseDir);
     }
+
+    public function testFsFileLookUpSelf()
+    {
+        $expected = __FILE__;
+        $actual = Lib::fsFileLookUp(basename($expected), __DIR__);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testFsFileLookUpCopying()
+    {
+        $expected = dirname(dirname(__DIR__)) . '/COPYING';
+        $actual = Lib::fsFileLookUp(basename($expected), __DIR__);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testFsFileLookUpCopyingWorkingDirectory()
+    {
+        $expected = './COPYING';
+        $actual = Lib::fsFileLookUp(basename($expected), null);
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testFsFileLookUpNonExistingFile()
+    {
+        $actual = Lib::fsFileLookUp('chinese-black-beans-sauce-vs-vietnamese-spring-rolls', __DIR__);
+        $this->assertNull($actual);
+    }
+
 }

@@ -273,10 +273,8 @@ EOD
         }
 
         if (false !== $buffer = $args->getOptionArgument('working-dir', false)) {
-            $result = chdir($buffer);
-            if ($result === false) {
-                $this->error(sprintf('pipelines: fatal: change working directory to %s', $buffer));
-                return 2;
+            if (null !== $result = $this->changeWorkingDir($buffer)) {
+                return $result;
             }
         }
 
@@ -289,7 +287,23 @@ EOD
         }
 
         /** @var string $file as bitbucket-pipelines.yml to process */
-        $file = $args->getOptionArgument('file', $basename);
+        $file = $args->getOptionArgument('file', null);
+        if (null === $file && null !== $file = Lib::fsFileLookUp($basename, $workingDir)) {
+            $buffer = dirname($file);
+            if ($buffer !== $workingDir) {
+                if (null !== $result = $this->changeWorkingDir($buffer)) {
+                    return $result; // @codeCoverageIgnore
+                }
+                $workingDir = getcwd();
+                if ($workingDir === false) {
+                    // @codeCoverageIgnoreStart
+                    $this->error('pipelines: fatal: obtain working directory');
+                    return 1;
+                    // @codeCoverageIgnoreEnd
+                }
+            }
+        }
+
         if (!strlen($file)) {
             $this->error('pipelines: file can not be empty');
             return 1;
@@ -378,6 +392,22 @@ EOD
         }
 
         return $status;
+    }
+
+    /**
+     * @param string $directory
+     * @return int|null
+     */
+    private function changeWorkingDir($directory)
+    {
+        $this->verbose(sprintf('info: changing working directory to %s', $directory));
+        $result = chdir($directory);
+        if ($result === false) {
+            $this->error(sprintf('pipelines: fatal: change working directory to %s', $directory));
+            return 2;
+        }
+
+        return null;
     }
 
     /**

@@ -257,4 +257,32 @@ class Lib
         self::fsUnlink($link);
         symlink($target, $link);
     }
+
+    /**
+     * locate (readable) file by basename upward all parent directories
+     *
+     * @param string $basename
+     * @param string $directory [optional] directory to operate from, defaults
+     *               to "." (relative path of present working directory)
+     * @return string
+     */
+    public static function fsFileLookUp($basename, $directory = null)
+    {
+        if ("" === $directory || null === $directory) {
+            $directory = ".";
+        }
+
+        for (
+            $dirName = $directory, $old = null;
+            $old !== $dirName;
+            $old = $dirName, $dirName = dirname($dirName)
+        ) {
+            $test = $dirName . '/' . $basename;
+            if (is_file($test) && is_readable($test)) {
+                return $test;
+            }
+        }
+
+        return null;
+    }
 }
