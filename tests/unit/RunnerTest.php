@@ -25,11 +25,11 @@ class RunnerTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->deploy_copy_cmd = "cd /tmp/pipelines/cp/. " .
+        $this->deploy_copy_cmd = "cd " . sys_get_temp_dir(). "/pipelines/cp/. " .
             "&& echo 'app' | tar c -h -f - --no-recursion app " .
             "| docker  cp - '*dry-run*:/.'";
 
-        $this->deploy_copy_cmd_2 = "cd /tmp/pipelines-test-suite/. " .
+        $this->deploy_copy_cmd_2 = "cd " . sys_get_temp_dir(). "/pipelines-test-suite/. " .
             "&& tar c -f - . " .
             "| docker  cp - '*dry-run*:/app'";
     }
@@ -53,7 +53,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('~pipelines: setting up the container failed~');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             null,
             null,
@@ -83,7 +83,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{^\x1d\+\+\+ step #0\n}');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             null,
             null,
@@ -97,9 +97,10 @@ class RunnerTest extends UnitTestCase
     public static function setUpBeforeClass()
     {
         // this test-case operates on a (clean) temporary directory
-        if (is_dir('/tmp/pipelines-test-suite')) {
-            shell_exec('rm -rf "/tmp/pipelines-test-suite/"');
-            mkdir('/tmp/pipelines-test-suite');
+        $testDirectory = sys_get_temp_dir() . '/pipelines-test-suite';
+        if (is_dir($testDirectory)) {
+            shell_exec('rm -rf "' . $testDirectory . '/"');
+            mkdir($testDirectory);
         }
         parent::setUpBeforeClass();
     }
@@ -115,7 +116,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('~pipelines: pipeline with no step to execute~');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             null,
             null,
@@ -136,7 +137,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('~^pipelines: .* pipeline inside pipelines recursion detected~');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             null,
             $env,
@@ -160,7 +161,7 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -190,7 +191,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -221,7 +222,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{exit status 255, keeping container id \*dry-run\*}');
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             null, # default flags are important here
             null,
@@ -250,12 +251,12 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker',"./build/foo-package.tgz")
-            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 0)
+            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 0)
         ;
 
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -289,7 +290,7 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -319,13 +320,13 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker',"./build/foo-package.tgz")
-            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C /tmp/pipelines-test-suite', 1)
+            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 1)
         ;
 
         $this->expectOutputString("pipelines: Artifact failure: 'build/foo-package.tgz' (1, 1 paths)\n");
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -354,7 +355,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputString("");
         $runner = new Runner(
             'pipelines-unit-test',
-            '/tmp/pipelines-test-suite',
+            sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
             null,
             null,

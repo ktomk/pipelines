@@ -77,18 +77,18 @@ class EnvResolverTest extends TestCase
 
     /**
      * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage File read error: '/tmp/xyz/nada-kar-la-da'
+     * @expectedExceptionMessage File read error: '/abc/xyz/nada-kar-la-da'
      */
     public function testAddInvalidFile()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
-        @$resolver->addFile('/tmp/xyz/nada-kar-la-da');
+        @$resolver->addFile('/abc/xyz/nada-kar-la-da');
     }
 
     public function testAddFileIfExists1()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
-        $resolver->addFileIfExists('/tmp/xyz/nada-kar-la-da');
+        $resolver->addFileIfExists('/abc/xyz/nada-kar-la-da');
         $this->assertNull($resolver->getValue('UID'));
     }
 

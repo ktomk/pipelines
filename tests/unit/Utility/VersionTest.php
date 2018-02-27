@@ -107,7 +107,7 @@ class VersionTest extends TestCase
 
     public function testGetGitVersionInNonGitRepo()
     {
-        $version = new Version('@.@.@', '@.@.@', '/tmp');
+        $version = new Version('@.@.@', '@.@.@', sys_get_temp_dir());
         $this->assertNull($version->getGitVersion());
     }
 

@@ -196,7 +196,7 @@ class EnvTest extends TestCase
         $env = Env::create(array('DOCKER_ID_USER' => 'electra'));
         $env->collectFiles(array(
             __DIR__ . '/../../data/env/.env.dist',
-            '/tmp/xyz/nada-kar-la-da',
+            '/abc/xyz/nada-kar-la-da',
         ));
         $actual = $env->getResolver()->getValue('DOCKER_ID_USER');
         $this->assertSame('electra', $actual, '.dist imports');
@@ -209,7 +209,7 @@ class EnvTest extends TestCase
     {
         $env = Env::create(array('DOCKER_ID_USER' => 'electra'));
         $env->collectFiles(array(
-            '/tmp/xyz/nada-kar-la-da',
+            '/abc/xyz/nada-kar-la-da',
             __DIR__ . '/../../data/env/.env.dist',
             __DIR__ . '/../../data/env/.env',
         ));
