@@ -3,6 +3,7 @@
 
 # pipelines Phar build
 /build/pipelines.phar
+/build/pipelines.phar.asc
 
 # Composer
 /vendor/

@@ -22,6 +22,9 @@ matrix:
   allow_failures:
     - php: 'master'
 
+before_install:
+  - openssl aes-256-cbc -K $encrypted_a90e500b3cd1_key -iv $encrypted_a90e500b3cd1_iv -in ktomk-phive-sign.gpg.enc -out ktomk-phive-sign.gpg -d
+
 install:
   - echo "${TRAVIS_PHP_VERSION}"
   - if [[ "${TRAVIS_PHP_VERSION}" == "7.0snapshot" ]]; then composer update; fi
@@ -33,6 +36,8 @@ install:
 script:
   - vendor/bin/phpunit tests
   - composer build
+  - gpg --import ktomk-phive-sign.gpg
+  - echo "pass" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --sign build/pipelines.phar
   - bin/pipelines --version
   - bin/pipelines
   - bin/pipelines --verbose --debug --show
@@ -49,7 +54,9 @@ deploy:
   provider: releases
   api_key:
     secure: 4xNiXhCoBqLy2CkocUjn2zPKFYr7xod3b02EQ0HG2qNPEJBt+DeZomcck7BsiMcbmbzfTy4vqHX+B5iWmiUMqniYiYwSs28TQYrj6mlY6nav6jfTAkQiLO2Wl/JbV/X1lLIFALGfWkbHgCpgqhF7aOTX9CazcAviqr3WD9CRctlibBTsSdyaBtG9tNrsbjlg4gY/DLBODD4vsbXWok1kXR7gQWy+DeXFvw5BAEOlmI8YP2mpByv7+iGuNSRXIP66xrrIP6OZWooSiNsiNTBcwmUwqu5Ax6QKnY+iWX7oXnzjUsW7JhHmh/dndK8+e/ejPQKjmqGNaJtRFIG+tHKq25Ql32yCmtXTPr1OcJSWtZLPrHLSlptjcVcjXUEoO28CDG3/+3ENcPp3lw3VqVwHb25ySJgLWusiINyYY9tsTZBzeIW5ez/NrPRkjPI8BmJbUSS2eopSPR93WkPF6FURnbLD+aWKPqV4Dj4wCZhldRt+gn0mNmSgm1b/YOUhnlKKctThujmobj5ymoHKQol2GlQwQhLc+J2qThSsw9CvtHUZ4ZXY/+ae/CSIZodcdyZD540YRJoamwiLxUragvOHkeuwjYCZWyw77gUc9jbZVXr8/SCHaA96pCRMwTWPDJYAKJ6jA7mUn9Xb7PxFJxWhFzwPKE8+JSkLTvWVa3JZ66Y=
-  file: build/pipelines.phar
+  file:
+    - build/pipelines.phar
+    - build/pipelines.phar.asc
   on:
     condition: $TRAVIS_PHP_VERSION = 7.2
     tags: true
