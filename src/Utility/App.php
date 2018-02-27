@@ -73,7 +73,7 @@ usage: pipelines [<options>...] [--version | [-h | --help]]
                  [[-e | --env] <variable>] [--env-file <path>]
                  [--file <path>] [--dry-run] [--no-run] [--list]
                  [--deploy mount | copy ] [--show] [--images]
-                 [--pipeline <id>] [--verbatim]
+                 [--pipeline <id>] [--trigger <ref>] [--verbatim]
        pipelines [-v | --verbose] [--dry-run] [--docker-list]
                  [--docker-kill] [--docker-clean]
 
@@ -117,6 +117,10 @@ Common options
                           the non-zero exit status is given and
                           an error message showing the container
                           id of the kept container
+    --trigger <ref>       build trigger, <ref> can be of either
+                          tag:<name>, branch:<name> or
+                          bookmark:<name>. used in determination
+                          of the pipeline to run
     --pipeline <id>       run pipeline with <id>, see --list
     --verbatim            only give verbatim output of the
                           pipeline, no other information around
