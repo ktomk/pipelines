@@ -37,7 +37,7 @@ script:
   - vendor/bin/phpunit tests
   - composer build
   - gpg --import ktomk-phive-sign.gpg
-  - echo "pass" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --sign build/pipelines.phar
+  - echo "pass" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
   - bin/pipelines --version
   - bin/pipelines
   - bin/pipelines --verbose --debug --show
