@@ -37,7 +37,8 @@ script:
   - vendor/bin/phpunit tests
   - composer build
   - gpg --import ktomk-phive-sign.gpg
-  - echo "pass" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
+  - echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
+  - ls -al build/pipelines.phar.asc
   - bin/pipelines --version
   - bin/pipelines
   - bin/pipelines --verbose --debug --show
@@ -58,6 +59,10 @@ deploy:
     - build/pipelines.phar
     - build/pipelines.phar.asc
   on:
-    condition: $TRAVIS_PHP_VERSION = 7.2
+    condition: '$TRAVIS_PHP_VERSION = 7.2'
     tags: true
     repo: ktomk/pipelines
+
+env:
+  global:
+    secure: 2UP09p6h0NTe+Cwxl8d8d47b5MJjNjx6AmXIg+2zLRc+ggGBhbHAZMk/1TKf8n/j4g0OSXgikdRBkaSGkfQ1jHulWuenuRKwY9/C16lRTXUpcCRQxlHby3twyDBKWhhZs/2dH6iCtyMGi38qmhObh1pmcADrE81PqF6/HBDONIyd2e9m9+Ruq76mWciyiuybm62L0G1kQREphuBIHlCB3aF1hcuO64BcMCrpS5l1q04FQyFx0dOPBKe64HXAjxHOp5bZzAZMmQMhaCKapj+/WddQwyopWDGnqQGgba9nFzGLpb3i+wmWLJJF8QSnVQo4withoE4SzoOgu7fqnpw6s29gYQoJWZ+lT2AupQFQzn1EymvLp9GOco8Wabqc7x1Vl17g+cqlb7qGiYmWm059qmqi0FDs1W3SHrlnpaV4N373IL2pvwKY89yi70fo9M1jyetFezg1jugGKU46v/AjeJ1fKX+6/lxXH7nayke9gbd0GmI0I63r94eCFgy81fIMR7+4J2JhkdP131ZVZMdrgBIgUdPsdFzhTJcZAxZVxeiRy8xAOrlOXrjL9HvGbgcYqENdFEu/0lGeZLvd+W+MqwWfmBbtlLTDVlXoO6Y9VmGODLEePlKSXEiRwMta4zxwCMagzgx1+cNUrb9u09MLjKVlrIpyCG4MM33q0mSiJdg=
