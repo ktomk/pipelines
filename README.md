@@ -308,7 +308,7 @@ To create a phar archive from sources, invoke from within the
 projects root directory the build script:
 
     $ composer build
-    > @php -dphar.readonly=0 -fdist/build/build.php # build phar file
+    > @php -dphar.readonly=0 -flib/build/build.php # build phar file
     building 0.0.1 ...
     pipelines version 0.0.1
     file.....: build/pipelines.phar

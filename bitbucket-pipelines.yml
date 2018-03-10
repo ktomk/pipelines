@@ -8,23 +8,23 @@ pipelines:
         name: pipeline features and introspection
         script:
           - echo "test" || true
-          - dist/pipelines/environment.sh
+          - lib/pipelines/environment.sh
 
   custom:
     lint-php-5.3:
       - step:
           image: php:5.3
           script:
-            - dist/pipelines/lint.sh
+            - lib/pipelines/lint.sh
     unit-tests-php-5.3:
       - step:
           # has no zip: tomsowerby/php-5.3:cli
           image: cespi/php-5.3:cli-latest
           script:
-            - command -v composer || dist/pipelines/composer-install.sh
-            - composer require --no-suggest --dev phpunit/phpunit ^4 --update-with-dependencies
-            - composer update --no-suggest
-            - dist/pipelines/phpunit.sh
+            - command -v composer || lib/pipelines/composer-install.sh
+            - composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit
+            - composer require --no-suggest --dev phpunit/phpunit ^4
+            - lib/pipelines/phpunit.sh
     unit-tests: # run phpunit suite
       - step:
           image: php:7.0
@@ -42,7 +42,7 @@ pipelines:
           image: php:7.0
           name: default pipeline inside pipelines pipeline
           script:
-            - dist/pipelines/docker-client-install.sh
+            - lib/pipelines/docker-client-install.sh
             - docker version
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
@@ -51,7 +51,7 @@ pipelines:
       - step:
           image: php:7.0
           script:
-            - dist/pipelines/docker-client-install.sh
+            - lib/pipelines/docker-client-install.sh
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
             - docker cp --help
@@ -64,7 +64,7 @@ pipelines:
       - step:
           image: php:7.0
           script:
-            - dist/pipelines/docker-client-install.sh
+            - lib/pipelines/docker-client-install.sh
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
             - bin/pipelines --pipeline custom/recursion --dry-run # must fail
@@ -76,5 +76,5 @@ pipelines:
             password: $DOCKER_ID_PASSWORD
             email: $DOCKER_ID_EMAIL
           script:
-            - dist/pipelines/environment.sh
+            - lib/pipelines/environment.sh
             - env

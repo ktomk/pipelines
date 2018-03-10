@@ -2,7 +2,7 @@
 #
 # lint php code in src and test
 #
-# usage: dist/pipelines/lint.sh
+# usage: lib/pipelines/lint.sh
 #
 set -u
 IFS="$(printf '\n\t ')"

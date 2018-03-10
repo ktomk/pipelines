@@ -30,9 +30,12 @@
     "phpunit/phpunit": "^6.5"
   },
   "scripts": {
-    "build": "@php -dphar.readonly=0 -fdist/build/build.php # build phar file",
+    "build": "@php -dphar.readonly=0 -flib/build/build.php # build phar file",
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
-    "test": "@php -dphar.readonly=0 -fvendor/bin/phpunit -- tests",
+    "test": [
+      "@php -dphar.readonly=0 -fvendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
+      "@php -flib/coverage/checker.php -- build/log/clover.xml"
+    ],
     "ci": [
       "bin/pipelines --no-keep --verbatim --pipeline custom/lint-php-5.3",
       "@test",

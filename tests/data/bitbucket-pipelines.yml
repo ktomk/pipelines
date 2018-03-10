@@ -10,7 +10,7 @@ pipelines:
         name: pipeline features and introspection
         script:
           - echo "test" || true
-          - dist/pipelines/environment.sh
+          - lib/pipelines/environment.sh
 
   branches: # (Git and Mercurial)
     feature/*:
@@ -72,25 +72,25 @@ pipelines:
       - step:
           image: php:5.3
           script:
-            - dist/pipelines/before_install.sh
-            - dist/pipelines/lint.sh
+            - lib/pipelines/before_install.sh
+            - lib/pipelines/lint.sh
       - step:
           image: php:5.6
           script:
-            - dist/pipelines/before_install.sh
-            - dist/pipelines/lint.sh
+            - lib/pipelines/before_install.sh
+            - lib/pipelines/lint.sh
       - step:
           image: php:7.1
           script:
-            - dist/pipelines/before_install.sh
-            - dist/pipelines/lint.sh
+            - lib/pipelines/before_install.sh
+            - lib/pipelines/lint.sh
       - step:
           image: php:7.1
           script:
-            - dist/pipelines/before_install.sh
-            - dist/pipelines/lint.sh
+            - lib/pipelines/before_install.sh
+            - lib/pipelines/lint.sh
     unit-tests: # run phpunit suite
       - step:
           image: php:7.0
           script:
-            - dist/pipelines/phpunit.sh
+            - lib/pipelines/phpunit.sh

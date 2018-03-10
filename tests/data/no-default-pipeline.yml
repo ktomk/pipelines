@@ -10,4 +10,4 @@ pipelines:
       - step:
           image: php:7.0
           script:
-            - dist/pipelines/phpunit.sh
+            - lib/pipelines/phpunit.sh

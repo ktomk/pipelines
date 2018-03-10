@@ -10,7 +10,7 @@ pipelines:
         name: pipeline features and introspection
         script:
           - echo "test" || true
-          - dist/pipelines/environment.sh
+          - lib/pipelines/environment.sh
 
   branches:
     feature/*: *default

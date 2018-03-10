@@ -2,7 +2,7 @@
 #
 # run phpunit from composer (dev) dependencies
 #
-# usage: dist/pipelines/phpunit.sh
+# usage: lib/pipelines/phpunit.sh
 #
 set -u
 IFS="$(printf '\n\t ')"

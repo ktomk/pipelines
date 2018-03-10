@@ -10,4 +10,4 @@ pipelines:
       - step:
           image: invalid image
           script:
-            - dist/pipelines/phpunit.sh
+            - lib/pipelines/phpunit.sh
