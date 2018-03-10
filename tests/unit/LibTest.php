@@ -11,6 +11,18 @@ use PHPUnit\Framework\TestCase;
  */
 class LibTest extends TestCase
 {
+    public function testRSet()
+    {
+        $ref = 'a';
+        $this->assertSame($ref, Lib::r($ref, null));
+    }
+
+    public function testRUnset()
+    {
+        $ref = null;
+        $this->assertSame('a', Lib::r($ref, 'a'));
+    }
+
     public function testGenerateUuid()
     {
         $actual = Lib::generateUuid();

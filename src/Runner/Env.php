@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\Collector;
+use Ktomk\Pipelines\Lib;
 
 /**
  * Pipeline environment collaborator
@@ -64,7 +65,7 @@ class Env
             'BITBUCKET_BRANCH' => null,
             'BITBUCKET_BUILD_NUMBER' => '0',
             'BITBUCKET_COMMIT' => '0000000000000000000000000000000000000000',
-            'BITBUCKET_REPO_OWNER' => '' . $this->r($inherit['USER'], 'nobody'),
+            'BITBUCKET_REPO_OWNER' => '' . Lib::r($inherit['USER'], 'nobody'),
             'BITBUCKET_REPO_SLUG' => 'local-has-no-slug',
             'BITBUCKET_TAG' => null,
             'CI' => 'true',
@@ -125,16 +126,6 @@ class Env
         }
 
         $this->vars['PIPELINES_CONTAINER_NAME'] = $name;
-    }
-
-    private function r(&$v, $d)
-    {
-        if (isset($v)) {
-            return $v;
-        }
-
-        unset($v);
-        return $d;
     }
 
     /**

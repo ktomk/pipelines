@@ -7,6 +7,15 @@ namespace Ktomk\Pipelines;
 
 class Lib
 {
+    public static function r(&$v, $d)
+    {
+        if (isset($v)) {
+            return $v;
+        }
+
+        return $d;
+    }
+
     /**
      * @return string UUID version 4
      */
@@ -232,7 +241,13 @@ class Lib
     public static function fsMkdir($path)
     {
         if (!is_dir($path)) {
-            mkdir($path, 0777, true);
+            if (!mkdir($path, 0777, true) && !is_dir($path)) {
+                // @codeCoverageIgnoreStart
+                throw new \RuntimeException(
+                    sprintf('Directory "%s" was not created', $path)
+                );
+                // @codeCoverageIgnoreEnd
+            }
         }
     }
 
