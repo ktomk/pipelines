@@ -87,6 +87,10 @@ Pipeline environment variables can be passed/exported to or set
 for your pipeline by name or file with `-e`, `--env` and
 `--env-file` options.
 
+Environment variables are also loaded from dot env files named
+`.env.dist` and `.env` and processed in that order before the
+environment switches.
+
 A full display of the pipelines utility options and arguments is
 available via `-h`, `--help`.
 
