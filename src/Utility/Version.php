@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 /**
- * Utility class to obtain version of a PHP bases CLI utility including but not
+ * Utility class to obtain version of a PHP based CLI utility including but not
  * limited to a Git project context
  *
  * @package Ktomk\Pipelines\Utility
@@ -134,13 +134,13 @@ class Version
             $buffer = 'null';
         }
 
-        $packages = (array)json_decode($buffer);
-
-        return $packages;
+        return (array)json_decode($buffer);
     }
 
     /**
      * get git version from git repository
+     *
+     * @return null|string
      */
     public function getGitVersion()
     {
