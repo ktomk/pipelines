@@ -27,7 +27,6 @@ class ImageNameTest extends TestCase
         new ImageName($invalid);
     }
 
-
     public function provideDockerImageNames()
     {
         return array(

@@ -38,7 +38,7 @@ class BuilderTest extends TestCase
         if (file_exists($this->file)) {
             unlink($this->file);
         }
-        if ($this->oldPw && $this->oldPw != getcwd()) {
+        if ($this->oldPw && $this->oldPw !== getcwd()) {
             chdir($this->oldPw);
         }
 

@@ -6,6 +6,9 @@ namespace Ktomk\Pipelines\File;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Ktomk\Pipelines\File\ParseException
+ */
 class ParseExceptionTest extends TestCase
 {
     public function testCreation()

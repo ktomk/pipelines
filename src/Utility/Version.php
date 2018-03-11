@@ -24,6 +24,20 @@ class Version
     private $version;
 
     /**
+     * Version constructor.
+     *
+     * @param string $version input
+     * @param string $placeholder
+     * @param string $dir [optional]
+     */
+    public function __construct($version, $placeholder = '@.@.@', $dir = null)
+    {
+        $this->version = $version;
+        $this->placeholder = $placeholder;
+        $this->dir = null === $dir ? __DIR__ : $dir;
+    }
+
+    /**
      * resolve version in case it is still a placeholder @.@.@,
      * e.g. when a source installation (composer package or git
      * clone)
@@ -35,21 +49,8 @@ class Version
     public static function resolve($version)
     {
         $subject = new self($version);
-        return $subject->resolveSourceVersion();
-    }
 
-    /**
-     * Version constructor.
-     *
-     * @param string $version input
-     * @param string $placeholder
-     * @param string $dir [optional]
-     */
-    public function __construct($version, $placeholder = '@.@.@', $dir = null)
-    {
-        $this->version = $version;
-        $this->placeholder = $placeholder;
-        $this->dir = $dir === null ? __DIR__ : $dir;
+        return $subject->resolveSourceVersion();
     }
 
     /**
@@ -110,7 +111,7 @@ class Version
     public function getPackageVersion()
     {
         foreach ($this->getInstalledPackages() as $package) {
-            if (!isset($package->name) || $package->name !== 'ktomk/pipelines') {
+            if (!isset($package->name) || 'ktomk/pipelines' !== $package->name) {
                 continue;
             }
             if (!isset($package->version)) {

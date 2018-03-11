@@ -29,15 +29,15 @@ class InvocationTest extends TestCase
      */
     public function testSuccessfulCommands($command)
     {
-        $this->assert("bin/pipelines $command");
+        $this->assert("bin/pipelines ${command}");
     }
 
     private function assert($command)
     {
         exec($command . ' 2>&1', $output, $status);
-        if ($status !== 0) {
+        if (0 !== $status) {
             echo "\n", $command, "\n", implode("\n", $output), "\n";
         }
-        $this->assertEquals(0, $status);
+        $this->assertSame(0, $status);
     }
 }

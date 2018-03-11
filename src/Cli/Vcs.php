@@ -27,7 +27,7 @@ class Vcs
     public function getTopLevelDirectory()
     {
         $result = $this->exec->capture('git', array('rev-parse', '--show-toplevel'), $out);
-        if ($result !== 0) {
+        if (0 !== $result) {
             return null;
         }
 

@@ -8,6 +8,9 @@ use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversNothing
+ */
 class UnitTestCase extends TestCase
 {
     /**
@@ -15,9 +18,9 @@ class UnitTestCase extends TestCase
      *
      * @param string $originalClassName
      *
+     * @throws Exception
      * @return MockObject
      *
-     * @throws Exception
      */
     protected function createMock($originalClassName)
     {

@@ -20,7 +20,7 @@ class File
 
     const DEFAULT_IMAGE = 'atlassian/default-image:latest';
 
-    /**$status =
+    /**
      * default clone depth
      */
     const DEFAULT_CLONE = 50;
@@ -36,15 +36,38 @@ class File
     private $pipelines;
 
     /**
+     * File constructor.
+     *
+     * @param array $array
+     * @throws \Ktomk\Pipelines\File\ParseException
+     */
+    public function __construct(array $array)
+    {
+        // quick validation: pipelines require
+        if (!isset($array['pipelines']) || !is_array($array['pipelines'])) {
+            ParseException::__("Missing required property 'pipelines'");
+        }
+
+        // quick validation: image name
+        self::validateImage($array);
+
+        $this->pipelines = $this->parsePipelineReferences($array['pipelines']);
+
+        $this->array = $array;
+    }
+
+    /**
      * @param $path
+     * @throws \Ktomk\Pipelines\File\ParseException
      * @return File
      */
-    static function createFromFile($path)
+    public static function createFromFile($path)
     {
         $result = Yaml::file($path);
         if (!$result) {
             ParseException::__(sprintf("YAML error: %s; verify the file contains valid YAML", $path));
         }
+
         return new self($result);
     }
 
@@ -55,6 +78,7 @@ class File
      *
      * @param array $array
      * @throw ParseException if the image name is invalid
+     * @throws \Ktomk\Pipelines\File\ParseException
      */
     public static function validateImage(array $array)
     {
@@ -71,6 +95,7 @@ class File
                     $image['name']
                 ));
             }
+
             return;
         }
 
@@ -84,22 +109,8 @@ class File
         }
     }
 
-    public function __construct(array $array)
-    {
-        // quick validation: pipelines require
-        if (!isset($array['pipelines']) || !is_array($array['pipelines'])) {
-            ParseException::__("Missing required property 'pipelines'");
-        };
-
-        // quick validation: image name
-        self::validateImage($array);
-
-        $this->pipelines = $this->parsePipelineReferences($array['pipelines']);
-
-        $this->array = $array;
-    }
-
     /**
+     * @throws \Ktomk\Pipelines\File\ParseException
      * @return Image
      */
     public function getImage()
@@ -118,6 +129,10 @@ class File
             : self::DEFAULT_CLONE;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     * @return null|Pipeline
+     */
     public function getDefault()
     {
         return $this->getById('default');
@@ -143,7 +158,9 @@ class File
      * Searches the pipeline that matches the reference
      *
      * @param Reference $reference
-     * @return string|null id if found, null otherwise
+     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
+     * @return null|string id if found, null otherwise
      */
     public function searchIdByReference(Reference $reference)
     {
@@ -157,40 +174,14 @@ class File
         );
     }
 
-    private function searchIdByTypeReference($type, $reference)
-    {
-        $this->validateType($type);
-
-        if (!isset($this->array['pipelines'][$type])) {
-            return $this->getIdDefault();
-        }
-        $array = &$this->array['pipelines'][$type];
-
-        # check for direct (non-pattern) match
-        if (isset($array[$reference])) {
-            return "$type/$reference";
-        }
-
-        # get entry with largest pattern to match
-        $patterns = array_keys($array);
-        unset($array);
-
-        $match = null;
-        foreach ($patterns as $pattern) {
-            $result = BbplMatch::match($pattern, $reference);
-            if ($result and (null === $match or strlen($pattern) > strlen($match))) {
-                $match = $pattern;
-            }
-        }
-        if (null !== $match) {
-            return "$type/$match";
-        }
-
-        return $this->getIdDefault();
-    }
-
     /**
      * Searches a reference
+     *
+     * @param Reference $reference
+     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
+     * @return null|Pipeline
      */
     public function searchReference(Reference $reference)
     {
@@ -208,13 +199,16 @@ class File
      *
      * @param string $type of pipeline, can be branches, tags or bookmarks
      * @param string $reference
-     * @return Pipeline|null
+     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
+     * @return null|Pipeline
      */
     public function searchTypeReference($type, $reference)
     {
         $id = $this->searchIdByTypeReference($type, $reference);
 
-        return $id !== null ? $this->getById($id) : null;
+        return null !== $id ? $this->getById($id) : null;
     }
 
     /**
@@ -226,10 +220,25 @@ class File
     }
 
     /**
+     * @throws \InvalidArgumentException
+     * @return array|Pipeline[]
+     */
+    public function getPipelines()
+    {
+        $pipelines = array();
+
+        foreach ($this->getPipelineIds() as $id) {
+            $pipelines[$id] = $this->getById($id);
+        }
+
+        return $pipelines;
+    }
+
+    /**
      * @param string $id
-     * @return Pipeline|null
      * @throws InvalidArgumentException
      * @throws ParseException
+     * @return null|Pipeline
      */
     public function getById($id)
     {
@@ -267,6 +276,50 @@ class File
         return null;
     }
 
+    /**
+     * @param $type
+     * @param $reference
+     * @throws \UnexpectedValueException
+     * @throws \InvalidArgumentException
+     * @return null|string
+     */
+    private function searchIdByTypeReference($type, $reference)
+    {
+        $this->validateType($type);
+
+        if (!isset($this->array['pipelines'][$type])) {
+            return $this->getIdDefault();
+        }
+        $array = &$this->array['pipelines'][$type];
+
+        # check for direct (non-pattern) match
+        if (isset($array[$reference])) {
+            return "${type}/${reference}";
+        }
+
+        # get entry with largest pattern to match
+        $patterns = array_keys($array);
+        unset($array);
+
+        $match = null;
+        foreach ($patterns as $pattern) {
+            $result = BbplMatch::match($pattern, $reference);
+            if ($result and (null === $match or strlen($pattern) > strlen($match))) {
+                $match = $pattern;
+            }
+        }
+        if (null !== $match) {
+            return "${type}/${match}";
+        }
+
+        return $this->getIdDefault();
+    }
+
+    /**
+     * @param array $array
+     * @throws \Ktomk\Pipelines\File\ParseException
+     * @return array
+     */
     private function parsePipelineReferences(array &$array)
     {
         // quick validation: pipeline sections
@@ -286,7 +339,7 @@ class File
         $section = 'default';
         if (isset($array[$section])) {
             if (!is_array($array[$section])) {
-                ParseException::__("'$section' requires a list of steps");
+                ParseException::__("'${section}' requires a list of steps");
             }
             $references[$section] = array(
                 $section,
@@ -300,10 +353,10 @@ class File
                 continue;
             }
             if (!is_array($refs)) {
-                ParseException::__("'$section' requires a list");
+                ParseException::__("'${section}' requires a list");
             }
             foreach ($refs as $pattern => $pipeline) {
-                $references["$section/$pattern"] = array(
+                $references["${section}/${pattern}"] = array(
                     $section,
                     $pattern,
                     &$array[$section][$pattern],
@@ -316,6 +369,7 @@ class File
 
     /**
      * @param $type
+     * @throws \InvalidArgumentException
      */
     private function validateType($type)
     {

@@ -76,7 +76,7 @@ class EnvTest extends TestCase
         $env->initDefaultVars(array('BITBUCKET_BRANCH' => 'test'));
         # start count has some vars unset
         $new = count($env->getArgs('-e'));
-        $this->assertEquals($default + 2, $new);
+        $this->assertSame($default + 2, $new);
     }
 
     public function testAddRefType()
@@ -112,7 +112,6 @@ class EnvTest extends TestCase
         $args = $env->getArgs('-e');
         $this->assertCount($count + 2, $args);
         $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=blue-seldom', $args, true));
-
 
         $env->setContainerName('solar-bottom');
         $args = $env->getArgs('-e');

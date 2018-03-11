@@ -14,21 +14,6 @@ use PHPUnit\Framework\TestCase;
  */
 class OptionIteratorTest extends TestCase
 {
-
-    private function iter(array $array = array('--foo', 'bar', '-f', 'b', '--', 'parameter'))
-    {
-        $argv = array_merge(
-            array('utility'),
-            $array
-        );
-
-        $args = \Ktomk\Pipelines\Cli\Args::create($argv);
-
-        $iter = new OptionIterator($args);
-
-        return $iter;
-    }
-
     public function testCreation()
     {
         $iterator = $this->iter();
@@ -86,7 +71,6 @@ class OptionIteratorTest extends TestCase
         $this->assertSame(4, $iterator->key());
     }
 
-
     public function provideSingleOptionArgs()
     {
         return array(
@@ -114,7 +98,6 @@ class OptionIteratorTest extends TestCase
         $iterator->next();
         $iterator->rewind();
         $this->assertSame(0, $iterator->key());
-
     }
 
     public function provideSingleOptionArguments()
@@ -130,11 +113,13 @@ class OptionIteratorTest extends TestCase
 
     /**
      * @dataProvider provideSingleOptionArguments()
+     * @param mixed $hasArg
      */
     public function testGetArgument(array $array, $hasArg)
     {
         $iterator = $this->iter($array);
         $this->assertSame($hasArg, $iterator->hasArgument());
+
         try {
             $actual = $iterator->getArgument();
             $this->assertTrue($hasArg);
@@ -142,5 +127,19 @@ class OptionIteratorTest extends TestCase
         } catch (ArgsException $e) {
             $this->addToAssertionCount(1);
         }
+    }
+
+    private function iter(array $array = array('--foo', 'bar', '-f', 'b', '--', 'parameter'))
+    {
+        $argv = array_merge(
+            array('utility'),
+            $array
+        );
+
+        $args = \Ktomk\Pipelines\Cli\Args::create($argv);
+
+        $iter = new OptionIterator($args);
+
+        return $iter;
     }
 }

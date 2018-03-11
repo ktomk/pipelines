@@ -27,6 +27,7 @@ class Collector extends Args
     /**
      * @param string|string[] $option one or more options to collect
      *
+     * @throws \InvalidArgumentException
      * @throws \Ktomk\Pipelines\Cli\ArgsException
      */
     public function collect($option)
@@ -34,8 +35,8 @@ class Collector extends Args
         /** @var OptionFilterIterator|OptionIterator $options */
         $options = new OptionFilterIterator($this->args, $option);
         $consume = array();
-        foreach ($options as $index => $option) {
-            $this->arguments[] = $option;
+        foreach ($options as $index => $value) {
+            $this->arguments[] = $value;
             $consume[] = $index;
             $this->arguments[] = $options->getArgument();
             $consume[] = $index + 1;

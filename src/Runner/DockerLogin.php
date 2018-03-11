@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Runner;
 
-
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Image;
 
@@ -50,6 +49,8 @@ class DockerLogin
      * Establish login for image
      *
      * @param Image $image
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
      */
     public function byImage(Image $image)
     {
@@ -87,6 +88,7 @@ class DockerLogin
         $buffer = @file_get_contents($this->path);
         $array = json_decode((string)$buffer, true);
         $isset = isset($array['auths'][$authUri]['auth']);
+
         return $isset;
     }
 

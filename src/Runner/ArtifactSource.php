@@ -25,7 +25,7 @@ class ArtifactSource
     private $dir;
 
     /**
-     * @var array|null all in-container build directory file paths
+     * @var null|array all in-container build directory file paths
      */
     private $allFiles;
 
@@ -43,17 +43,23 @@ class ArtifactSource
     }
 
     /**
+     * @throws \RuntimeException
      * @return array|string[]
      */
     public function getAllFiles()
     {
-        if ($this->allFiles === null) {
+        if (null === $this->allFiles) {
             $this->allFiles = $this->getFindPaths();
         }
 
         return $this->allFiles;
     }
 
+    /**
+     * @param string $pattern
+     * @throws \RuntimeException
+     * @return array
+     */
     public function findByPattern($pattern)
     {
         $matcher = function ($subject) use ($pattern) {
@@ -68,8 +74,17 @@ class ArtifactSource
     }
 
     /**
+     * @return string container id
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * get an array of paths obtained via docker exec & find
      *
+     * @throws \RuntimeException
      * @return array
      */
     private function getFindPaths()
@@ -84,6 +99,10 @@ class ArtifactSource
         return array_values($paths);
     }
 
+    /**
+     * @throws \RuntimeException
+     * @return string
+     */
     private function getFindBuffer()
     {
         $command = array(

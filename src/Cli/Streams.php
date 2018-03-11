@@ -25,6 +25,40 @@ class Streams
     private $closeOnDestruct;
 
     /**
+     * Streams constructor.
+     *|string
+     * handles can be null (noop), a resource (reuse) or a string that
+     * is opened before use (currently on creation, could be postponed)
+     *
+     * @param null|resource|string $in
+     * @param null|resource|string $out
+     * @param null|resource|string $err
+     */
+    public function __construct($in = null, $out = null, $err = null)
+    {
+        $this->handles = array();
+        $this->addHandle($in);
+        $this->addHandle($out);
+        $this->addHandle($err);
+    }
+
+    public function __destruct()
+    {
+        foreach ($this->handles as $handle => $descriptor) {
+            list($resource, $context) = $descriptor;
+            if ($resource && is_string($context) && is_resource($resource)) {
+                fclose($resource);
+                $this->handles[$handle][0] = null;
+            }
+        }
+    }
+
+    public function __invoke($string)
+    {
+        $this->out(sprintf("%s\n", $string));
+    }
+
+    /**
      * Create streams from environment (standard streams)
      */
     public static function create()
@@ -40,29 +74,6 @@ class Streams
         $streams->closeOnDestruct = $care;
 
         return $streams;
-    }
-
-    /**
-     * Streams constructor.
-     *|string
-     * handles can be null (noop), a resource (reuse) or a string that
-     * is opened before use (currently on creation, could be postponed)
-     *
-     * @param resource|null|string $in
-     * @param resource|null|string $out
-     * @param resource|null|string $err
-     */
-    public function __construct($in = null, $out = null, $err = null)
-    {
-        $this->handles = array();
-        $this->addHandle($in);
-        $this->addHandle($out);
-        $this->addHandle($err);
-    }
-
-    public function __invoke($string)
-    {
-        $this->out(sprintf("%s\n", $string));
     }
 
     public function out($string)
@@ -121,16 +132,5 @@ class Streams
         }
 
         $this->handles[$num] = $new;
-    }
-
-    public function __destruct()
-    {
-        foreach ($this->handles as $handle => $descriptor) {
-            list($resource, $context) = $descriptor;
-            if ($resource && is_string($context) && is_resource($resource)) {
-                fclose($resource);
-                $this->handles[$handle][0] = null;
-            }
-        }
     }
 }

@@ -26,15 +26,15 @@ class ImageTest extends TestCase
      */
     public function testSuccessfulCommands($command)
     {
-        $this->assert("bin/pipelines --file tests/data/images.yml $command");
+        $this->assert("bin/pipelines --file tests/data/images.yml ${command}");
     }
 
     private function assert($command)
     {
         exec($command . ' 2>&1', $output, $status);
-        if ($status !== 0) {
+        if (0 !== $status) {
             echo "\n", $command, "\n", implode("\n", $output), "\n";
         }
-        $this->assertEquals(0, $status);
+        $this->assertSame(0, $status);
     }
 }

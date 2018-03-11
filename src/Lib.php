@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use UnexpectedValueException;
 
 class Lib
 {
@@ -21,10 +22,12 @@ class Lib
      */
     public static function generateUuid()
     {
-        return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        return sprintf(
+            '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
             // 32 bits for "time_low"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
 
             // 16 bits for "time_mid"
             mt_rand(0, 0xffff),
@@ -39,7 +42,9 @@ class Lib
             mt_rand(0, 0x3fff) | 0x8000,
 
             // 48 bits for "node"
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff)
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff)
         );
     }
 
@@ -71,10 +76,10 @@ class Lib
         foreach ($parts as $index => $part) {
             $index && $buffer .= "\\'";
             $safe = preg_match('~^[a-zA-Z0-9,._+@%/-]*$~', $part);
-            $buffer .= $safe ? $part : "'$part'";
+            $buffer .= $safe ? $part : "'${part}'";
         }
 
-        if ($buffer === "") {
+        if ("" === $buffer) {
             $buffer = "''";
         }
 
@@ -121,6 +126,7 @@ class Lib
      * expand brace "{}" in pattern
      *
      * @param string $pattern
+     * @throws \UnexpectedValueException
      * @return array of all patterns w/o braces, no duplicates
      */
     public static function expandBrace($pattern)
@@ -152,51 +158,6 @@ class Lib
         }, $stack);
 
         return array_values($stack);
-    }
-
-    /**
-     * @param string $subject
-     * @param array $matches
-     * @return false|int
-     */
-    private static function expandBraceInnerMatch($subject, &$matches)
-    {
-        $result = preg_match_all(
-            '~(\\\\.(*SKIP)(*FAIL)|(?P<token>[,{}]))~',
-            $subject,
-            $lookup,
-            PREG_OFFSET_CAPTURE
-        );
-
-        if (false === $result) {
-            throw new \UnexpectedValueException('regex pattern failure'); // @codeCoverageIgnore
-        }
-
-        if (0 === $result) {
-            return $result;
-        }
-
-        $open = null;
-        $comma = null;
-
-        foreach ($lookup['token'] as $token) {
-            list($type, $pos) = $token;
-            if ($type === '{') {
-                $open = $token;
-                $comma = null;
-            } elseif ($type === ',') {
-                $comma = $token;
-            } elseif ($open && $comma) {
-                $matches = array(
-                    $subject,
-                    substr($subject, 0, $open[1]),
-                    substr($subject, $open[1] + 1, $pos - $open[1] - 1),
-                    substr($subject, $pos + 1),
-                );
-                return 1;
-            }
-        }
-        return 0;
     }
 
     /**
@@ -237,10 +198,12 @@ class Lib
      * create directory if not yet exists
      *
      * @param string $path
+     * @throws \RuntimeException
      */
     public static function fsMkdir($path)
     {
         if (!is_dir($path)) {
+            /** @noinspection NestedPositiveIfStatementsInspection */
             if (!mkdir($path, 0777, true) && !is_dir($path)) {
                 // @codeCoverageIgnoreStart
                 throw new \RuntimeException(
@@ -299,5 +262,53 @@ class Lib
         }
 
         return null;
+    }
+
+    /**
+     * @param string $subject
+     * @param array $matches
+     * @throws UnexpectedValueException
+     * @return false|int
+     */
+    private static function expandBraceInnerMatch($subject, &$matches)
+    {
+        $result = preg_match_all(
+            '~(\\\\.(*SKIP)(*FAIL)|(?P<token>[,{}]))~',
+            $subject,
+            $lookup,
+            PREG_OFFSET_CAPTURE
+        );
+
+        if (false === $result) {
+            throw new UnexpectedValueException('regex pattern failure'); // @codeCoverageIgnore
+        }
+
+        if (0 === $result) {
+            return $result;
+        }
+
+        $open = null;
+        $comma = null;
+
+        foreach ($lookup['token'] as $token) {
+            list($type, $pos) = $token;
+            if ('{' === $type) {
+                $open = $token;
+                $comma = null;
+            } elseif (',' === $type) {
+                $comma = $token;
+            } elseif ($open && $comma) {
+                $matches = array(
+                    $subject,
+                    substr($subject, 0, $open[1]),
+                    substr($subject, $open[1] + 1, $pos - $open[1] - 1),
+                    substr($subject, $pos + 1),
+                );
+
+                return 1;
+            }
+        }
+
+        return 0;
     }
 }

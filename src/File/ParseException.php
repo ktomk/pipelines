@@ -15,9 +15,10 @@ class ParseException extends InvalidArgumentException
      * Abstract method to throw this message
      *
      * @param string $message
+     * @throws ParseException
      */
     public static function __($message)
     {
-        throw new ParseException($message);
+        throw new self($message);
     }
 }

@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 class VcsTest extends TestCase
 {
-
     public function testCreation()
     {
         $exec = new ExecTester($this);

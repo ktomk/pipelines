@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Cli\Args;
 
 use FilterIterator;
+use InvalidArgumentException;
 
 /**
  * Filter decorator of OptionIterator
@@ -18,6 +19,12 @@ class OptionFilterIterator extends FilterIterator
      */
     private $options;
 
+    /**
+     * OptionFilterIterator constructor.
+     * @param Args $args
+     * @param $options
+     * @throws \InvalidArgumentException
+     */
     public function __construct(Args $args, $options)
     {
         $this->initOptions((array)$options);
@@ -59,11 +66,12 @@ class OptionFilterIterator extends FilterIterator
     {
         $current = parent::current();
 
-        return in_array($current, $this->options);
+        return in_array($current, $this->options, true);
     }
 
     /**
      * @param array|string[] $options
+     * @throws \InvalidArgumentException
      */
     private function initOptions(array $options)
     {
@@ -83,19 +91,17 @@ class OptionFilterIterator extends FilterIterator
      * non-fitting.
      *
      * @param string $option
+     * @throws InvalidArgumentException
      * @return string
      */
     private function compareOption($option)
     {
         if (!preg_match('~^[a-z0-9][a-z0-9-]*$~i', $option)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf("invalid option '%s'", $option)
             );
         }
 
-        $compare = (strlen($option) === 1 ? '-' : '--')
-            . $option;
-
-        return $compare;
+        return (1 === strlen($option) ? '-' : '--') . $option;
     }
 }

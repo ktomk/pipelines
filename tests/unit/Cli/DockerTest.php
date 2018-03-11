@@ -23,7 +23,7 @@ class DockerTest extends UnitTestCase
             }
         );
 
-        /** @var MockObject|Exec $exec */
+        /** @var Exec|MockObject $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $results = array(
             $procFail,
@@ -42,6 +42,7 @@ class DockerTest extends UnitTestCase
                 $proc = $results[$call];
                 $out = $proc->getStandardOutput();
                 $err = $proc->getStandardError();
+
                 return $proc->getStatus();
             }
         );
@@ -60,10 +61,11 @@ class DockerTest extends UnitTestCase
 
     public function testHostDeviceMount()
     {
-        /** @var MockObject|Exec $exec */
+        /** @var Exec|MockObject $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $exec->method('capture')->willReturnCallback(function ($cmd, $args, &$stdout) {
             $stdout = file_get_contents(__DIR__ . '/../../data/docker-inspect.json');
+
             return 0;
         });
 
@@ -74,10 +76,11 @@ class DockerTest extends UnitTestCase
 
     public function testHostDeviceMountOnNonMountPoint()
     {
-        /** @var MockObject|Exec $exec */
+        /** @var Exec|MockObject $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $exec->method('capture')->willReturnCallback(function ($cmd, $args, &$stdout) {
             $stdout = file_get_contents(__DIR__ . '/../../data/docker-inspect.json');
+
             return 0;
         });
 
@@ -88,7 +91,7 @@ class DockerTest extends UnitTestCase
 
     public function testHostDeviceMountDockerInspectFails()
     {
-        /** @var MockObject|Exec $exec */
+        /** @var Exec|MockObject $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $exec->method('capture')->willReturn(1);
 
@@ -99,10 +102,11 @@ class DockerTest extends UnitTestCase
 
     public function testHostDeviceMountJsonParseFailure()
     {
-        /** @var MockObject|Exec $exec */
+        /** @var Exec|MockObject $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $exec->method('capture')->willReturnCallback(function ($cmd, $args, &$stdout) {
             $stdout = 'Error: file not found or whatever';
+
             return 0;
         });
 

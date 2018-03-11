@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\Runner\Reference;
 use PHPUnit\Framework\TestCase;
 
@@ -43,10 +42,10 @@ class FileTest extends TestCase
     {
         $image = $file->getImage();
         $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
-        $imageString = (string) $image;
+        $imageString = (string)$image;
         $this->assertInternalType('string', $imageString);
         $expectedImage = File::DEFAULT_IMAGE;
-        $this->assertEquals($expectedImage, $imageString);
+        $this->assertSame($expectedImage, $imageString);
     }
 
     public function testGetImageSet()
@@ -57,9 +56,8 @@ class FileTest extends TestCase
             'pipelines' => array('tags' => array()),
         );
         $file = new File($image);
-        $this->assertSame($expected, (string) $file->getImage());
+        $this->assertSame($expected, (string)$file->getImage());
     }
-
 
     public function testMinimalFileStructureAndDefaultValues()
     {
@@ -69,7 +67,7 @@ class FileTest extends TestCase
 
         $file = new File($minimal);
 
-        $this->assertSame(File::DEFAULT_IMAGE, (string) $file->getImage());
+        $this->assertSame(File::DEFAULT_IMAGE, (string)$file->getImage());
         $this->assertSame(File::DEFAULT_CLONE, $file->getClone());
 
         $steps = $file->getDefault();
@@ -139,6 +137,20 @@ class FileTest extends TestCase
         $this->assertInternalType('array', $ids);
         $this->assertArrayHasKey(11, $ids);
         $this->assertSame('custom/unit-tests', $ids[11]);
+    }
+
+    /**
+     * @depends testCreateFromFile
+     * @param File $file
+     */
+    public function testGetPipelines(File $file)
+    {
+        $actual = $file->getPipelines();
+        $this->assertGreaterThan(1, count($actual));
+        $this->assertContainsOnlyInstancesOf(
+            'Ktomk\Pipelines\Pipeline',
+            $actual
+        );
     }
 
     public function testGetReference()
@@ -258,7 +270,6 @@ class FileTest extends TestCase
         $pipeline = $file->searchTypeReference('bookmarks', 'xy');
         $this->asPlFiStName('default', $pipeline);
 
-
         $pipeline = $file->searchTypeReference('branches', 'feature/xy');
         $this->asPlFiStName('default', $pipeline);
     }
@@ -338,7 +349,6 @@ class FileTest extends TestCase
 
         $pipeline = new Pipeline($file, array(array('step' => array('script' => array(':')))));
         $this->assertNull($file->getIdFrom($pipeline));
-
     }
 
     /**
@@ -374,8 +384,6 @@ class FileTest extends TestCase
         $this->addToAssertionCount(1);
     }
 
-
-
     /**
      * assertPipelineFirstStepName
      *
@@ -387,6 +395,6 @@ class FileTest extends TestCase
     {
         $steps = $pipeline->getSteps();
         $first = $steps[0];
-        $this->assertEquals($expected, $first->getName(), $message);
+        $this->assertSame($expected, $first->getName(), $message);
     }
 }

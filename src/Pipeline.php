@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-
 use Ktomk\Pipelines\File\ParseException;
 
 class Pipeline
@@ -15,10 +14,16 @@ class Pipeline
     private $file;
 
     /**
-     * @var array
+     * @var array|Step[]
      */
     private $steps;
 
+    /**
+     * Pipeline constructor.
+     * @param File $file
+     * @param array $definition
+     * @throws \Ktomk\Pipelines\File\ParseException
+     */
     public function __construct(File $file, array $definition)
     {
         // quick validation
@@ -28,21 +33,6 @@ class Pipeline
 
         $this->file = $file;
         $this->steps = $this->parseSteps($definition);
-    }
-
-    /**
-     * @param array $definition
-     * @return array
-     */
-    private function parseSteps(array $definition) {
-        $steps = array();
-        foreach ($definition as $index => $step) {
-            if (!is_array($step)) {
-                ParseException::__("Pipeline requires a list of steps");
-            }
-            $steps[] = $this->step($step);
-        }
-        return $steps;
     }
 
     /**
@@ -56,7 +46,7 @@ class Pipeline
     /**
      * get id of pipeline within the corresponding file object
      *
-     * @return string|null id, can be null in fake/test conditions
+     * @return null|string id, can be null in fake/test conditions
      */
     public function getId()
     {
@@ -71,6 +61,46 @@ class Pipeline
         return $this->steps;
     }
 
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @return array
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        $steps = array();
+        foreach ($this->steps as $step) {
+            $steps[] = $step->jsonSerialize();
+        }
+
+        return array(
+            'steps' => $steps,
+        );
+    }
+
+    /**
+     * @param array $definition
+     * @throws \Ktomk\Pipelines\File\ParseException
+     * @return array
+     */
+    private function parseSteps(array $definition) {
+        $steps = array();
+        foreach ($definition as $index => $step) {
+            if (!is_array($step)) {
+                ParseException::__("Pipeline requires a list of steps");
+            }
+            $steps[] = $this->step($step);
+        }
+
+        return $steps;
+    }
+
+    /**
+     * @param array $step
+     * @throws \Ktomk\Pipelines\File\ParseException
+     * @return Step
+     */
     private function step(array $step)
     {
         if (!isset($step['step'])) {
@@ -81,5 +111,4 @@ class Pipeline
 
         return new Step($this, $step['step']);
     }
-
 }

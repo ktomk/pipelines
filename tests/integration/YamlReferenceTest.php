@@ -7,6 +7,9 @@ namespace Ktomk\Pipelines\Integration;
 use Ktomk\Pipelines\File;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversNothing
+ */
 class YamlReferenceTest extends TestCase
 {
     public function testFileWithAliasParses()
@@ -22,14 +25,14 @@ class YamlReferenceTest extends TestCase
         $this->assertSame($expected, $actual, 'alias is loaded');
 
         $this->assertNotSame(
-            $file->getById($idDefault),
-            $file->getById($idAlias),
+            $default = $file->getById($idDefault),
+            $alias = $file->getById($idAlias),
             'alias yaml node must create their identities'
         );
 
-        $this->assertEquals(
-            $file->getById($idDefault),
-            $file->getById($idAlias),
+        $this->assertSame(
+            $default->jsonSerialize(),
+            $alias->jsonSerialize(),
             'alias yaml node must create their nodes'
         );
     }

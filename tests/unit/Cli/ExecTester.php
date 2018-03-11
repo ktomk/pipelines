@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Cli;
 
 use BadMethodCallException;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 /**
  * Emulate execution of command line utilities in tests
@@ -17,14 +18,7 @@ class ExecTester extends Exec
      */
     private $testCase;
 
-    /**
-     * @param TestCase $testCase
-     * @return ExecTester
-     */
-    public static function create(TestCase $testCase)
-    {
-        return new self($testCase);
-    }
+    private $expects = array();
 
     /**
      * ExecTester constructor.
@@ -38,24 +32,99 @@ class ExecTester extends Exec
         parent::setActive(false);
     }
 
-    private $expects = array();
+    /**
+     * @throws \PHPUnit\Framework\AssertionFailedError
+     */
+    public function __destruct()
+    {
+        $this->testCase->addToAssertionCount(1);
+        if (count($this->expects)) {
+            $this->testCase->fail(
+                sprintf(
+                    'Failed assertion that expected number of exec\'s were done (%d left)',
+                    count($this->expects)
+                )
+            );
+        }
+    }
+
+    /**
+     * @param TestCase $testCase
+     * @return ExecTester
+     */
+    public static function create(TestCase $testCase)
+    {
+        return new self($testCase);
+    }
 
     /**
      * @param string $method
      * @param string $command
-     * @param int|string|callable $context
+     * @param callable|int|string $context
      * @return $this
      */
     public function expect($method, $command, $context = 0)
     {
         $this->expects[] = array($method, $command, $context);
+
         return $this;
     }
 
+    /**
+     * @param $command
+     * @param array $arguments
+     * @param null $out
+     * @param null $err
+     * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws UnexpectedValueException
+     * @return $this|int
+     */
+    public function capture($command, array $arguments, &$out = null, &$err = null)
+    {
+        return $this->dealInvokeExpectation(__FUNCTION__, $command, $arguments, $out, $err);
+    }
+
+    /**
+     * @param string $command
+     * @param array $arguments
+     * @throws \PHPUnit\Framework\AssertionFailedError
+     * @throws UnexpectedValueException
+     * @return int|mixed
+     */
+    public function pass($command, array $arguments)
+    {
+        return $this->dealInvokeExpectation(__FUNCTION__, $command, $arguments);
+    }
+
+    /**
+     * @param bool $active
+     * @throws \BadMethodCallException
+     */
+    public function setActive($active)
+    {
+        if (false === (bool)$active) {
+            return;
+        }
+
+        throw new BadMethodCallException(
+            'This exec tester can not be used in tests that require setting it to active.'
+        );
+    }
+
+    /**
+     * @param string $method
+     * @param string $command
+     * @param array $arguments
+     * @param null $out
+     * @param null $err
+     * @throws UnexpectedValueException
+     * @throws \PHPUnit\Framework\AssertionFailedError
+     * @return int|mixed
+     */
     private function dealInvokeExpectation($method, $command, array $arguments, &$out = null, &$err = null)
     {
         $current = array_shift($this->expects);
-        if ($current === null) {
+        if (null === $current) {
             $this->testCase->fail(
                 sprintf(
                     "Exec tester violation: %s() with command '%s' called with no more expectations",
@@ -89,6 +158,7 @@ class ExecTester extends Exec
 
         if (is_string($context)) {
             $out = $context;
+
             return 0;
         }
 
@@ -99,50 +169,6 @@ class ExecTester extends Exec
             );
         }
 
-        throw new \UnexpectedValueException('Invalid context');
-    }
-
-    /**
-     * @param $command
-     * @param array $arguments
-     * @param null $out
-     * @param null $err
-     * @return $this|int
-     */
-    public function capture($command, array $arguments, &$out = null, &$err = null)
-    {
-        return $this->dealInvokeExpectation(__FUNCTION__, $command, $arguments, $out, $err);
-    }
-
-    public function pass($command, array $arguments)
-    {
-        return $this->dealInvokeExpectation(__FUNCTION__, $command, $arguments);
-    }
-
-    /**
-     * @param bool $active
-     */
-    public function setActive($active)
-    {
-        if (false === (bool)$active) {
-            return;
-        }
-
-        throw new BadMethodCallException(
-            'This exec tester can not be used in tests that require setting it to active.'
-        );
-    }
-
-    public function __destruct()
-    {
-        $this->testCase->addToAssertionCount(1);
-        if (count($this->expects)) {
-            $this->testCase->fail(
-                sprintf(
-                    'Failed assertion that expected number of exec\'s were done (%d left)',
-                    count($this->expects)
-                )
-            );
-        }
+        throw new UnexpectedValueException('Invalid context');
     }
 }

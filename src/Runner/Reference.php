@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use InvalidArgumentException;
+
 class Reference
 {
     const BRANCH_TAG_BOOKMARK = '~^(branch|tag|bookmark):(.+)$~';
@@ -14,14 +16,25 @@ class Reference
 
     private $value;
 
-    private $map = array(
+    private static $map = array(
         'bookmark' => 'bookmarks',
         'branch' => 'branches',
         'tag' => 'tags',
     );
 
     /**
-     * @param string|null $string [optional] use null for a null reference
+     * Reference constructor
+     *
+     * @param null|string $string [optional] use null for a null reference
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($string = null)
+    {
+        $this->parse($string);
+    }
+
+    /**
+     * @param null|string $string [optional] use null for a null reference
      * @return Reference
      */
     public static function create($string = null)
@@ -43,17 +56,32 @@ class Reference
     }
 
     /**
-     * Reference constructor
-     *
-     * @param string|null $string [optional] use null for a null reference
+     * @return null|string
      */
-    public function __construct($string = null)
+    public function getType()
     {
-        $this->parse($string);
+        return $this->type;
     }
 
     /**
-     * @param string|null $string
+     * @return null|string
+     */
+    public function getPipelinesType()
+    {
+        return $this->type ? self::$map[$this->type] : null;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getName()
+    {
+        return $this->value;
+    }
+
+    /**
+     * @param null|string $string
+     * @throws InvalidArgumentException
      */
     private function parse($string)
     {
@@ -66,34 +94,10 @@ class Reference
         $result = preg_match(self::BRANCH_TAG_BOOKMARK, $string, $matches);
 
         if (!$result) {
-            throw new \InvalidArgumentException(sprintf('invalid reference: "%s"', $string));
+            throw new InvalidArgumentException(sprintf('invalid reference: "%s"', $string));
         }
 
         $this->type = $matches[1];
         $this->value = $matches[2];
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPipelinesType()
-    {
-        return $this->type ? $this->map[$this->type] : null;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getName()
-    {
-        return $this->value;
     }
 }

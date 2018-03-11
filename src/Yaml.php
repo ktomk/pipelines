@@ -9,10 +9,9 @@ use Spyc;
 
 class Yaml
 {
-
     /**
      * @param $path
-     * @return array|null on error
+     * @return null|array on error
      */
     public static function file($path)
     {

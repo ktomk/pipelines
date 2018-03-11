@@ -26,7 +26,8 @@ class Image
     /**
      * Image constructor.
      *
-     * @param string|array $image
+     * @param array|string $image
+     * @throws \Ktomk\Pipelines\File\ParseException
      */
     public function __construct($image)
     {
@@ -34,8 +35,42 @@ class Image
         $this->parse($image);
     }
 
+    public function __toString()
+    {
+        return (string)$this->name;
+    }
+
     /**
-     * @param string|array $image
+     * @return ImageName image name
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return Properties properties additional to name
+     */
+    public function getProperties()
+    {
+        return $this->properties;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        return array(
+            'name' => (string)$this->getName()
+        );
+    }
+
+    /**
+     * @param array|string $image
+     * @throws \Ktomk\Pipelines\File\ParseException
      */
     private function parse($image)
     {
@@ -52,6 +87,7 @@ class Image
 
     /**
      * @param string $name
+     * @throws \Ktomk\Pipelines\File\ParseException
      */
     private function parseString($name)
     {
@@ -64,6 +100,10 @@ class Image
         $this->name = new ImageName($name);
     }
 
+    /**
+     * @param array $image
+     * @throws \Ktomk\Pipelines\File\ParseException
+     */
     private function parseArray(array $image)
     {
         if (!isset($image['name'])) {
@@ -81,26 +121,5 @@ class Image
                 key($image)
             ));
         }
-    }
-
-    /**
-     * @return ImageName image name
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function __toString()
-    {
-        return (string)$this->name;
-    }
-
-    /**
-     * @return Properties properties additional to name
-     */
-    public function getProperties()
-    {
-        return $this->properties;
     }
 }

@@ -6,6 +6,9 @@ namespace Ktomk\Pipelines\Runner;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Ktomk\Pipelines\Runner\Reference
+ */
 class ReferenceTest extends TestCase
 {
     public function testCreation()
@@ -51,11 +54,11 @@ class ReferenceTest extends TestCase
         try {
             $this->addToAssertionCount(1);
             $type = Reference::create($string);
-            if ($string !== null && !$valid) {
+            if (null !== $string && !$valid) {
                 $this->fail('An expected exception has not been thrown');
             }
             $this->assertNotNull($type);
-            if ($string !== null) {
+            if (null !== $string) {
                 $this->assertNotNull($type->getType());
                 $this->assertNotNull($type->getName());
             }

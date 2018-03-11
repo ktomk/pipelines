@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Cli\Args;
 
-
 use Iterator as PhpIterator;
 
 class Iterator extends Args implements PhpIterator
@@ -42,39 +41,6 @@ class Iterator extends Args implements PhpIterator
     public function getNext()
     {
         return $this->getByIndex($this->index + 1);
-    }
-
-    /**
-     * @param int $index
-     * @return string|null argument string or null if not found
-     */
-    private function getByIndex($index)
-    {
-
-        $argsIndex = $this->getArgsIndex($index);
-        if (null === $argsIndex) {
-            return null;
-        }
-
-        if (!isset($this->args->arguments[$argsIndex])) {
-            return null;
-        }
-
-        return $this->args->arguments[$argsIndex];
-    }
-
-    /**
-     * @param int $index to retrieve index for
-     *
-     * @return int|null integer index of the argument, null if there is none
-     */
-    private function getArgsIndex($index)
-    {
-        if (!isset($this->indexes[$index])) {
-            return null;
-        }
-
-        return $this->indexes[$index];
     }
 
     /* Iterator */
@@ -138,5 +104,37 @@ class Iterator extends Args implements PhpIterator
     {
         $this->index = 0;
         $this->indexes = array_keys($this->args->arguments);
+    }
+
+    /**
+     * @param int $index
+     * @return null|string argument string or null if not found
+     */
+    private function getByIndex($index)
+    {
+        $argsIndex = $this->getArgsIndex($index);
+        if (null === $argsIndex) {
+            return null;
+        }
+
+        if (!isset($this->args->arguments[$argsIndex])) {
+            return null;
+        }
+
+        return $this->args->arguments[$argsIndex];
+    }
+
+    /**
+     * @param int $index to retrieve index for
+     *
+     * @return null|int integer index of the argument, null if there is none
+     */
+    private function getArgsIndex($index)
+    {
+        if (!isset($this->indexes[$index])) {
+            return null;
+        }
+
+        return $this->indexes[$index];
     }
 }

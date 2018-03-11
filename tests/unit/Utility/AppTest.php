@@ -31,7 +31,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams(null, 'php://output'));
 
-        $this->expectOutputRegex("{^pipelines version (@\.@\.@|[a-f0-9]{7}|\d+\.\d+\.\d+)(-\d+-g[a-f0-9]{7})?\+?\n}");
+        $this->expectOutputRegex("{^pipelines version (@\\.@\\.@|[a-f0-9]{7}|\\d+\\.\\d+\\.\\d+)(-\\d+-g[a-f0-9]{7})?\\+?\n}");
         $app->main(array('cmd', '--version'));
     }
 

@@ -38,6 +38,7 @@ class Properties implements Countable
      *                    1. array of strings
      *                    2. array of two arrays of string, first is for
      *                       required, second for optional entries
+     * @throws \InvalidArgumentException
      * @return array export product
      */
     public function export(array $keys)
@@ -53,22 +54,6 @@ class Properties implements Countable
         }
 
         return $this->exportPropertiesByName($keys);
-    }
-
-    /**
-     * obtain a list of keys that are not available in properties
-     *
-     * @param array $keys
-     */
-    private function missingKeys(array $keys)
-    {
-        $missing = array_diff_key(array_flip($keys), $this->properties);
-        if (!empty($missing)) {
-            throw new InvalidArgumentException(sprintf(
-                'property/ies "%s" required',
-                implode('", "', array_keys($missing))
-            ));
-        }
     }
 
     /**
@@ -141,7 +126,7 @@ class Properties implements Countable
         return $this->properties;
     }
 
-    /** Countable **/
+    /** Countable */
 
     /**
      * Count elements of an object
@@ -151,5 +136,22 @@ class Properties implements Countable
     public function count()
     {
         return count($this->properties);
+    }
+
+    /**
+     * obtain a list of keys that are not available in properties
+     *
+     * @param array $keys
+     * @throws \InvalidArgumentException
+     */
+    private function missingKeys(array $keys)
+    {
+        $missing = array_diff_key(array_flip($keys), $this->properties);
+        if (!empty($missing)) {
+            throw new InvalidArgumentException(sprintf(
+                'property/ies "%s" required',
+                implode('", "', array_keys($missing))
+            ));
+        }
     }
 }

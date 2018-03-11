@@ -78,11 +78,16 @@ class Runner
 
         $this->directory = $directory;
         $this->exec = $exec;
-        $this->flags = $flags === null ? self::FLAGS : $flags;
+        $this->flags = null === $flags ? self::FLAGS : $flags;
         $this->env = null === $env ? Env::create() : $env;
         $this->streams = null === $streams ? Streams::create() : $streams;
     }
 
+    /**
+     * @param Pipeline $pipeline
+     * @throws \RuntimeException
+     * @return int
+     */
     public function run(Pipeline $pipeline)
     {
         $hasId = $this->env->setPipelinesId($pipeline->getId()); # TODO give Env an addPipeline() method (compare addReference)
@@ -91,19 +96,21 @@ class Runner
                 "pipelines: won't start pipeline '%s'; pipeline inside pipelines recursion detected\n",
                 $pipeline->getId()
             ));
+
             return self::STATUS_RECURSION_DETECTED;
         }
 
         $steps = $pipeline->getSteps();
         foreach ($steps as $index => $step) {
             $status = $this->runStep($step, $index);
-            if ($status !== 0) {
+            if (0 !== $status) {
                 return $status;
             }
         }
 
         if (!isset($status)) {
             $this->streams->err("pipelines: pipeline with no step to execute\n");
+
             return self::STATUS_NO_STEPS;
         }
 
@@ -113,6 +120,7 @@ class Runner
     /**
      * @param Step $step
      * @param int $index
+     * @throws \RuntimeException
      * @return int exit status
      */
     public function runStep(Step $step, $index)
@@ -158,7 +166,7 @@ class Runner
 
         $mountWorkingDirectory = $copy
             ? array()
-            : array('--volume', "$deviceDir:/app"); // FIXME(tk): hard encoded /app
+            : array('--volume', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
 
         $status = $exec->capture('docker', array(
             'run', '-i', '--name', $name,
@@ -167,12 +175,13 @@ class Runner
             $mountDockerSock,
             '--workdir', '/app', '--detach', $image->getName()
         ), $out, $err);
-        if ($status !== 0) {
+        if (0 !== $status) {
             $streams->out("    container-id...: *failure*\n\n");
             $streams->err("pipelines: setting up the container failed\n");
-            $streams->err("$err\n");
-            $streams->out("$out\n");
+            $streams->err("${err}\n");
+            $streams->out("${out}\n");
             $streams->out(sprintf("exit status: %d\n", $status));
+
             return $status;
         }
         $id = rtrim($out) ?: "*dry-run*"; # side-effect: internal exploit of no output with true exit status
@@ -205,7 +214,7 @@ class Runner
      * @param bool $copy
      * @param string $id container id
      * @param string $dir directory to copy contents into container
-     * @return int|null null if all clear, integer for exit status
+     * @return null|int null if all clear, integer for exit status
      */
     private function deployCopy($copy, $id, $dir)
     {
@@ -222,29 +231,39 @@ class Runner
         Lib::fsMkdir($tmpDir);
         Lib::fsSymlink($dir, $tmpDir . '/app');
         $cd = Lib::cmd('cd', array($tmpDir . '/.'));
-        $tar = Lib::cmd('tar', array(
+        $tar = Lib::cmd(
+            'tar',
+            array(
                 'c', '-h', '-f', '-', '--no-recursion', 'app')
         );
-        $dockerCp = Lib::cmd('docker ', array(
+        $dockerCp = Lib::cmd(
+            'docker ',
+            array(
                 'cp', '-', $id . ':/.')
         );
-        $status = $exec->pass("$cd && echo 'app' | $tar | $dockerCp", array());
+        $status = $exec->pass("${cd} && echo 'app' | ${tar} | ${dockerCp}", array());
         Lib::fsUnlink($tmpDir . '/app');
-        if ($status !== 0) {
+        if (0 !== $status) {
             $streams->err('pipelines: deploy copy failure\n');
+
             return $status;
         }
 
         $cd = Lib::cmd('cd', array($dir . '/.'));
-        $tar = Lib::cmd('tar', array(
+        $tar = Lib::cmd(
+            'tar',
+            array(
                 'c', '-f', '-', '.')
         );
-        $dockerCp = Lib::cmd('docker ', array(
+        $dockerCp = Lib::cmd(
+            'docker ',
+            array(
                 'cp', '-', $id . ':/app')
         );
-        $status = $exec->pass("$cd && $tar | $dockerCp", array());
-        if ($status !== 0) {
+        $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
+        if (0 !== $status) {
             $streams->err('pipelines: deploy copy failure\n');
+
             return $status;
         }
 
@@ -258,7 +277,7 @@ class Runner
      * @param Streams $streams
      * @param Exec $exec
      * @param string $name container name
-     * @return int|null should never be null, status, non-zero if a command failed
+     * @return null|int should never be null, status, non-zero if a command failed
      */
     private function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
     {
@@ -271,7 +290,7 @@ class Runner
                 'exec', '-i', $name, '/bin/sh', '-c', $command,
             ));
             $streams->out(sprintf("\n"));
-            if ($status !== 0) {
+            if (0 !== $status) {
                 break;
             }
         }
@@ -307,7 +326,7 @@ class Runner
 
         $patterns = $artifacts->getPatterns();
         foreach ($patterns as $pattern) {
-            $this->captureArtifactPattern($source, $pattern, $id, $dir);
+            $this->captureArtifactPattern($source, $pattern, $dir);
         }
 
         $streams("");
@@ -318,14 +337,15 @@ class Runner
      *
      * @param ArtifactSource $source
      * @param string $pattern
-     * @param string $id
      * @param string $dir
+     * @throws \RuntimeException
      */
-    private function captureArtifactPattern(ArtifactSource $source, $pattern, $id, $dir)
+    private function captureArtifactPattern(ArtifactSource $source, $pattern, $dir)
     {
         $exec = $this->exec;
         $streams = $this->streams;
 
+        $id = $source->getId();
         $paths = $source->findByPattern($pattern);
         if (empty($paths)) {
             return;
@@ -335,13 +355,13 @@ class Runner
         $chunks = array_chunk($paths, $chunkSize, true);
 
         foreach ($chunks as $paths) {
-            $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
             $docker = Lib::cmd('docker', array('exec', '-w', '/app', $id));
+            $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
             $unTar = Lib::cmd('tar', array('x', '-f', '-', '-C', $dir));
 
             $status = $exec->pass($docker . ' ' . $tar . ' | ' . $unTar, array());
 
-            if ($status !== 0) {
+            if (0 !== $status) {
                 $streams->err(
                     sprintf("pipelines: Artifact failure: '%s' (%d, %d paths)\n", $pattern, $status, count($paths))
                 );
@@ -354,6 +374,7 @@ class Runner
      * @param string $id container id
      * @param Exec $exec
      * @param string $name container name
+     * @throws \RuntimeException
      */
     private function shutdownStepContainer($status, $id, Exec $exec, $name)
     {

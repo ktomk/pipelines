@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ImageTest extends TestCase
 {
-
     public function testCreateFromString()
     {
         $image = new Image('account-name/java:8u66');
@@ -92,5 +91,18 @@ class ImageTest extends TestCase
         $actual = $image->getProperties();
         $class = 'Ktomk\Pipelines\Value\Properties';
         $this->assertInstanceOf($class, $actual);
+    }
+
+    public function testJsonSerialize()
+    {
+        $expected = array(
+            'name' => 'peace',
+        );
+        $image = new Image($expected);
+        $actual = $image->jsonSerialize();
+        $this->assertSame(
+            $expected,
+            $actual
+        );
     }
 }

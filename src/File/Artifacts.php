@@ -20,6 +20,7 @@ class Artifacts
      * Artifacts constructor.
      *
      * @param array|string[] $artifacts
+     * @throws \Ktomk\Pipelines\File\ParseException
      */
     public function __construct($artifacts)
     {
@@ -36,6 +37,7 @@ class Artifacts
 
     /**
      * @param array|string[] $artifacts
+     * @throws \Ktomk\Pipelines\File\ParseException
      */
     private function parse($artifacts)
     {

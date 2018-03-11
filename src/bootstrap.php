@@ -7,9 +7,9 @@ $inc = function ($file) {
 };
 
 if (!$inc('/vendor/autoload.php') and !$inc('/../../autoload.php')) {
-    fputs(
-        defined('STDERR') ? constant('STDERR') : fopen('php://stderr', 'w')
-        , <<<ERROR
+    fwrite(
+        defined('STDERR') ? constant('STDERR') : fopen('php://stderr', 'wb'),
+        <<<'ERROR'
 To use pipelines set up project dependencies via `composer install` first
 See https://getcomposer.org/download/ for how to install Composer
 

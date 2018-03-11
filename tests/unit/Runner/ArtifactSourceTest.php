@@ -7,6 +7,9 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\ExecTester;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @covers \Ktomk\Pipelines\Runner\ArtifactSource
+ */
 class ArtifactSourceTest extends TestCase
 {
     public function testCreation()
@@ -14,6 +17,17 @@ class ArtifactSourceTest extends TestCase
         $exec = new ExecTester($this);
         $source = new ArtifactSource($exec, '*fake*', '/app');
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\ArtifactSource', $source);
+
+        return $source;
+    }
+
+    /**
+     * @param ArtifactSource $source
+     * @depends testCreation
+     */
+    public function testGetId(ArtifactSource $source)
+    {
+        $this->assertSame('*fake*', $source->getId());
     }
 
     public function testGetFiles()
@@ -49,6 +63,6 @@ class ArtifactSourceTest extends TestCase
         $result = $source->findByPattern('build/html/**.html');
         $this->assertInternalType('array', $result);
         $actual = array_intersect($expected, $result);
-        $this->assertEquals($expected, $actual, 'all expected must be found');
+        $this->assertSame($expected, $actual, 'all expected must be found');
     }
 }

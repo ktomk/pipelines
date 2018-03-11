@@ -18,6 +18,6 @@ class ArgsException extends \Exception
      */
     public static function __($message, $code = 1)
     {
-        throw new ArgsException($message, $code);
+        throw new self($message, $code);
     }
 }

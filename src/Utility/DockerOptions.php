@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
@@ -32,11 +31,6 @@ class DockerOptions
      */
     private $prefix;
 
-    public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
-    {
-        return new self($args, $exec, $prefix, $streams);
-    }
-
     /**
      * DockerOptions constructor.
      *
@@ -53,6 +47,11 @@ class DockerOptions
         $this->prefix = $prefix;
     }
 
+    public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
+    {
+        return new self($args, $exec, $prefix, $streams);
+    }
+
     /**
      * Process docker related options
      *
@@ -60,7 +59,9 @@ class DockerOptions
      * --docker-kill  - kill (running) containers
      * --docker-clean - remove (stopped) containers
      *
-     * @return int|null for no command executed, otherwise int exist status
+     * @throws \InvalidArgumentException
+     * @throws \RuntimeException
+     * @return null|int for no command executed, otherwise int exist status
      */
     public function run()
     {
@@ -125,7 +126,7 @@ class DockerOptions
             'docker ps -a',
             array(
                 '--filter',
-                "name=^/$prefix-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                "name=^/${prefix}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
             )
         );
 
@@ -135,7 +136,8 @@ class DockerOptions
     /**
      * get ids of all (prefixed in their name) containers, including stopped ones
      *
-     * @return array|null
+     * @throws \RuntimeException
+     * @return null|array
      */
     private function getAllContainerIds()
     {
@@ -147,7 +149,7 @@ class DockerOptions
             'docker',
             array(
                 'ps', '-qa', '--filter',
-                "name=^/$prefix-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                "name=^/${prefix}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
             ),
             $result
         );
@@ -157,6 +159,10 @@ class DockerOptions
         return $ids;
     }
 
+    /**
+     * @throws \RuntimeException
+     * @return null|array
+     */
     private function getRunningContainerIds()
     {
         $prefix = $this->prefix;
@@ -167,7 +173,7 @@ class DockerOptions
             'docker',
             array(
                 'ps', '-q', '--filter',
-                "name=^/$prefix-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                "name=^/${prefix}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
             ),
             $result
         );

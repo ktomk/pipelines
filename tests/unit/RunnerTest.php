@@ -21,19 +21,29 @@ class RunnerTest extends UnitTestCase
     private $deploy_copy_cmd;
     private $deploy_copy_cmd_2;
 
+    public static function setUpBeforeClass()
+    {
+        // this test-case operates on a (clean) temporary directory
+        $testDirectory = sys_get_temp_dir() . '/pipelines-test-suite';
+        if (is_dir($testDirectory)) {
+            shell_exec('rm -rf "' . $testDirectory . '/"');
+            mkdir($testDirectory);
+        }
+        parent::setUpBeforeClass();
+    }
+
     protected function setUp()
     {
         parent::setUp();
 
-        $this->deploy_copy_cmd = "cd " . sys_get_temp_dir(). "/pipelines/cp/. " .
+        $this->deploy_copy_cmd = "cd " . sys_get_temp_dir() . "/pipelines/cp/. " .
             "&& echo 'app' | tar c -h -f - --no-recursion app " .
             "| docker  cp - '*dry-run*:/.'";
 
-        $this->deploy_copy_cmd_2 = "cd " . sys_get_temp_dir(). "/pipelines-test-suite/. " .
+        $this->deploy_copy_cmd_2 = "cd " . sys_get_temp_dir() . "/pipelines-test-suite/. " .
             "&& tar c -f - . " .
             "| docker  cp - '*dry-run*:/app'";
     }
-
 
     public function testFailOnContainerCreation()
     {
@@ -66,7 +76,7 @@ class RunnerTest extends UnitTestCase
 
     public function testRunning()
     {
-        /** @var MockObject|Exec $exec */
+        /** @var Exec|MockObject $exec */
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $exec->method('pass')->willReturn(0);
         $exec->method('capture')->willReturn(0);
@@ -94,20 +104,9 @@ class RunnerTest extends UnitTestCase
         $this->assertSame(0, $actual);
     }
 
-    public static function setUpBeforeClass()
-    {
-        // this test-case operates on a (clean) temporary directory
-        $testDirectory = sys_get_temp_dir() . '/pipelines-test-suite';
-        if (is_dir($testDirectory)) {
-            shell_exec('rm -rf "' . $testDirectory . '/"');
-            mkdir($testDirectory);
-        }
-        parent::setUpBeforeClass();
-    }
-
     public function testErrorStatusWithPipelineHavingEmptySteps()
     {
-        /** @var Pipeline|MockObject $pipeline */
+        /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array());
 
@@ -123,7 +122,7 @@ class RunnerTest extends UnitTestCase
             new Streams(null, null, 'php://output')
         );
         $status = $runner->run($pipeline);
-        $this->assertEquals($runner::STATUS_NO_STEPS, $status);
+        $this->assertSame($runner::STATUS_NO_STEPS, $status);
     }
 
     public function testHitRecursion()
@@ -281,7 +280,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
-            ->expect('capture', 'docker',"./build/foo-package.tgz")
+            ->expect('capture', 'docker', "./build/foo-package.tgz")
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 0)
         ;
 
@@ -316,7 +315,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
-            ->expect('capture', 'docker',"./build/foo-package.tgz")
+            ->expect('capture', 'docker', "./build/foo-package.tgz")
         ;
 
         $runner = new Runner(
@@ -350,7 +349,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
-            ->expect('capture', 'docker',"./build/foo-package.tgz")
+            ->expect('capture', 'docker', "./build/foo-package.tgz")
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 1)
         ;
 

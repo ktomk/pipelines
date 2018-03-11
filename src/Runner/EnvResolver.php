@@ -20,12 +20,10 @@ use UnexpectedValueException;
  */
 class EnvResolver
 {
-
     /**
      * @var array host environment (that exports)
      */
     private $environment;
-
 
     /**
      * @var array container environment (partial w/o bitbucket environment)
@@ -42,6 +40,28 @@ class EnvResolver
         $this->environment = array_filter($environment, 'is_string');
     }
 
+    /**
+     * resolve a string or an array of strings
+     *
+     * @param array|string $stringOrArray
+     * @throws \UnexpectedValueException
+     * @return array|string
+     * @see resolveString
+     */
+    public function __invoke($stringOrArray)
+    {
+        // TODO(tk): provide full environment (string) on NULL parameter
+        if (is_array($stringOrArray)) {
+            return array_map(array($this, 'resolveString'), $stringOrArray);
+        }
+
+        return $this->resolveString($stringOrArray);
+    }
+
+    /**
+     * @param Args $args
+     * @throws \InvalidArgumentException
+     */
     public function addArguments(Args $args)
     {
         $files = new OptionFilterIterator($args, 'env-file');
@@ -59,13 +79,16 @@ class EnvResolver
      * add a file (--env-file option)
      *
      * @param string $file path to file
+     * @throws \InvalidArgumentException
      */
     public function addFile($file)
     {
         $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if (false === $lines) {
-            throw new InvalidArgumentException(sprintf(
-                    "File read error: '%s'", $file
+            throw new InvalidArgumentException(
+                sprintf(
+                    "File read error: '%s'",
+                    $file
                 )
             );
         }
@@ -77,6 +100,7 @@ class EnvResolver
      *
      * @see addFile
      * @param string $file path to (potentially existing) file
+     * @throws \InvalidArgumentException
      * @return bool file was added
      */
     public function addFileIfExists($file)
@@ -86,9 +110,14 @@ class EnvResolver
         }
 
         $this->addFile($file);
+
         return true;
     }
 
+    /**
+     * @param array $lines
+     * @throws \InvalidArgumentException
+     */
     public function addLines(array $lines)
     {
         $definitions = preg_grep('~^(\s*#.*|\s*)$~', $lines, PREG_GREP_INVERT);
@@ -101,6 +130,7 @@ class EnvResolver
      * add a variable definition (-e, --env option)
      *
      * @param string $definition variable definition, either name only or w/ equal sign
+     * @throws \InvalidArgumentException
      */
     public function addDefinition($definition)
     {
@@ -109,7 +139,8 @@ class EnvResolver
         $result = preg_match($pattern, $definition, $matches);
         if (0 === $result) {
             throw new InvalidArgumentException(sprintf(
-                "Variable definition error: '%s'", $definition
+                "Variable definition error: '%s'",
+                $definition
             ));
         }
 
@@ -126,7 +157,7 @@ class EnvResolver
      * get value of variable
      *
      * @param string $name of variable to obtain value from
-     * @return string|null value, null if unset
+     * @return null|string value, null if unset
      */
     public function getValue($name)
     {
@@ -143,6 +174,7 @@ class EnvResolver
      * context.
      *
      * @param $string
+     * @throws \UnexpectedValueException
      * @return string
      */
     public function resolveString($string)
@@ -161,22 +193,5 @@ class EnvResolver
         $value = $this->getValue($name);
 
         return (string)$value;
-    }
-
-    /**
-     * resolve a string or an array of strings
-     *
-     * @param string|array $stringOrArray
-     * @return string|array
-     * @see resolveString
-     */
-    public function __invoke($stringOrArray)
-    {
-        // TODO(tk): provide full environment (string) on NULL parameter
-        if (is_array($stringOrArray)) {
-            return array_map(array($this, 'resolveString'), $stringOrArray);
-        }
-
-        return $this->resolveString($stringOrArray);
     }
 }

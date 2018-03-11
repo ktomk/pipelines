@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 class IteratorTest extends TestCase
 {
-
     public function testCreation()
     {
         $args = new ArgsTester();

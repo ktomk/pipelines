@@ -6,7 +6,6 @@ namespace Ktomk\Pipelines\Cli;
 
 use Ktomk\Pipelines\Lib;
 
-
 /**
  * Class to abstract command execution in command line interface
  * context.
@@ -37,8 +36,8 @@ class Exec
             return 0;
         }
 
-        $buffer === ':' ? $status = 0 : passthru($buffer, $status);
-        $this->debug("exit status: $status");
+        ':' === $buffer ? $status = 0 : passthru($buffer, $status);
+        $this->debug("exit status: ${status}");
 
         return $status;
     }
@@ -48,6 +47,7 @@ class Exec
      * @param array $arguments
      * @param string $out captured standard output
      * @param string $err captured standard error
+     * @throws \RuntimeException
      * @return int
      */
     public function capture($command, array $arguments, &$out = null, &$err = null)
@@ -60,18 +60,11 @@ class Exec
         }
 
         $status = $proc->run();
-        $this->debug("exit status: $status");
+        $this->debug("exit status: ${status}");
         $out = $proc->getStandardOutput();
         $err = $proc->getStandardError();
 
         return $status;
-    }
-
-    private function debug($message)
-    {
-        if ($this->debugPrinter) {
-            call_user_func($this->debugPrinter, $message);
-        }
     }
 
     /**
@@ -80,5 +73,12 @@ class Exec
     public function setActive($active)
     {
         $this->active = (bool)$active;
+    }
+
+    private function debug($message)
+    {
+        if ($this->debugPrinter) {
+            call_user_func($this->debugPrinter, $message);
+        }
     }
 }

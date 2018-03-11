@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Cli\Args;
 
-
 /**
  * Class Args
  *

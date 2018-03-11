@@ -76,6 +76,9 @@ class BbplMatchTest extends TestCase
 
     /**
      * @dataProvider provideMatchPatternLevel1
+     * @param mixed $pattern
+     * @param mixed $subject
+     * @param mixed $expected
      */
     public function testMatchLevel1($pattern, $subject, $expected)
     {
@@ -84,6 +87,9 @@ class BbplMatchTest extends TestCase
 
     /**
      * @dataProvider provideMatchPatternLevel2
+     * @param mixed $pattern
+     * @param mixed $subject
+     * @param mixed $expected
      */
     public function testMatchLevel2($pattern, $subject, $expected)
     {
@@ -92,6 +98,9 @@ class BbplMatchTest extends TestCase
 
     /**
      * @dataProvider provideMatchPatternLevel3
+     * @param mixed $pattern
+     * @param mixed $subject
+     * @param mixed $expected
      */
     public function testMatchLevel3($pattern, $subject, $expected)
     {

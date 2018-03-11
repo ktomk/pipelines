@@ -47,7 +47,7 @@ class Timestamps
      *
      * The PHAR signature can then be produced in a reproducible manner.
      *
-     * @param int|\DateTime|string $timestamp Date string or DateTime or unix timestamp to use
+     * @param int|\DateTime|string|bool $timestamp Date string or DateTime or unix timestamp to use
      */
     public function updateTimestamps($timestamp = null)
     {

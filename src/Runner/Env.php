@@ -15,7 +15,7 @@ class Env
     /**
      * @var array pipelines (bitbucket) environment variables
      */
-    private $vars;
+    private $vars = array();
 
     /**
      * collected arguments
@@ -31,19 +31,18 @@ class Env
      */
     private $inherit = array();
 
-
     /**
-     * @var EnvResolver|null
+     * @var null|EnvResolver
      */
     private $resolver;
 
     /**
-     * @param array|null $inherit
+     * @param null|array $inherit
      * @return Env
      */
     public static function create(array $inherit = array())
     {
-        $env = new Env();
+        $env = new self();
         $env->initDefaultVars($inherit);
 
         return $env;
@@ -170,7 +169,7 @@ class Env
      * get a variables value or null if not set
      *
      * @param string $name
-     * @return string|null
+     * @return null|string
      */
     public function getValue($name)
     {
@@ -188,6 +187,7 @@ class Env
      * @param Args $args
      * @param string|string[] $option
      *
+     * @throws \InvalidArgumentException
      * @throws \Ktomk\Pipelines\Cli\ArgsException
      */
     public function collect(Args $args, $option)
@@ -199,6 +199,10 @@ class Env
         $this->getResolver()->addArguments($collector);
     }
 
+    /**
+     * @param array $paths
+     * @throws \InvalidArgumentException
+     */
     public function collectFiles(array $paths)
     {
         $resolver = $this->getResolver();
@@ -213,22 +217,6 @@ class Env
     }
 
     /**
-     * @return array w/ a string variable definition (name=value) per value
-     */
-    private function getVarDefinitions()
-    {
-        $array = array();
-
-        foreach ((array)$this->vars as $name => $value) {
-            if (isset($value)) {
-                $array[] = sprintf('%s=%s', $name, $value);
-            }
-        }
-
-        return $array;
-    }
-
-    /**
      * @return EnvResolver
      */
     public function getResolver()
@@ -238,5 +226,21 @@ class Env
         }
 
         return $this->resolver;
+    }
+
+    /**
+     * @return array w/ a string variable definition (name=value) per value
+     */
+    private function getVarDefinitions()
+    {
+        $array = array();
+
+        foreach ($this->vars as $name => $value) {
+            if (isset($value)) {
+                $array[] = sprintf('%s=%s', $name, $value);
+            }
+        }
+
+        return $array;
     }
 }

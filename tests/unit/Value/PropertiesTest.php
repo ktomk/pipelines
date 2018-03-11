@@ -116,7 +116,7 @@ class PropertiesTest extends TestCase
         $properties->importPropertiesArray($array);
 
         $actual = $properties->exportPropertiesByName(array('bar', 'baz'));
-        $this->assertEquals($array, $actual);
+        $this->assertSame($array, $actual);
     }
 
     public function testExportWithRequiredKey()

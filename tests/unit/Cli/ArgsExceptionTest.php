@@ -11,7 +11,6 @@ use PHPUnit\Framework\TestCase;
  */
 class ArgsExceptionTest extends TestCase
 {
-
     /**
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
      * @expectedExceptionMessage test

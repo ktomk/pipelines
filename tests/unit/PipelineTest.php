@@ -14,13 +14,17 @@ use PHPUnit\Framework\TestCase;
  */
 class PipelineTest extends TestCase
 {
-
+    /**
+     * @return Pipeline
+     */
     public function testCreation()
     {
         $file = new File(array('pipelines' => array('default' => array())));
         $definition = array(array('step' => array('script' => array(':'))));
         $pipeline = new Pipeline($file, $definition);
         $this->assertInstanceOf('Ktomk\Pipelines\Pipeline', $pipeline);
+
+        return $pipeline;
     }
 
     public function testParseErrors()
@@ -78,5 +82,16 @@ class PipelineTest extends TestCase
         $pipeline = $file->getById('default');
         $actual = $pipeline->getId();
         $this->assertSame('default', $actual);
+    }
+
+    /**
+     * @depends testCreation
+     */
+    public function testJsonSerialize(Pipeline $pipeline)
+    {
+        $this->assertArrayHasKey(
+            'steps',
+            $pipeline->jsonSerialize()
+        );
     }
 }

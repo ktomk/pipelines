@@ -35,7 +35,7 @@ class VersionTest extends TestCase
 
     public function testResolveSourceVersionPackageVersion()
     {
-        /** @var Version|\PHPUnit\Framework\MockObject\MockObject $version */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|Version $version */
         $version = $this->getMockBuilder('Ktomk\Pipelines\Utility\Version')
             ->enableOriginalConstructor()
             ->setConstructorArgs(array('1.2.3'))
@@ -48,7 +48,7 @@ class VersionTest extends TestCase
 
     public function testResolveSourceVersionGitVersion()
     {
-        /** @var Version|\PHPUnit\Framework\MockObject\MockObject $version */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|Version $version */
         $version = $this->getMockBuilder('Ktomk\Pipelines\Utility\Version')
             ->enableOriginalConstructor()
             ->setConstructorArgs(array('1.2.3'))
@@ -61,7 +61,7 @@ class VersionTest extends TestCase
 
     public function testResolveSourceVersionFallback()
     {
-        /** @var Version|\PHPUnit\Framework\MockObject\MockObject $version */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|Version $version */
         $version = $this->getMockBuilder('Ktomk\Pipelines\Utility\Version')
             ->enableOriginalConstructor()
             ->setConstructorArgs(array('1.2.3'))
@@ -73,7 +73,7 @@ class VersionTest extends TestCase
 
     public function testGetPackageVersion()
     {
-        /** @var Version|\PHPUnit\Framework\MockObject\MockObject $version */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|Version $version */
         $version = $this->getMockBuilder('Ktomk\Pipelines\Utility\Version')
             ->enableOriginalConstructor()
             ->setConstructorArgs(array('1.2.3'))
@@ -90,7 +90,7 @@ class VersionTest extends TestCase
 
     public function testGetPackageVersionUnknownFormat()
     {
-        /** @var Version|\PHPUnit\Framework\MockObject\MockObject $version */
+        /** @var \PHPUnit\Framework\MockObject\MockObject|Version $version */
         $version = $this->getMockBuilder('Ktomk\Pipelines\Utility\Version')
             ->enableOriginalConstructor()
             ->setConstructorArgs(array('1.2.3'))

@@ -38,7 +38,7 @@ class DockerTest extends TestCase
         $docker = new Docker($exec);
 
         $version = $docker->getVersion();
-        if ($version === null) {
+        if (null === $version) {
             $this->assertNull($version);
         } else {
             $this->assertInternalType('string', $version);

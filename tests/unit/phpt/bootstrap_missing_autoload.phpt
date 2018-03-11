@@ -5,7 +5,7 @@ check bootstrap path w/ missing vendor/autoload.php
 if (file_exists('vendor/autoload.php')) {
     rename('vendor/autoload.php', 'vendor/autoload.php.phpt~');
 }
-require __DIR__ . '/../../../src/bootstrap.php'
+require __DIR__ . '/../../../src/bootstrap.php';
 ?>
 --EXPECT--
 To use pipelines set up project dependencies via `composer install` first

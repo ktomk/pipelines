@@ -34,6 +34,7 @@ class BbplMatch
      *
      * @param string $pattern
      * @param string $subject
+     * @throws \UnexpectedValueException
      * @return bool
      */
     public static function match($pattern, $subject) {

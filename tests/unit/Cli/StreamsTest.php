@@ -19,7 +19,7 @@ class StreamsTest extends TestCase
     {
         parent::tearDown();
 
-        foreach ((array) $this->closeHandles as $resource) {
+        foreach ((array)$this->closeHandles as $resource) {
             if (is_resource($resource)) {
                 fclose($resource);
             }

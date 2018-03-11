@@ -78,7 +78,7 @@ class StepTest extends UnitTestCase
             'image' => 'expected',
             'script' => array(":"),
         ));
-        $this->assertSame('expected', (string) $step->getImage());
+        $this->assertSame('expected', (string)$step->getImage());
     }
 
     /**
@@ -117,16 +117,22 @@ class StepTest extends UnitTestCase
     public function testGetScript()
     {
         $step = $this->createStep();
-        $this->assertSame(array(':'),$step->getScript());
+        $this->assertSame(array(':'), $step->getScript());
+    }
+
+    public function testJsonSerialize()
+    {
+        $actual = $this->createStep()->jsonSerialize();
+        $this->assertArrayHasKey('image', $actual);
     }
 
     /**
-     * @param array|null $array [optional]
+     * @param null|array $array [optional]
      * @return Step
      */
     private function createStep(array $array = null)
     {
-        if ($array === null) {
+        if (null === $array) {
             # a (minimum) array to successfully create a step
             $array = array(
                 'script' => array(":"),
@@ -136,7 +142,7 @@ class StepTest extends UnitTestCase
         /** @var File|MockObject $pipeline */
         $file = $this->createMock('Ktomk\Pipelines\File');
 
-        /** @var Pipeline|MockObject $pipeline */
+        /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getFile')->willReturn($file);
 

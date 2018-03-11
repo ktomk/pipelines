@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-
 use Exception;
 use Ktomk\Pipelines\File;
 use Ktomk\Pipelines\Step;
@@ -39,6 +38,10 @@ class FileShower
         $this->file = $file;
     }
 
+    /**
+     * @throws \InvalidArgumentException
+     * @return int
+     */
     public function showImages()
     {
         $file = $this->file;
@@ -49,12 +52,11 @@ class FileShower
          * @param File $file
          * @return array|Step[]
          */
-        $iter = function (File $file) {
-            $ids = $file->getPipelineIds();
+        $iterator = function (File $file) {
             $return = array();
-            foreach ($ids as $id) {
-                foreach ($file->getById($id)->getSteps() as $index => $step) {
-                    $return["$id:/step/$index"] = $step;
+            foreach ($file->getPipelines() as $id => $pipeline) {
+                foreach ($pipeline->getSteps() as $index => $step) {
+                    $return["${id}:/step/${index}"] = $step;
                 }
             }
 
@@ -62,7 +64,7 @@ class FileShower
         };
 
         $images = array();
-        foreach ($iter($file) as $step) {
+        foreach ($iterator($file) as $step) {
             $image = $step->getImage();
             $images[(string)$image] = $image;
         }
@@ -95,13 +97,13 @@ class FileShower
         $errors = 0;
         $table = array(array('PIPELINE ID', 'IMAGES', 'STEPS'));
         foreach ($pipelines->getPipelineIds() as $id) {
-
             try {
                 $pipeline = $pipelines->getById($id);
                 $steps = $pipeline->getSteps();
             } catch (Exception $e) {
                 $errors++;
                 $table[] = array($id, 'ERROR', $e->getMessage());
+
                 continue;
             }
 
@@ -143,7 +145,7 @@ class FileShower
 
         foreach ($steps as $step) {
             $image = $step->getImage()->getName();
-            if ($image !== File::DEFAULT_IMAGE) {
+            if (File::DEFAULT_IMAGE !== $image) {
                 $images[] = $image;
             }
             $name = $step->getName();
@@ -173,6 +175,7 @@ class FileShower
                 $sizes[$index] = max($sizes[$index], strlen($column));
             }
         }
+
         return $sizes;
     }
 

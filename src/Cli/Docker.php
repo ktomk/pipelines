@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\Cli;
 
+use UnexpectedValueException;
+
 /**
  * Php wrapper for the Docker CLI
  */
@@ -21,6 +23,10 @@ class Docker
         $this->exec = $exec;
     }
 
+    /**
+     * @throws \RuntimeException
+     * @return bool
+     */
     public function hasCommand()
     {
         $status = $this->exec->capture(
@@ -32,6 +38,8 @@ class Docker
     }
 
     /**
+     * @throws \RuntimeException
+     * @throws UnexpectedValueException
      * @return string
      */
     public function getVersion()
@@ -42,7 +50,7 @@ class Docker
             $out
         );
 
-        if ($status !== 0) {
+        if (0 !== $status) {
             return null;
         }
 
@@ -54,13 +62,14 @@ class Docker
         );
 
         if (false === $return) {
-            throw new \UnexpectedValueException('Regex pattern failed'); // @codeCoverageIgnore
+            throw new UnexpectedValueException('Regex pattern failed'); // @codeCoverageIgnore
         }
 
         if (0 === $return) {
             trigger_error(
                 sprintf('Failed to parse "%s" for Docker version', $out)
             );
+
             return "0.0.0-err";
         }
 
@@ -73,6 +82,7 @@ class Docker
      *
      * @param string $container name to inspect
      * @param string $mountPoint absolute path to search for a host mount for
+     * @throws \RuntimeException
      * @return bool|string
      */
     public function hostDevice($container, $mountPoint)
@@ -82,7 +92,7 @@ class Docker
         $status = $exec->capture('docker', array(
             'inspect', $container
         ), $out);
-        if ($status !== 0) {
+        if (0 !== $status) {
             return $mountPoint;
         }
 
@@ -93,12 +103,11 @@ class Docker
 
         $binds = $data[0]['HostConfig']['Binds'];
 
-        $end = ":$mountPoint";
+        $end = ":${mountPoint}";
 
         foreach ($binds as $bind) {
             if (substr($bind, -strlen($end)) === $end) {
-                $hostDir = substr($bind, 0, -strlen($end));
-                return $hostDir;
+                return substr($bind, 0, -strlen($end));
             }
         }
 

@@ -34,7 +34,6 @@ $builder
 
 printf("build errors: %d\n", count($builder->errors()));
 
-
 __HALT_COMPILER(); ?>
 --EXPECTF--
 Warning: file_get_contents(stub2.php): failed to open stream: No such file or directory in %s on line %d

@@ -38,6 +38,62 @@ class Step
     }
 
     /**
+     * @return null|Artifacts
+     */
+    public function getArtifacts()
+    {
+        return isset($this->step['artifacts'])
+            ? new Artifacts($this->step['artifacts'])
+            : null;
+    }
+
+    /**
+     * @return Image
+     */
+    public function getImage()
+    {
+        return isset($this->step['image'])
+            ? new Image($this->step['image'])
+            : $this->pipeline->getFile()->getImage();
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getName()
+    {
+        return isset($this->step['name'])
+            ? (string)$this->step['name']
+            : null;
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getScript()
+    {
+        return $this->step['script'];
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     *
+     * @return array
+     */
+    public function jsonSerialize()
+    {
+        $image = $this->getImage();
+        $image = null === $image ? "" : $image->jsonSerialize();
+
+        return array(
+            'name' => $this->getName(),
+            'image' => $image,
+            'script' => $this->getScript(),
+            'artifacts' => $this->getArtifacts(),
+        );
+    }
+
+    /**
      * Parse a step script section
      *
      * @param array $step
@@ -61,43 +117,5 @@ class Step
                 );
             }
         }
-    }
-
-    /**
-     * @return Artifacts|null
-     */
-    public function getArtifacts()
-    {
-        return isset($this->step['artifacts'])
-            ? new Artifacts($this->step['artifacts'])
-            : null;
-    }
-
-    /**
-     * @return Image
-     */
-    public function getImage()
-    {
-        return isset($this->step['image'])
-            ? new Image($this->step['image'])
-            : $this->pipeline->getFile()->getImage();
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getName()
-    {
-        return isset($this->step['name'])
-            ? (string)$this->step['name']
-            : null;
-    }
-
-    /**
-     * @return array|string[]
-     */
-    public function getScript()
-    {
-        return $this->step['script'];
     }
 }

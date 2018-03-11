@@ -37,7 +37,6 @@ class ReferenceSearchTest extends TestCase
     {
         $actual = $this->searchReference('branch:feature/unicorns');
         $this->assertNotNull($actual);
-
     }
 
     public function testSearchDirect()

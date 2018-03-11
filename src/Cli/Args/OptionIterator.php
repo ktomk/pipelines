@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Cli\Args;
 
-
 use IteratorIterator;
 use Ktomk\Pipelines\Cli\ArgsException;
 
@@ -34,7 +33,7 @@ class OptionIterator extends IteratorIterator
             return false;
         }
 
-        if ($next === '--') {
+        if ('--' === $next) {
             return false;
         }
 
@@ -53,23 +52,6 @@ class OptionIterator extends IteratorIterator
         }
 
         return $this->iterator->getNext();
-    }
-
-    /**
-     * Forward the iterator to the current option
-     */
-    private function forwardToOption()
-    {
-        while (
-            parent::valid()
-            && (null !== $current = parent::current())
-            && (
-                (strlen($current) < 2)
-                || (substr($current, 0, 1) !== '-')
-            )
-        ) {
-            parent::next();
-        }
     }
 
     /* Iterator */
@@ -115,5 +97,22 @@ class OptionIterator extends IteratorIterator
     {
         parent::rewind();
         $this->forwardToOption();
+    }
+
+    /**
+     * Forward the iterator to the current option
+     */
+    private function forwardToOption()
+    {
+        while (
+            parent::valid()
+            && (null !== $current = parent::current())
+            && (
+                (strlen($current) < 2)
+                || ('-' !== substr($current, 0, 1))
+            )
+        ) {
+            parent::next();
+        }
     }
 }

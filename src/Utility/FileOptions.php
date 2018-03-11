@@ -26,19 +26,6 @@ class FileOptions
     private $file;
 
     /**
-     * bind options
-     *
-     * @param Args $args
-     * @param Streams $streams
-     * @param File $file
-     * @return FileOptions
-     */
-    public static function bind(Args $args, Streams $streams, File $file)
-    {
-        return new self($args, $streams, $file);
-    }
-
-    /**
      * FileOptions constructor.
      * @param Args $args
      * @param callable $output
@@ -52,9 +39,23 @@ class FileOptions
     }
 
     /**
+     * bind options
+     *
+     * @param Args $args
+     * @param Streams $streams
+     * @param File $file
+     * @return FileOptions
+     */
+    public static function bind(Args $args, Streams $streams, File $file)
+    {
+        return new self($args, $streams, $file);
+    }
+
+    /**
      * run options
      *
-     * @return int|null exit status or null if run was not applicable
+     * @throws \InvalidArgumentException
+     * @return null|int exit status or null if run was not applicable
      */
     public function run()
     {
@@ -89,7 +90,7 @@ class FileOptions
     }
 
     /**
-     * @param File|null $file [optional]
+     * @param null|File $file [optional]
      * @return FileShower
      */
     private function shower(File $file = null)

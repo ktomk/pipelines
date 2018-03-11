@@ -3,6 +3,7 @@
 /* this file is part of pipelines */
 
 namespace Ktomk\Pipelines\Cli;
+use RuntimeException;
 
 /**
  * Run command non-interactively and capture standard output and error
@@ -12,7 +13,7 @@ class Proc
     private $command;
 
     /**
-     * @var int|null
+     * @var null|int
      */
     private $status;
 
@@ -23,13 +24,18 @@ class Proc
         $this->command = $command;
     }
 
+    /**
+     * @throws \RuntimeException
+     * @return int
+     */
     public function run()
     {
         $command = $this->command;
 
         # do nothing placeholder
-        if ($command === ':') {
+        if (':' === $command) {
             $this->buffers['stdout'] = $this->buffers['stderr'] = "";
+
             return $this->status = 0;
         }
 
@@ -41,7 +47,7 @@ class Proc
 
         $process = proc_open($command, $descriptors, $pipes);
         if (!is_resource($process)) {
-            throw new \RuntimeException(sprintf('Failed to open: %s', $command)); // @codeCoverageIgnore
+            throw new RuntimeException(sprintf('Failed to open: %s', $command)); // @codeCoverageIgnore
         }
 
         $this->buffers['stdout'] = stream_get_contents($pipes[1]);
@@ -49,7 +55,7 @@ class Proc
 
         # consume pipes
         foreach ($descriptors as $number => $descriptor) {
-            if ($descriptor[0] === "pipe") {
+            if ("pipe" === $descriptor[0]) {
                 $result = fclose($pipes[$number]);
                 unset($result); # intentionally ignore errors (fail safe)
             }
@@ -61,7 +67,7 @@ class Proc
     }
 
     /**
-     * @return int|null exit status, null if not yet executed
+     * @return null|int exit status, null if not yet executed
      */
     public function getStatus()
     {
@@ -79,7 +85,7 @@ class Proc
     }
 
     /**
-     * @param int|null $status
+     * @param null|int $status
      */
     public function setStatus($status)
     {
