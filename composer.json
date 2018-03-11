@@ -27,16 +27,21 @@
     "mustangostang/spyc": "^0.6.2"
   },
   "require-dev": {
+    "friendsofphp/php-cs-fixer": "^2.10",
     "phpunit/phpunit": "^6.5"
   },
   "scripts": {
     "build": "@php -dphar.readonly=0 -flib/build/build.php # build phar file",
+    "cs-check": "@php -fvendor/bin/php-cs-fixer -- fix --dry-run",
+    "cs-fix": "@php -fvendor/bin/php-cs-fixer -- fix",
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
     "test": [
       "@php -dphar.readonly=0 -fvendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
       "@php -flib/coverage/checker.php -- build/log/clover.xml"
     ],
     "ci": [
+      "@composer validate --strict",
+      "@cs-check",
       "bin/pipelines --no-keep --verbatim --pipeline custom/lint-php-5.3",
       "@test",
       "@build"

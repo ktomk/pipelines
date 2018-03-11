@@ -1,12 +1,5 @@
-# Phpunit HTML report
-/build/html/
-
-# pipelines Phar build
-/build/pipelines.phar
-/build/pipelines.phar.asc
-
 # Composer
 /vendor/
 
-# environment file
+# Environment file
 /.env
