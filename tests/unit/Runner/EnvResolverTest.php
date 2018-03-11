@@ -129,17 +129,23 @@ class EnvResolverTest extends TestCase
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
         $resolver->addDefinition('UID');
+        $resolver->addDefinition('GOO_711=55');
+        $resolver->addDefinition('G=TOP');
         $input = array(
             'foo' => 'UID',
             'bar' => '$BAR',
             'baz' => 'baz',
             'uid' => '$UID',
+            'goo' => '$GOO_711',
+            'g' => '$G',
         );
         $expected = array(
             'foo' => 'UID',
             'bar' => '',
             'baz' => 'baz',
             'uid' => '1000',
+            'goo' => '55',
+            'g' => 'TOP',
         );
 
         $this->assertTrue(is_callable($resolver));

@@ -179,7 +179,7 @@ class EnvResolver
      */
     public function resolveString($string)
     {
-        $pattern = '~^\$([A-Z_]+[0-9A-Z_])*$~';
+        $pattern = '~^\$([A-Z_]+[0-9A-Z_]*)$~';
         $result = preg_match($pattern, $string, $matches);
         if (false === $result) {
             throw new UnexpectedValueException('regex pattern error'); // @codeCoverageIgnore

@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Code style
 - Readme for corrections and coverage
+### Fixed
+- Resolution of environment variables (esp. w/ numbers in name)
 
 ## [0.0.9] - 2018-02-28
 ### Added
