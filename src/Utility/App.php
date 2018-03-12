@@ -378,7 +378,7 @@ class App
     /**
      * Map diverse parameters to run flags
      *
-     * @param bool $keep
+     * @param KeepOptions $keep
      * @param $deployMode
      * @return bool|int
      */

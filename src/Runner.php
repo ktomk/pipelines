@@ -205,6 +205,8 @@ class Runner
 
     /**
      * @param Image $image
+     * @throws \RuntimeException
+     * @throws \InvalidArgumentException
      */
     private function imageLogin(Image $image)
     {
@@ -216,6 +218,7 @@ class Runner
      * @param bool $copy
      * @param string $id container id
      * @param string $dir directory to copy contents into container
+     * @throws \RuntimeException
      * @return null|int null if all clear, integer for exit status
      */
     private function deployCopy($copy, $id, $dir)
@@ -305,6 +308,7 @@ class Runner
      * @param bool $copy
      * @param string $id container id
      * @param string $dir to put artifacts in (project directory)
+     * @throws \RuntimeException
      */
     private function captureStepArtifacts(Step $step, $copy, $id, $dir)
     {

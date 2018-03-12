@@ -45,8 +45,8 @@ class Properties implements Countable
     {
         if (
             2 === count($keys)
-            && 2 === count(array_filter($keys, 'is_array'))
             && array(0, 1) === array_keys($keys)
+            && 2 === count(array_filter($keys, 'is_array'))
         ) {
             list($required, $optional) = $keys;
             $this->missingKeys($required);

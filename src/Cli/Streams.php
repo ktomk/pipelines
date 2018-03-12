@@ -79,13 +79,13 @@ class Streams
     public function out($string)
     {
         $handle = $this->handles[1][0];
-        is_resource($handle) && fputs($handle, $string);
+        is_resource($handle) && fwrite($handle, $string);
     }
 
     public function err($string)
     {
         $handle = $this->handles[2][0];
-        is_resource($handle) && fputs($handle, $string);
+        is_resource($handle) && fwrite($handle, $string);
     }
 
     /**
@@ -107,6 +107,7 @@ class Streams
 
     /**
      * @param null|resource|string $context
+     * @throws \RuntimeException
      */
     private function addHandle($context)
     {

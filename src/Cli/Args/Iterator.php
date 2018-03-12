@@ -90,11 +90,7 @@ class Iterator extends Args implements PhpIterator
     {
         $current = $this->getByIndex($this->index);
 
-        if (null === $current) {
-            return false;
-        }
-
-        return true;
+        return !(null === $current);
     }
 
     /**

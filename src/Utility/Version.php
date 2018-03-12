@@ -15,7 +15,7 @@ class Version
     /**
      * @var string
      */
-    private $dir = __DIR__;
+    private $dir;
 
     /**
      * @var string
@@ -90,7 +90,7 @@ class Version
     }
 
     /**
-     * @return null|string version or null if there is no buid version
+     * @return null|string version or null if there is no build version
      */
     public function getBuildVersion()
     {

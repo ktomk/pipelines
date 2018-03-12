@@ -87,9 +87,8 @@ class DockerLogin
     {
         $buffer = @file_get_contents($this->path);
         $array = json_decode((string)$buffer, true);
-        $isset = isset($array['auths'][$authUri]['auth']);
 
-        return $isset;
+        return isset($array['auths'][$authUri]['auth']);
     }
 
     /**
@@ -100,8 +99,7 @@ class DockerLogin
     public function getDockerConfigPathFromEnvironment()
     {
         $home = getenv('HOME');
-        $path = ($home ?: '~') . '/.docker/config.json';
 
-        return $path;
+        return ($home ?: '~') . '/.docker/config.json';
     }
 }

@@ -208,10 +208,8 @@ class Env
         $resolver = $this->getResolver();
         foreach ($paths as $path) {
             if ($resolver->addFileIfExists($path)) {
-                $this->collected = array_merge(
-                    $this->collected,
-                    array('--env-file', $path)
-                );
+                $this->collected[] = '--env-file';
+                $this->collected[] = $path;
             }
         }
     }

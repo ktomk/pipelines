@@ -6,7 +6,7 @@ $inc = function ($file) {
     return is_file($path = __DIR__ . '/../' . $file) ? include $path : false;
 };
 
-if (!$inc('/vendor/autoload.php') and !$inc('/../../autoload.php')) {
+if ((!$inc('/vendor/autoload.php')) && (!$inc('/../../autoload.php'))) {
     fwrite(
         defined('STDERR') ? constant('STDERR') : fopen('php://stderr', 'wb'),
         <<<'ERROR'

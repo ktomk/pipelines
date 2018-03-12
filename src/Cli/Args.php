@@ -73,6 +73,7 @@ class Args extends ArgsArgs
      */
     public function getFirstRemainingOption()
     {
+        /** @noinspection LoopWhichDoesNotLoopInspection */
         foreach (new OptionIterator($this) as $option) {
             return $option;
         }
@@ -98,6 +99,7 @@ class Args extends ArgsArgs
 
         /** @var OptionFilterIterator|OptionIterator $options */
         $options = new OptionFilterIterator($this, $option);
+        /** @noinspection LoopWhichDoesNotLoopInspection */
         foreach ($options as $index => $argument) {
             /** @scrutinizer ignore-call */
             $result = $options->getArgument();

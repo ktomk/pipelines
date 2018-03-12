@@ -54,9 +54,7 @@ class OptionFilterIterator extends FilterIterator
      */
     public function getOptionDescription()
     {
-        $buffer = implode(", ", $this->options);
-
-        return $buffer;
+        return implode(", ", $this->options);
     }
 
     /**

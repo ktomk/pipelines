@@ -35,6 +35,7 @@ class Reference
 
     /**
      * @param null|string $string [optional] use null for a null reference
+     * @throws \InvalidArgumentException
      * @return Reference
      */
     public static function create($string = null)

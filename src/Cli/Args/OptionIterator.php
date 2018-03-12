@@ -83,11 +83,7 @@ class OptionIterator extends IteratorIterator
 
         $current = parent::current();
 
-        if ('--' === $current) {
-            return false;
-        }
-
-        return true;
+        return  !('--' === $current);
     }
 
     /**
@@ -109,7 +105,7 @@ class OptionIterator extends IteratorIterator
             && (null !== $current = parent::current())
             && (
                 (strlen($current) < 2)
-                || ('-' !== substr($current, 0, 1))
+                || (0 !== strpos($current, '-'))
             )
         ) {
             parent::next();

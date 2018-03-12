@@ -48,6 +48,8 @@ class Timestamps
      * The PHAR signature can then be produced in a reproducible manner.
      *
      * @param int|\DateTime|string|bool $timestamp Date string or DateTime or unix timestamp to use
+     * @throws \LogicException
+     * @throws \RuntimeException
      */
     public function updateTimestamps($timestamp = null)
     {
@@ -114,6 +116,7 @@ class Timestamps
      * @param  string $path
      * @param  int $signatureAlgo One of Phar::MD5, Phar::SHA1, Phar::SHA256 or Phar::SHA512
      * @return bool
+     * @throws \UnexpectedValueException
      */
     public function save($path, $signatureAlgo)
     {
@@ -155,6 +158,8 @@ class Timestamps
      * Determine the beginning of the signature.
      *
      * @return int
+     * @throws \LogicException
+     * @throws \RuntimeException
      */
     private function determineSignatureBegin()
     {
@@ -189,7 +194,7 @@ class Timestamps
             $filenameLength = $this->readUint($pos, 4);
             $pos += 4 + $filenameLength;
 
-            // skip filesize and timestamp
+            // skip file size and timestamp
             $pos += 2*4;
 
             $compressedSizes += $this->readUint($pos, 4);

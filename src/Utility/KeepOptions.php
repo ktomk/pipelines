@@ -60,6 +60,7 @@ class KeepOptions
     }
 
     /**
+     * @throws \InvalidArgumentException
      * @return null|int non-zero, positive integer in case of error
      *                  parsing keep option arguments
      */

@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Keep container on error option: `--error-keep`
 ### Changed
 - Do not keep containers by default, not even on error
+### Fixed
+- Code style
 
 ## [0.0.10] - 2018-03-12
 ### Added

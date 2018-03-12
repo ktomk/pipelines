@@ -4,13 +4,13 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\File\ParseException;
 use Spyc;
 
 class Yaml
 {
     /**
      * @param $path
+     * @throws \InvalidArgumentException
      * @return null|array on error
      */
     public static function file($path)
@@ -33,8 +33,6 @@ class Yaml
 
     public static function buffer($buffer)
     {
-        $array = Spyc::YAMLLoadString($buffer);
-
-        return $array;
+        return Spyc::YAMLLoadString($buffer);
     }
 }

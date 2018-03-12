@@ -152,7 +152,7 @@ class Builder
         }
 
         foreach ((array)$pattern as $one) {
-            $this->_add($one, $callback, "${directory}", "${alias}");
+            $this->_add($one, $callback, (string)$directory, (string)$alias);
         }
 
         return $this;
