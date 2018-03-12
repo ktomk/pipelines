@@ -17,11 +17,12 @@ use Ktomk\Pipelines\Runner\Env;
  */
 class Runner
 {
-    const FLAGS = 3;
+    const FLAGS = 19;
     const FLAG_DOCKER_REMOVE = 1;
     const FLAG_DOCKER_KILL = 2;
     const FLAG_DEPLOY_COPY = 4; # copy working dir into container
     const FLAG_KEEP_ON_ERROR = 8;
+    const FLAG_SOCKET = 16;
 
     const STATUS_NO_STEPS = 1;
     const STATUS_RECURSION_DETECTED = 127;
@@ -151,10 +152,11 @@ class Runner
 
         $copy = (bool)($this->flags & self::FLAG_DEPLOY_COPY);
 
-        // docker client inside docker
+        // enable docker client inside docker by mounting docker socket
         // FIXME give controlling options, this is serious /!\
+        $socket = (bool)($this->flags & self::FLAG_SOCKET);
         $mountDockerSock = array();
-        if (file_exists('/var/run/docker.sock')) {
+        if ($socket && file_exists('/var/run/docker.sock')) {
             $mountDockerSock = array(
                 '-v', '/var/run/docker.sock:/var/run/docker.sock',
             );
