@@ -17,7 +17,7 @@ use Ktomk\Pipelines\Runner\Env;
  */
 class Runner
 {
-    const FLAGS = 11;
+    const FLAGS = 3;
     const FLAG_DOCKER_REMOVE = 1;
     const FLAG_DOCKER_KILL = 2;
     const FLAG_DEPLOY_COPY = 4; # copy working dir into container

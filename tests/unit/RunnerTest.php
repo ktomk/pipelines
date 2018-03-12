@@ -254,7 +254,7 @@ class RunnerTest extends UnitTestCase
             'pipelines-unit-test',
             sys_get_temp_dir() . '/pipelines-test-suite',
             $exec,
-            null, # default flags are important here
+            Runner::FLAGS | Runner::FLAG_KEEP_ON_ERROR, # keep on error flag is important
             null,
             new Streams(null, null, 'php://output')
         );

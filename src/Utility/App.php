@@ -154,14 +154,9 @@ class App
             return $status;
         }
 
-        /** @var bool $keep containers */
-        $keep = $args->hasOption('keep');
-        /** @var bool $noKeep do not keep on errors */
-        $noKeep = $args->hasOption('no-keep');
-        if ($keep && $noKeep) {
-            $this->error('pipelines: --keep and --no-keep are exclusive');
-
-            return 1;
+        $keep = KeepOptions::bind($args, $this->streams);
+        if (null !== $status = $keep->run()) {
+            return $status;
         }
 
         /** @var string $basename for bitbucket-pipelines.yml */
@@ -288,7 +283,7 @@ class App
             return $pipeline;
         }
 
-        $flags = $this->getRunFlags($keep, $noKeep, $deployMode);
+        $flags = $this->getRunFlags($keep, $deployMode);
 
         $runner = new Runner($prefix, $workingDir, $exec, $flags, $env, $streams);
         if ($noRun) {
@@ -296,6 +291,11 @@ class App
             $status = 0;
         } else {
             $status = $runner->run($pipeline);
+            if (0 !== $status) {
+                $this->streams->out(
+                    sprintf("exit status: %d\n", $status)
+                );
+            }
         }
 
         return $status;
@@ -376,18 +376,19 @@ class App
     }
 
     /**
+     * Map diverse parameters to run flags
+     *
      * @param bool $keep
-     * @param bool $noKeep
      * @param $deployMode
      * @return bool|int
      */
-    private function getRunFlags($keep, $noKeep, $deployMode)
+    private function getRunFlags(KeepOptions $keep, $deployMode)
     {
         $flags = Runner::FLAGS;
-        if ($keep) {
-            $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
-        } elseif ($noKeep) {
+        if ($keep->errorKeep) {
             $flags &= ~Runner::FLAG_KEEP_ON_ERROR;
+        } elseif ($keep->keep) {
+            $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
         }
 
         if ('copy' === $deployMode) {

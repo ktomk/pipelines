@@ -166,8 +166,9 @@ class AppTest extends TestCase
             array(array('--list')),
             array(array('--dry-run')),
             array(array('--verbose', '--dry-run')),
-            array(array('--keep', '--no-run')),
+            array(array('--keep', '--dry-run')),
             array(array('--no-keep', '--no-run')),
+            array(array('--error-keep', '--dry-run')),
             array(array('--docker-list', '--dry-run')),
             array(array('--verbatim', '--dry-run')),
         );

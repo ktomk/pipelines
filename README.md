@@ -62,9 +62,8 @@ pipelines container by using `--deploy mount`.
 
 Use `--keep` flag to keep containers after the pipeline has
 finished for further inspection. By default all containers are
-destroyed on successful pipeline step execution and kept in
-case of error. The `--no-keep` flag prevents keeping of
-containers even in case of error.
+destroyed. Sometimes for development it is interesting to keep
+containers on error only, the `--error-keep` flag is for that.
 
 Manage leftover containers with `--docker-list` showing all
 pipeline containers, `--docker-kill` to kill running containers
@@ -136,7 +135,8 @@ Features include:
       $ docker exec -it $ID /bin/sh
 
   Containers can be always kept for debugging and manual testing
-  of a pipeline with `--keep`.
+  of a pipeline with `--keep` or with `--error-keep` on error
+  only.
 
   Afterwards manage left overs with `--docker-list|kill|clean`.
 

@@ -37,8 +37,9 @@ class Help
         $this->streams->out(
             <<<'EOD'
 usage: pipelines [<options>...] [--version | [-h | --help]]
-       pipelines [-v | --verbose] [--working-dir <path>] [--[no-]keep]
-                 [--prefix <prefix>] [--basename <basename>]
+       pipelines [-v | --verbose] [--working-dir <path>]
+                 [--[no-|error-]keep] [--prefix <prefix>]
+                 [--basename <basename>]
                  [[-e | --env] <variable>] [--env-file <path>]
                  [--file <path>] [--dry-run] [--no-run] [--list]
                  [--deploy mount | copy ] [--show] [--images]
@@ -80,13 +81,6 @@ Common options
     --file <path>         path to the pipelines file, overrides
                           looking up the <basename> file from
                           the current working directory
-    --[no-]keep           (do not) keep docker containers.
-                          default is to kill and remove
-                          containers after each pipeline step
-                          unless the pipeline step failed. then
-                          the non-zero exit status is given and
-                          an error message showing the container
-                          id of the kept container
     --trigger <ref>       build trigger, <ref> can be of either
                           tag:<name>, branch:<name> or
                           bookmark:<name>. used in determination
@@ -103,6 +97,15 @@ Run control options
                           with --verbose shows the commands that
                           would have run w/o the --dry-run flag
     --no-run              do not run the pipeline
+
+Keep options
+    --keep                always keep docker containers
+    --error-keep          keep docker docker containers if a
+                          step failed; the non-zero exit status
+                          is output and the id of the container
+                          kept
+    --no-keep             do not keep docker containers; default
+                          behaviour
 
 File information options
     --images              list all images in file, in order
