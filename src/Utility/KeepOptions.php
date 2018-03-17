@@ -29,10 +29,6 @@ class KeepOptions
      * @var null|bool
      */
     public $noKeep;
-    /**
-     * @var Streams
-     */
-    private $streams;
 
     /**
      * @var Args
@@ -41,11 +37,9 @@ class KeepOptions
 
     /**
      * @param Args $args
-     * @param Streams $streams
      */
-    public function __construct(Args $args, Streams $streams)
+    public function __construct(Args $args)
     {
-        $this->streams = $streams;
         $this->args = $args;
     }
 
@@ -54,22 +48,21 @@ class KeepOptions
      * @param Streams $streams
      * @return KeepOptions
      */
-    public static function bind(Args $args, Streams $streams)
+    public static function bind(Args $args)
     {
-        return new self($args, $streams);
+        return new self($args);
     }
 
     /**
-     * @throws \InvalidArgumentException
-     * @return null|int non-zero, positive integer in case of error
-     *                  parsing keep option arguments
+     * @throws StatusException w/ conflicting arguments
+     * @return KeepOptions
      */
     public function run()
     {
-        list($status, $this->errorKeep, $this->keep, $this->noKeep)
-            = $this->parse($this->args) + array(null, null, null, null);
+        list($this->errorKeep, $this->keep, $this->noKeep)
+            = $this->parse($this->args);
 
-        return $status;
+        return $this;
     }
 
     /**
@@ -77,6 +70,7 @@ class KeepOptions
      *
      * @param Args $args
      * @throws \InvalidArgumentException
+     * @throws StatusException
      * @return array|int
      */
     public function parse(Args $args)
@@ -91,28 +85,17 @@ class KeepOptions
         $noKeep = $args->hasOption('no-keep');
 
         if ($keep && $noKeep) {
-            $this->error('pipelines: --keep and --no-keep are exclusive');
-
-            return array(1);
+            StatusException::status(1, '--keep and --no-keep are exclusive');
         }
+
         if ($keep && $errorKeep) {
-            $this->error('pipelines: --keep and --error-keep are exclusive');
-
-            return array(1);
+            StatusException::status(1, '--keep and --error-keep are exclusive');
         }
+
         if ($noKeep && $errorKeep) {
-            $this->error('pipelines: --error-keep and --no-keep are exclusive');
-
-            return array(1);
+            StatusException::status(1, '--error-keep and --no-keep are exclusive');
         }
 
-        return array(null, $errorKeep, $keep, $noKeep);
-    }
-
-    private function error($message)
-    {
-        $this->streams->err(
-            sprintf("%s\n", $message)
-        );
+        return array($errorKeep, $keep, $noKeep);
     }
 }

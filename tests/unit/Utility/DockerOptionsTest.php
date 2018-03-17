@@ -46,6 +46,12 @@ class DockerOptionsTest extends TestCase
         $options->run();
     }
 
+    /**
+     * @throws StatusException
+     * @expectedException \Ktomk\Pipelines\Utility\StatusException
+     * @expectedExceptionMessage
+     * @expectedExceptionCode 0
+     */
     public function testHappyPath()
     {
         $exec = ExecTester::create($this);
@@ -68,6 +74,12 @@ class DockerOptionsTest extends TestCase
         $options->run();
     }
 
+    /**
+     * @throws StatusException
+     * @expectedException \Ktomk\Pipelines\Utility\StatusException
+     * @expectedExceptionMessage
+     * @expectedExceptionCode 0
+     */
     public function testNoContainersToKill()
     {
         $exec = ExecTester::create($this);

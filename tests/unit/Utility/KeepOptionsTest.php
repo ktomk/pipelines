@@ -5,19 +5,17 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
-use Ktomk\Pipelines\Cli\Streams;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\UnitTestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Utility\KeepOptions
  */
-class KeepOptionsTest extends TestCase
+class KeepOptionsTest extends UnitTestCase
 {
     public function testCreation()
     {
         $args = Args::create(array('test-util', '--error-keep'));
-        $streams = new Streams(null, null, 'php://output');
-        $keep = KeepOptions::bind($args, $streams);
+        $keep = KeepOptions::bind($args);
         $this->assertInstanceOf('Ktomk\Pipelines\Utility\KeepOptions', $keep);
 
         return $keep;
@@ -26,54 +24,42 @@ class KeepOptionsTest extends TestCase
     /**
      * @depends testCreation
      * @param KeepOptions $keep
+     * @throws StatusException
      */
     public function testParse(KeepOptions $keep)
     {
-        $this->assertNull($keep->run());
+        $actual = $keep->run();
+        $this->assertInstanceOf(get_class($keep), $actual);
     }
 
-    /**
-     * @depends testCreation
-     * @param KeepOptions $keep
-     */
-    public function testParseExclusivityErrorKeepAndKeep(KeepOptions $keep)
+    public function provideExclusivityExceptions()
     {
-        $this->expectOutputString("pipelines: --keep and --error-keep are exclusive\n");
-        $args = Args::create(array('test-util', '--error-keep', '--keep'));
-        $expected = array(1);
-        $this->assertSame(
-            $expected,
-            $keep->parse($args)
+        return array(
+            array(array('--error-keep', '--keep'), '--keep and --error-keep are exclusive'),
+            array(array('--no-keep', '--keep'), '--keep and --no-keep are exclusive'),
+            array(array('--no-keep', '--error-keep'), '--error-keep and --no-keep are exclusive'),
         );
     }
 
     /**
-     * @depends testCreation
-     * @param KeepOptions $keep
+     * @param array $arguments
+     * @param string $expected
+     * @throws StatusException
+     * @dataProvider provideExclusivityExceptions
      */
-    public function testParseExclusivityKeepAndNoKeep(KeepOptions $keep)
+    public function testExclusivityException(array $arguments, $expected)
     {
-        $this->expectOutputString("pipelines: --keep and --no-keep are exclusive\n");
-        $args = Args::create(array('test-util', '--no-keep', '--keep'));
-        $expected = array(1);
-        $this->assertSame(
-            $expected,
-            $keep->parse($args)
+        $args = Args::create(
+            array_merge(array('test-util'), $arguments)
         );
-    }
+        $keep = new KeepOptions($args);
 
-    /**
-     * @depends testCreation
-     * @param KeepOptions $keep
-     */
-    public function testParseExclusivityErrorKeepAndNoKeep(KeepOptions $keep)
-    {
-        $this->expectOutputString("pipelines: --error-keep and --no-keep are exclusive\n");
-        $args = Args::create(array('test-util', '--no-keep', '--error-keep'));
-        $expected = array(1);
-        $this->assertSame(
-            $expected,
-            $keep->parse($args)
-        );
+        try {
+            $keep->parse($args);
+            $this->fail('an expectected exception has not been thrown');
+        } catch (StatusException $exception) {
+            $this->assertSame($expected, $exception->getMessage());
+            $this->assertSame(1, $exception->getCode());
+        }
     }
 }

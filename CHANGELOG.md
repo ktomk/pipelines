@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Utility status exception
 ### Changed
-- Do not keep containers by default, not even on error
+- Parsing of utility options and arguments in run routine
 ### Fixed
 - Code coverage for unit tests
 

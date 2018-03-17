@@ -4,10 +4,12 @@
 
 namespace Ktomk\Pipelines\Utility;
 
+use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\Lib;
+use RuntimeException;
 
 class DockerOptions
 {
@@ -59,9 +61,9 @@ class DockerOptions
      * --docker-kill  - kill (running) containers
      * --docker-clean - remove (stopped) containers
      *
-     * @throws \InvalidArgumentException
-     * @throws \RuntimeException
-     * @return null|int for no command executed, otherwise int exist status
+     * @throws InvalidArgumentException
+     * @throws RuntimeException
+     * @throws StatusException
      */
     public function run()
     {
@@ -104,7 +106,9 @@ class DockerOptions
             }
         }
 
-        return $count ? $status : null;
+        if ($count) {
+            StatusException::status($status);
+        }
     }
 
     private function info($message)
@@ -136,7 +140,7 @@ class DockerOptions
     /**
      * get ids of all (prefixed in their name) containers, including stopped ones
      *
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @return null|array
      */
     private function getAllContainerIds()
@@ -160,7 +164,7 @@ class DockerOptions
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
      * @return null|array
      */
     private function getRunningContainerIds()

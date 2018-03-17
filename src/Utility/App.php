@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Exception;
+use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Exec;
@@ -64,7 +65,7 @@ class App
 
     /**
      * @param array $arguments including the utility name in the first argument
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return int 0-255
      */
     public function main(array $arguments)
@@ -118,7 +119,7 @@ class App
     /**
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws \Ktomk\Pipelines\File\ParseException
      * @throws ArgsException
      * @throws StatusException
@@ -134,84 +135,22 @@ class App
 
         $args = $this->arguments;
 
-        if (
-            null !== $status
-                = DockerOptions::bind($args, $exec, $prefix, $this->streams)->run()
-        ) {
-            return $status;
-        }
+        DockerOptions::bind($args, $exec, $prefix, $this->streams)->run();
 
-        $keep = KeepOptions::bind($args, $this->streams);
-        if (null !== $status = $keep->run()) {
-            return $status;
-        }
+        $keep = KeepOptions::bind($args)->run();
 
-        /** @var string $basename for bitbucket-pipelines.yml */
-        $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
-        if (!Lib::fsIsBasename($basename)) {
-            $this->error(sprintf("pipelines: not a basename: '%s'", $basename));
+        $basename = $this->parseBasename();
 
-            return 1;
-        }
+        $workingDir = $this->parseWorkingDir();
 
-        if (
-            (false !== $buffer = $args->getOptionArgument('working-dir', false))
-            && (null !== $result = $this->changeWorkingDir($buffer))
-        ) {
-                return $result;
-        }
+        $file = $this->parseFile($basename, $workingDir);
 
-        $workingDir = getcwd();
-        if (false === $workingDir) {
-            // @codeCoverageIgnoreStart
-            $this->error('pipelines: fatal: obtain working directory');
+        $path = $this->parsePath($basename, $file, $workingDir);
 
-            return 1;
-            // @codeCoverageIgnoreEnd
-        }
-
-        /** @var string $file as bitbucket-pipelines.yml to process */
-        $file = $args->getOptionArgument('file', null);
-        if (null === $file && null !== $file = Lib::fsFileLookUp($basename, $workingDir)) {
-            $buffer = dirname($file);
-            if ($buffer !== $workingDir) {
-                if (null !== $result = $this->changeWorkingDir($buffer)) {
-                    return $result; // @codeCoverageIgnore
-                }
-                $workingDir = getcwd();
-                if (false === $workingDir) {
-                    // @codeCoverageIgnoreStart
-                    $this->error('pipelines: fatal: obtain working directory');
-
-                    return 1;
-                    // @codeCoverageIgnoreEnd
-                }
-            }
-        }
-
-        if (!strlen($file)) {
-            $this->error('pipelines: file can not be empty');
-
-            return 1;
-        }
-        if ($file !== $basename && self::BBPL_BASENAME !== $basename) {
-            $this->verbose('info: --file overrides non-default --basename');
-        }
-
-        // TODO: obtain project dir information etc. from VCS, also traverse for basename file
-        // $vcs = new Vcs();
-
-        /** @var string $path full path as bitbucket-pipelines.yml to process */
-        $path = Lib::fsIsAbsolutePath($file)
-            ? $file
-            : $workingDir . '/' . $file;
-
-        if (!is_file($path) && !is_readable($path)) {
-            $this->error(sprintf('pipelines: not a readable file: %s', $file));
-
-            return 1;
-        }
         unset($file);
+
+        // TODO: obtain project dir information etc. from VCS
+        // $vcs = new Vcs();
 
         $noRun = $args->hasOption('no-run');
 
@@ -289,7 +228,112 @@ class App
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws StatusException
+     * @throws ArgsException
+     * @return string basename for bitbucket-pipelines.yml
+     */
+    private function parseBasename()
+    {
+        $args = $this->arguments;
+
+        $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
+        if (!Lib::fsIsBasename($basename)) {
+            StatusException::status(1, sprintf("not a basename: '%s'", $basename));
+        }
+
+        return $basename;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws StatusException
+     * @throws ArgsException
+     * @return string current working directory
+     */
+    private function parseWorkingDir()
+    {
+        $args = $this->arguments;
+
+        $buffer = $args->getOptionArgument('working-dir', false);
+
+        if (false !== $buffer) {
+            $this->changeWorkingDir($buffer);
+        }
+
+        return $this->getWorkingDirectory();
+    }
+
+    /**
+     * @throws StatusException
+     * @return string
+     */
+    private function getWorkingDirectory()
+    {
+        $workingDir = \getcwd();
+        if (false === $workingDir) {
+            // @codeCoverageIgnoreStart
+            StatusException::status(1, 'fatal: obtain working directory');
+            // @codeCoverageIgnoreEnd
+        }
+
+        return $workingDir;
+    }
+
+    /**
+     * @param string $basename
+     * @param string $workingDir
+     * @throws StatusException
+     * @throws ArgsException
+     * @return string file
+     */
+    private function parseFile($basename, &$workingDir)
+    {
+        $args = $this->arguments;
+
+        /** @var string $file as bitbucket-pipelines.yml to process */
+        $file = $args->getOptionArgument('file', null);
+        if (null === $file && null !== $file = Lib::fsFileLookUp($basename, $workingDir)) {
+            $buffer = dirname($file);
+            if ($buffer !== $workingDir) {
+                $this->changeWorkingDir($buffer);
+                $workingDir = $this->getWorkingDirectory();
+            }
+        }
+
+        if (!strlen($file)) {
+            StatusException::status(1, 'file can not be empty');
+        }
+
+        return $file;
+    }
+
+    /**
+     * @param string $basename
+     * @param string $file
+     * @param string $workingDir
+     * @throws StatusException
+     * @return string path
+     */
+    private function parsePath($basename, $file, $workingDir)
+    {
+        if ($file !== $basename && self::BBPL_BASENAME !== $basename) {
+            $this->verbose('info: --file overrides non-default --basename');
+        }
+
+        /** @var string $path full path as bitbucket-pipelines.yml to process */
+        $path = Lib::fsIsAbsolutePath($file)
+            ? $file
+            : $workingDir . '/' . $file;
+
+        if (!is_file($path) && !is_readable($path)) {
+            StatusException::status(1, sprintf('not a readable file: %s', $file));
+        }
+
+        return $path;
+    }
+
+    /**
+     * @throws InvalidArgumentException
      * @return Exec
      */
     private function parseExec()
@@ -348,19 +392,21 @@ class App
 
     /**
      * @param string $directory
-     * @return null|int
+     * @throws StatusException
      */
     private function changeWorkingDir($directory)
     {
-        $this->verbose(sprintf('info: changing working directory to %s', $directory));
+        $this->verbose(
+            sprintf('info: changing working directory to %s', $directory)
+        );
+
         $result = chdir($directory);
         if (false === $result) {
-            $this->error(sprintf('pipelines: fatal: change working directory to %s', $directory));
-
-            return 2;
+            StatusException::status(
+                2,
+                sprintf('fatal: change working directory to %s', $directory)
+            );
         }
-
-        return null;
     }
 
     /**
@@ -382,7 +428,7 @@ class App
             $this->error(sprintf("pipelines: error: pipeline id '%s'", $pipelineId));
 
             throw $e;
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->error(sprintf("pipelines: pipeline '%s' unavailable", $pipelineId));
             $this->info('Pipelines are:');
             $fileOptions->showPipelines($pipelines);
