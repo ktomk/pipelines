@@ -69,8 +69,10 @@ class App
      */
     public function main(array $arguments)
     {
-        $this->arguments = Args::create($arguments);
-        $this->debug = $this->arguments->hasOption('debug');
+        $args = Args::create($arguments);
+        $this->debug = $args->hasOption('debug');
+        $this->verbose = $args->hasOption(array('v', 'verbose'));
+        $this->arguments = $args;
 
         try {
             $status = $this->run();
@@ -120,16 +122,8 @@ class App
     {
         $args = $this->arguments;
 
-        $this->verbose = $args->hasOption(array('v', 'verbose'));
-
-        # quickly handle version
-        if ($args->hasOption('version')) {
-            return $this->help->showVersion();
-        }
-
-        # quickly handle help
-        if ($args->hasOption(array('h', 'help'))) {
-            return $this->help->showHelp();
+        if (null !== $status = $this->helpRun($args)) {
+            return $status;
         }
 
         $prefix = $args->getOptionArgument('prefix', 'pipelines');
@@ -299,6 +293,21 @@ class App
         }
 
         return $status;
+    }
+
+    private function helpRun(Args $args)
+    {
+        # quickly handle version
+        if ($args->hasOption('version')) {
+            return $this->help->showVersion();
+        }
+
+        # quickly handle help
+        if ($args->hasOption(array('h', 'help'))) {
+            return $this->help->showHelp();
+        }
+
+        return null;
     }
 
     /**
