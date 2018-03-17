@@ -81,6 +81,11 @@ class App
             $message = $e->getMessage();
             $this->error($message);
             $this->help->showUsage();
+        } catch (StatusException $e) {
+            $status = $e->getCode();
+            if (0 !== $status && '' !== $message = $e->getMessage()) {
+                $this->error(sprintf('pipelines: %s', $message));
+            }
         } catch (File\ParseException $e) {
             $status = 2;
             $message = sprintf('pipelines: file parse error: %s', $e->getMessage());
@@ -116,30 +121,18 @@ class App
      * @throws \InvalidArgumentException
      * @throws \Ktomk\Pipelines\File\ParseException
      * @throws ArgsException
+     * @throws StatusException
      * @return null|int
      */
     public function run()
     {
+        $this->helpRun();
+
+        $prefix = $this->parsePrefix();
+
+        $exec = $this->parseExec();
+
         $args = $this->arguments;
-
-        if (null !== $status = $this->helpRun($args)) {
-            return $status;
-        }
-
-        $prefix = $args->getOptionArgument('prefix', 'pipelines');
-        if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
-            ArgsException::__(sprintf("Invalid prefix: '%s'", $prefix));
-        }
-
-        $debugPrinter = null;
-        if ($this->verbose) {
-            $debugPrinter = $this->streams;
-        }
-        $exec = new Exec($debugPrinter);
-
-        if ($args->hasOption('dry-run')) {
-            $exec->setActive(false);
-        }
 
         if (
             null !== $status
@@ -295,19 +288,62 @@ class App
         return $status;
     }
 
-    private function helpRun(Args $args)
+    /**
+     * @throws \InvalidArgumentException
+     * @return Exec
+     */
+    private function parseExec()
     {
+        $args = $this->arguments;
+
+        $debugPrinter = null;
+        if ($this->verbose) {
+            $debugPrinter = $this->streams;
+        }
+        $exec = new Exec($debugPrinter);
+
+        if ($args->hasOption('dry-run')) {
+            $exec->setActive(false);
+        }
+
+        return $exec;
+    }
+
+    /**
+     * @throws ArgsException
+     * @return string
+     */
+    private function parsePrefix()
+    {
+        $args = $this->arguments;
+
+        $prefix = $args->getOptionArgument('prefix', 'pipelines');
+        if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
+            ArgsException::__(sprintf("Invalid prefix: '%s'", $prefix));
+        }
+
+        return $prefix;
+    }
+
+    /**
+     * @throws StatusException
+     */
+    private function helpRun()
+    {
+        $args = $this->arguments;
+
+        $status = null;
+
         # quickly handle version
+        $help = $this->help;
         if ($args->hasOption('version')) {
-            return $this->help->showVersion();
+            StatusException::status($help->showVersion());
         }
 
         # quickly handle help
         if ($args->hasOption(array('h', 'help'))) {
-            return $this->help->showHelp();
+            StatusException::status($help->showHelp());
         }
-
-        return null;
     }
 
     /**
