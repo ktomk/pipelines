@@ -48,6 +48,7 @@
     ]
   },
   "config": {
-    "autoloader-suffix": "pipelines"
+    "autoloader-suffix": "pipelines",
+    "sort-packages": true
   }
 }

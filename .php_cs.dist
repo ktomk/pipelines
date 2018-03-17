@@ -47,9 +47,8 @@ $config = PhpCsFixer\Config::create()
     ))
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->exclude('tests/fixtures')
-            ->notPath('src/PharBuild/Timestamps.php')
-            ->in(__DIR__)
+            ->notPath('PharBuild/Timestamps.php')
+            ->in(array('src', 'tests'))
     )
 ;
 
