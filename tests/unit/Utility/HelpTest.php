@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Utility;
 
+use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
 use PHPUnit\Framework\TestCase;
 
@@ -52,5 +53,51 @@ class HelpTest extends TestCase
         $this->expectOutputRegex('~^pipelines version [^\\n]{5,}$~');
         $actual = $help->showVersion();
         $this->assertSame(0, $actual);
+    }
+
+    /**
+     * @param Help $help
+     * @depends testCreation
+     */
+    public function testRunHelp(Help $help)
+    {
+        $this->expectOutputRegex('~^usage: pipelines ~');
+        $args = new Args(array('cmd', '--help'));
+
+        try {
+            $help->run($args);
+            $this->fail('an expected exception has not been thrown');
+        } catch (StatusException $e) {
+            $this->assertSame(0, $e->getCode());
+        }
+    }
+
+    /**
+     * @param Help $help
+     * @depends testCreation
+     */
+    public function testRunVersion(Help $help)
+    {
+        $this->expectOutputRegex("{^pipelines version (@\\.@\\.@|[a-f0-9]{7}|\\d+\\.\\d+\\.\\d+)(-\\d+-g[a-f0-9]{7})?\\+?\n}");
+        $args = new Args(array('cmd', '--version'));
+
+        try {
+            $help->run($args);
+            $this->fail('an expected exception has not been thrown');
+        } catch (StatusException $e) {
+            $this->assertSame(0, $e->getCode());
+        }
+    }
+
+    /**
+     * @param Help $help
+     * @throws StatusException
+     * @depends testCreation
+     */
+    public function testRun(Help $help)
+    {
+        $args = new Args(array('cmd', '--dev-null-da-place-to-be'));
+        $help->run($args);
+        $this->addToAssertionCount(1);
     }
 }

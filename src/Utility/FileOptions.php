@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Utility;
 
+use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File;
@@ -54,30 +55,27 @@ class FileOptions
     /**
      * run options
      *
-     * @throws \InvalidArgumentException
-     * @return null|int exit status or null if run was not applicable
+     * @throws InvalidArgumentException
+     * @throws StatusException
+     * @return self
      */
     public function run()
     {
         $args = $this->args;
 
-        $images = $args->hasOption('images');
-        $show = $args->hasOption('show');
-        $list = $args->hasOption('list');
-
-        if ($images) {
-            return $this->shower()->showImages();
+        if ($args->hasOption('images')) {
+            StatusException::status($this->shower()->showImages());
         }
 
-        if ($show) {
-            return $this->shower()->showPipelines();
+        if ($args->hasOption('show')) {
+            StatusException::status($this->shower()->showPipelines());
         }
 
-        if ($list) {
-            return $this->shower()->showPipelineIds();
+        if ($args->hasOption('list')) {
+            StatusException::status($this->shower()->showPipelineIds());
         }
 
-        return null;
+        return $this;
     }
 
     /**

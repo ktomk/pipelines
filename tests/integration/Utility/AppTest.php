@@ -119,8 +119,8 @@ class AppTest extends TestCase
 
     public function testInvalidWrongPipelineNameArgumentException()
     {
-        $this->expectOutputString(
-            "pipelines: pipeline 'test/more' unavailable\n"
+        $this->expectOutputRegex(
+            "~^pipelines: pipeline 'test/more' unavailable\n~"
         );
         $app = new App(new Streams(null, null, 'php://output'));
         $args = array(

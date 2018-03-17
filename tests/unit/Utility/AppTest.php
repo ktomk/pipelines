@@ -18,23 +18,6 @@ class AppTest extends TestCase
         $this->assertNotNull($app);
     }
 
-    public function testHelpOption()
-    {
-        $app = new App(new Streams(null, 'php://output'));
-
-        $this->expectOutputRegex('~^usage: pipelines ~');
-        $status = $app->main(array('cmd', '--help'));
-        $this->assertSame(0, $status);
-    }
-
-    public function testShowVersion()
-    {
-        $app = new App(new Streams(null, 'php://output'));
-
-        $this->expectOutputRegex("{^pipelines version (@\\.@\\.@|[a-f0-9]{7}|\\d+\\.\\d+\\.\\d+)(-\\d+-g[a-f0-9]{7})?\\+?\n}");
-        $app->main(array('cmd', '--version'));
-    }
-
     public function testMainExceptionHandlingArgsException()
     {
         $app = new App(new Streams(null, null, 'php://output'));

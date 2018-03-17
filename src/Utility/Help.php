@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\Utility;
 
+use InvalidArgumentException;
+use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
 
 class Help
@@ -141,5 +143,23 @@ EOD
         );
 
         return 0;
+    }
+
+    /**
+     * @param Args $args
+     * @throws InvalidArgumentException
+     * @throws StatusException
+     */
+    public function run(Args $args)
+    {
+        # quickly handle version
+        if ($args->hasOption('version')) {
+            StatusException::status($this->showVersion());
+        }
+
+        # quickly handle help
+        if ($args->hasOption(array('h', 'help'))) {
+            StatusException::status($this->showHelp());
+        }
     }
 }

@@ -47,19 +47,24 @@ class FileOptionsTest extends TestCase
     }
 
     /**
-     * @param string $args
+     * @param array $arguments
      * @param int $expected
      * @dataProvider provideTestRunArgs
      */
-    public function testRun($args, $expected)
+    public function testRun(array $arguments, $expected)
     {
-        $args = new Args(array_merge(array('test-cmd'), $args));
+        $args = new Args(array_merge(array('test-cmd'), $arguments));
         $output = new Streams();
         $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
 
         $options = new FileOptions($args, $output, $file);
-        $actual = $options->run();
-        $this->assertSame($expected, $actual);
+
+        try {
+            $options->run();
+            $this->assertNull($expected);
+        } catch (StatusException $e) {
+            $this->assertSame($expected, $e->getCode());
+        }
     }
 
     public function testShowPipelines()

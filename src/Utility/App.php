@@ -99,19 +99,7 @@ class App
             // @codeCoverageIgnoreEnd
         }
 
-        if (isset($e) && $this->debug) {
-            for (; $e; $e = $e->getPrevious()) {
-                $this->error('--------');
-                $this->error(sprintf("class....: %s", get_class($e)));
-                $this->error(sprintf("message..: %s", $e->getMessage()));
-                $this->error(sprintf("code.....: %s", $e->getCode()));
-                $this->error(sprintf("file.....: %s", $e->getFile()));
-                $this->error(sprintf("line.....: %s", $e->getLine()));
-                $this->error('backtrace:');
-                $this->error($e->getTraceAsString());
-            }
-            $this->error('--------');
-        }
+        $this->debugException($e);
 
         return $status;
     }
@@ -123,17 +111,17 @@ class App
      * @throws \Ktomk\Pipelines\File\ParseException
      * @throws ArgsException
      * @throws StatusException
-     * @return null|int
+     * @return int
      */
     public function run()
     {
-        $this->helpRun();
+        $args = $this->arguments;
+
+        $this->help->run($args);
 
         $prefix = $this->parsePrefix();
 
         $exec = $this->parseExec();
-
-        $args = $this->arguments;
 
         DockerOptions::bind($args, $exec, $prefix, $this->streams)->run();
 
@@ -143,124 +131,67 @@ class App
 
         $workingDir = $this->parseWorkingDir();
 
-        $file = $this->parseFile($basename, $workingDir);
-
-        $path = $this->parsePath($basename, $file, $workingDir);
-
-        unset($file);
+        $path = $this->parsePath($basename, $workingDir);
 
         // TODO: obtain project dir information etc. from VCS
         // $vcs = new Vcs();
 
         $noRun = $args->hasOption('no-run');
 
-        $deployMode = $args->getOptionArgument('deploy', 'copy');
-        if (!in_array($deployMode, array('mount', 'copy'), true)) {
-            $this->error(sprintf("pipelines: unknown deploy mode '%s'\n", $deployMode));
-
-            return 1;
-        }
-
-        $this->verbose(sprintf("info: pipelines file is '%s'", $path));
+        $deployMode = $this->parseDeployMode();
 
         $pipelines = File::createFromFile($path);
 
-        $fileOptions = FileOptions::bind($args, $this->streams, $pipelines);
-        if (null !== $status = $fileOptions->run()) {
-            return $status;
-        }
+        $fileOptions = FileOptions::bind($args, $this->streams, $pipelines)->run();
 
-        ###
+        $reference = $this->parseReference();
 
-        $reference = Runner\Reference::create(
-            $args->getOptionArgument('trigger')
-        );
-
-        $env = Env::create($_SERVER);
-        $env->addReference($reference);
-        $env->collectFiles(array(
-            $workingDir . '/.env.dist',
-            $workingDir . '/.env',
-        ));
-        $env->collect($args, array('e', 'env', 'env-file'));
+        $env = $this->parseEnv($_SERVER, $reference, $workingDir);
 
         $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';
 
         $pipelineId = $args->getOptionArgument('pipeline', $pipelineId);
 
-        // --verbatim show only errors for own runner actions, show everything from pipeline verbatim
-        $streams = $this->streams;
-        if ($args->hasOption('verbatim')) {
-            $streams = new Streams();
-            $streams->copyHandle($this->streams, 2);
-        }
+        $streams = $this->parseStreams();
 
-        if ($option = $args->getFirstRemainingOption()) {
-            $this->error("pipelines: unknown option: ${option}");
-            $this->help->showUsage();
-
-            return 1;
-        }
-
-        ###
+        $this->parseRemainingOptions();
 
         $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions);
-        if (!$pipeline instanceof Pipeline) {
-            return $pipeline;
-        }
 
         $flags = $this->getRunFlags($keep, $deployMode);
 
         $runner = new Runner($prefix, $workingDir, $exec, $flags, $env, $streams);
+
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');
             $status = 0;
         } else {
             $status = $runner->run($pipeline);
             if (0 !== $status) {
-                $this->streams->out(
-                    sprintf("exit status: %d\n", $status)
-                );
+                $this->streams->out(sprintf("exit status: %d\n", $status)); // @codeCoverageIgnore
             }
         }
 
         return $status;
     }
 
-    /**
-     * @throws StatusException
-     * @throws ArgsException
-     * @return string basename for bitbucket-pipelines.yml
-     */
-    private function parseBasename()
+    private function debugException(Exception $e = null)
     {
-        $args = $this->arguments;
-
-        $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
-        if (!Lib::fsIsBasename($basename)) {
-            StatusException::status(1, sprintf("not a basename: '%s'", $basename));
+        if (null === $e || false === $this->debug) {
+            return;
         }
 
-        return $basename;
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     * @throws StatusException
-     * @throws ArgsException
-     * @return string current working directory
-     */
-    private function parseWorkingDir()
-    {
-        $args = $this->arguments;
-
-        $buffer = $args->getOptionArgument('working-dir', false);
-
-        if (false !== $buffer) {
-            $this->changeWorkingDir($buffer);
+        for (; $e; $e = $e->getPrevious()) {
+            $this->error('--------');
+            $this->error(sprintf("class....: %s", get_class($e)));
+            $this->error(sprintf("message..: %s", $e->getMessage()));
+            $this->error(sprintf("code.....: %s", $e->getCode()));
+            $this->error(sprintf("file.....: %s", $e->getFile()));
+            $this->error(sprintf("line.....: %s", $e->getLine()));
+            $this->error('backtrace:');
+            $this->error($e->getTraceAsString());
         }
-
-        return $this->getWorkingDirectory();
+        $this->error('--------');
     }
 
     /**
@@ -280,8 +211,93 @@ class App
     }
 
     /**
+     * @throws InvalidArgumentException
+     * @throws StatusException
+     * @throws ArgsException
+     * @return string basename for bitbucket-pipelines.yml
+     */
+    private function parseBasename()
+    {
+        $args = $this->arguments;
+
+        $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
+        if (!Lib::fsIsBasename($basename)) {
+            StatusException::status(1, sprintf("not a basename: '%s'", $basename));
+        }
+
+        return $basename;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws ArgsException
+     * @throws StatusException
+     * @return string deploy mode ('copy', 'mount')
+     */
+    private function parseDeployMode()
+    {
+        $args = $this->arguments;
+
+        $deployMode = $args->getOptionArgument('deploy', 'copy');
+
+        if (!in_array($deployMode, array('mount', 'copy'), true)) {
+            StatusException::status(
+                1,
+                sprintf("unknown deploy mode '%s'\n", $deployMode)
+            );
+        }
+
+        return $deployMode;
+    }
+
+    /**
+     * @param array $inherit from this environment
+     * @param Runner\Reference $reference
+     * @param string $workingDir
+     * @throws InvalidArgumentException
+     * @throws ArgsException
+     * @return Env
+     */
+    private function parseEnv(array $inherit, $reference, $workingDir)
+    {
+        $args = $this->arguments;
+
+        $env = Env::create($inherit);
+        $env->addReference($reference);
+        $env->collectFiles(array(
+            $workingDir . '/.env.dist',
+            $workingDir . '/.env',
+        ));
+        $env->collect($args, array('e', 'env', 'env-file'));
+
+        return $env;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @return Exec
+     */
+    private function parseExec()
+    {
+        $args = $this->arguments;
+
+        $debugPrinter = null;
+        if ($this->verbose) {
+            $debugPrinter = $this->streams;
+        }
+        $exec = new Exec($debugPrinter);
+
+        if ($args->hasOption('dry-run')) {
+            $exec->setActive(false);
+        }
+
+        return $exec;
+    }
+
+    /**
      * @param string $basename
      * @param string $workingDir
+     * @throws InvalidArgumentException
      * @throws StatusException
      * @throws ArgsException
      * @return string file
@@ -309,13 +325,16 @@ class App
 
     /**
      * @param string $basename
-     * @param string $file
      * @param string $workingDir
+     * @throws InvalidArgumentException
+     * @throws ArgsException
      * @throws StatusException
      * @return string path
      */
-    private function parsePath($basename, $file, $workingDir)
+    private function parsePath($basename, &$workingDir)
     {
+        $file = $this->parseFile($basename, $workingDir);
+
         if ($file !== $basename && self::BBPL_BASENAME !== $basename) {
             $this->verbose('info: --file overrides non-default --basename');
         }
@@ -329,31 +348,13 @@ class App
             StatusException::status(1, sprintf('not a readable file: %s', $file));
         }
 
+        $this->verbose(sprintf("info: pipelines file is '%s'", $path));
+
         return $path;
     }
 
     /**
      * @throws InvalidArgumentException
-     * @return Exec
-     */
-    private function parseExec()
-    {
-        $args = $this->arguments;
-
-        $debugPrinter = null;
-        if ($this->verbose) {
-            $debugPrinter = $this->streams;
-        }
-        $exec = new Exec($debugPrinter);
-
-        if ($args->hasOption('dry-run')) {
-            $exec->setActive(false);
-        }
-
-        return $exec;
-    }
-
-    /**
      * @throws ArgsException
      * @return string
      */
@@ -370,24 +371,69 @@ class App
     }
 
     /**
+     * @throws InvalidArgumentException
+     * @throws ArgsException
+     * @return Runner\Reference
+     */
+    private function parseReference()
+    {
+        $trigger = $this->arguments->getOptionArgument('trigger');
+
+        return Runner\Reference::create($trigger);
+    }
+
+    /**
+     * give error about unknown option, show usage and exit status of 1
+     *
      * @throws StatusException
      */
-    private function helpRun()
+    private function parseRemainingOptions()
+    {
+        $option = $this->arguments->getFirstRemainingOption();
+
+        if (!$option) {
+            return;
+        }
+
+        $this->error("pipelines: unknown option: ${option}");
+        $this->help->showUsage();
+        StatusException::status(1);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @return Streams
+     */
+    private function parseStreams()
+    {
+        $streams = $this->streams;
+
+        // --verbatim show only errors for own runner actions, show everything from pipeline verbatim
+        if ($this->arguments->hasOption('verbatim')) {
+            $streams = new Streams();
+            $streams->copyHandle($this->streams, 2);
+        }
+
+        return $streams;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws StatusException
+     * @throws ArgsException
+     * @return string current working directory
+     */
+    private function parseWorkingDir()
     {
         $args = $this->arguments;
 
-        $status = null;
+        $buffer = $args->getOptionArgument('working-dir', false);
 
-        # quickly handle version
-        $help = $this->help;
-        if ($args->hasOption('version')) {
-            StatusException::status($help->showVersion());
+        if (false !== $buffer) {
+            $this->changeWorkingDir($buffer);
         }
 
-        # quickly handle help
-        if ($args->hasOption(array('h', 'help'))) {
-            StatusException::status($help->showHelp());
-        }
+        return $this->getWorkingDirectory();
     }
 
     /**
@@ -416,7 +462,8 @@ class App
      * @param $pipelineId
      * @param FileOptions $fileOptions
      * @throws \Ktomk\Pipelines\File\ParseException
-     * @return int|Pipeline on success, integer on error as exit status
+     * @throws StatusException
+     * @return Pipeline on success
      */
     private function getRunPipeline(File $pipelines, $pipelineId, FileOptions $fileOptions)
     {
@@ -432,14 +479,11 @@ class App
             $this->error(sprintf("pipelines: pipeline '%s' unavailable", $pipelineId));
             $this->info('Pipelines are:');
             $fileOptions->showPipelines($pipelines);
-
-            return 1;
+            StatusException::status(1);
         }
 
         if (!$pipeline) {
-            $this->error("pipelines: no pipeline to run!");
-
-            return 1;
+            StatusException::status(1, 'no pipeline to run!');
         }
 
         return $pipeline;
