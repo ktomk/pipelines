@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Utility status exception
 ### Changed
 - Do not keep containers by default, not even on error
+### Fixed
+- Code coverage for unit tests
 
 ## [0.0.11] - 2018-03-13
 ### Added

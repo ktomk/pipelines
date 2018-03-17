@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class ProcTest
  *
- * @covers \Ktomk\Pipelines\Cli\Proc
+ * @coversNothing
  */
 class ProcTest extends TestCase
 {

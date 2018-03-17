@@ -9,7 +9,7 @@ use Ktomk\Pipelines\Utility\App;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @covers \Ktomk\Pipelines\Utility\App
+ * @coversNothing
  */
 class AppTest extends TestCase
 {

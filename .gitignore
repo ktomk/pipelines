@@ -3,3 +3,6 @@
 
 # Environment file
 /.env
+
+# Phpunit
+/phpunit.xml

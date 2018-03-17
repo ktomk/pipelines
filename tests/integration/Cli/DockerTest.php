@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * Class ProcTest
  *
- * @covers \Ktomk\Pipelines\Cli\Docker
+ * @coversNothing
  */
 class DockerTest extends TestCase
 {

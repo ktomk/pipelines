@@ -186,11 +186,30 @@ class AppTest extends TestCase
         $this->assertSame(0, $status);
     }
 
-    public function testKeepAndNoKeepExclusivity()
+    public function provideErroneousArguments()
     {
-        $this->expectOutputString("pipelines: --keep and --no-keep are exclusive\n");
+        return array(
+            array(
+                "pipelines: --keep and --no-keep are exclusive\n",
+                array('--keep', '--no-keep', '--no-run'),
+            ),
+            array(
+                "pipelines: pipeline 'fromage/baguette' unavailable\n",
+                array('--pipeline', 'fromage/baguette'),
+            ),
+        );
+    }
+
+    /**
+     * @param string $output expected error output
+     * @param array $arguments
+     * @dataProvider provideErroneousArguments
+     */
+    public function testErroneousCommands($output, array $arguments)
+    {
+        $this->expectOutputString($output);
         $app = new App(new Streams(null, null, 'php://output'));
-        $args = array('pipelines-test', '--keep', '--no-keep', '--no-run');
+        $args = array_merge((array)'pipelines-test', $arguments);
         $status = $app->main($args);
         $this->assertSame(1, $status);
     }
