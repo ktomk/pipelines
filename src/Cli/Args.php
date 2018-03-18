@@ -111,7 +111,7 @@ class Args extends ArgsArgs
         if (null === $result) {
             if ($required) {
                 ArgsException::__(sprintf(
-                    "error: option %s is not optional",
+                    "option %s is not optional",
                     $options->/** @scrutinizer ignore-call */
                         getOptionDescription()
                 ));

@@ -94,12 +94,14 @@ class OptionFilterIterator extends FilterIterator
      */
     private function compareOption($option)
     {
+        $buffer = (1 === strlen($option) ? '-' : '--') . $option;
+
         if (!preg_match('~^[a-z0-9][a-z0-9-]*$~i', $option)) {
             throw new InvalidArgumentException(
-                sprintf("invalid option '%s'", $option)
+                sprintf("invalid option %s", $buffer)
             );
         }
 
-        return (1 === strlen($option) ? '-' : '--') . $option;
+        return $buffer;
     }
 }

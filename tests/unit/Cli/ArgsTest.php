@@ -89,6 +89,9 @@ class ArgsTest extends TestCase
         $this->assertSame('value', $actual);
     }
 
+    /**
+     * @throws ArgsException
+     */
     public function testOptionalOptionArgument()
     {
         $args = new Args(array('--prefix', 'value'));
@@ -102,7 +105,7 @@ class ArgsTest extends TestCase
 
     /**
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage error: option --volume is not optional
+     * @expectedExceptionMessage option --volume is not optional
      */
     public function testMandatoryOption()
     {
@@ -110,6 +113,9 @@ class ArgsTest extends TestCase
         $args->getOptionArgument('volume', null, true);
     }
 
+    /**
+     * @throws ArgsException
+     */
     public function testNonMandatoryOption()
     {
         $args = new Args(array('--prefix', 'value'));
@@ -118,7 +124,7 @@ class ArgsTest extends TestCase
 
     /**
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage error: option 'prefix' requires an argument
+     * @expectedExceptionMessage option --prefix requires an argument
      */
     public function testMandatoryOptionArgument()
     {
@@ -128,7 +134,7 @@ class ArgsTest extends TestCase
 
     /**
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage error: option 'prefix' requires an argument
+     * @expectedExceptionMessage option --prefix requires an argument
      */
     public function testMandatorOptionArgumentWithParameters()
     {

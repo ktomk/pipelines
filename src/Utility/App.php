@@ -79,8 +79,9 @@ class App
             $status = $this->run();
         } catch (ArgsException $e) {
             $status = $e->getCode();
-            $message = $e->getMessage();
-            $this->error($message);
+            if (0 !== $status && '' !== $message = $e->getMessage()) {
+                $this->error(sprintf('pipelines: %s', $message));
+            }
             $this->help->showUsage();
         } catch (StatusException $e) {
             $status = $e->getCode();
@@ -364,7 +365,7 @@ class App
 
         $prefix = $args->getOptionArgument('prefix', 'pipelines');
         if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
-            ArgsException::__(sprintf("Invalid prefix: '%s'", $prefix));
+            ArgsException::__(sprintf("invalid prefix: '%s'", $prefix));
         }
 
         return $prefix;
@@ -385,7 +386,7 @@ class App
     /**
      * give error about unknown option, show usage and exit status of 1
      *
-     * @throws StatusException
+     * @throws ArgsException
      */
     private function parseRemainingOptions()
     {
@@ -395,9 +396,9 @@ class App
             return;
         }
 
-        $this->error("pipelines: unknown option: ${option}");
-        $this->help->showUsage();
-        StatusException::status(1);
+        ArgsException::__(
+            sprintf('unknown option: %s', $option)
+        );
     }
 
     /**

@@ -44,7 +44,7 @@ class AppTest extends TestCase
     public function testInvalidPrefixGivesError()
     {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputString("Invalid prefix: '!\$\"'\n");
+        $this->expectOutputString("pipelines: invalid prefix: '!\$\"'\n");
         $args = array(
             'pipelines-test',
             '--prefix',

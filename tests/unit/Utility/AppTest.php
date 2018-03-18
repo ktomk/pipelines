@@ -21,7 +21,7 @@ class AppTest extends TestCase
     public function testMainExceptionHandlingArgsException()
     {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputRegex('{^error: option \'prefix\' requires an argument\n--------\nclass....:}');
+        $this->expectOutputRegex('{^pipelines: option --prefix requires an argument\n--------\nclass....:}');
         $actual = $app->main(array('cmd', '--debug', '--prefix'));
         $this->assertNotSame(0, $actual);
     }
@@ -53,7 +53,7 @@ class AppTest extends TestCase
      */
     public function testInvalidPrefix() {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputRegex('{^Invalid prefix: \'123\'\n}');
+        $this->expectOutputRegex('{^pipelines: invalid prefix: \'123\'\n}');
         $actual = $app->main(array('cmd', '--prefix', '123'));
         $this->assertSame(1, $actual);
     }
