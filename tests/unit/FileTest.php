@@ -35,6 +35,31 @@ class FileTest extends TestCase
     }
 
     /**
+     * @return File
+     */
+    public function testCreateFromFileWithInvalidId()
+    {
+        $path = __DIR__ . '/../data/invalid-pipeline-id.yml';
+
+        $file = File::createFromFile($path);
+
+        $this->assertNotNull($file);
+
+        return $file;
+    }
+
+    /**
+     * @param File $file
+     * @depends testCreateFromFileWithInvalidId
+     * @expectedException \Ktomk\Pipelines\File\ParseException
+     * @expectedExceptionMessage file parse error: invalid pipeline id '
+     */
+    public function testGetPipelinesWithInvalidIdParseError(File $file)
+    {
+        $file->getPipelines();
+    }
+
+    /**
      * @depends testCreateFromFile
      * @param File $file
      */
@@ -122,7 +147,7 @@ class FileTest extends TestCase
      */
     public function testImageNameRequired()
     {
-         new File(
+        new File(
             array(
                 'image' => null,
                 'pipelines' => array(),

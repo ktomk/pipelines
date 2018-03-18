@@ -16,7 +16,7 @@ use Ktomk\Pipelines\Pipeline;
 use Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Runner\Env;
 
-class App
+class App implements Runnable
 {
     const BBPL_BASENAME = 'bitbucket-pipelines.yml';
 
@@ -36,11 +36,6 @@ class App
      * @var bool
      */
     private $verbose = true;
-
-    /**
-     * @var bool
-     */
-    private $debug = false;
 
     /**
      * @var Help
@@ -71,38 +66,17 @@ class App
     public function main(array $arguments)
     {
         $args = Args::create($arguments);
-        $this->debug = $args->hasOption('debug');
+
         $this->verbose = $args->hasOption(array('v', 'verbose'));
         $this->arguments = $args;
 
-        try {
-            $status = $this->run();
-        } catch (ArgsException $e) {
-            $status = $e->getCode();
-            if (0 !== $status && '' !== $message = $e->getMessage()) {
-                $this->error(sprintf('pipelines: %s', $message));
-            }
-            $this->help->showUsage();
-        } catch (StatusException $e) {
-            $status = $e->getCode();
-            if (0 !== $status && '' !== $message = $e->getMessage()) {
-                $this->error(sprintf('pipelines: %s', $message));
-            }
-        } catch (File\ParseException $e) {
-            $status = 2;
-            $message = sprintf('pipelines: file parse error: %s', $e->getMessage());
-            $this->error($message);
-        } catch (Exception $e) { // @codeCoverageIgnoreStart
-            // catch unexpected exceptions for user-friendly message
-            $status = 2;
-            $message = sprintf('fatal: %s', $e->getMessage());
-            $this->error($message);
-            // @codeCoverageIgnoreEnd
-        }
+        $handler = new ExceptionHandler(
+            $this->streams,
+            $this->help,
+            $args->hasOption('debug')
+        );
 
-        $this->debugException($e);
-
-        return $status;
+        return $handler->handle($this);
     }
 
     /**
@@ -174,25 +148,6 @@ class App
         }
 
         return $status;
-    }
-
-    private function debugException(Exception $e = null)
-    {
-        if (null === $e || false === $this->debug) {
-            return;
-        }
-
-        for (; $e; $e = $e->getPrevious()) {
-            $this->error('--------');
-            $this->error(sprintf("class....: %s", get_class($e)));
-            $this->error(sprintf("message..: %s", $e->getMessage()));
-            $this->error(sprintf("code.....: %s", $e->getCode()));
-            $this->error(sprintf("file.....: %s", $e->getFile()));
-            $this->error(sprintf("line.....: %s", $e->getLine()));
-            $this->error('backtrace:');
-            $this->error($e->getTraceAsString());
-        }
-        $this->error('--------');
     }
 
     /**
@@ -392,13 +347,11 @@ class App
     {
         $option = $this->arguments->getFirstRemainingOption();
 
-        if (!$option) {
-            return;
+        if ($option) {
+            ArgsException::__(
+                sprintf('unknown option: %s', $option)
+            );
         }
-
-        ArgsException::__(
-            sprintf('unknown option: %s', $option)
-        );
     }
 
     /**

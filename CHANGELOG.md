@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Utility status exception
 ### Changed
+- Streamline of file parse error handling
 - Streamline of utility option and argument errors
 - Parsing of utility options and arguments in run routine
 ### Fixed

@@ -12,6 +12,11 @@ use InvalidArgumentException;
 class ParseException extends InvalidArgumentException
 {
     /**
+     * @var string
+     */
+    private $parseMessage;
+
+    /**
      * Abstract method to throw this message
      *
      * @param string $message
@@ -19,6 +24,21 @@ class ParseException extends InvalidArgumentException
      */
     public static function __($message)
     {
-        throw new self($message);
+        $self = new self(
+            sprintf('file parse error: %s', $message),
+            2
+        );
+
+        $self->parseMessage = $message;
+
+        throw $self;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParseMessage()
+    {
+        return $this->parseMessage;
     }
 }

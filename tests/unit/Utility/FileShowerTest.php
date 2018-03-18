@@ -43,6 +43,13 @@ class FileShowerTest extends TestCase
         $this->assertSame(0, $shower->showPipelines());
     }
 
+    public function testShowPipelinesWithInvalidId()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../data/invalid-pipeline-id.yml');
+        $shower = new FileShower(new Streams(), $file);
+        $this->assertSame(1, $shower->showPipelines());
+    }
+
     public function testShowPipelinesWithErrors()
     {
         $file = File::createFromFile(__DIR__ . '/../../data/invalid-pipeline.yml');

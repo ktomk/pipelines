@@ -130,7 +130,7 @@ class File
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return null|Pipeline
      */
     public function getDefault()
@@ -159,7 +159,7 @@ class File
      *
      * @param Reference $reference
      * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return null|string id if found, null otherwise
      */
     public function searchIdByReference(Reference $reference)
@@ -180,7 +180,7 @@ class File
      * @param Reference $reference
      * @throws \Ktomk\Pipelines\File\ParseException
      * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return null|Pipeline
      */
     public function searchReference(Reference $reference)
@@ -201,7 +201,7 @@ class File
      * @param string $reference
      * @throws \Ktomk\Pipelines\File\ParseException
      * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return null|Pipeline
      */
     public function searchTypeReference($type, $reference)
@@ -220,7 +220,8 @@ class File
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
+     * @throws ParseException
      * @return array|Pipeline[]
      */
     public function getPipelines()
@@ -228,6 +229,9 @@ class File
         $pipelines = array();
 
         foreach ($this->getPipelineIds() as $id) {
+            if (!$this->isIdValid($id)) {
+                ParseException::__(sprintf("invalid pipeline id '%s'", $id));
+            }
             $pipelines[$id] = $this->getById($id);
         }
 
@@ -242,7 +246,7 @@ class File
      */
     public function getById($id)
     {
-        if (!preg_match('~^(default|(branches|tags|bookmarks|custom)/[^\x00-\x1F]*)$~', $id)) {
+        if (!$this->isIdValid($id)) {
             throw new InvalidArgumentException(sprintf("Invalid id '%s'", $id));
         }
 
@@ -276,11 +280,16 @@ class File
         return null;
     }
 
+    private function isIdValid($id)
+    {
+        return (bool)preg_match('~^(default|(branches|tags|bookmarks|custom)/[^\x00-\x1F\x7F-\xFF]*)$~', $id);
+    }
+
     /**
      * @param $type
      * @param $reference
      * @throws \UnexpectedValueException
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return null|string
      */
     private function searchIdByTypeReference($type, $reference)
@@ -369,7 +378,7 @@ class File
 
     /**
      * @param $type
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     private function validateType($type)
     {

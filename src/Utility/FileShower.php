@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Exception;
+use InvalidArgumentException;
 use Ktomk\Pipelines\File;
 use Ktomk\Pipelines\Step;
 
@@ -39,7 +40,7 @@ class FileShower
     }
 
     /**
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @return int
      */
     public function showImages()
@@ -99,8 +100,14 @@ class FileShower
         foreach ($pipelines->getPipelineIds() as $id) {
             try {
                 $pipeline = $pipelines->getById($id);
-                $steps = $pipeline->getSteps();
-            } catch (Exception $e) {
+
+                $steps = (null === $pipeline) ? array() : $pipeline->getSteps();
+            } catch (File\ParseException $e) {
+                $errors++;
+                $table[] = array($id, 'ERROR', $e->getParseMessage());
+
+                continue;
+            } catch (InvalidArgumentException $e) {
                 $errors++;
                 $table[] = array($id, 'ERROR', $e->getMessage());
 

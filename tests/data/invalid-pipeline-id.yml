@@ -1,0 +1,11 @@
+# this file is part of pipelines
+#
+# fixture bitbucket-pipelines.yml w/ invalid custom id name
+
+pipelines:
+  custom:
+    überflieger:
+      - step:
+          image: "image"
+          script:
+            - ":"
