@@ -142,7 +142,7 @@ class App implements Runnable
             $status = 0;
         } else {
             $status = $runner->run($pipeline);
-            if (0 !== $status) {
+            if (0 !== $status && !$keep->hasErrorKeep()) {
                 $this->streams->out(sprintf("exit status: %d\n", $status)); // @codeCoverageIgnore
             }
         }
@@ -475,7 +475,7 @@ class App implements Runnable
     {
         $flags = Runner::FLAGS;
         if ($keep->errorKeep) {
-            $flags &= ~Runner::FLAG_KEEP_ON_ERROR;
+            $flags |= Runner::FLAG_KEEP_ON_ERROR;
         } elseif ($keep->keep) {
             $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
         }

@@ -98,4 +98,12 @@ class KeepOptions
 
         return array($errorKeep, $keep, $noKeep);
     }
+
+    /**
+     * @return bool
+     */
+    public function hasErrorKeep()
+    {
+        return true === $this->errorKeep;
+    }
 }

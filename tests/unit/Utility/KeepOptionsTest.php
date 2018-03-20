@@ -32,6 +32,15 @@ class KeepOptionsTest extends UnitTestCase
         $this->assertInstanceOf(get_class($keep), $actual);
     }
 
+    /**
+     * @depends testCreation
+     * @param KeepOptions $keep
+     */
+    public function testHasErrorKeep(KeepOptions $keep)
+    {
+        $this->assertTrue($keep->hasErrorKeep());
+    }
+
     public function provideExclusivityExceptions()
     {
         return array(
