@@ -142,9 +142,6 @@ class App implements Runnable
             $status = 0;
         } else {
             $status = $runner->run($pipeline);
-            if (0 !== $status && !$keep->hasErrorKeep()) {
-                $this->streams->out(sprintf("exit status: %d\n", $status)); // @codeCoverageIgnore
-            }
         }
 
         return $status;

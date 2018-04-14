@@ -249,7 +249,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', 'docker', 255)
         ;
 
-        $this->expectOutputRegex('{exit status 255, keeping container id \*dry-run\*}');
+        $this->expectOutputRegex('{script non-zero exit status: 255\nkeeping container id \*dry-run\*}');
         $runner = new Runner(
             'pipelines-unit-test',
             sys_get_temp_dir() . '/pipelines-test-suite',

@@ -296,6 +296,8 @@ class Runner
             ));
             $streams->out(sprintf("\n"));
             if (0 !== $status) {
+                $this->streams->err(sprintf("script non-zero exit status: %d\n", $status));
+
                 break;
             }
         }
@@ -389,8 +391,7 @@ class Runner
         # keep container on error
         if (0 !== $status && $flags & self::FLAG_KEEP_ON_ERROR) {
             $this->streams->err(sprintf(
-                "exit status %d, keeping container id %s\n",
-                $status,
+                "keeping container id %s\n",
                 substr($id, 0, 12)
             ));
 
