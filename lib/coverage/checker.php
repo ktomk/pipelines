@@ -44,7 +44,7 @@ if (!$xml = simplexml_load_file($clover)) {
     exit(2);
 }
 
-$percentage = min(100, max(0, (float)$percentage));
+$percentage = min(100, max(0, round($percentage, 2)));
 
 $fCoverage = function (SimpleXMLElement $xml) {
     $fMetrics = function ($s) use ($xml) {
@@ -60,7 +60,7 @@ $fCoverage = function (SimpleXMLElement $xml) {
     return (($total === $checked) ? 1 : $checked / $total) * 100;
 };
 
-$coverage = $fCoverage($xml);
+$coverage = round($fCoverage($xml), 2);
 if ($coverage >= $percentage) {
     printf('Code coverage is %.2f%% - OK!%s', $coverage, PHP_EOL);
     exit(0);

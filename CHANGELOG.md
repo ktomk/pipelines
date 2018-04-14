@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Coverage checker script precision
 - Duplicate output of non-zero exit code information
 ### Added
 - Tag script to make releases
