@@ -17,7 +17,10 @@ class EnvTest extends TestCase
         $env = new Env();
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Env', $env);
         $this->assertNotNull($env->getArgs('-e'));
+    }
 
+    public function testStaticCreation()
+    {
         $env = Env::create();
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Env', $env);
         $this->assertNotNull($env->getArgs('-e'));
@@ -35,6 +38,13 @@ class EnvTest extends TestCase
         $this->assertCount(10, $array);
     }
 
+    public function testDefaultValue()
+    {
+        $slug = 'pipelines';
+        $env = Env::create(array('BITBUCKET_REPO_SLUG' => $slug));
+        $this->assertSame($slug, $env->getValue('BITBUCKET_REPO_SLUG'));
+    }
+
     public function testUserInheritance()
     {
         $user = 'adele';
@@ -43,7 +53,7 @@ class EnvTest extends TestCase
         $this->assertSame($user, $env->getValue('BITBUCKET_REPO_OWNER'));
     }
 
-    public function testInheritionOnInit()
+    public function testInheritOnInit()
     {
         $env = new Env();
         $env->initDefaultVars(array('BITBUCKET_BUILD_NUMBER' => '123'));

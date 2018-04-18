@@ -18,6 +18,18 @@ class Lib
     }
 
     /**
+     * @param mixed $v variable reference
+     * @param mixed $d [optional]  default value (null)
+     * @return void
+     */
+    public static function v(&$v, $d = null)
+    {
+        if (!isset($v)) {
+            $v = $d;
+        }
+    }
+
+    /**
      * @return string UUID version 4
      */
     public static function generateUuid()

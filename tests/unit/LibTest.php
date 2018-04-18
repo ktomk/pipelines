@@ -23,6 +23,19 @@ class LibTest extends TestCase
         $this->assertSame('a', Lib::r($ref, 'a'));
     }
 
+    public function testVSet()
+    {
+        $variable = false;
+        Lib::v($variable, true);
+        $this->assertFalse($variable);
+    }
+
+    public function testVUnset()
+    {
+        Lib::v($variable, true);
+        $this->assertTrue($variable);
+    }
+
     public function testGenerateUuid()
     {
         $actual = Lib::generateUuid();

@@ -215,6 +215,8 @@ class App implements Runnable
     {
         $args = $this->arguments;
 
+        Lib::v($inherit['BITBUCKET_REPO_SLUG'], basename($workingDir));
+
         $env = Env::create($inherit);
         $env->addReference($reference);
         $env->collectFiles(array(

@@ -205,7 +205,7 @@ environment variables][BBPL-ENV] \[BBPL-ENV]:
     always set to "`0000000000000000000000000000000000000000`"
 * `BITBUCKET_REPO_OWNER` - current username from
     environment or if not available "`nobody`"
-* `BITBUCKET_REPO_SLUG` - always set to "`local-has-no-slug`"
+* `BITBUCKET_REPO_SLUG` - base name of project directory"
 * `BITBUCKET_TAG` - conditionally set by `--target`
 * `CI` - always set to "`true`"
 
