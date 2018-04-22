@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-use Exception;
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ArgsException;
@@ -219,10 +218,19 @@ class App implements Runnable
 
         $env = Env::create($inherit);
         $env->addReference($reference);
-        $env->collectFiles(array(
-            $workingDir . '/.env.dist',
-            $workingDir . '/.env',
-        ));
+
+        $noDotEnvFiles = $args->hasOption('no-dot-env-files');
+        $noDotEnvDotDist = $args->hasOption('no-dot-env-dot-dist');
+
+        if (false === $noDotEnvFiles) {
+            $filesToCollect = array();
+            if (false === $noDotEnvDotDist) {
+                $filesToCollect[] = $workingDir . '/.env.dist';
+            }
+            $filesToCollect[] = $workingDir . '/.env';
+            $env->collectFiles($filesToCollect);
+        }
+
         $env->collect($args, array('e', 'env', 'env-file'));
 
         return $env;

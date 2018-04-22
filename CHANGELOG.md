@@ -4,6 +4,12 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Added
+- Add `--no-dot-env-files` and `--no-dot-env-dot-dist` flags to
+  not pass `.env.dist` and `.env` files to docker as
+  `--env-file` arguments
+
 ## [0.0.14] - 2018-04-18
 ### Added
 - Tag script to make releases
@@ -78,7 +84,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [0.0.5] - 2018-01-29
 ### Added
-- Docker environment variables options: `-e`, `--env` for 
+- Docker environment variables options: `-e`, `--env` for
   variables and `--env-file` for files
 - Composer "ci" script to integrate continuously
 - `--no-keep` option to never keep containers, even on error

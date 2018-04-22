@@ -43,6 +43,7 @@ usage: pipelines [<options>...] [--version | [-h | --help]]
                  [--[no-|error-]keep] [--prefix <prefix>]
                  [--basename <basename>]
                  [[-e | --env] <variable>] [--env-file <path>]
+                 [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--file <path>] [--dry-run] [--no-run] [--list]
                  [--deploy mount | copy ] [--show] [--images]
                  [--pipeline <id>] [--trigger <ref>] [--verbatim]
@@ -80,6 +81,10 @@ Common options
                           for the docker container
     --env-file <path>     pass variables from environment file
                           to the docker container
+    --no-dot-env-files    do not pass .env.dist and .env files
+                          as environment files to docker
+    --no-dot-env-dot-dist dot not pass .env.dist as environment
+                          file to docker
     --file <path>         path to the pipelines file, overrides
                           looking up the <basename> file from
                           the current working directory

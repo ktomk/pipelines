@@ -78,3 +78,9 @@ pipelines:
           script:
             - lib/pipelines/environment.sh
             - env
+    printenv:
+        - step:
+            image: busybox
+            name: print environemnt variables
+            script:
+              - printenv
