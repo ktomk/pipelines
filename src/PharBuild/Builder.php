@@ -372,8 +372,8 @@ class Builder
 
         printf("file.....: %s\n", $filename);
         printf("size.....: %s bytes\n", number_format(filesize($filename), 0, '.', ' '));
-        printf("SHA-1....: %s\n", sha1_file($filename));
-        printf("SHA-256..: %s\n", hash_file('sha256', $filename));
+        printf("SHA-1....: %s\n", strtoupper(sha1_file($filename)));
+        printf("SHA-256..: %s\n", strtoupper(hash_file('sha256', $filename)));
 
         $pinfo = new \Phar($filename);
         printf("api......: %s\n", $pinfo->getVersion());

@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Support for PHP YAML extension, is preferred over Spyc lib if
   available; highly recommended
+### Fixed
+  - All uppercase hexits in builder phar info
 
 ## [0.0.15] - 2018-04-23
 ### Added
