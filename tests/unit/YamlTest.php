@@ -36,7 +36,7 @@ class YamlTest extends TestCase
     {
         $array = Yaml::file(__FILE__);
 
-        $this->assertInternalType('array', $array);
+        $this->assertNull($array);
     }
 
     public function testYamlNull()

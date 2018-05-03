@@ -259,4 +259,14 @@ class LibTest extends TestCase
         $actual = Lib::fsFileLookUp('chinese-black-beans-sauce-vs-vietnamese-spring-rolls', __DIR__);
         $this->assertNull($actual);
     }
+
+    public function testFsIsStreamUri()
+    {
+        $this->assertTrue(Lib::fsIsStreamUri('data://text/plain,'));
+    }
+
+    public function testFsIsStreamUriOnPath()
+    {
+        $this->assertFalse(Lib::fsIsStreamUri(__FILE__));
+    }
 }

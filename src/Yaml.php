@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
-use Spyc;
+use Ktomk\Pipelines\Yaml\ParserInterface;
 
 class Yaml
 {
@@ -21,18 +21,36 @@ class Yaml
             );
         }
 
-        $last = error_get_last();
-        $level = error_reporting();
-        error_reporting(0);
-        $array = Spyc::YAMLLoad($path);
-        $error = error_get_last() !== $last;
-        error_reporting($level);
-
-        return $error ? null : $array;
+        return self::parser()->parseFile($path);
     }
 
+    /**
+     * @param string $buffer
+     * @return null|array
+     */
     public static function buffer($buffer)
     {
-        return Spyc::YAMLLoadString($buffer);
+        return self::parser()->parseBuffer($buffer);
+    }
+
+    /**
+     * @return ParserInterface
+     */
+    private static function parser()
+    {
+        $classes = array(
+            'Ktomk\Pipelines\Yaml\LibYaml',
+            'Ktomk\Pipelines\Yaml\Spyc',
+        );
+
+        $class = null;
+
+        foreach ($classes as $class) {
+            if ($class::isAvailable()) {
+                break;
+            }
+        }
+
+        return new $class;
     }
 }

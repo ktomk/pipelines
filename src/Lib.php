@@ -277,6 +277,20 @@ class Lib
     }
 
     /**
+     * @param string $path
+     * @return bool
+     */
+    public static function fsIsStreamUri($path)
+    {
+        $scheme = parse_url($path, PHP_URL_SCHEME);
+        if (null === $scheme) {
+            return false;
+        }
+
+        return in_array($scheme, stream_get_wrappers(), true);
+    }
+
+    /**
      * @param string $subject
      * @param array $matches
      * @throws UnexpectedValueException

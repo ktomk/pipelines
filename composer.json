@@ -30,6 +30,9 @@
     "friendsofphp/php-cs-fixer": "^2.10",
     "phpunit/phpunit": "^6.5"
   },
+  "suggest": {
+    "ext-yaml": "Preferred YAML parser; highly recommended."
+  },
   "scripts": {
     "build": "@php -dphar.readonly=0 -flib/build/build.php # build phar file",
     "cs-check": "@php -fvendor/bin/php-cs-fixer -- fix --dry-run",
