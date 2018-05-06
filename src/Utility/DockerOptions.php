@@ -11,6 +11,15 @@ use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\Lib;
 use RuntimeException;
 
+/**
+ * docker specific options of the pipelines utility
+ *
+ * --docker-list
+ * --docker-kill
+ * --docker-clean
+ *
+ * @package Ktomk\Pipelines\Utility
+ */
 class DockerOptions
 {
     /**
