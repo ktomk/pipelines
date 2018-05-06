@@ -128,15 +128,16 @@ Features include:
   different pipelines file (`--file`) or swap the "repository" by
   changing the working directory (`--working-dir <path>`).
 
-  If a pipeline step fails, the steps container will be
-  automatically kept for further inspection. The container id is
-  shown which makes it easy to spawn a shell inside:
+  If a pipeline step fails, the steps container can be kept for
+  further inspection on error with the `--error-keep` option.
+  The container id is shown which makes it easy to spawn a shell
+  inside:
 
       $ docker exec -it $ID /bin/sh
 
   Containers can be always kept for debugging and manual testing
-  of a pipeline with `--keep` or with `--error-keep` on error
-  only.
+  of a pipeline with `--keep` and with the said `--error-keep` on
+  error only.
 
   Afterwards manage left overs with `--docker-list|kill|clean`.
 
@@ -205,7 +206,7 @@ environment variables][BBPL-ENV] \[BBPL-ENV]:
     always set to "`0000000000000000000000000000000000000000`"
 * `BITBUCKET_REPO_OWNER` - current username from
     environment or if not available "`nobody`"
-* `BITBUCKET_REPO_SLUG` - base name of project directory"
+* `BITBUCKET_REPO_SLUG` - base name of project directory
 * `BITBUCKET_TAG` - conditionally set by `--target`
 * `CI` - always set to "`true`"
 
@@ -213,7 +214,7 @@ All of these (but not `BITBUCKET_CLONE_DIR`) can be set within
 the environment pipelines runs and are taken over into container
 environment. Example:
 
-    $ BITBUCKET_BUILD_NUMBER=1234 pipelines # build no. 1234
+    $ BITBUCKET_BUILD_NUMBER=123 pipelines # build no. 123
 
 Additionally pipelines sets some environment variables for
 introspection:
