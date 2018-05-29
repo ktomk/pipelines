@@ -107,7 +107,7 @@ class ArtifactSource
     {
         $command = array(
             'find', '(', '-name', '.git', '-o', '-name', '.idea', ')',
-            '-prune', '-type', 'f', '-o', '-type', 'f',
+            '-prune', '-o', '(', '-type', 'f', '-o', '-type', 'l', ')',
         );
 
         $status = $this->exec->capture('docker', array(

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Reduce artifact chunk size from 2048 to 1792
 ### Fixed
+- Symbolic links in artifacts
 - Read me file has some errors and inconsistencies. Again.
 
 ## [0.0.16] - 2018-05-04
