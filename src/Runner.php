@@ -359,7 +359,7 @@ class Runner
             return;
         }
 
-        $chunkSize = 2048;
+        $chunkSize = 1792;
         $chunks = array_chunk($paths, $chunkSize, true);
 
         foreach ($chunks as $paths) {
