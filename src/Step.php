@@ -16,6 +16,11 @@ class Step
     private $step;
 
     /**
+     * @var int numer of the step, starting at one
+     */
+    private $index;
+
+    /**
      * @var Pipeline
      */
     private $pipeline;
@@ -23,10 +28,10 @@ class Step
     /**
      * Step constructor.
      * @param Pipeline $pipeline
+     * @param int $index
      * @param array $step
-     * @throws \Ktomk\Pipelines\File\ParseException
      */
-    public function __construct(Pipeline $pipeline, array $step)
+    public function __construct(Pipeline $pipeline, $index, array $step)
     {
         // quick validation: image name
         File::validateImage($step);
@@ -35,6 +40,7 @@ class Step
         $this->parseScript($step);
 
         $this->pipeline = $pipeline;
+        $this->index = $index;
         $this->step = $step;
     }
 
@@ -94,6 +100,14 @@ class Step
             'script' => $this->getScript(),
             'artifacts' => $this->getArtifacts(),
         );
+    }
+
+    /**
+     * @return int
+     */
+    public function getIndex()
+    {
+        return $this->index;
     }
 
     /**

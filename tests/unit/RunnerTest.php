@@ -54,7 +54,7 @@ class RunnerTest extends UnitTestCase
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
 
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
             ))
@@ -84,7 +84,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
             ))
@@ -170,7 +170,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
             ))
@@ -200,7 +200,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
             ))
@@ -231,7 +231,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
             ))
@@ -262,7 +262,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array('fatal me an error'),
             ))
@@ -296,7 +296,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
                 'artifacts' => array('build/foo-package.tgz'),
@@ -330,7 +330,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
                 'artifacts' => array('build/bar-package.tgz'),
@@ -366,7 +366,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
                 'artifacts' => array('build/foo-package.tgz'),
@@ -395,7 +395,7 @@ class RunnerTest extends UnitTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, array(
+            new Step($pipeline, 0, array(
                 'image' => array(
                     'name' => 'foo/bar:latest',
                     'username' => 'user',

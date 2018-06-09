@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\File\Artifacts;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -126,6 +125,12 @@ class StepTest extends UnitTestCase
         $this->assertArrayHasKey('image', $actual);
     }
 
+    public function testGetIndex() {
+        $index = $this->createStep()->getIndex();
+        $this->assertInternalType('int', $index);
+        $this->assertGreaterThanOrEqual(0, $index);
+    }
+
     /**
      * @param null|array $array [optional]
      * @return Step
@@ -146,7 +151,7 @@ class StepTest extends UnitTestCase
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getFile')->willReturn($file);
 
-        $step = new Step($pipeline, $array);
+        $step = new Step($pipeline, 0, $array);
 
         return $step;
     }

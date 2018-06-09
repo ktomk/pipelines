@@ -90,18 +90,18 @@ class Pipeline
             if (!is_array($step)) {
                 ParseException::__("Pipeline requires a list of steps");
             }
-            $steps[] = $this->step($step);
+            $steps[] = $this->step($index, $step);
         }
 
         return $steps;
     }
 
     /**
+     * @param int $index of step, from the zero based index in the list of steps
      * @param array $step
-     * @throws \Ktomk\Pipelines\File\ParseException
      * @return Step
      */
-    private function step(array $step)
+    private function step($index, array $step)
     {
         if (!isset($step['step'])) {
             ParseException::__(
@@ -109,6 +109,6 @@ class Pipeline
             );
         }
 
-        return new Step($this, $step['step']);
+        return new Step($this, $index, $step['step']);
     }
 }

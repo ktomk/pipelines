@@ -119,11 +119,10 @@ class Runner
 
     /**
      * @param Step $step
-     * @param int $index
      * @throws \RuntimeException
      * @return int exit status
      */
-    public function runStep(Step $step, $index)
+    public function runStep(Step $step)
     {
         $prefix = $this->prefix;
         $dir = $this->directory;
@@ -140,7 +139,7 @@ class Runner
         # launch container
         $streams->out(sprintf(
             "\x1D+++ step #%d\n\n    name...........: %s\n    effective-image: %s\n    container......: %s\n",
-            $index,
+            $step->getIndex() + 1,
             $step->getName() ? '"' . $step->getName() . '"' : '(unnamed)',
             $image->getName(),
             $name
