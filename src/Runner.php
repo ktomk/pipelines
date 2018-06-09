@@ -87,7 +87,7 @@ class Runner
     /**
      * @param Pipeline $pipeline
      * @throws \RuntimeException
-     * @return int
+     * @return int status (as in exit status, 0 OK, !0 NOK)
      */
     public function run(Pipeline $pipeline)
     {
@@ -101,9 +101,8 @@ class Runner
             return self::STATUS_RECURSION_DETECTED;
         }
 
-        $steps = $pipeline->getSteps();
-        foreach ($steps as $index => $step) {
-            $status = $this->runStep($step, $index);
+        foreach ($pipeline->getSteps() as $step) {
+            $status = $this->runStep($step);
             if (0 !== $status) {
                 return $status;
             }
@@ -272,7 +271,7 @@ class Runner
             return $status;
         }
 
-        $streams("");
+        $streams('');
 
         return null;
     }

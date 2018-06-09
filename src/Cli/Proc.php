@@ -34,7 +34,7 @@ class Proc
 
         # do nothing placeholder
         if (':' === $command) {
-            $this->buffers['stdout'] = $this->buffers['stderr'] = "";
+            $this->buffers['stdout'] = $this->buffers['stderr'] = '';
 
             return $this->status = 0;
         }

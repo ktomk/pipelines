@@ -40,7 +40,7 @@ class ErrorCatcher
     }
 
     /**
-     * @return bool an error occured between start and end
+     * @return bool an error occurred between start and end
      */
     public function end()
     {

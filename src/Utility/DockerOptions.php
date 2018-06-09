@@ -102,7 +102,7 @@ class DockerOptions
             if ($running) {
                 $status = $exec->pass('docker', Lib::merge('kill', $running));
             } else {
-                $this->info("no containers to kill");
+                $this->info('no containers to kill');
             }
         }
 
@@ -111,7 +111,7 @@ class DockerOptions
             if ($ids) {
                 $status = $exec->pass('docker', Lib::merge('rm', $ids));
             } else {
-                $this->info("no containers to remove");
+                $this->info('no containers to remove');
             }
         }
 
