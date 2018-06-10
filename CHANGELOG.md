@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- Add `--docker-zap` flag kill and clean all pipeline docker
+  containers at once
 ### Changed
 - Pipeline step specific container names instead of random UUIDs
   so that keeping pipelines (and only if in mind) makes this all

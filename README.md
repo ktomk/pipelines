@@ -72,6 +72,13 @@ in combination to fully clean, e.g.:
 
     $ pipelines --docker-list --docker-kill --docker-clean
 
+Or just run for a more shy clean-up:
+
+    $ pipelines --docker-zap
+
+to kill and remove all pipeline containers (w/o showing a list)
+first.
+
 Validate your bitbucket-pipelines.yml file with `--show` which
 highlights errors found.
 

@@ -48,7 +48,7 @@ usage: pipelines [<options>...] [--version | [-h | --help]]
                  [--deploy mount | copy ] [--show] [--images]
                  [--pipeline <id>] [--trigger <ref>] [--verbatim]
        pipelines [-v | --verbose] [--dry-run] [--docker-list]
-                 [--docker-kill] [--docker-clean]
+                 [--docker-kill] [--docker-clean] [--docker-zap]
 
 EOD
         );
@@ -138,6 +138,7 @@ Docker container maintenance options
     --docker-kill         kills prefixed containers
     --docker-clean        remove (non-running) containers with
                           pipelines prefix
+    --docker-zap          kill and remove all prefixed containers
 
 Less common options
     --debug               flag for trouble-shooting fatal errors

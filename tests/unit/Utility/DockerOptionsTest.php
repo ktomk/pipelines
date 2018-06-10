@@ -99,4 +99,29 @@ class DockerOptionsTest extends TestCase
 
         $options->run();
     }
+
+    /**
+     * @throws StatusException
+     * @expectedException \Ktomk\Pipelines\Utility\StatusException
+     * @expectedExceptionMessage
+     * @expectedExceptionCode 0
+     */
+    public function testDockerZap()
+    {
+        $exec = ExecTester::create($this);
+
+        $options = new DockerOptions(
+            Args::create(array('cmd', '--docker-zap')),
+            $exec,
+            '',
+            new Streams()
+        );
+
+        $exec
+            ->expect('capture', 'docker', "")
+            ->expect('capture', 'docker', "")
+        ;
+
+        $options->run();
+    }
 }

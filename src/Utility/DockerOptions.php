@@ -89,6 +89,9 @@ class DockerOptions
 
         $hasKill = $args->hasOption('docker-kill');
         $hasClean = $args->hasOption('docker-clean');
+        if ($args->hasOption('docker-zap')) {
+            $hasKill = $hasClean = true;
+        }
 
         $ids = null;
         if ($hasClean || $hasKill) {
