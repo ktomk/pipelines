@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\Runner\Directories;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -64,7 +65,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('~pipelines: setting up the container failed~');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             null,
             null,
@@ -94,7 +95,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{^\x1d\+\+\+ step #1\n}');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             null,
             null,
@@ -116,7 +117,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('~pipelines: pipeline with no step to execute~');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             null,
             null,
@@ -137,7 +138,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('~^pipelines: .* pipeline inside pipelines recursion detected~');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             null,
             $env,
@@ -162,7 +163,7 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -193,7 +194,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -225,7 +226,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -257,7 +258,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputRegex('{script non-zero exit status: 255\nkeeping container id \*dry-run\*}');
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAGS | Runner::FLAG_KEEP_ON_ERROR, # keep on error flag is important
             null,
@@ -292,7 +293,7 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -327,7 +328,7 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -364,7 +365,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputString("pipelines: Artifact failure: 'build/foo-package.tgz' (1, 1 paths)\n");
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -400,7 +401,7 @@ class RunnerTest extends UnitTestCase
 
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             Runner::FLAG_DEPLOY_COPY,
             null,
@@ -428,7 +429,7 @@ class RunnerTest extends UnitTestCase
         $this->expectOutputString("");
         $runner = new Runner(
             'pipelines-unit-test',
-            sys_get_temp_dir() . '/pipelines-test-suite',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
             null,
             null,

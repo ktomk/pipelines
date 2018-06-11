@@ -134,7 +134,9 @@ class App implements Runnable
 
         $flags = $this->getRunFlags($keep, $deployMode);
 
-        $runner = new Runner($prefix, $workingDir, $exec, $flags, $env, $streams);
+        $directories = new Runner\Directories($_SERVER, $workingDir);
+
+        $runner = new Runner($prefix, $directories, $exec, $flags, $env, $streams);
 
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');

@@ -9,6 +9,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\Runner\ArtifactSource;
+use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DockerLogin;
 use Ktomk\Pipelines\Runner\Env;
 
@@ -33,9 +34,9 @@ class Runner
     private $prefix;
 
     /**
-     * @var string
+     * @var Directories
      */
-    private $directory;
+    private $directories;
 
     /**
      * @var Exec
@@ -60,7 +61,7 @@ class Runner
      * DockerSession constructor.
      *
      * @param string $prefix
-     * @param string $directory source repository root
+     * @param Directories $directories source repository root directory based directories object
      * @param Exec $exec
      * @param int $flags [optional]
      * @param Env $env [optional]
@@ -68,7 +69,7 @@ class Runner
      */
     public function __construct(
         $prefix,
-        $directory,
+        Directories $directories,
         Exec $exec,
         $flags = null,
         Env $env = null,
@@ -76,7 +77,7 @@ class Runner
     )
     {
         $this->prefix = $prefix;
-        $this->directory = $directory;
+        $this->directories = $directories;
         $this->exec = $exec;
         $this->flags = null === $flags ? self::FLAGS : $flags;
         $this->env = null === $env ? Env::create() : $env;
@@ -123,7 +124,7 @@ class Runner
      */
     public function runStep(Step $step)
     {
-        $dir = $this->directory;
+        $dir = $this->directories->getProject();
         $env = $this->env;
         $exec = $this->exec;
         $streams = $this->streams;
@@ -132,7 +133,6 @@ class Runner
 
         $name = $this->generateContainerName($step);
         $this->zapContinerByName($name);
-
         $image = $step->getImage();
         $env->setContainerName($name);
 
@@ -188,7 +188,7 @@ class Runner
         $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
 
         # TODO: different deployments, mount (default), mount-ro, copy
-        if (null !== $result = $this->deployCopy($copy, $id, $dir)) {
+        if (null !== $result = $this->deployCopy($copy, $id, $this->directories->getProject())) {
             return $result;
         }
 
@@ -438,7 +438,7 @@ class Runner
      */
     private function generateContainerName(Step $step)
     {
-        $project = basename($this->directory);
+        $project = $this->directories->getName();
         $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '', $step->getPipeline()->getId());
         if ('' === $idContainerSlug) {
             $idContainerSlug = 'null';
