@@ -59,16 +59,16 @@ class DockerOptionsTest extends TestCase
         $options = new DockerOptions(
             Args::create(array('cmd', '--docker-list', '--docker-kill', '--docker-clean')),
             $exec,
-            '',
+            'abc-',
             new Streams()
         );
 
         $exec
             ->expect('pass', 'docker ps -a', 0)
             ->expect('capture', 'docker', "123\n456")
-            ->expect('capture', 'docker', "456")
-            ->expect('pass', 'docker', 0)
-            ->expect('pass', 'docker', 0)
+            ->expect('capture', 'docker', '456')
+            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 0)
             ;
 
         $options->run();
@@ -87,14 +87,14 @@ class DockerOptionsTest extends TestCase
         $options = new DockerOptions(
             Args::create(array('cmd', '--docker-list', '--docker-kill', '--docker-clean')),
             $exec,
-            '',
+            'abc-',
             new Streams()
         );
 
         $exec
             ->expect('pass', 'docker ps -a', 0)
-            ->expect('capture', 'docker', "")
-            ->expect('capture', 'docker', "")
+            ->expect('capture', 'docker', '')
+            ->expect('capture', 'docker', '')
         ;
 
         $options->run();
@@ -113,13 +113,13 @@ class DockerOptionsTest extends TestCase
         $options = new DockerOptions(
             Args::create(array('cmd', '--docker-zap')),
             $exec,
-            '',
+            'abc',
             new Streams()
         );
 
         $exec
-            ->expect('capture', 'docker', "")
-            ->expect('capture', 'docker', "")
+            ->expect('capture', 'docker', '')
+            ->expect('capture', 'docker', '')
         ;
 
         $options->run();

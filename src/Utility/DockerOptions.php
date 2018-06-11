@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Utility;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
+use Ktomk\Pipelines\Cli\DockerProcessManager;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\Lib;
@@ -43,6 +44,11 @@ class DockerOptions
     private $prefix;
 
     /**
+     * @var DockerProcessManager
+     */
+    private $ps;
+
+    /**
      * DockerOptions constructor.
      *
      * @param Args $args
@@ -55,6 +61,7 @@ class DockerOptions
         $this->streams = $streams;
         $this->args = $args;
         $this->exec = $exec;
+        $this->ps = new DockerProcessManager($exec);
         $this->prefix = $prefix;
     }
 
@@ -77,7 +84,6 @@ class DockerOptions
     public function run()
     {
         $args = $this->args;
-        $exec = $this->exec;
 
         $count = 0;
         $status = 0;
@@ -96,14 +102,14 @@ class DockerOptions
         $ids = null;
         if ($hasClean || $hasKill) {
             $count++;
-            $ids = $this->getAllContainerIds();
+            $ids = $this->ps->findAllContainerIdsByNamePrefix($this->prefix . '-');
         }
 
         if (!$status && $hasKill) {
             $count++;
-            $running = $this->getRunningContainerIds();
+            $running = $this->ps->findRunningContainerIdsByNamePrefix($this->prefix . '-');
             if ($running) {
-                $status = $exec->pass('docker', Lib::merge('kill', $running));
+                $status = $this->ps->kill($running);
             } else {
                 $this->info('no containers to kill');
             }
@@ -112,7 +118,7 @@ class DockerOptions
         if (!$status && $hasClean) {
             $count++;
             if ($ids) {
-                $status = $exec->pass('docker', Lib::merge('rm', $ids));
+                $status = $this->ps->remove($ids);
             } else {
                 $this->info('no containers to remove');
             }
@@ -147,55 +153,5 @@ class DockerOptions
         );
 
         return $status;
-    }
-
-    /**
-     * get ids of all (prefixed in their name) containers, including stopped ones
-     *
-     * @throws RuntimeException
-     * @return null|array
-     */
-    private function getAllContainerIds()
-    {
-        $prefix = $this->prefix;
-
-        $ids = null;
-
-        $status = $this->exec->capture(
-            'docker',
-            array(
-                'ps', '-qa', '--filter',
-                "name=^/${prefix}-"
-            ),
-            $result
-        );
-
-        $status || $ids = Lib::lines($result);
-
-        return $ids;
-    }
-
-    /**
-     * @throws RuntimeException
-     * @return null|array
-     */
-    private function getRunningContainerIds()
-    {
-        $prefix = $this->prefix;
-
-        $ids = null;
-
-        $status = $this->exec->capture(
-            'docker',
-            array(
-                'ps', '-q', '--filter',
-                "name=^/${prefix}-"
-            ),
-            $result
-        );
-
-        $status || $ids = Lib::lines($result);
-
-        return $ids;
     }
 }
