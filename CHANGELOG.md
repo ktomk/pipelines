@@ -4,6 +4,12 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Changed
+- Pipeline step specific container names instead of random UUIDs
+  so that keeping pipelines (and only if in mind) makes this all
+  much more predictable
+
 ## [0.0.17] - 2018-05-29
 ### Changed
 - Reduce artifact chunk size from 2048 to 1792

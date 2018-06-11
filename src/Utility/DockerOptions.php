@@ -139,7 +139,7 @@ class DockerOptions
             'docker ps -a',
             array(
                 '--filter',
-                "name=^/${prefix}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                "name=^/${prefix}-"
             )
         );
 
@@ -162,7 +162,7 @@ class DockerOptions
             'docker',
             array(
                 'ps', '-qa', '--filter',
-                "name=^/${prefix}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                "name=^/${prefix}-"
             ),
             $result
         );
@@ -186,7 +186,7 @@ class DockerOptions
             'docker',
             array(
                 'ps', '-q', '--filter',
-                "name=^/${prefix}-[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                "name=^/${prefix}-"
             ),
             $result
         );

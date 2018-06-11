@@ -48,6 +48,7 @@ class RunnerTest extends UnitTestCase
     public function testFailOnContainerCreation()
     {
         $exec = new ExecTester($this);
+        $exec->expect('capture', 'docker', 1);
         $exec->expect('capture', 'docker', 126);
 
         /** @var MockObject|Pipeline $pipeline */
@@ -90,7 +91,7 @@ class RunnerTest extends UnitTestCase
             ))
         ));
 
-        $this->expectOutputRegex('{^\x1d\+\+\+ step #0\n}');
+        $this->expectOutputRegex('{^\x1d\+\+\+ step #1\n}');
         $runner = new Runner(
             'pipelines-unit-test',
             sys_get_temp_dir() . '/pipelines-test-suite',
@@ -152,6 +153,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
@@ -184,6 +186,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 1);
 
@@ -214,6 +217,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 1);
@@ -245,6 +249,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', 'docker', 255)
         ;
@@ -276,6 +281,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
@@ -311,6 +317,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
@@ -345,6 +352,7 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
+            ->expect('capture', 'docker', 1)
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
@@ -370,6 +378,41 @@ class RunnerTest extends UnitTestCase
                 'image' => 'foo/bar:latest',
                 'script' => array(':'),
                 'artifacts' => array('build/foo-package.tgz'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
+    }
+
+    public function testZapExistingContainer()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', "123456789\n") # zap: docker ps
+            ->expect('capture', 'docker', "123456789\n") # zap: docker kill
+            ->expect('capture', 'docker', "123456789\n") # zap: docker rm
+            ->expect('capture', 'docker', 0) # docker run
+            ->expect('pass', $this->deploy_copy_cmd, 0)
+            ->expect('pass', $this->deploy_copy_cmd_2, 0)
+            ->expect('pass', 'docker', 0) # docker exec
+        ;
+
+        $runner = new Runner(
+            'pipelines-unit-test',
+            sys_get_temp_dir() . '/pipelines-test-suite',
+            $exec,
+            Runner::FLAG_DEPLOY_COPY,
+            null,
+            new Streams()
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, 0, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
             ))
         ));
 

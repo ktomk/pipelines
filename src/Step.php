@@ -111,6 +111,15 @@ class Step
     }
 
     /**
+     * @return Pipeline
+     * @codeCoverageIgnore
+     */
+    public function getPipeline()
+    {
+        return $this->pipeline;
+    }
+
+    /**
      * Parse a step script section
      *
      * @param array $step

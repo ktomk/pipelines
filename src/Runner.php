@@ -76,7 +76,6 @@ class Runner
     )
     {
         $this->prefix = $prefix;
-
         $this->directory = $directory;
         $this->exec = $exec;
         $this->flags = null === $flags ? self::FLAGS : $flags;
@@ -124,7 +123,6 @@ class Runner
      */
     public function runStep(Step $step)
     {
-        $prefix = $this->prefix;
         $dir = $this->directory;
         $env = $this->env;
         $exec = $this->exec;
@@ -132,7 +130,9 @@ class Runner
 
         $docker = new Docker($exec);
 
-        $name = $prefix . '-' . Lib::generateUuid();
+        $name = $this->generateContainerName($step);
+        $this->zapContinerByName($name);
+
         $image = $step->getImage();
         $env->setContainerName($name);
 
@@ -199,6 +199,32 @@ class Runner
         $this->shutdownStepContainer($status, $id, $exec, $name);
 
         return $status;
+    }
+
+    /**
+     * @param string $name
+     */
+    private function zapContinerByName($name)
+    {
+        $ids = null;
+
+        $status = $this->exec->capture(
+            'docker',
+            array(
+                'ps', '-qa', '--filter',
+                "name=^/${name}$"
+            ),
+            $result
+        );
+
+        $status || $ids = Lib::lines($result);
+
+        if ($status || !(is_array($ids) && 1 === count($ids))) {
+            return;
+        }
+
+        $this->exec->capture('docker', Lib::merge('kill', $ids));
+        $this->exec->capture('docker', Lib::merge('rm', $ids));
     }
 
     /**
@@ -404,5 +430,34 @@ class Runner
         if ($flags & self::FLAG_DOCKER_REMOVE) {
             $exec->capture('docker', array('rm', $name));
         }
+    }
+
+    /**
+     * @param Step $step
+     * @return string
+     */
+    private function generateContainerName(Step $step)
+    {
+        $project = basename($this->directory);
+        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '', $step->getPipeline()->getId());
+        if ('' === $idContainerSlug) {
+            $idContainerSlug = 'null';
+        }
+        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $step->getName());
+        if ('' === $nameSlug) {
+            $nameSlug = 'no-name';
+        }
+
+        return $this->prefix . '-' . implode(
+                '.',
+                array_reverse(
+                array(
+                    $project,
+                    $idContainerSlug,
+                    $nameSlug,
+                    $step->getIndex() + 1,
+                )
+            )
+        );
     }
 }
