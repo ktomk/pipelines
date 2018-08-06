@@ -269,4 +269,24 @@ class LibTest extends TestCase
     {
         $this->assertFalse(Lib::fsIsStreamUri(__FILE__));
     }
+
+    public function testFsCanFopen()
+    {
+        $this->assertTrue(Lib::fsCanFopen(__FILE__, 'rb'));
+    }
+
+    public function testFsCanFopenFail()
+    {
+        $this->assertFalse(Lib::fsCanFopen(__FILE__ . 'xxxx'));
+    }
+
+    public function testFsIsReadableFile()
+    {
+        $this->assertTrue(Lib::fsIsReadableFile(__FILE__));
+    }
+
+    public function testFsIsReadableFileOnDirectory()
+    {
+        $this->assertFalse(Lib::fsIsReadableFile(__DIR__));
+    }
 }

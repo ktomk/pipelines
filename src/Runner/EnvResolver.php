@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\OptionFilterIterator;
+use Ktomk\Pipelines\Lib;
 use UnexpectedValueException;
 
 /**
@@ -105,7 +106,7 @@ class EnvResolver
      */
     public function addFileIfExists($file)
     {
-        if (!is_file($file) || !is_readable($file)) {
+        if (!Lib::fsIsReadableFile($file)) {
             return false;
         }
 

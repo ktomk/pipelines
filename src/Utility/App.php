@@ -309,7 +309,7 @@ class App implements Runnable
             ? $file
             : $workingDir . '/' . $file;
 
-        if (!is_file($path) && !is_readable($path)) {
+        if (!Lib::fsIsReadableFile($file)) {
             StatusException::status(1, sprintf('not a readable file: %s', $file));
         }
 

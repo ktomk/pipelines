@@ -25,7 +25,7 @@ class Spyc implements ParserInterface
     public function parseFile($path)
     {
         $fsIsStreamUri = Lib::fsIsStreamUri($path);
-        if (!$fsIsStreamUri && (!is_file($path) || !is_readable($path))) {
+        if (!$fsIsStreamUri && !Lib::fsIsReadableFile($path)) {
             return null;
         }
 

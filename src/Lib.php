@@ -254,7 +254,7 @@ class Lib
      * @param string $basename
      * @param string $directory [optional] directory to operate from, defaults
      *               to "." (relative path of present working directory)
-     * @return string
+     * @return string|null
      */
     public static function fsFileLookUp($basename, $directory = null)
     {
@@ -268,7 +268,7 @@ class Lib
             $old = $dirName, $dirName = dirname($dirName)
         ) {
             $test = $dirName . '/' . $basename;
-            if (is_file($test) && is_readable($test)) {
+            if (Lib::fsIsReadableFile($test)) {
                 return $test;
             }
         }
@@ -288,6 +288,40 @@ class Lib
         }
 
         return in_array($scheme, stream_get_wrappers(), true);
+    }
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    public static function fsIsReadableFile($path)
+    {
+        if (!is_file($path)) {
+            return false;
+        }
+
+        return is_readable($path) ?: self::fsCanFopen($path, 'rb');
+    }
+
+    /**
+     * @param string $path
+     * @param string $mode [optional]
+     * @return bool
+     */
+    public static function fsCanFopen($path, $mode = null)
+    {
+        if (null === $mode) {
+            $mode = 'rb';
+        }
+
+        $handle = @fopen($path, $mode);
+        if (false === $handle) {
+            return false;
+        }
+
+        @fclose($handle);
+
+        return true;
     }
 
     /**

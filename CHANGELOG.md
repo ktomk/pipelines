@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add `--docker-zap` flag kill and clean all pipeline docker
   containers at once
+- Fallback for readable file check for sytems w/ ACLs where a
+  file is not readable by permission but can be read (#1)
 ### Changed
 - Pipeline step specific container names instead of random UUIDs
   so that keeping pipelines (and only if in mind) makes this all
