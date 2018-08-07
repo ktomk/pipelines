@@ -42,6 +42,7 @@ class OptionIterator extends IteratorIterator
 
     /**
      * @throws ArgsException
+     * @return string
      */
     public function getArgument()
     {

@@ -10,6 +10,7 @@ use InvalidArgumentException;
 /**
  * Filter decorator of OptionIterator
  *
+ * @method string getArgument()
  * @see \Ktomk\Pipelines\Cli\Args\OptionIterator::getArgument
  */
 class OptionFilterIterator extends FilterIterator

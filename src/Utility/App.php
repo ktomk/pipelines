@@ -271,7 +271,7 @@ class App implements Runnable
     {
         $args = $this->arguments;
 
-        /** @var string $file as bitbucket-pipelines.yml to process */
+        /** @var null|string $file as bitbucket-pipelines.yml to process */
         $file = $args->getOptionArgument('file', null);
         if (null === $file && null !== $file = Lib::fsFileLookUp($basename, $workingDir)) {
             $buffer = dirname($file);

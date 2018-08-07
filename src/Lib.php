@@ -254,7 +254,7 @@ class Lib
      * @param string $basename
      * @param string $directory [optional] directory to operate from, defaults
      *               to "." (relative path of present working directory)
-     * @return string|null
+     * @return null|string
      */
     public static function fsFileLookUp($basename, $directory = null)
     {
@@ -319,7 +319,7 @@ class Lib
             return false;
         }
 
-        @fclose($handle);
+        /** @scrutinizer ignore-unhandled */ @fclose($handle);
 
         return true;
     }
