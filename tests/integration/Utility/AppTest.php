@@ -90,7 +90,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputString(
-            "pipelines: not a readable file: " .
+            'pipelines: not a readable file: ' .
             "/rooter/home/galore/not/found/super.yml\n"
         );
         $args = array(

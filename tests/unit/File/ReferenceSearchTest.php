@@ -69,9 +69,8 @@ class ReferenceSearchTest extends TestCase
     private function getFirstStepName(Pipeline $pipeline)
     {
         $steps = $pipeline->getSteps();
-        $name = $steps[0]->getName();
 
-        return $name;
+        return $steps[0]->getName();
     }
 
     private function assertDefault(Pipeline $pipeline)

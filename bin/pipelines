@@ -10,7 +10,7 @@
  */
 
 if (PHP_SAPI !== 'cli') printf(
-    "warn: pipelines should be invoked via the CLI version of PHP, " .
+    'warn: pipelines should be invoked via the CLI version of PHP, ' .
     "not the '%s' SAPI\n",
     PHP_SAPI
 );

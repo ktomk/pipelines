@@ -361,7 +361,7 @@ class Runner
             $this->captureArtifactPattern($source, $pattern, $dir);
         }
 
-        $streams("");
+        $streams('');
     }
 
     /**
@@ -455,7 +455,7 @@ class Runner
         return $this->prefix . '-' . implode(
             '.',
             array_reverse(
-                    array(
+                array(
                     $project,
                     $idContainerSlug,
                     $nameSlug,

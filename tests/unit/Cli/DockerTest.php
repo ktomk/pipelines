@@ -1,4 +1,4 @@
-<?php
+<?php /** @noinspection ALL */
 
 /* this file is part of pipelines */
 

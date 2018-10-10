@@ -4,8 +4,11 @@
 
 namespace Ktomk\Pipelines;
 
+use InvalidArgumentException;
 use Ktomk\Pipelines\Runner\Reference;
 use PHPUnit\Framework\TestCase;
+use ReflectionException;
+use ReflectionObject;
 
 /**
  * @covers \Ktomk\Pipelines\File
@@ -194,15 +197,17 @@ class FileTest extends TestCase
      * test that in the internal file array, the pipelines
      * data gets referenced to the concrete pipeline object
      * when it once hast been acquired.
+     *
+     * @throws ReflectionException
      */
     public function testFlyweightPatternWithPatternSection()
     {
         $withBranch = array(
             'pipelines' => array(
                 'branches' => array(
-                    "master" => array(array('step' => array(
+                    'master' => array(array('step' => array(
                         'name' => 'master branch',
-                        'script' => array("1st line"),
+                        'script' => array('1st line'),
                     )))
                 ),
             ),
@@ -212,7 +217,7 @@ class FileTest extends TestCase
         $pipeline = $file->searchTypeReference('branches', 'master');
         $this->asPlFiStName('master branch', $pipeline);
 
-        $refl = new \ReflectionObject($file);
+        $refl = new ReflectionObject($file);
         $prop = $refl->getProperty('array');
         $prop->setAccessible(true);
         $array = $prop->getValue($file);
@@ -221,7 +226,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid id 'branch/master'
      */
     public function testInvalidReferenceName()
@@ -275,13 +280,13 @@ class FileTest extends TestCase
                 'default' => array(
                     array('step' => array(
                         'name' => 'default',
-                        'script' => array("1st line"),
+                        'script' => array('1st line'),
                     )),
                 ),
                 'branches' => array(
-                    "master" => array(array('step' => array(
+                    'master' => array(array('step' => array(
                         'name' => 'master branch',
-                        'script' => array("1st line"),
+                        'script' => array('1st line'),
                     )))
                 ),
             ),
@@ -304,9 +309,9 @@ class FileTest extends TestCase
         $withoutDefault = array(
             'pipelines' => array(
                 'branches' => array(
-                    "master" => array(array('step' => array(
+                    'master' => array(array('step' => array(
                         'name' => 'master branch',
-                        'script' => array("1st line"),
+                        'script' => array('1st line'),
                     )))
                 ),
             ),
@@ -330,7 +335,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
+     * @expectedException InvalidArgumentException
      * @expectedExceptionMessage Invalid type 'invalid'
      */
     public function testSearchReferenceInvalidScopeException()

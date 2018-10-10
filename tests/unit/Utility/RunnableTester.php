@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\Utility;
 
+use InvalidArgumentException;
+
 /**
  * test class for a runnable
  *
@@ -19,20 +21,20 @@ class RunnableTester implements Runnable
     public function __construct($callable = null)
     {
         if (null !== $callable && !is_callable($callable)) {
-            throw new \InvalidArgumentException('must be null or callable');
+            throw new InvalidArgumentException('must be null or callable');
         }
 
         $this->callable = $callable;
     }
 
     /**
-     * @param null $callbale
+     * @param null $callable
      *
      * @return RunnableTester
      */
-    public static function create($callbale = null)
+    public static function create($callable = null)
     {
-        return new self($callbale);
+        return new self($callable);
     }
 
     /**
@@ -43,5 +45,7 @@ class RunnableTester implements Runnable
         if ($this->callable) {
             return call_user_func($this->callable);
         }
+
+        return null;
     }
 }

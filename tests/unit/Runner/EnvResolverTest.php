@@ -148,7 +148,7 @@ class EnvResolverTest extends TestCase
             'g' => 'TOP',
         );
 
-        $this->assertTrue(is_callable($resolver));
+        $this->assertInternalType('callable', $resolver);
 
         # string mode
         $actual = array_map($resolver, $input);

@@ -37,7 +37,7 @@ class ArgsTest extends TestCase
 
     public function testHasOption()
     {
-        $args = Args::create(array('cmd', '--verbose', '-v', '--', "--operand"));
+        $args = Args::create(array('cmd', '--verbose', '-v', '--', '--operand'));
         $this->assertFalse($args->hasOption('cmd'));
         $this->assertFalse($args->hasOption('f'));
         $this->assertTrue($args->hasOption('verbose'));
@@ -119,7 +119,7 @@ class ArgsTest extends TestCase
     public function testNonMandatoryOption()
     {
         $args = new Args(array('--prefix', 'value'));
-        $this->assertNull($args->getOptionArgument('volumne', null));
+        $this->assertNull($args->getOptionArgument('volume'));
     }
 
     /**
@@ -136,7 +136,7 @@ class ArgsTest extends TestCase
      * @expectedException \Ktomk\Pipelines\Cli\ArgsException
      * @expectedExceptionMessage option --prefix requires an argument
      */
-    public function testMandatorOptionArgumentWithParameters()
+    public function testMandatoryOptionArgumentWithParameters()
     {
         $args = new Args(array('--prefix', '--'));
         $args->getOptionArgument('prefix', 100);

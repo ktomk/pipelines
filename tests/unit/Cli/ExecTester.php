@@ -37,9 +37,10 @@ class ExecTester extends Exec
      */
     public function __destruct()
     {
-        $this->testCase->addToAssertionCount(1);
+        $testCase = $this->testCase;
+        $testCase->addToAssertionCount(1);
         if (count($this->expects)) {
-            $this->testCase->fail(
+            $testCase::fail(
                 sprintf(
                     'Failed assertion that expected number of exec\'s were done (%d left)',
                     count($this->expects)
@@ -124,8 +125,9 @@ class ExecTester extends Exec
     private function dealInvokeExpectation($method, $command, array $arguments, &$out = null, &$err = null)
     {
         $current = array_shift($this->expects);
+        $testCase = $this->testCase;
         if (null === $current) {
-            $this->testCase->fail(
+            $testCase::fail(
                 sprintf(
                     "Exec tester violation: %s() with command '%s' called with no more expectations",
                     $method,
@@ -140,13 +142,13 @@ class ExecTester extends Exec
             $context,
             ) = $current;
 
-        $this->testCase->assertSame(
+        $testCase::assertSame(
             $expectedMethod,
             $method,
             sprintf("Method on exec mismatch with command '%s'", $command)
         );
 
-        $this->testCase->assertSame(
+        $testCase::assertSame(
             $expectedCommand,
             $command,
             sprintf("Command on exec mismatch with method '%s'", $method)

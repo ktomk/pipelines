@@ -226,7 +226,7 @@ class Builder
                 return null;
             }
             array_shift($lines);
-            $buffer = implode("", $lines);
+            $buffer = implode('', $lines);
 
             return array('str', $buffer);
         };
@@ -571,7 +571,7 @@ class Builder
         }
         if ($result === array()) {
             $this->err(sprintf(
-                "ineffective pattern: %s",
+                'ineffective pattern: %s',
                 $pattern === $glob
                     ? $pattern
                     : sprintf("'%s' -> '%s'", $pattern, $glob)
@@ -627,7 +627,7 @@ class Builder
 
                     break;
                 default:
-                    throw new \UnexpectedValueException(sprintf("unknown type: %s", $type));
+                    throw new \UnexpectedValueException(sprintf('unknown type: %s', $type));
             }
         }
         unset($nodes);

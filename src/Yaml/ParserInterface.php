@@ -7,6 +7,11 @@ namespace Ktomk\Pipelines\Yaml;
 interface ParserInterface
 {
     /**
+     * @return bool
+     */
+    public static function isAvailable();
+
+    /**
      * @param string $path
      * @return null|array
      */

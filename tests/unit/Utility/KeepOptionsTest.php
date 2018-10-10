@@ -53,7 +53,6 @@ class KeepOptionsTest extends UnitTestCase
     /**
      * @param array $arguments
      * @param string $expected
-     * @throws StatusException
      * @dataProvider provideExclusivityExceptions
      */
     public function testExclusivityException(array $arguments, $expected)
@@ -65,7 +64,7 @@ class KeepOptionsTest extends UnitTestCase
 
         try {
             $keep->parse($args);
-            $this->fail('an expectected exception has not been thrown');
+            $this->fail('an expected exception has not been thrown');
         } catch (StatusException $exception) {
             $this->assertSame($expected, $exception->getMessage());
             $this->assertSame(1, $exception->getCode());

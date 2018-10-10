@@ -13,7 +13,7 @@ class ImageNameTest extends TestCase
 {
     public function testCreation()
     {
-        $name = new ImageName("foo/bar:latest");
+        $name = new ImageName('foo/bar:latest');
         $this->assertInstanceOf('Ktomk\Pipelines\File\ImageName', $name);
     }
 
@@ -55,7 +55,7 @@ class ImageNameTest extends TestCase
 
     public function testToString()
     {
-        $expected = "foo/bar:latest";
+        $expected = 'foo/bar:latest';
         $name = new ImageName($expected);
         $this->assertSame($expected, $name->__toString());
         $this->assertSame($expected, (string)$name);

@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Utility;
 use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Streams;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 /**
  * Class ExceptionHandlerTest
@@ -42,7 +43,7 @@ class ExceptionHandlerTest extends TestCase
     {
         $runnable = RunnableTester::create(
             function () {
-                throw new \UnexpectedValueException('handle this!');
+                throw new UnexpectedValueException('handle this!');
             }
         );
         $this->assertSame(2, $handler->handle($runnable));

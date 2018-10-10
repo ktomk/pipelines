@@ -5,7 +5,7 @@
 set -u
 IFS="$(printf '\n\t ')"
 
-cd build/store/http-cache
+cd build/store/http-cache || exit 2
 
 package="docker-17.12.0-ce.tgz"
 

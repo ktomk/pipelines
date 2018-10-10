@@ -86,6 +86,7 @@ class PipelineTest extends TestCase
 
     /**
      * @depends testCreation
+     * @param Pipeline $pipeline
      */
     public function testJsonSerialize(Pipeline $pipeline)
     {

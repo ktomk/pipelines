@@ -75,9 +75,9 @@ class BuilderTest extends TestCase
         $this->builder = $builder = Builder::create('fake.phar');
         $this->assertFNE($builder);
         $this->expectOutputString("error reading file: data:no-comma-in-URL\n");
-        $builder->errHandle = fopen('php://output', 'w');
+        $builder->errHandle = fopen('php://output', 'wb');
         $callback = $builder->dropFirstLine();
-        $this->assertTrue(is_callable($callback));
+        $this->assertInternalType('callable', $callback);
         // violate rfc2397 by intention to provoke read error
         $actual = @call_user_func($callback, 'data:no-comma-in-URL');
         $this->assertNull($actual);
@@ -88,7 +88,7 @@ class BuilderTest extends TestCase
         $this->builder = $builder = Builder::create('fake.phar');
         $this->assertFNE($builder);
         $callback = $builder->replace('abc', '123');
-        $this->assertTrue(is_callable($callback));
+        $this->assertInternalType('callable', $callback);
         $result = call_user_func($callback, 'data:,abc');
         $this->assertArrayHasKey(0, $result);
         $this->assertArrayHasKey(1, $result);
@@ -97,7 +97,7 @@ class BuilderTest extends TestCase
         $this->assertSame('123', $result[1]);
     }
 
-    private function assertFNE($actual)
+    private function assertFNE(Builder $actual)
     {
         $builder = $this->builder;
         $this->assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $actual);

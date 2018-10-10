@@ -55,17 +55,20 @@ HOME                       current home directory, informative
 
 print_var()
 {
-    local name=$1
-    eval "printf \"%-32s:= %s\\n\" \"${name}\" \"\${${name}-*unset*}\""
+  # shellcheck disable=SC2039
+  local name=$1
+  eval "printf \"%-32s:= %s\\n\" \"${name}\" \"\${${name}-*unset*}\""
 }
 
 print_vars()
 {
-    local vars="$1"
-    while read -r var description; do
-        test ${#var} -gt 0 \
-            && print_var "${var}"
-    done <<EOF
+  # shellcheck disable=SC2039
+  local vars="$1"
+  # shellcheck disable=SC2034
+  while read -r var description; do
+    test ${#var} -gt 0 \
+      && print_var "${var}"
+  done <<EOF
 $vars
 EOF
 

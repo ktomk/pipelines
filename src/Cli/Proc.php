@@ -55,7 +55,7 @@ class Proc
 
         # consume pipes
         foreach ($descriptors as $number => $descriptor) {
-            if ("pipe" === $descriptor[0]) {
+            if ('pipe' === $descriptor[0]) {
                 $result = fclose($pipes[$number]);
                 unset($result); # intentionally ignore errors (fail safe)
             }

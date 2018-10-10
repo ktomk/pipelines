@@ -26,7 +26,7 @@ class YamlTest extends TestCase
      */
     public function testCreateFromNonExistentFile()
     {
-        Yaml::file("xxx");
+        Yaml::file('xxx');
     }
 
     /**

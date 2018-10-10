@@ -17,23 +17,24 @@ unit()
     capture="$(php -dphar.readonly=0 -f vendor/bin/phpunit -- --color=always)"
     result=$?
 
-    local testwatch=$(</dev/shm/testwatch)
+    local testwatch
+    testwatch=$(</dev/shm/testwatch)
 
-    if [ $result -eq 0 ]; then
-        if [ ${testwatch} -ne 0 ]; then
+    if [[ $result -eq 0 ]]; then
+        if [[ ${testwatch} -ne 0 ]]; then
             notify-send "Tests Green Again" "$(date)" \
                 -i /usr/share/icons/gnome/scalable/status/rotation-allowed-symbolic.svg
         fi
         echo 0 >/dev/shm/testwatch
     else
-        if [ $((${testwatch} % 5)) -eq 0 ]; then
+        if [[ $((testwatch % 5)) -eq 0 ]]; then
             # DISPLAY=:0.0 /usr/bin/notify-send - some use might require DISPLAY
             #                                     variable
             notify-send "Tests Failure (${testwatch})" "$(date)" \
                 -i /usr/share/icons/gnome/scalable/status/software-update-urgent-symbolic.svg # notification-message-email
         fi
 
-        echo $(($testwatch+1)) >/dev/shm/testwatch;
+        echo $((testwatch+1)) >/dev/shm/testwatch;
     fi
 
     echo -n "${capture}"

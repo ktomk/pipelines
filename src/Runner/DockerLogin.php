@@ -83,7 +83,7 @@ class DockerLogin
      * @param string $authUri URI to check authorization again
      * @return bool
      */
-    public function dockerLoginHasAuth($authUri = "https://index.docker.io/v1/")
+    public function dockerLoginHasAuth($authUri = 'https://index.docker.io/v1/')
     {
         $buffer = @file_get_contents($this->path);
         $array = json_decode((string)$buffer, true);

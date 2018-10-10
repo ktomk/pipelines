@@ -83,6 +83,7 @@ class OptionIteratorTest extends TestCase
 
     /**
      * @dataProvider provideSingleOptionArgs
+     * @param array $array
      */
     public function testValid(array $array)
     {
@@ -113,6 +114,7 @@ class OptionIteratorTest extends TestCase
 
     /**
      * @dataProvider provideSingleOptionArguments()
+     * @param array $array
      * @param mixed $hasArg
      */
     public function testGetArgument(array $array, $hasArg)
@@ -138,8 +140,6 @@ class OptionIteratorTest extends TestCase
 
         $args = \Ktomk\Pipelines\Cli\Args::create($argv);
 
-        $iter = new OptionIterator($args);
-
-        return $iter;
+        return new OptionIterator($args);
     }
 }

@@ -48,7 +48,7 @@ class OptionIterator extends IteratorIterator
     {
         if (!$this->hasArgument()) {
             ArgsException::__(
-                sprintf("option %s requires an argument", $this->current())
+                sprintf('option %s requires an argument', $this->current())
             );
         }
 

@@ -86,7 +86,7 @@ class AppTest extends TestCase
     public function testFileAbsolutePath()
     {
         $file = __DIR__ . '/my-pipelines.yml';
-        $this->expectOutputRegex(sprintf('{^pipelines: not a readable file: %s}', preg_quote($file)));
+        $this->expectOutputRegex(sprintf('{^pipelines: not a readable file: %s}', preg_quote($file, '{}')));
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--file', $file));
         $this->assertSame(1, $actual);
@@ -94,7 +94,10 @@ class AppTest extends TestCase
 
     public function testBasenameLookupWorkingDirectoryChange()
     {
-        $this->expectOutputRegex(sprintf('{^info: changing working directory to %s$}m', preg_quote(dirname(dirname(dirname(__DIR__))))));
+        $this->expectOutputRegex(sprintf(
+            '{^info: changing working directory to %s$}m',
+            preg_quote(dirname(dirname(dirname(__DIR__))), '{}')
+        ));
         $app = new App(new Streams(null, 'php://output'));
         $actual = $app->main(array('cmd', '--working-dir', __DIR__, '-v', '--no-run'));
         $this->assertSame(0, $actual);
@@ -133,7 +136,7 @@ class AppTest extends TestCase
     public function testUnknownOption()
     {
         $option = '--meltdown-trampoline-kernel-patch';
-        $this->expectOutputRegex(sprintf('{^pipelines: unknown option: %s}', preg_quote($option)));
+        $this->expectOutputRegex(sprintf('{^pipelines: unknown option: %s}', preg_quote($option, '{}')));
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', $option));
         $this->assertSame(1, $actual);

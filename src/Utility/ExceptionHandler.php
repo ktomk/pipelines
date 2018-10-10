@@ -96,11 +96,11 @@ class ExceptionHandler
     {
         for (; $e; $e = $e->getPrevious()) {
             $this->error('--------');
-            $this->error(sprintf("class....: %s", get_class($e)));
-            $this->error(sprintf("message..: %s", $e->getMessage()));
-            $this->error(sprintf("code.....: %s", $e->getCode()));
-            $this->error(sprintf("file.....: %s", $e->getFile()));
-            $this->error(sprintf("line.....: %s", $e->getLine()));
+            $this->error(sprintf('class....: %s', get_class($e)));
+            $this->error(sprintf('message..: %s', $e->getMessage()));
+            $this->error(sprintf('code.....: %s', $e->getCode()));
+            $this->error(sprintf('file.....: %s', $e->getFile()));
+            $this->error(sprintf('line.....: %s', $e->getLine()));
             $this->error('backtrace:');
             $this->error($e->getTraceAsString());
         }

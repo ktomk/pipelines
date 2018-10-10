@@ -37,12 +37,12 @@ class RunnerTest extends UnitTestCase
     {
         parent::setUp();
 
-        $this->deploy_copy_cmd = "cd " . sys_get_temp_dir() . "/pipelines/cp/. " .
+        $this->deploy_copy_cmd = 'cd ' . sys_get_temp_dir() . '/pipelines/cp/. ' .
             "&& echo 'app' | tar c -h -f - --no-recursion app " .
             "| docker  cp - '*dry-run*:/.'";
 
-        $this->deploy_copy_cmd_2 = "cd " . sys_get_temp_dir() . "/pipelines-test-suite/. " .
-            "&& tar c -f - . " .
+        $this->deploy_copy_cmd_2 = 'cd ' . sys_get_temp_dir() . '/pipelines-test-suite/. ' .
+            '&& tar c -f - . ' .
             "| docker  cp - '*dry-run*:/app'";
     }
 
@@ -287,7 +287,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
-            ->expect('capture', 'docker', "./build/foo-package.tgz")
+            ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 0)
         ;
 
@@ -323,7 +323,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
-            ->expect('capture', 'docker', "./build/foo-package.tgz")
+            ->expect('capture', 'docker', './build/foo-package.tgz')
         ;
 
         $runner = new Runner(
@@ -358,7 +358,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
-            ->expect('capture', 'docker', "./build/foo-package.tgz")
+            ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 1)
         ;
 
@@ -426,7 +426,7 @@ class RunnerTest extends UnitTestCase
         $exec = new Exec();
         $exec->setActive(false);
 
-        $this->expectOutputString("");
+        $this->expectOutputString('');
         $runner = new Runner(
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),

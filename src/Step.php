@@ -92,7 +92,7 @@ class Step
     public function jsonSerialize()
     {
         $image = $this->getImage();
-        $image = null === $image ? "" : $image->jsonSerialize();
+        $image = null === $image ? '' : $image->jsonSerialize();
 
         return array(
             'name' => $this->getName(),

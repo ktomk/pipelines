@@ -196,7 +196,7 @@ class FileShower
         $line = '';
         foreach ($row as $index => $column) {
             $len = strlen($column);
-            $index && $line .= "    ";
+            $index && $line .= '    ';
             $line .= $column;
             $line .= str_repeat(' ', $sizes[$index] - $len);
         }

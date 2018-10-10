@@ -57,7 +57,7 @@ class FileOptions
      *
      * @throws InvalidArgumentException
      * @throws StatusException
-     * @return self
+     * @return $this
      */
     public function run()
     {

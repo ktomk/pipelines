@@ -55,7 +55,7 @@ class OptionFilterIterator extends FilterIterator
      */
     public function getOptionDescription()
     {
-        return implode(", ", $this->options);
+        return implode(', ', $this->options);
     }
 
     /**
@@ -99,7 +99,7 @@ class OptionFilterIterator extends FilterIterator
 
         if (!preg_match('~^[a-z0-9][a-z0-9-]*$~i', $option)) {
             throw new InvalidArgumentException(
-                sprintf("invalid option %s", $buffer)
+                sprintf('invalid option %s', $buffer)
             );
         }
 

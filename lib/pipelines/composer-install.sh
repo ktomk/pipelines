@@ -1,11 +1,13 @@
 #!/bin/sh
 #
-# install composer via script <https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md>
+# install composer via script
+#
+# <https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md>
 #
 set -u
 IFS="$(printf '\n\t ')"
 
-cd build/store/http-cache
+cd build/store/http-cache || exit 2
 
 package="composer.phar"
 
@@ -17,7 +19,7 @@ if [ ! -f "${package}" ]; then
 
     if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
     then
-        >&2 echo 'ERROR: Invalid installer signature'
+        >&2 echo "$(basename "${0}"): Invalid installer signature"
         rm composer-setup.php
         exit 1
     fi

@@ -18,7 +18,7 @@ class StatusExceptionTest extends TestCase
      */
     public function testCreation()
     {
-        $actual = new StatusException("this is what it counts for", 1);
+        $actual = new StatusException('this is what it counts for', 1);
         $this->assertInstanceOf(
             'Ktomk\Pipelines\Utility\StatusException',
             $actual
@@ -42,7 +42,7 @@ class StatusExceptionTest extends TestCase
     public function testMinimumCodeZero()
     {
         $this->assertNotNull(
-            new StatusException("", 0)
+            new StatusException('', 0)
         );
     }
 
@@ -52,16 +52,16 @@ class StatusExceptionTest extends TestCase
      */
     public function testMinimumCodeZeroOneOff()
     {
-        new StatusException("", -1);
+        new StatusException('', -1);
     }
 
     /**
      *
      */
-    public function testMaxmimumCode255()
+    public function testMaximumCode255()
     {
         $this->assertNotNull(
-            new StatusException("", 255)
+            new StatusException('', 255)
         );
     }
 
@@ -70,9 +70,9 @@ class StatusExceptionTest extends TestCase
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage Code must be integer in range from 0 to 255, 256 given
      */
-    public function testMaxmimumCode255OneOff()
+    public function testMaximumCode255OneOff()
     {
-        throw new StatusException("", 256);
+        throw new StatusException('', 256);
     }
 
     /**

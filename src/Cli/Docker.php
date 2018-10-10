@@ -70,7 +70,7 @@ class Docker
                 sprintf('Failed to parse "%s" for Docker version', $out)
             );
 
-            return "0.0.0-err";
+            return '0.0.0-err';
         }
 
         return $matches[1];

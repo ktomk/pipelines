@@ -34,16 +34,16 @@ class StreamsTest extends TestCase
 
     public function testHandleWrite()
     {
-        $this->closeHandles[] = $capture = fopen('php://memory', 'w');
+        $this->closeHandles[] = $capture = fopen('php://memory', 'wb');
         $streams = new Streams(null, null, $capture);
-        $streams->err("more");
+        $streams->err('more');
         rewind($capture);
         $this->assertSame('more', stream_get_contents($capture));
     }
 
     public function testNullHandleWrite()
     {
-        $this->closeHandles[] = $capture = fopen('php://memory', 'w');
+        $this->closeHandles[] = $capture = fopen('php://memory', 'wb');
         $streams = new Streams(null, null, $capture);
         $streams->out("something\n");
         rewind($capture);
@@ -63,7 +63,7 @@ class StreamsTest extends TestCase
     {
         $this->expectOutputString("test\n");
         $streams = new Streams(null, 'php://output');
-        $streams("test");
+        $streams('test');
     }
 
     public function testCopyHandle()
@@ -74,7 +74,7 @@ class StreamsTest extends TestCase
         $other->copyHandle($streams, 1);
         $other->out("test\n");
         unset($other);
-        $streams->out("me");
+        $streams->out('me');
     }
 
     /**

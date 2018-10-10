@@ -58,7 +58,7 @@ class EnvTest extends TestCase
         $env = new Env();
         $env->initDefaultVars(array('BITBUCKET_BUILD_NUMBER' => '123'));
         $array = $env->getArgs('-e');
-        $this->assertTrue(in_array('BITBUCKET_BUILD_NUMBER=123', $array, true));
+        $this->assertContains('BITBUCKET_BUILD_NUMBER=123', $array);
     }
 
     public function testGetOptionArgs()
@@ -95,10 +95,10 @@ class EnvTest extends TestCase
         $default = count($env->getArgs('-e'));
 
         $env->addReference(Reference::create());
-        $this->assertSame($default, count($env->getArgs('-e')), 'null refrence does not add any variables');
+        $this->assertCount($default, $env->getArgs('-e'), 'null reference does not add any variables');
 
         $env->addReference(Reference::create('branch:testing'));
-        $this->assertSame($default + 2, count($env->getArgs('-e')), 'full refrence does add variables');
+        $this->assertCount($default + 2, $env->getArgs('-e'), 'full reference does add variables');
     }
 
     public function testAddRefTypeIfSet()
@@ -110,7 +110,7 @@ class EnvTest extends TestCase
         $actual = $env->getArgs('-e');
         $this->assertCount($default, $actual);
 
-        $this->assertTrue(in_array('BITBUCKET_TAG=inherit', $actual, true));
+        $this->assertContains('BITBUCKET_TAG=inherit', $actual);
     }
 
     public function testSetContainerName()
@@ -121,13 +121,13 @@ class EnvTest extends TestCase
         $env->setContainerName('blue-seldom');
         $args = $env->getArgs('-e');
         $this->assertCount($count + 2, $args);
-        $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=blue-seldom', $args, true));
+        $this->assertContains('PIPELINES_CONTAINER_NAME=blue-seldom', $args);
 
         $env->setContainerName('solar-bottom');
         $args = $env->getArgs('-e');
         $this->assertCount($count + 4, $args);
-        $this->assertTrue(in_array('PIPELINES_PARENT_CONTAINER_NAME=blue-seldom', $args, true));
-        $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=solar-bottom', $args, true));
+        $this->assertContains('PIPELINES_PARENT_CONTAINER_NAME=blue-seldom', $args);
+        $this->assertContains('PIPELINES_CONTAINER_NAME=solar-bottom', $args);
     }
 
     public function testInheritedContainerName()
@@ -138,8 +138,8 @@ class EnvTest extends TestCase
         $env = Env::create($inherit);
         $env->setContainerName('dream-blue');
         $args = $env->getArgs('-e');
-        $this->assertTrue(in_array('PIPELINES_PARENT_CONTAINER_NAME=cloud-sea', $args, true));
-        $this->assertTrue(in_array('PIPELINES_CONTAINER_NAME=dream-blue', $args, true));
+        $this->assertContains('PIPELINES_PARENT_CONTAINER_NAME=cloud-sea', $args);
+        $this->assertContains('PIPELINES_CONTAINER_NAME=dream-blue', $args);
     }
 
     public function testGetVar()

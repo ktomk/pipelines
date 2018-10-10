@@ -11,7 +11,7 @@ use Exception;
  */
 class StatusException extends Exception
 {
-    public function __construct($message = "", $code = 0, Exception $previous = null)
+    public function __construct($message = '', $code = 0, Exception $previous = null)
     {
         if (!is_int($code) || $code < 0 || $code > 255) {
             throw new \InvalidArgumentException(
@@ -29,7 +29,7 @@ class StatusException extends Exception
      * @param string $message
      * @throws StatusException
      */
-    public static function status($code = 0, $message = "")
+    public static function status($code = 0, $message = '')
     {
         throw new self($message, $code);
     }

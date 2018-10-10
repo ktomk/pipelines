@@ -20,8 +20,8 @@ class StepTest extends UnitTestCase
     public function testGetArtifacts()
     {
         $array = array(
-            'script' => array(":"),
-            'artifacts' => array("build/html/testdox.html"),
+            'script' => array(':'),
+            'artifacts' => array('build/html/testdox.html'),
         );
         $step = $this->createStep($array);
         $actual = $step->getArtifacts();
@@ -65,8 +65,8 @@ class StepTest extends UnitTestCase
     {
         $this->createStep(array(
             'script' => array(
-                ": # valid",
-                array("" => "step #1 is broken"),
+                ': # valid',
+                array('' => 'step #1 is broken'),
             ),
         ));
     }
@@ -75,7 +75,7 @@ class StepTest extends UnitTestCase
     {
         $step = $this->createStep(array(
             'image' => 'expected',
-            'script' => array(":"),
+            'script' => array(':'),
         ));
         $this->assertSame('expected', (string)$step->getImage());
     }
@@ -88,7 +88,7 @@ class StepTest extends UnitTestCase
     {
         $this->createStep(array(
             'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
-            'script' => array(":"),
+            'script' => array(':'),
         ));
     }
 
@@ -102,7 +102,7 @@ class StepTest extends UnitTestCase
     {
         $step = $this->createStep(array(
             'name' => 'expected',
-            'script' => array(":"),
+            'script' => array(':'),
         ));
         $this->assertSame('expected', $step->getName());
     }
@@ -140,7 +140,7 @@ class StepTest extends UnitTestCase
         if (null === $array) {
             # a (minimum) array to successfully create a step
             $array = array(
-                'script' => array(":"),
+                'script' => array(':'),
             );
         }
 
@@ -151,8 +151,6 @@ class StepTest extends UnitTestCase
         $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
         $pipeline->method('getFile')->willReturn($file);
 
-        $step = new Step($pipeline, 0, $array);
-
-        return $step;
+        return new Step($pipeline, 0, $array);
     }
 }

@@ -32,6 +32,9 @@ class DockerOptionsTest extends TestCase
         );
     }
 
+    /**
+     * @throws StatusException
+     */
     public function testCreation()
     {
         $exec = ExecTester::create($this);

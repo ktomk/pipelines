@@ -6,5 +6,6 @@ namespace Ktomk\Pipelines\Cli\Args;
 
 class ArgsTester extends Args
 {
-    public $arguments = array();
+    public /** @noinspection PropertyInitializationFlawsInspection */
+        $arguments = array();
 }

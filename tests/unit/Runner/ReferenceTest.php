@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -62,7 +63,7 @@ class ReferenceTest extends TestCase
                 $this->assertNotNull($type->getType());
                 $this->assertNotNull($type->getName());
             }
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             if ($valid) {
                 $this->fail('Exception');
             }

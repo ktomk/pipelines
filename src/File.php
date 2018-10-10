@@ -65,7 +65,7 @@ class File
     {
         $result = Yaml::file($path);
         if (!$result) {
-            ParseException::__(sprintf("YAML error: %s; verify the file contains valid YAML", $path));
+            ParseException::__(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
         }
 
         return new self($result);
@@ -261,7 +261,7 @@ class File
 
         // bind to instance if yet an array
         if (!is_array($ref[2])) {
-            ParseException::__(sprintf("%s: named pipeline required", $id));
+            ParseException::__(sprintf('%s: named pipeline required', $id));
         }
         $pipeline = new Pipeline($this, $ref[2]);
         $ref[2] = $pipeline;

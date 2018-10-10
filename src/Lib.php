@@ -91,7 +91,7 @@ class Lib
             $buffer .= $safe ? $part : "'${part}'";
         }
 
-        if ("" === $buffer) {
+        if ('' === $buffer) {
             $buffer = "''";
         }
 
@@ -104,7 +104,7 @@ class Lib
      * Handles no newline at the end of buffer
      *
      * @param string $buffer
-     * @return array
+     * @return array|string[]
      */
     public static function lines($buffer)
     {
@@ -301,8 +301,8 @@ class Lib
      */
     public static function fsFileLookUp($basename, $directory = null)
     {
-        if ("" === $directory || null === $directory) {
-            $directory = ".";
+        if ('' === $directory || null === $directory) {
+            $directory = '.';
         }
 
         for (

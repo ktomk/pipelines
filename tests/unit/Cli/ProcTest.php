@@ -38,8 +38,8 @@ class ProcTest extends TestCase
         $this->assertNull($proc->getStandardOutput());
         $this->assertNull($proc->getStandardError());
         $proc->run();
-        $this->assertSame("", $proc->getStandardOutput());
-        $this->assertSame("", $proc->getStandardError());
+        $this->assertSame('', $proc->getStandardOutput());
+        $this->assertSame('', $proc->getStandardError());
     }
 
     /**

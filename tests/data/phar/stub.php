@@ -5,6 +5,7 @@
 
 Phar::mapPhar('builder-test.phar');
 
+/** @noinspection PhpIncludeInspection */
 require 'phar://builder-test.phar/test';
 
 __HALT_COMPILER(); ?>

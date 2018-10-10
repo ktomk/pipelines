@@ -28,7 +28,7 @@ class Pipeline
     {
         // quick validation
         if (!isset($definition[0])) {
-            ParseException::__("Pipeline requires a list of steps");
+            ParseException::__('Pipeline requires a list of steps');
         }
 
         $this->file = $file;
@@ -88,7 +88,7 @@ class Pipeline
         $steps = array();
         foreach ($definition as $index => $step) {
             if (!is_array($step)) {
-                ParseException::__("Pipeline requires a list of steps");
+                ParseException::__('Pipeline requires a list of steps');
             }
             $steps[] = $this->step($index, $step);
         }

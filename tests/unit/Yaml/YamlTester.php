@@ -28,14 +28,14 @@ class YamlTester
     {
         $parser = $this->parser;
 
-        $class = get_class($parser);
+        $testCase = $this->testCase;
 
-        $this->testCase->assertInternalType('bool', $class::isAvailable(), 'static availability returns bool');
+        $testCase::assertInternalType('bool', $parser::isAvailable(), 'static availability returns bool');
 
-        $this->testCase->assertNull($parser->parseFile('xxx'), 'non existing file returns NULL');
+        $testCase::assertNull($parser->parseFile('xxx'), 'non existing file returns NULL');
 
-        $this->testCase->assertNull($parser->parseFile('data://text/plain,'), 'empty YAML stream returns NULL');
+        $testCase::assertNull($parser->parseFile('data://text/plain,'), 'empty YAML stream returns NULL');
 
-        $this->testCase->assertNull($parser->parseFile(__FILE__), 'non YAML file returns NULL');
+        $testCase::assertNull($parser->parseFile(__FILE__), 'non YAML file returns NULL');
     }
 }
