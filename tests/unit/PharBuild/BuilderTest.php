@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\PharBuild;
 
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
 /**
  * @covers \Ktomk\Pipelines\PharBuild\Builder
@@ -57,9 +58,8 @@ class BuilderTest extends TestCase
      */
     public function testIllegalStub()
     {
-        if ("0" !== ini_get('phar.readonly')) {
-            $this->markTestSkipped('pnar.readonly is active');
-        }
+        $this->needsPharWriteAccess();
+
         $builder = Builder::create('fake.phar');
         $builder->stubfile(__FILE__);
         $builder->add(basename(__FILE__), null, __DIR__);
@@ -97,11 +97,36 @@ class BuilderTest extends TestCase
         $this->assertSame('123', $result[1]);
     }
 
+    /**
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage unknown type: type
+     * @throws \ReflectionException
+     */
+    public function testBuildFilesInvalidType()
+    {
+        $this->needsPharWriteAccess();
+        $this->builder = $builder = Builder::create('fake.phar');
+        $this->assertFNE($builder);
+
+        $filesProperty = new ReflectionProperty($builder, 'files');
+        $filesProperty->setAccessible(true);
+        $filesProperty->setValue($builder, array('.null' => array('type', 'context')));
+
+        $builder->build();
+    }
+
     private function assertFNE(Builder $actual)
     {
         $builder = $this->builder;
         $this->assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $actual);
         $this->assertSame($builder, $actual, 'the same builder');
         $this->assertCount(0, $actual->errors(), 'zero errors');
+    }
+
+    private function needsPharWriteAccess()
+    {
+        if ('0' !== ini_get('phar.readonly')) {
+            $this->markTestSkipped('phar.readonly is active');
+        }
     }
 }
