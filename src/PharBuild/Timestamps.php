@@ -96,8 +96,18 @@ class Timestamps
             // update timestamp to a fixed value
             $this->contents = substr_replace($this->contents, pack('L', $timestamp), $pos, 4);
 
-            // skip timestamp, compressed file size, crc32 checksum and file flags
-            $pos += 4*4;
+            // skip timestamp, compressed file size and crc32 checksum
+            $pos += 3*4;
+
+            // update or skip file flags - see Bug #77022, use 0644 over 0666
+            $fileFlags = $this->readUint($pos, 4);
+            $permission = $fileFlags & 0x000001FF;
+            if ($permission === 0666) {
+                $permission = 0644;
+                $compression = $fileFlags & 0xFFFFF000;
+                $this->contents = substr_replace($this->contents, pack('L', $permission | $compression), $pos, 4);
+            }
+            $pos += 4;
 
             $metadataLength = $this->readUint($pos, 4);
             $pos += 4 + $metadataLength;

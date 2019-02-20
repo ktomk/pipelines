@@ -74,6 +74,8 @@ class Builder
      */
     public static function create($fphar)
     {
+        umask(022);
+
         $builder = new self();
         $builder->_ctor($fphar);
 
@@ -376,7 +378,11 @@ class Builder
         printf("SHA-256..: %s\n", strtoupper(hash_file('sha256', $filename)));
 
         $pinfo = new \Phar($filename);
-        printf("api......: %s\n", $pinfo->getVersion());
+        printf("file.....: %s\n", $pinfo->getVersion());
+        printf("api......: %s\n", $pinfo::apiVersion());
+        printf("extension: %s\n", phpversion('phar'));
+        printf("php......: %s\n", PHP_VERSION);
+        printf("uname....: %s\n", php_uname('a'));
         printf("count....: %d file(s)\n", $pinfo->count());
         $sig = $pinfo->getSignature();
         printf("signature: %s %s\n", $sig['hash_type'], $sig['hash']);
