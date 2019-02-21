@@ -27,7 +27,7 @@
     "mustangostang/spyc": "^0.6.2"
   },
   "require-dev": {
-    "friendsofphp/php-cs-fixer": "^2.10",
+    "friendsofphp/php-cs-fixer": "^2.14",
     "phpunit/phpunit": "^6.5"
   },
   "suggest": {
