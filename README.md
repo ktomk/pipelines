@@ -259,6 +259,10 @@ it to run. It should work with PHP 5.3+, the phar build requires
 PHP 5.4+. A development environment should have PHP 7, this is
 especially suggested for future releases.
 
+Installing the [PHP YAML extension][PHP-YAML] is highly
+recommended as it does greatly improve parsing the pipelines
+file.
+
 ### User Tests
 
 Successful use on Ubuntu 16.04 LTS and Mac OS X Sierra and High
@@ -383,9 +387,11 @@ Check the version by invoking it:
 * \[BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 * \[BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
 * \[DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
+* \[PHP-YAML]: https://pecl.php.net/package/yaml
 
 [BBPL]: https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
 [BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 [BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 [BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
 [DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
+[PHP-YAML]: https://pecl.php.net/package/yaml
