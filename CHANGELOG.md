@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Changed
+- Reduce artifact chunk size from fixed number 1792 to string
+  length based.
 ### Fixed
 - Patch fstat permission bits after PHP bug #77022 fix to restore
   reproducible phar build

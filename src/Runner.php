@@ -383,20 +383,24 @@ class Runner
             return;
         }
 
-        $chunkSize = 1792;
-        $chunks = array_chunk($paths, $chunkSize, true);
+        $chunks = Lib::arrayChunkByStringLength($paths, 131072, 4);
 
         foreach ($chunks as $paths) {
             $docker = Lib::cmd('docker', array('exec', '-w', '/app', $id));
             $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
             $unTar = Lib::cmd('tar', array('x', '-f', '-', '-C', $dir));
 
-            $status = $exec->pass($docker . ' ' . $tar . ' | ' . $unTar, array());
+            $command = $docker . ' ' . $tar . ' | ' . $unTar;
+            $status = $exec->pass($command, array());
 
             if (0 !== $status) {
-                $streams->err(
-                    sprintf("pipelines: Artifact failure: '%s' (%d, %d paths)\n", $pattern, $status, count($paths))
-                );
+                $streams->err(sprintf(
+                    "pipelines: Artifact failure: '%s' (%d, %d paths, %d bytes)\n",
+                    $pattern,
+                    $status,
+                    count($paths),
+                    strlen($command)
+                ));
             }
         }
     }
@@ -449,9 +453,9 @@ class Runner
         }
 
         return $this->prefix . '-' . implode(
-                '.',
-                array_reverse(
-                array(
+            '.',
+            array_reverse(
+                    array(
                     $project,
                     $idContainerSlug,
                     $nameSlug,

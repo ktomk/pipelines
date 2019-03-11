@@ -362,7 +362,7 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 1)
         ;
 
-        $this->expectOutputString("pipelines: Artifact failure: 'build/foo-package.tgz' (1, 1 paths)\n");
+        $this->expectOutputString("pipelines: Artifact failure: 'build/foo-package.tgz' (1, 1 paths, 106 bytes)\n");
         $runner = new Runner(
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),

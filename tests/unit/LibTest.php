@@ -289,4 +289,20 @@ class LibTest extends TestCase
     {
         $this->assertFalse(Lib::fsIsReadableFile(__DIR__));
     }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage maximum length of 2 is too little
+     */
+    public function testArrayChunkByStringLengthThrowsException()
+    {
+        Lib::arrayChunkByStringLength(array('test'), 2);
+    }
+
+    public function testArrayChunkByStringLength()
+    {
+        $expected = array(array('test'), array('fest'));
+        $actual = Lib::arrayChunkByStringLength(array('test', 'fest'), 4);
+        $this->assertSame($expected, $actual);
+    }
 }

@@ -135,6 +135,49 @@ class Lib
     }
 
     /**
+     * Chunk an array of strings based on maximum string length per chunk
+     *
+     * @param array|string[] $array
+     * @param $maxLength
+     * @param int $overHeadPerEntry
+     * @return array|array[]
+     */
+    public static function arrayChunkByStringLength(array $array, $maxLength, $overHeadPerEntry = 0)
+    {
+        $chunks = array();
+        $chunkStringLength = 0;
+        $chunk = array();
+
+        foreach ($array as $key => $value) {
+            $entryLen = strlen($value) + $overHeadPerEntry;
+            if ($chunkStringLength + $entryLen > $maxLength) {
+                if (empty($chunk)) {
+                    throw new \InvalidArgumentException(
+                        sprintf(
+                            'maximum length of %d is too little to chunk the array at %s %s (%d chunk(s) so far)',
+                            $maxLength,
+                            is_string($key) ? 'key' : 'index',
+                            is_string($key) ? var_export($key, true) : (int)$key,
+                            count($chunks)
+                        )
+                    );
+                }
+                $chunks[] = $chunk;
+                $chunk = array();
+                $chunkStringLength = 0;
+            }
+            $chunk[] = $value;
+            $chunkStringLength += $entryLen;
+        }
+
+        if (!empty($chunk)) {
+            $chunks[] = $chunk;
+        }
+
+        return $chunks;
+    }
+
+    /**
      * expand brace "{}" in pattern
      *
      * @param string $pattern
