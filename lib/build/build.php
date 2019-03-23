@@ -12,7 +12,7 @@ use Ktomk\Pipelines\PharBuild\Builder;
 
 require __DIR__ . '/../../src/bootstrap.php';
 
-$version = exec('echo $(git describe --tags --always --first-parent)$(git diff-index --quiet HEAD -- || echo +)');
+$version = exec('echo "$(git describe --tags --always --first-parent)$(git diff-index --quiet HEAD -- || echo +)"');
 
 printf("building %s ...\n", $version);
 

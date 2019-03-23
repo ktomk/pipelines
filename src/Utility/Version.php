@@ -145,7 +145,7 @@ class Version
     public function getGitVersion()
     {
         $buffer = rtrim(exec(sprintf(
-            'cd %s 2>/dev/null && echo $(git describe --tags --always --first-parent 2>/dev/null)$(git diff-index --quiet HEAD -- 2>/dev/null || echo +)',
+            'cd %s 2>/dev/null && echo "$(git describe --tags --always --first-parent 2>/dev/null)$(git diff-index --quiet HEAD -- 2>/dev/null || echo +)"',
             escapeshellarg($this->dir)
         )));
 
