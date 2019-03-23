@@ -34,13 +34,13 @@
     "ext-yaml": "Preferred YAML parser; highly recommended."
   },
   "scripts": {
-    "build": "@php -dphar.readonly=0 -flib/build/build.php # build phar file",
-    "cs-check": "@php -fvendor/bin/php-cs-fixer -- fix --dry-run",
-    "cs-fix": "@php -fvendor/bin/php-cs-fixer -- fix",
+    "build": "@php -dphar.readonly=0 -f lib/build/build.php # build phar file",
+    "cs-check": "@php -f vendor/bin/php-cs-fixer -- fix --dry-run",
+    "cs-fix": "@php -f vendor/bin/php-cs-fixer -- fix",
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
     "test": [
-      "@php -dphar.readonly=0 -fvendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
-      "@php -flib/coverage/checker.php -- build/log/clover.xml"
+      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
+      "@php -f lib/coverage/checker.php -- build/log/clover.xml"
     ],
     "ci": [
       "@composer validate --strict",
