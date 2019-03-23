@@ -30,14 +30,14 @@ $builder
     ->remove('src/PharBuild/*')
     // Composer autoloader has a flaw and requires a full install w/ --no-dev
     // for the non-dev autoloader used in the phar file
-    ->exec('composer -n -q install --no-dev')
+    ->phpExec('composer -n -q install --no-dev')
     ->add('vendor/{,composer/}*.php', $builder->snapShot())
-    ->exec('composer -n -q install')
+    ->phpExec('composer -n -q install --ignore-platform-reqs')
     // Dependencies
     ->add('vendor/mustangostang/spyc/Spyc.php')
     // build phar archive, reset timestamps
     ->build('--version')
-    ->exec("git log -n1 --pretty=%ci HEAD", $timestamp)
+    ->exec('git log -n1 --pretty=%ci HEAD', $timestamp)
     ->timestamps($timestamp)
     ->info();
 

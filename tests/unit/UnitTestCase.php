@@ -38,4 +38,32 @@ class UnitTestCase extends TestCase
             # ->disallowMockingUnknownTypes()
             ->getMock();
     }
+
+    /**
+     * Returns a partial test double for the specified class.
+     *
+     * @param string   $originalClassName
+     * @param string[] $methods
+     *
+     * @throws Exception
+     * @return MockObject
+     *
+     */
+    protected function createPartialMock($originalClassName, array $methods)
+    {
+        // shim for older phpunit versions
+
+        if (is_callable('parent::' . __METHOD__)) {
+            return parent::createPartialMock($originalClassName, $methods);
+        }
+
+        return $this->getMockBuilder($originalClassName)
+            ->disableOriginalConstructor()
+            ->disableOriginalClone()
+            ->disableArgumentCloning()
+            # phpunit ^4 does not have the method:
+            # ->disallowMockingUnknownTypes()
+            ->setMethods(empty($methods) ? null : $methods)
+            ->getMock();
+    }
 }

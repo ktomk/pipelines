@@ -444,6 +444,39 @@ class Builder
     }
 
     /**
+     * Execute a utility written in PHP w/ the current PHP binary automatically
+     *
+     * @param string $command
+     * @param string $return [by-ref]  last line of the output (w/o newline/white space at end)
+     *@throws \RuntimeException
+     * @return $this
+     * @see Builder::exec()
+     *
+     */
+    public function phpExec($command, &$return = null)
+    {
+        list($utility, $parameters) = preg_split('(\s)', $command, 2) + array(1 => null);
+
+        $status = null;
+        $phpUtility = sprintf(
+            '%s -f %s --',
+            escapeshellcmd(Lib::phpBinary()),
+            is_file($utility) ? $utility : exec(sprintf('which %s', escapeshellarg($utility)), $blank, $status)
+        );
+        if (null !== $status && 0 !== $status) {
+            $this->err(sprintf(
+                '%s: unable to resolve "%s", verify the file exists and it is an actual php utility',
+                'php command error',
+                $utility
+            ));
+
+            return $this;
+        }
+
+        return $this->exec($phpUtility . ' ' . $parameters, $return);
+    }
+
+    /**
      * @return array error messages
      */
     public function errors()
@@ -681,14 +714,16 @@ class Builder
 
     /**
      * @throws \RuntimeException
-     * @return bool|mixed|resource
+     * @return resource handle of the system's standard error stream
      */
     private function errHandleFromEnvironment()
     {
         if (defined('STDERR')) {
             // @codeCoverageIgnoreStart
-            // phpunit can't tests this cleanly as it is always not defined in
-            // phpt tests
+            // explicit: phpunit can not test this code cleanly as it is always
+            // not defined in phpt tests due to PHP having STDERR not set when a
+            // php file read is STDIN (which is the case for phpt tests for PHP
+            // code) so this is a work around as this code is tested w/ phpt.
             $handle = constant('STDERR');
             if (false === is_resource($handle)) {
                 $message = 'fatal i/o error: failed to acquire stream from STDERR';

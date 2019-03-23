@@ -4,13 +4,14 @@
 
 namespace Ktomk\Pipelines\PharBuild;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\UnitTestCase;
 use ReflectionProperty;
 
 /**
  * @covers \Ktomk\Pipelines\PharBuild\Builder
  */
-class BuilderTest extends TestCase
+class BuilderTest extends UnitTestCase
 {
     /**
      * @var string test phar archive file
@@ -113,6 +114,37 @@ class BuilderTest extends TestCase
         $filesProperty->setValue($builder, array('.null' => array('type', 'context')));
 
         $builder->build();
+    }
+
+    /**
+     * test phpExec() will trigger which resolution and PHP_BINARY mapping
+     */
+    public function testPhpExec()
+    {
+        $testCase = $this;
+        $expected = sprintf('%s -f /usr/bin/test -- ', Lib::phpBinary());
+
+        $builder = $this->createPartialMock('Ktomk\Pipelines\PharBuild\Builder', array('exec'));
+        $builder
+            ->method('exec')
+            ->willReturnCallback(function ($command, &$return) use ($testCase, $expected, $builder) {
+                $testCase::assertSame($expected, $command);
+                $return = 'OK';
+
+                return $builder;
+            });
+
+        $this->assertSame($builder, $builder->phpExec('test', $return));
+        $this->assertSame('OK', $return);
+    }
+
+    public function testPhpExecWithInvalidCommand()
+    {
+        $this->builder = $builder = Builder::create('fake.phar');
+        $this->assertFNE($builder);
+        $this->expectOutputString("php command error: unable to resolve \"not-existing-fake-utility\", verify the file exists and it is an actual php utility\n");
+        $builder->errHandle = fopen('php://output', 'wb');
+        $builder->phpExec('not-existing-fake-utility');
     }
 
     private function assertFNE(Builder $actual)

@@ -368,6 +368,16 @@ class Lib
     }
 
     /**
+     * fallback for the php 5.3 version which does not have PHP_BINARY.
+     *
+     * @return string
+     */
+    public static function phpBinary()
+    {
+        return defined('PHP_BINARY') ? constant('PHP_BINARY') : PHP_BINDIR . '/php';
+    }
+
+    /**
      * @param string $subject
      * @param array $matches
      * @throws UnexpectedValueException

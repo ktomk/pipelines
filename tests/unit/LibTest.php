@@ -290,6 +290,11 @@ class LibTest extends TestCase
         $this->assertFalse(Lib::fsIsReadableFile(__DIR__));
     }
 
+    public function testPhpBinary()
+    {
+        $this->assertInternalType('string', Lib::phpBinary());
+    }
+
     /**
      * @expectedException \InvalidArgumentException
      * @expectedExceptionMessage maximum length of 2 is too little
