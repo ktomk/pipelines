@@ -103,7 +103,7 @@ class Builder
     /**
      * set traversal limit for double-dot glob '**'
      *
-     * @param int $limit 0 to 16, 0 makes '**' effectively act like '*'
+     * @param int $limit 0 to 16, 0 makes '**' effectively act like '*' for path segments
      * @return $this
      */
     public function limit($limit)
@@ -570,6 +570,8 @@ class Builder
                 // @codeCoverageIgnoreEnd
             }
 
+            $result = preg_replace('(//+)', '/', $result);
+
             foreach ($result as $file) {
                 $reservoir["k{$file}"] = $file;
             }
@@ -588,7 +590,7 @@ class Builder
     private function _glob($pattern)
     {
         /* enable double-dots (with recursion limit, @see Builder::limit */
-        $glob = strtr($pattern, array('\*' => '\*', '**' => $this->double));
+        $glob = strtr($pattern, array('\*' => '\*', '**' => '{' . $this->double . '/,}'));
 
         $result = $this->_glob_brace($glob, GLOB_NOSORT);
 
