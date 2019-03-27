@@ -128,11 +128,17 @@ class Runner
         $env = $this->env;
         $exec = $this->exec;
         $streams = $this->streams;
-
-        $docker = new Docker($exec);
+        $flags = $this->flags;
 
         $name = $this->generateContainerName($step);
-        $this->zapContinerByName($name);
+
+        $reuseContainer =
+            ($flags & self::FLAG_KEEP_ON_ERROR)
+            || !($flags & (self::FLAG_DOCKER_KILL | self::FLAG_DOCKER_REMOVE));
+
+        if (false === $reuseContainer) {
+            $this->zapContainerByName($name);
+        }
         $image = $step->getImage();
         $env->setContainerName($name);
 
@@ -145,14 +151,59 @@ class Runner
             $name
         ));
 
+        $copy = (bool)($flags & self::FLAG_DEPLOY_COPY);
+
+        $id = null;
+        if ($reuseContainer) {
+            $id = $this->dockerGetContainerIdByName($name);
+        }
+
+        if (null === $id) {
+            list($id, $status) = $this->runNewContainer($name, $dir, $copy, $step);
+            if (null === $id) {
+                return $status;
+            }
+        }
+
+        $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
+
+        # TODO: different deployments, mount (default), mount-ro, copy
+        if (null !== $result = $this->deployCopy($copy, $id, $dir)) {
+            return $result;
+        }
+
+        $status = $this->runStepScript($step, $streams, $exec, $name);
+
+        $this->captureStepArtifacts($step, $copy && 0 === $status, $id, $dir);
+
+        $this->shutdownStepContainer($status, $id, $exec, $name);
+
+        return $status;
+    }
+
+    /**
+     * @param string $name
+     * @param string $dir
+     * @param bool $copy
+     * @param Step $step
+     * @return array
+     */
+    private function runNewContainer($name, $dir, $copy, Step $step)
+    {
+        $env = $this->env;
+        $exec = $this->exec;
+        $flags = $this->flags;
+        $streams = $this->streams;
+
+        $image = $step->getImage();
+        $docker = new Docker($exec);
+
         # process docker login if image demands so, but continue on failure
         $this->imageLogin($image);
 
-        $copy = (bool)($this->flags & self::FLAG_DEPLOY_COPY);
-
         // enable docker client inside docker by mounting docker socket
         // FIXME give controlling options, this is serious /!\
-        $socket = (bool)($this->flags & self::FLAG_SOCKET);
+        $socket = (bool)($flags & self::FLAG_SOCKET);
         $mountDockerSock = array();
         if ($socket && file_exists('/var/run/docker.sock')) {
             $mountDockerSock = array(
@@ -182,29 +233,17 @@ class Runner
             $streams->out("${out}\n");
             $streams->out(sprintf("exit status: %d\n", $status));
 
-            return $status;
+            return array(null, $status);
         }
-        $id = rtrim($out) ?: "*dry-run*"; # side-effect: internal exploit of no output with true exit status
-        $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
+        $id = rtrim($out) ?: '*dry-run*'; # side-effect: internal exploit of no output with true exit status
 
-        # TODO: different deployments, mount (default), mount-ro, copy
-        if (null !== $result = $this->deployCopy($copy, $id, $this->directories->getProject())) {
-            return $result;
-        }
-
-        $status = $this->runStepScript($step, $streams, $exec, $name);
-
-        $this->captureStepArtifacts($step, $copy && 0 === $status, $id, $dir);
-
-        $this->shutdownStepContainer($status, $id, $exec, $name);
-
-        return $status;
+        return array($id, 0);
     }
 
     /**
      * @param string $name
      */
-    private function zapContinerByName($name)
+    private function zapContainerByName($name)
     {
         $ids = null;
 
@@ -225,6 +264,32 @@ class Runner
 
         $this->exec->capture('docker', Lib::merge('kill', $ids));
         $this->exec->capture('docker', Lib::merge('rm', $ids));
+    }
+
+    /**
+     * @param string $name
+     * @return null|string
+     */
+    private function dockerGetContainerIdByName($name)
+    {
+        $ids = null;
+
+        $status = $this->exec->capture(
+            'docker',
+            array(
+                'ps', '-qa', '--filter',
+                "name=^/${name}$"
+            ),
+            $result
+        );
+
+        $status || $ids = Lib::lines($result);
+
+        if ($status || !(is_array($ids) && 1 === count($ids))) {
+            return null;
+        }
+
+        return $ids[0];
     }
 
     /**
@@ -419,7 +484,7 @@ class Runner
         # keep container on error
         if (0 !== $status && $flags & self::FLAG_KEEP_ON_ERROR) {
             $this->streams->err(sprintf(
-                "keeping container id %s\n",
+                "error, keeping container id %s\n",
                 substr($id, 0, 12)
             ));
 
@@ -433,6 +498,13 @@ class Runner
 
         if ($flags & self::FLAG_DOCKER_REMOVE) {
             $exec->capture('docker', array('rm', $name));
+        }
+
+        if (!($flags & (self::FLAG_DOCKER_KILL | self::FLAG_DOCKER_REMOVE))) {
+            $this->streams->out(sprintf(
+                "keeping container id %s\n",
+                substr($id, 0, 12)
+            ));
         }
     }
 

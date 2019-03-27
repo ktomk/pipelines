@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 ### Added
 - Suggestion to install the PHP YAML extension
+- Kept containers are automatically re-used if they still exist
 ### Changed
 - Reduce artifact chunk size from fixed number 1792 to string
   length based.

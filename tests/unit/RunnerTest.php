@@ -154,18 +154,20 @@ class RunnerTest extends UnitTestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
+            ->expect('capture', 'docker', 1) # zap
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
+            ->expect('capture', 'docker', 0) # docker kill
+            ->expect('capture', 'docker', 0) # docker rm
         ;
 
         $runner = new Runner(
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
             null,
             new Streams()
         );
@@ -196,7 +198,7 @@ class RunnerTest extends UnitTestCase
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
             null,
             new Streams(null, null, 'php://output')
         );
@@ -228,7 +230,7 @@ class RunnerTest extends UnitTestCase
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
             null,
             new Streams(null, null, 'php://output')
         );
@@ -246,36 +248,29 @@ class RunnerTest extends UnitTestCase
         $this->assertSame(1, $status);
     }
 
-    public function testKeepContainerOnError()
+    public function testKeepContainerOnErrorWithNonExistentContainer()
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 1) # no id for name of potential re-use
+            ->expect('capture', 'docker', 0) # run the container
             ->expect('pass', 'docker', 255)
         ;
 
-        $this->expectOutputRegex('{script non-zero exit status: 255\nkeeping container id \*dry-run\*}');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
-            $exec,
-            Runner::FLAGS | Runner::FLAG_KEEP_ON_ERROR, # keep on error flag is important
-            null,
-            new Streams(null, null, 'php://output')
-        );
+        $this->keepContainerOnErrorExecTest($exec);
+    }
 
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array('fatal me an error'),
-            ))
-        ));
+    public function testKeepContainerOnErrorWithExistingContainer()
+    {
+        $containerId = 'face42face42';
 
-        $status = $runner->run($pipeline);
-        $this->assertSame(255, $status);
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', $containerId) # id for name of potential re-use
+            ->expect('pass', 'docker', 255)
+        ;
+
+        $this->keepContainerOnErrorExecTest($exec, $containerId);
     }
 
     public function testArtifacts()
@@ -289,13 +284,15 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 0)
+            ->expect('capture', 'docker', 0) # docker kill
+            ->expect('capture', 'docker', 0) # docker rm
         ;
 
         $runner = new Runner(
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
             null,
             new Streams()
         );
@@ -324,13 +321,15 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
+            ->expect('capture', 'docker', 0) # docker kill
+            ->expect('capture', 'docker', 0) # docker rm
         ;
 
         $runner = new Runner(
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
             null,
             new Streams()
         );
@@ -360,6 +359,8 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', 'docker', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . sys_get_temp_dir() . '/pipelines-test-suite', 1)
+            ->expect('capture', 'docker', 0) # docker kill
+            ->expect('capture', 'docker', 0) # docker rm
         ;
 
         $this->expectOutputString("pipelines: Artifact failure: 'build/foo-package.tgz' (1, 1 paths, 106 bytes)\n");
@@ -367,7 +368,7 @@ class RunnerTest extends UnitTestCase
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
             null,
             new Streams(null, null, 'php://output')
         );
@@ -397,13 +398,45 @@ class RunnerTest extends UnitTestCase
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', 'docker', 0) # docker exec
+            ->expect('capture', 'docker', 0) # docker kill
+            ->expect('capture', 'docker', 0) # docker rm
         ;
 
         $runner = new Runner(
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY,
+            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            null,
+            new Streams()
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, 0, array(
+                'image' => 'foo/bar:latest',
+                'script' => array(':'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(0, $status);
+    }
+
+    public function testKeepExistingContainer()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', "123456789\n") # existing id
+            ->expect('pass', 'docker', 0) # docker exec
+        ;
+
+        $runner = new Runner(
+            'pipelines-unit-test',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
+            $exec,
+            (Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE) ^ Runner::FLAGS,
             null,
             new Streams()
         );
@@ -451,5 +484,34 @@ class RunnerTest extends UnitTestCase
 
         $status = $runner->run($pipeline);
         $this->assertSame(0, $status);
+    }
+
+    private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')
+    {
+        $expectedRegex = sprintf(
+            '{script non-zero exit status: 255\nerror, keeping container id %s}',
+            preg_quote($id, '{}')
+        );
+        $this->expectOutputRegex($expectedRegex);
+        $runner = new Runner(
+            'pipelines-unit-test',
+            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
+            $exec,
+            Runner::FLAGS | Runner::FLAG_KEEP_ON_ERROR, # keep on error flag is important
+            null,
+            new Streams(null, null, 'php://output')
+        );
+
+        /** @var MockObject|Pipeline $pipeline */
+        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline->method('getSteps')->willReturn(array(
+            new Step($pipeline, 0, array(
+                'image' => 'foo/bar:latest',
+                'script' => array('fatal me an error'),
+            ))
+        ));
+
+        $status = $runner->run($pipeline);
+        $this->assertSame(255, $status);
     }
 }
