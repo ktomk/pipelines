@@ -515,7 +515,7 @@ class Runner
     private function generateContainerName(Step $step)
     {
         $project = $this->directories->getName();
-        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '', $step->getPipeline()->getId());
+        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '-', $step->getPipeline()->getId());
         if ('' === $idContainerSlug) {
             $idContainerSlug = 'null';
         }
@@ -529,7 +529,7 @@ class Runner
             array_reverse(
                 array(
                     $project,
-                    $idContainerSlug,
+                    trim($idContainerSlug, '-'),
                     $nameSlug,
                     $step->getIndex() + 1,
                 )
