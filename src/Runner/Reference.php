@@ -8,7 +8,7 @@ use InvalidArgumentException;
 
 class Reference
 {
-    const BRANCH_TAG_BOOKMARK = '~^(branch|tag|bookmark):(.+)$~';
+    const TRIGGER = '~^(branch|tag|bookmark|pr):(.+)$~';
 
     private $string;
 
@@ -19,6 +19,7 @@ class Reference
     private static $map = array(
         'bookmark' => 'bookmarks',
         'branch' => 'branches',
+        'pr' => 'pull-requests',
         'tag' => 'tags',
     );
 
@@ -51,7 +52,7 @@ class Reference
      */
     public static function valid($string)
     {
-        $result = preg_match(self::BRANCH_TAG_BOOKMARK, $string);
+        $result = preg_match(self::TRIGGER, $string);
 
         return (bool)$result;
     }
@@ -92,7 +93,7 @@ class Reference
             return;
         }
 
-        $result = preg_match(self::BRANCH_TAG_BOOKMARK, $string, $matches);
+        $result = preg_match(self::TRIGGER, $string, $matches);
 
         if (!$result) {
             throw new InvalidArgumentException(sprintf('invalid reference: "%s"', $string));

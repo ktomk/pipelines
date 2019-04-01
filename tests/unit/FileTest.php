@@ -32,7 +32,7 @@ class FileTest extends TestCase
      */
     public function testCreateFromFileWithError()
     {
-        $path = __DIR__ . '/../data/error.yml';
+        $path = __DIR__ . '/../data/yml/error.yml';
 
         File::createFromFile($path);
     }
@@ -42,7 +42,7 @@ class FileTest extends TestCase
      */
     public function testCreateFromFileWithInvalidId()
     {
-        $path = __DIR__ . '/../data/invalid-pipeline-id.yml';
+        $path = __DIR__ . '/../data/yml/invalid-pipeline-id.yml';
 
         $file = File::createFromFile($path);
 
@@ -160,11 +160,11 @@ class FileTest extends TestCase
 
     public function testGetPipelineIds()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
         $ids = $file->getPipelineIds();
         $this->assertInternalType('array', $ids);
-        $this->assertArrayHasKey(11, $ids);
-        $this->assertSame('custom/unit-tests', $ids[11]);
+        $this->assertArrayHasKey(12, $ids);
+        $this->assertSame('custom/unit-tests', $ids[12]);
     }
 
     /**
@@ -183,7 +183,7 @@ class FileTest extends TestCase
 
     public function testGetReference()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
 
         $pipeline = $file->getById('branches/master');
         $this->assertNotNull($pipeline);
@@ -231,7 +231,7 @@ class FileTest extends TestCase
      */
     public function testInvalidReferenceName()
     {
-        File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml')
+        File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml')
             ->getById('branch/master'); # must be branch_es_
     }
 
@@ -264,7 +264,7 @@ class FileTest extends TestCase
 
     public function testSearchReference()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
 
         $pipeline = $file->searchTypeReference('branches', 'master');
         $this->asPlFiStName('master duplicate', $pipeline, 'direct match');
@@ -340,7 +340,7 @@ class FileTest extends TestCase
      */
     public function testSearchReferenceInvalidScopeException()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
         $file->searchTypeReference('invalid', '');
     }
 

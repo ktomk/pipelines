@@ -3,6 +3,7 @@
 /* this file is part of pipelines */
 
 namespace Ktomk\Pipelines\Runner;
+
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\Collector;
 use Ktomk\Pipelines\Lib;
@@ -105,8 +106,12 @@ class Env
             'bookmark' => 'BITBUCKET_BOOKMARK',
             'branch' => 'BITBUCKET_BRANCH',
             'tag' => 'BITBUCKET_TAG',
+            'pr' => 'BITBUCKET_BRANCH',
         );
 
+        if (!isset($map[$type])) {
+            throw new \UnexpectedValueException(sprintf('Unknown reference type: "%s"', $type));
+        }
         $var = $map[$type];
 
         if (!isset($this->vars[$var])) {

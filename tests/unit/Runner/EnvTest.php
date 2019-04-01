@@ -5,12 +5,12 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Args\ArgsTester;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\UnitTestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\Env
  */
-class EnvTest extends TestCase
+class EnvTest extends UnitTestCase
 {
     public function testCreation()
     {
@@ -98,6 +98,18 @@ class EnvTest extends TestCase
         $this->assertCount($default, $env->getArgs('-e'), 'null reference does not add any variables');
 
         $env->addReference(Reference::create('branch:testing'));
+        $this->assertCount($default + 2, $env->getArgs('-e'), 'full reference does add variables');
+    }
+
+    public function testPullRequestAddsBranchName()
+    {
+        $env = Env::create();
+        $default = count($env->getArgs('-e'));
+
+        $env->addReference(Reference::create());
+        $this->assertCount($default, $env->getArgs('-e'), 'null reference does not add any variables');
+
+        $env->addReference(Reference::create('pr:feature'));
         $this->assertCount($default + 2, $env->getArgs('-e'), 'full reference does add variables');
     }
 
@@ -250,5 +262,21 @@ class EnvTest extends TestCase
             'Ktomk\Pipelines\Runner\EnvResolver',
             $env->getResolver()
         );
+    }
+
+    /**
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage Unknown reference type: "foo"
+     */
+    public function testAddReferenceOfUnknownType()
+    {
+        $env = new Env();
+
+        $reference = $this->createMock('\Ktomk\Pipelines\Runner\Reference');
+        $reference
+            ->method('getType')
+            ->willReturn('foo');
+
+        $env->addReference($reference);
     }
 }

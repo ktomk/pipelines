@@ -14,7 +14,7 @@ class YamlReferenceTest extends TestCase
 {
     public function testFileWithAliasParses()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/alias.yml');
+        $file = File::createFromFile(__DIR__ . '/../data/yml/alias.yml');
         $actual = $file->getPipelineIds();
         $idDefault = 'default';
         $idAlias = 'branches/feature/*';

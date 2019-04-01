@@ -89,9 +89,9 @@ Common options
                           looking up the <basename> file from
                           the current working directory
     --trigger <ref>       build trigger, <ref> can be of either
-                          tag:<name>, branch:<name> or
-                          bookmark:<name>. used in determination
-                          of the pipeline to run
+                          tag:<name>, branch:<name>,
+                          bookmark:<name> or pr:<branch-name>.
+                          determines the pipeline to run
     --pipeline <id>       run pipeline with <id>, see --list
     --verbatim            only give verbatim output of the
                           pipeline, no other information around

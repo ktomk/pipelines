@@ -1,0 +1,14 @@
+---
+# this file is part of pipelines
+#
+# fixture bitbucket-pipelines.yml w/ pull-requests
+image: php:5.6
+clone:
+  depth: full
+pipelines:
+  pull-requests:
+    '**':
+      - step:
+          name: default pull request pipeline
+          script:
+            - ":"

@@ -31,6 +31,7 @@ class ReferenceTest extends TestCase
             array('tag:', false),
             array('tag:1.0.0', true),
             array('branch:feature/drop-support', true),
+            array('pr:feature-42', true),
         );
     }
 
@@ -41,7 +42,7 @@ class ReferenceTest extends TestCase
      */
     public function testValidation($string, $valid)
     {
-        $this->assertSame($valid, Reference::valid($string));
+        $this->assertSame($valid, Reference::valid($string), sprintf('reference "%s"', $string));
     }
 
     /**
@@ -87,5 +88,6 @@ class ReferenceTest extends TestCase
         $this->assertSame('bookmarks', $f('bookmark:stable'));
         $this->assertSame('branches', $f('branch:master'));
         $this->assertSame('tags', $f('tag:1.0.0'));
+        $this->assertSame('pull-requests', $f('pr:feature'));
     }
 }

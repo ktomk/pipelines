@@ -37,12 +37,14 @@ information about the pipelines is available via `--show`. Both
 
 Run the pipeline as if a tag/branch or bookmark has been pushed
 with `--trigger <ref>` where `<ref>` is `tag:<name>`,
-`branch:<name>` or `bookmark:<name>`. If there is no tag, branch
-or bookmark pipeline with that name, the name is compared against
-the patterns of the referenced pipelines type and if found, that
-pipeline is run. Otherwise the default pipeline is run, if there
-is no default pipeline, no pipeline at all is run and the command
-exits with non-zero status.
+`branch:<name>`, `bookmark:<name>` or `pr:<branch-name>`. If
+there is no tag, branch, bookmark or pull-request pipeline with
+that name, the name is compared against the patterns of the
+referenced type and if found, that pipeline is run.
+
+Otherwise the default pipeline is run, if there is no default
+pipeline, no pipeline at all is run and the command exits with
+non-zero status.
 
 `--pipeline` and `--trigger` can be used together, `--pipeline`
 overrides pipeline from `--trigger` but `--trigger` still

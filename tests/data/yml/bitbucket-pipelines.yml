@@ -66,6 +66,13 @@ pipelines:
         - step:
             script:
               - echo "bookmark v1.0.0"
+              -
+  pull-requests:
+    '**':
+      - step:
+          name: default pull request pipeline
+          script:
+            - ":"
 
   custom:
     lint-php: # lint against diverse PHP versions

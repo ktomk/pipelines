@@ -36,6 +36,11 @@ class File
     private $pipelines;
 
     /**
+     * @var array
+     */
+    private static $sections = array('branches', 'tags', 'bookmarks', 'pull-requests', 'custom');
+
+    /**
      * File constructor.
      *
      * @param array $array
@@ -282,7 +287,7 @@ class File
 
     private function isIdValid($id)
     {
-        return (bool)preg_match('~^(default|(branches|tags|bookmarks|custom)/[^\x00-\x1F\x7F-\xFF]*)$~', $id);
+        return (bool)preg_match('~^(default|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~', $id);
     }
 
     /**
@@ -332,7 +337,7 @@ class File
     private function parsePipelineReferences(array &$array)
     {
         // quick validation: pipeline sections
-        $sections = array('branches', 'tags', 'bookmarks', 'custom');
+        $sections = self::$sections;
         $count = 0;
         foreach ($sections as $section) {
             if (isset($array[$section])) {
@@ -340,7 +345,8 @@ class File
             }
         }
         if (!$count && !isset($array['default'])) {
-            ParseException::__("'pipelines' requires at least a default, branches, tags, bookmarks or custom section");
+            $middle = implode(', ', array_slice($sections, 0, -1));
+            ParseException::__("'pipelines' requires at least a default, ${middle} or custom section");
         }
 
         $references = array();
@@ -382,7 +388,7 @@ class File
      */
     private function validateType($type)
     {
-        $scopes = array('branches', 'tags', 'bookmarks');
+        $scopes = array_slice(self::$sections, 0, 4);
         if (!in_array($type, $scopes, true)) {
             throw new InvalidArgumentException(sprintf("Invalid type '%s'", $type));
         }

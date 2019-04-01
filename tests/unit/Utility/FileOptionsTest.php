@@ -20,7 +20,7 @@ class FileOptionsTest extends TestCase
     {
         $args = new Args(array('test-cmd'));
         $output = new Streams();
-        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = new FileOptions($args, $output, $file);
         $this->assertInstanceOf('Ktomk\Pipelines\Utility\FileOptions', $options);
@@ -30,7 +30,7 @@ class FileOptionsTest extends TestCase
     {
         $args = new Args(array('test-cmd'));
         $output = new Streams();
-        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = FileOptions::bind($args, $output, $file);
         $this->assertInstanceOf('Ktomk\Pipelines\Utility\FileOptions', $options);
@@ -55,7 +55,7 @@ class FileOptionsTest extends TestCase
     {
         $args = new Args(array_merge(array('test-cmd'), $arguments));
         $output = new Streams();
-        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = new FileOptions($args, $output, $file);
 
@@ -71,7 +71,7 @@ class FileOptionsTest extends TestCase
     {
         $arg = new Args(array('test-cmd'));
         $output = new Streams();
-        $file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = new FileOptions($arg, $output, $file);
         $actual = $options->showPipelines($file);

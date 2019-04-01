@@ -23,7 +23,7 @@ class ReferenceSearchTest extends TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->file = File::createFromFile(__DIR__ . '/../../data/bitbucket-pipelines.yml');
+        $this->file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
     }
 
     public function searchReference($ref = null)
