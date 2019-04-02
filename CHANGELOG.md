@@ -4,14 +4,14 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.18] - 2019-04-02
 ### Added
 - Suggestion to install the PHP YAML extension
 - Kept containers are automatically re-used if they still exist
 - Support for pull request pipelines
 ### Changed
 - Reduce artifact chunk size from fixed number 1792 to string
-  length based.
+  length based
 ### Fixed
 - Patch fstat permission bits after PHP bug #77022 fix to restore
   reproducible phar build
