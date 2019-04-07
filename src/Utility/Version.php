@@ -24,20 +24,6 @@ class Version
     private $version;
 
     /**
-     * Version constructor.
-     *
-     * @param string $version input
-     * @param string $placeholder
-     * @param string $dir [optional]
-     */
-    public function __construct($version, $placeholder = '@.@.@', $dir = null)
-    {
-        $this->version = $version;
-        $this->placeholder = $placeholder;
-        $this->dir = null === $dir ? __DIR__ : $dir;
-    }
-
-    /**
      * resolve version in case it is still a placeholder @.@.@,
      * e.g. when a source installation (composer package or git
      * clone)
@@ -51,6 +37,20 @@ class Version
         $subject = new self($version);
 
         return $subject->resolveSourceVersion();
+    }
+
+    /**
+     * Version constructor.
+     *
+     * @param string $version input
+     * @param string $placeholder
+     * @param string $dir [optional]
+     */
+    public function __construct($version, $placeholder = '@.@.@', $dir = null)
+    {
+        $this->version = $version;
+        $this->placeholder = $placeholder;
+        $this->dir = null === $dir ? __DIR__ : $dir;
     }
 
     /**

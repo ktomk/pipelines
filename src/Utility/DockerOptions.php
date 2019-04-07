@@ -48,6 +48,11 @@ class DockerOptions
      */
     private $ps;
 
+    public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
+    {
+        return new self($args, $exec, $prefix, $streams);
+    }
+
     /**
      * DockerOptions constructor.
      *
@@ -63,11 +68,6 @@ class DockerOptions
         $this->exec = $exec;
         $this->ps = new DockerProcessManager($exec);
         $this->prefix = $prefix;
-    }
-
-    public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
-    {
-        return new self($args, $exec, $prefix, $streams);
     }
 
     /**

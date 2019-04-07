@@ -24,23 +24,6 @@ class Image
     private $properties;
 
     /**
-     * Image constructor.
-     *
-     * @param array|string $image
-     * @throws \Ktomk\Pipelines\File\ParseException
-     */
-    public function __construct($image)
-    {
-        $this->properties = new Properties();
-        $this->parse($image);
-    }
-
-    public function __toString()
-    {
-        return (string)$this->name;
-    }
-
-    /**
      * if an 'image' entry is set, validate it is a string or a section.
      *
      * @param array $array
@@ -74,6 +57,23 @@ class Image
                 sprintf("'image' invalid Docker image name: '%s'", $image)
             );
         }
+    }
+
+    /**
+     * Image constructor.
+     *
+     * @param array|string $image
+     * @throws \Ktomk\Pipelines\File\ParseException
+     */
+    public function __construct($image)
+    {
+        $this->properties = new Properties();
+        $this->parse($image);
+    }
+
+    public function __toString()
+    {
+        return (string)$this->name;
     }
 
     /**

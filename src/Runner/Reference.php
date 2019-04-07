@@ -24,17 +24,6 @@ class Reference
     );
 
     /**
-     * Reference constructor
-     *
-     * @param null|string $string [optional] use null for a null reference
-     * @throws \InvalidArgumentException
-     */
-    public function __construct($string = null)
-    {
-        $this->parse($string);
-    }
-
-    /**
      * @param null|string $string [optional] use null for a null reference
      * @throws \InvalidArgumentException
      * @return Reference
@@ -55,6 +44,17 @@ class Reference
         $result = preg_match(self::TRIGGER, $string);
 
         return (bool)$result;
+    }
+
+    /**
+     * Reference constructor
+     *
+     * @param null|string $string [optional] use null for a null reference
+     * @throws \InvalidArgumentException
+     */
+    public function __construct($string = null)
+    {
+        $this->parse($string);
     }
 
     /**

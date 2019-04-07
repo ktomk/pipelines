@@ -19,86 +19,6 @@ use PHPUnit\Util\InvalidArgumentHelper;
  */
 class TestCase extends PhpunitTestCase
 {
-    /**
-     * Backwards compatible assertions (as far as in use)
-     *
-     * @param string $name
-     * @param array $arguments
-     */
-    public function __call($name, array $arguments)
-    {
-        switch ($name) {
-            // file and directory assertions came w/ PHPUnit 5.7
-            case 'assertDirectoryExists':
-                list($directory, $message) = $arguments + array(1 => '');
-                $this->shimAssertDirectoryExists($directory, $message);
-
-                return;
-            case 'assertDirectoryNotExists':
-                list($directory, $message) = $arguments + array(1 => '');
-                $this->shimAssertDirectoryNotExists($directory, $message);
-
-                return;
-            case 'assertFileExists':
-                list($filename, $message) = $arguments + array(1 => '');
-                $this->shimAssertFileExists($filename, $message);
-
-                return;
-            case 'assertFileNotExists':
-                list($filename, $message) = $arguments + array(1 => '');
-                $this->shimAssertFileNotExists($filename, $message);
-
-                return;
-        }
-
-        throw new \BadMethodCallException(
-            sprintf('Testcase %s::%s(%d)', get_class($this), $name, count($arguments))
-        );
-    }
-    public function setExpectedException($class, $message = '', $code = null)
-    {
-        if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
-            parent::setExpectedException($class, $message, $code);
-
-            return;
-        }
-
-        if (is_callable('parent::expectException')) {
-            $this->expectException($class);
-        }
-
-        if (null !== $message && is_callable('parent::expectExceptionMessage')) {
-            $this->expectExceptionMessage($message);
-        }
-
-        if (null !== $code && is_callable('parent::expectExceptionCode')) {
-            $this->expectExceptionCode($code);
-        }
-    }
-
-    public function setExpectedExceptionRegExp($class, $messageRegExp = '', $code = null)
-    {
-        if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
-            parent::setExpectedExceptionRegExp($class, $messageRegExp, $code);
-
-            return;
-        }
-
-        if (is_callable('parent::expectException')) {
-            $this->expectException($class);
-        }
-
-        if (is_callable('parent::expectExceptionMessageRegExp')) {
-            $this->expectExceptionMessageRegExp($messageRegExp);
-        }
-
-        if (null !== $code && is_callable('parent::expectExceptionCode')) {
-            $this->expectExceptionCode($code);
-        }
-    }
-
     public static function assertIsArray($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -158,6 +78,86 @@ class TestCase extends PhpunitTestCase
 
         self::assertInternalType('string', $actual, $message);
     }
+    /**
+     * Backwards compatible assertions (as far as in use)
+     *
+     * @param string $name
+     * @param array $arguments
+     */
+    public function __call($name, array $arguments)
+    {
+        switch ($name) {
+            // file and directory assertions came w/ PHPUnit 5.7
+            case 'assertDirectoryExists':
+                list($directory, $message) = $arguments + array(1 => '');
+                $this->shimAssertDirectoryExists($directory, $message);
+
+                return;
+            case 'assertDirectoryNotExists':
+                list($directory, $message) = $arguments + array(1 => '');
+                $this->shimAssertDirectoryNotExists($directory, $message);
+
+                return;
+            case 'assertFileExists':
+                list($filename, $message) = $arguments + array(1 => '');
+                $this->shimAssertFileExists($filename, $message);
+
+                return;
+            case 'assertFileNotExists':
+                list($filename, $message) = $arguments + array(1 => '');
+                $this->shimAssertFileNotExists($filename, $message);
+
+                return;
+        }
+
+        throw new \BadMethodCallException(
+            sprintf('Testcase %s::%s(%d)', get_class($this), $name, count($arguments))
+        );
+    }
+
+    public function setExpectedException($class, $message = '', $code = null)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            parent::setExpectedException($class, $message, $code);
+
+            return;
+        }
+
+        if (is_callable('parent::expectException')) {
+            $this->expectException($class);
+        }
+
+        if (null !== $message && is_callable('parent::expectExceptionMessage')) {
+            $this->expectExceptionMessage($message);
+        }
+
+        if (null !== $code && is_callable('parent::expectExceptionCode')) {
+            $this->expectExceptionCode($code);
+        }
+    }
+
+    public function setExpectedExceptionRegExp($class, $messageRegExp = '', $code = null)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            /** @noinspection PhpUndefinedMethodInspection */
+            parent::setExpectedExceptionRegExp($class, $messageRegExp, $code);
+
+            return;
+        }
+
+        if (is_callable('parent::expectException')) {
+            $this->expectException($class);
+        }
+
+        if (is_callable('parent::expectExceptionMessageRegExp')) {
+            $this->expectExceptionMessageRegExp($messageRegExp);
+        }
+
+        if (null !== $code && is_callable('parent::expectExceptionCode')) {
+            $this->expectExceptionCode($code);
+        }
+    }
 
     /**
      * Returns a test double for the specified class.
@@ -189,7 +189,7 @@ class TestCase extends PhpunitTestCase
      * @param string   $originalClassName
      * @param string[] $methods
      *
-     * @throws \Exception
+     * @throws
      * @return MockObject
      *
      */

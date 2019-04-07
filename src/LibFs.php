@@ -9,7 +9,6 @@ use UnexpectedValueException;
 /**
  * Class LibFs - Low level file-system utility functions
  *
- * @package Ktomk\Pipelines
  * @covers \Ktomk\Pipelines\LibFs
  */
 class LibFs
@@ -302,7 +301,7 @@ class LibFs
     }
 
     /**
-     * Create handle and path of a temporary file (which get's cleaned up)
+     * Create handle and path of a temporary file (which gets cleaned up)
      *
      * @return array(handle, string)
      */

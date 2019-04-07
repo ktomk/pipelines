@@ -24,6 +24,20 @@ class DestructibleString
      */
     private $callback;
 
+    /**
+     * @see LibFs::rmDir
+     *
+     * @param string $string
+     * @return DestructibleString
+     */
+    public static function rmDir($string)
+    {
+        return new self(
+            $string,
+            'Ktomk\Pipelines\LibFs::rmDir'
+        );
+    }
+
     public function __construct($string, $callback)
     {
         $this->string = $string;
@@ -38,13 +52,5 @@ class DestructibleString
     public function __toString()
     {
         return $this->string;
-    }
-
-    public static function rmDir($string)
-    {
-        return new self(
-            $string,
-            'Ktomk\Pipelines\LibFs::rmDir'
-        );
     }
 }

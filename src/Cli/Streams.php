@@ -25,6 +25,24 @@ class Streams
     private $closeOnDestruct;
 
     /**
+     * Create streams from environment (standard streams)
+     */
+    public static function create()
+    {
+        // PHP Doc Bug #43283 CLI does not define STDOUT/STDERR with stdin script
+        $care = !defined('STDIN');
+
+        $in = $care ? constant('STDIN') : 'php://stdin';
+        $out = $care ? constant('STDOUT') : 'php://stdout';
+        $err = $care ? constant('STDERR') : 'php://stderr';
+
+        $streams = new self($in, $out, $err);
+        $streams->closeOnDestruct = $care;
+
+        return $streams;
+    }
+
+    /**
      * Streams constructor.
      *|string
      * handles can be null (noop), a resource (reuse) or a string that
@@ -56,24 +74,6 @@ class Streams
     public function __invoke($string)
     {
         $this->out(sprintf("%s\n", $string));
-    }
-
-    /**
-     * Create streams from environment (standard streams)
-     */
-    public static function create()
-    {
-        // PHP Doc Bug #43283 CLI does not define STDOUT/STDERR with stdin script
-        $care = !defined('STDIN');
-
-        $in = $care ? constant('STDIN') : 'php://stdin';
-        $out = $care ? constant('STDOUT') : 'php://stdout';
-        $err = $care ? constant('STDERR') : 'php://stderr';
-
-        $streams = new self($in, $out, $err);
-        $streams->closeOnDestruct = $care;
-
-        return $streams;
     }
 
     public function out($string)

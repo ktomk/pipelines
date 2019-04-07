@@ -26,17 +26,17 @@ class ErrorCatcher
      */
     private $level;
 
-    public function __construct()
-    {
-        $this->start();
-    }
-
     /**
      * @return ErrorCatcher
      */
     public static function create()
     {
         return new self();
+    }
+
+    public function __construct()
+    {
+        $this->start();
     }
 
     /**

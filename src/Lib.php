@@ -4,8 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use UnexpectedValueException;
-
 class Lib
 {
     public static function r(&$v, $d)
@@ -60,6 +58,11 @@ class Lib
         );
     }
 
+    /**
+     * @param string $command
+     * @param array|string[] $arguments
+     * @return string
+     */
     public static function cmd($command, array $arguments)
     {
         $buffer = $command;

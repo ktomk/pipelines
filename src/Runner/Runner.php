@@ -333,14 +333,8 @@ class Runner
         $this->temporaryDirectories[] = DestructibleString::rmDir($tmpDir);
         LibFs::symlink($dir, $tmpDir . '/app');
         $cd = Lib::cmd('cd', array($tmpDir . '/.'));
-        $tar = Lib::cmd(
-            'tar',
-            array('c', '-h', '-f', '-', '--no-recursion', 'app')
-        );
-        $dockerCp = Lib::cmd(
-            'docker ',
-            array('cp', '-', $id . ':/.')
-        );
+        $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', 'app'));
+        $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
         $status = $exec->pass("${cd} && echo 'app' | ${tar} | ${dockerCp}", array());
         LibFs::unlink($tmpDir . '/app');
         if (0 !== $status) {
@@ -350,16 +344,8 @@ class Runner
         }
 
         $cd = Lib::cmd('cd', array($dir . '/.'));
-        $tar = Lib::cmd(
-            'tar',
-            array(
-                'c', '-f', '-', '.')
-        );
-        $dockerCp = Lib::cmd(
-            'docker ',
-            array(
-                'cp', '-', $id . ':/app')
-        );
+        $tar = Lib::cmd('tar', array('c', '-f', '-', '.'));
+        $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/app'));
         $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
         if (0 !== $status) {
             $streams->err('pipelines: deploy copy failure\n');

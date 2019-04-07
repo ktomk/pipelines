@@ -37,20 +37,19 @@ class KeepOptions
 
     /**
      * @param Args $args
-     */
-    public function __construct(Args $args)
-    {
-        $this->args = $args;
-    }
-
-    /**
-     * @param Args $args
-     * @param Streams $streams
      * @return KeepOptions
      */
     public static function bind(Args $args)
     {
         return new self($args);
+    }
+
+    /**
+     * @param Args $args
+     */
+    public function __construct(Args $args)
+    {
+        $this->args = $args;
     }
 
     /**

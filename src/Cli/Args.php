@@ -23,11 +23,6 @@ class Args extends ArgsArgs
      */
     private $utility;
 
-    public function __construct(array $arguments)
-    {
-        $this->arguments = $arguments;
-    }
-
     /**
      * create from $argv
      *
@@ -46,6 +41,11 @@ class Args extends ArgsArgs
         $args->utility = $command;
 
         return $args;
+    }
+
+    public function __construct(array $arguments)
+    {
+        $this->arguments = $arguments;
     }
 
     /**

@@ -18,15 +18,6 @@ class RunnableTester implements Runnable
      */
     private $callable;
 
-    public function __construct($callable = null)
-    {
-        if (null !== $callable && !is_callable($callable)) {
-            throw new InvalidArgumentException('must be null or callable');
-        }
-
-        $this->callable = $callable;
-    }
-
     /**
      * @param null $callable
      *
@@ -35,6 +26,15 @@ class RunnableTester implements Runnable
     public static function create($callable = null)
     {
         return new self($callable);
+    }
+
+    public function __construct($callable = null)
+    {
+        if (null !== $callable && !is_callable($callable)) {
+            throw new InvalidArgumentException('must be null or callable');
+        }
+
+        $this->callable = $callable;
     }
 
     /**

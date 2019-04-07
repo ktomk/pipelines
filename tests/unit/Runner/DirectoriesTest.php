@@ -15,6 +15,11 @@ use Ktomk\Pipelines\TestCase;
  */
 class DirectoriesTest extends TestCase
 {
+    public static function getTestProject()
+    {
+        return LibFs::normalizePathSegments(__DIR__ . '/../../..');
+    }
+
     public function testCreation()
     {
         $project = realpath(__DIR__ . '/../../..');
@@ -55,11 +60,6 @@ class DirectoriesTest extends TestCase
             $project,
             $directories->getProject()
         );
-    }
-
-    public static function getTestProject()
-    {
-        return LibFs::normalizePathSegments(__DIR__ . '/../../..');
     }
 
     public function testPipelineLocalDeploy()

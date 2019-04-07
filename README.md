@@ -9,6 +9,10 @@
 Command line pipeline runner written in PHP. Available from
 Github or Packagist.
 
+[Usage](#usage) | [Environment](#environment) |
+[Exit Status](#exit-status) | [Details](#details) |
+[References](#references)
+
 ## Usage
 
 From anywhere within a project or (Git) repository with a
@@ -254,16 +258,17 @@ via the `-e`, `--env` and `--env-file` options. These behave
 exactly as documented for the [`docker run` command][DCK-RN]
 \[DCK-RN].
 
-## Exit Code / Return Code / Status
+## Exit Status
 
 Exit status on success is 0 (zero).
 
 A non zero exit status denotes an error:
 
-- 1 (one): An argument supplied (also no argument at all) caused
-  the error.
-- 2 (two): A error is caused by the system not being able to
-  fulfill the command (e.g. a file can not be read).
+- 1  : An argument supplied (also a missing one) caused the error.
+- 2  : An error is caused by the system not being able to fulfill
+       the command (e.g. a file can not be read).
+- 127: Running pipelines inside pipelines failed due to detecting
+       an endless loop.
 
 ### Example
 
@@ -275,9 +280,14 @@ is more prominently showing all pipelines of that file.
 
 ## Details
 
+[Requirements](#requirements) | [User Tests](#user-tests) |
+[Installation](#installation) | [Known Bugs](#known-bugs) |
+[Todo](#todo)
+
 ### Requirements
 
-Pipelines works best on a POSIX compatible system.
+Pipelines works best on a POSIX compatible system having a PHP
+runtime.
 
 Docker needs to be available locally as `docker` command as it is
 used to run the pipelines.
@@ -287,10 +297,10 @@ it to run. It should work with PHP 5.3+, the phar build requires
 PHP 5.4+. A development environment should have PHP 7, this is
 especially suggested for future releases.
 
-Installing the [PHP YAML extension][PHP-YAML] is highly
-recommended as it does greatly improve parsing the pipelines
-file which is otherwise with a YAML parser that is not very
-supportive of the file-format.
+Installing the [PHP YAML extension][PHP-YAML] \[PHP-YAML] is
+highly recommended as it does greatly improve parsing the
+pipelines file which is otherwise with a YAML parser that is not
+overly supportive of the file-format.
 
 ### User Tests
 
@@ -305,8 +315,14 @@ X Sierra and High Sierra with PHP and Docker installed.
 
 ### Installation
 
+[Phar (Download)](#download-the-phar-php-archive-file) |
+[Composer](#install-with-composer) | 
+[Phive](#install-with-phive) | 
+[Source (also w/ Phar)](#install-from-source)
+
 Installation is available by downloading the phar archive from
-Github, via Composer/Packagist or with Phive.
+Github, via Composer/Packagist or with Phive and it should always
+work from source which includes building the phar file.
 
 #### Download the PHAR (PHP Archive) File
 
@@ -342,13 +358,25 @@ To uninstall remove the package:
 
     $ composer global remove ktomk/pipelines
 
+Take a look at [Composer from getcomposer.org](COMPOSER)
+\[COMPOSER], a *Dependency Manager for PHP*. Pipelines has
+support for composer based installations, which might include
+upstream patches. 
 
 #### Install with Phive
 
-Perhaps the most easy way to install when phive is available
-and your PHP version has the Yaml extension configured:
+Perhaps the most easy way to install when *phive* is available:
 
     $ phive install pipelines
+    
+Even if your PHP version does not have the Yaml extension this
+should work out of the box. If you use *composer* and you're a
+PHP aficionado, dig into *phive* for your systems and workflow.
+
+Take a look at [Phive from Phar.io](PHARIO) \[PHARIO], the *PHAR
+Installation and Verification Environment (PHIVE)*. Pipelines has
+full support for phar.io/phar based installations which includes
+support for the **phive** utility including upstream patches.
 
 #### Install from Source
 
@@ -358,7 +386,7 @@ PATH, e.g. your HOME/bin directory or similar. Verify the
 installation by invoking pipelines and output the version:
 
     $ pipelines --version
-    pipelines version 0.0.19
+    pipelines version 0.0.19 # NOTE: the version is exemplary
 
 To create a phar archive from sources, invoke from within the
 projects root directory the build script:
@@ -431,12 +459,16 @@ Check the version by invoking it:
 * \[BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 * \[BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 * \[BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+* \[COMPOSER]: https://getcomposer.org/
 * \[DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
+* \[PHARIO]: https://phar.io/
 * \[PHP-YAML]: https://pecl.php.net/package/yaml
 
 [BBPL]: https://confluence.atlassian.com/bitbucket/configure-bitbucket-pipelines-yml-792298910.html
 [BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 [BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 [BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+[COMPOSER]: https://getcomposer.org/
 [DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
+[PHARIO]: https://phar.io/
 [PHP-YAML]: https://pecl.php.net/package/yaml

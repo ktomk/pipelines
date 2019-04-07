@@ -11,6 +11,15 @@ use Exception;
  */
 class StatusException extends Exception
 {
+    /**
+     * @param int $code
+     * @param string $message
+     * @throws StatusException
+     */
+    public static function status($code = 0, $message = '')
+    {
+        throw new self($message, $code);
+    }
     public function __construct($message = '', $code = 0, Exception $previous = null)
     {
         if (!is_int($code) || $code < 0 || $code > 255) {
@@ -23,14 +32,5 @@ class StatusException extends Exception
         }
 
         parent::__construct($message, $code, $previous);
-    }
-    /**
-     * @param int $code
-     * @param string $message
-     * @throws StatusException
-     */
-    public static function status($code = 0, $message = '')
-    {
-        throw new self($message, $code);
     }
 }

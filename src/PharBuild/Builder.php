@@ -59,15 +59,6 @@ class Builder
      */
     private $unlink = array();
 
-    public function __destruct()
-    {
-        foreach ($this->unlink as $path => $test) {
-            if (file_exists($path) && unlink($path)) {
-                unset($this->unlink[$path]);
-            }
-        }
-    }
-
     /**
      * @param string $fphar phar file name
      * @return Builder
@@ -80,6 +71,15 @@ class Builder
         $builder->_ctor($fphar);
 
         return $builder;
+    }
+
+    public function __destruct()
+    {
+        foreach ($this->unlink as $path => $test) {
+            if (file_exists($path) && unlink($path)) {
+                unset($this->unlink[$path]);
+            }
+        }
     }
 
     /**

@@ -27,19 +27,6 @@ class FileOptions
     private $file;
 
     /**
-     * FileOptions constructor.
-     * @param Args $args
-     * @param callable $output
-     * @param File $file
-     */
-    public function __construct(Args $args, $output, File $file)
-    {
-        $this->args = $args;
-        $this->output = $output;
-        $this->file = $file;
-    }
-
-    /**
      * bind options
      *
      * @param Args $args
@@ -50,6 +37,19 @@ class FileOptions
     public static function bind(Args $args, Streams $streams, File $file)
     {
         return new self($args, $streams, $file);
+    }
+
+    /**
+     * FileOptions constructor.
+     * @param Args $args
+     * @param callable $output
+     * @param File $file
+     */
+    public function __construct(Args $args, $output, File $file)
+    {
+        $this->args = $args;
+        $this->output = $output;
+        $this->file = $file;
     }
 
     /**

@@ -9,6 +9,8 @@
  * Licensed under GNU Affero General Public License v3.0 or later
  */
 
+use Ktomk\Pipelines\Utility\App;
+
 if (PHP_SAPI !== 'cli') printf(
     'warn: pipelines should be invoked via the CLI version of PHP, ' .
     "not the '%s' SAPI\n",
@@ -22,4 +24,4 @@ if (function_exists('init_set')) {
 
 require __DIR__ . '/../src/bootstrap.php';
 
-exit(\Ktomk\Pipelines\Utility\App::create()->main($argv));
+exit(App::create()->main($argv));

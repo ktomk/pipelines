@@ -32,7 +32,9 @@ $config = PhpCsFixer\Config::create()
         'no_unreachable_default_argument_value' => true,
         'no_useless_else' => true,
         'no_useless_return' => true,
-        'ordered_class_elements' => true,
+        'ordered_class_elements' => array(
+            'order' => array('constant_public', 'constant_protected', 'constant_private', 'property_public', 'property_protected', 'property_private', 'method_public_static', 'construct', 'destruct', 'magic', 'phpunit', 'method_public', 'method_protected', 'method_private')
+        ),
         'ordered_imports' => true,
         'php_unit_strict' => true,
         'php_unit_test_annotation' => true,

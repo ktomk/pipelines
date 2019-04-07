@@ -45,12 +45,6 @@ class App implements Runnable
      */
     private $help;
 
-    public function __construct(Streams $streams)
-    {
-        $this->streams = $streams;
-        $this->help = new Help($streams);
-    }
-
     /**
      * @return App
      */
@@ -59,6 +53,12 @@ class App implements Runnable
         $streams = Streams::create();
 
         return new self($streams);
+    }
+
+    public function __construct(Streams $streams)
+    {
+        $this->streams = $streams;
+        $this->help = new Help($streams);
     }
 
     /**

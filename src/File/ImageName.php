@@ -15,20 +15,6 @@ class ImageName
     private $name;
 
     /**
-     * @param string $name
-     * @throws \Ktomk\Pipelines\File\ParseException
-     */
-    public function __construct($name)
-    {
-        $this->parse($name);
-    }
-
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    /**
      * Is a Docker image name (optionally with a tag) syntactically
      * valid?
      *
@@ -49,6 +35,20 @@ class ImageName
         $result = preg_match($pattern, $name);
 
         return 1 === $result;
+    }
+
+    /**
+     * @param string $name
+     * @throws \Ktomk\Pipelines\File\ParseException
+     */
+    public function __construct($name)
+    {
+        $this->parse($name);
+    }
+
+    public function __toString()
+    {
+        return $this->name;
     }
 
     /**

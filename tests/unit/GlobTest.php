@@ -60,7 +60,7 @@ class GlobTest extends TestCase
         parent::__construct($name, $data, $dataName);
     }
 
-    public static function provideBracePattern()
+    public function provideBracePattern()
     {
         return array(
             array(array(''), ''),

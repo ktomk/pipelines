@@ -39,6 +39,21 @@ class File
     private static $sections = array('branches', 'tags', 'bookmarks', 'pull-requests', 'custom');
 
     /**
+     * @param $path
+     * @throws \Ktomk\Pipelines\File\ParseException
+     * @return File
+     */
+    public static function createFromFile($path)
+    {
+        $result = Yaml::file($path);
+        if (!$result) {
+            ParseException::__(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
+        }
+
+        return new self($result);
+    }
+
+    /**
      * File constructor.
      *
      * @param array $array
@@ -57,21 +72,6 @@ class File
         $this->pipelines = $this->parsePipelineReferences($array['pipelines']);
 
         $this->array = $array;
-    }
-
-    /**
-     * @param $path
-     * @throws \Ktomk\Pipelines\File\ParseException
-     * @return File
-     */
-    public static function createFromFile($path)
-    {
-        $result = Yaml::file($path);
-        if (!$result) {
-            ParseException::__(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
-        }
-
-        return new self($result);
     }
 
     /**
@@ -278,7 +278,7 @@ class File
         $match = null;
         foreach ($patterns as $pattern) {
             $result = Glob::match($pattern, $reference);
-            if ($result and (null === $match or strlen($pattern) > strlen($match))) {
+            if ($result && (null === $match || strlen($pattern) > strlen($match))) {
                 $match = $pattern;
             }
         }

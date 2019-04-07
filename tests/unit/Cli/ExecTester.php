@@ -21,6 +21,15 @@ class ExecTester extends Exec
     private $expects = array();
 
     /**
+     * @param TestCase $testCase
+     * @return ExecTester
+     */
+    public static function create(TestCase $testCase)
+    {
+        return new self($testCase);
+    }
+
+    /**
      * ExecTester constructor.
      *
      * @param TestCase $testCase
@@ -47,15 +56,6 @@ class ExecTester extends Exec
                 )
             );
         }
-    }
-
-    /**
-     * @param TestCase $testCase
-     * @return ExecTester
-     */
-    public static function create(TestCase $testCase)
-    {
-        return new self($testCase);
     }
 
     /**
