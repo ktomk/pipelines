@@ -16,12 +16,8 @@ class DockerProcessManager
      */
     private $exec;
 
-    public function __construct(Exec $exec = null)
+    public function __construct(Exec $exec)
     {
-        if (null === $exec) {
-            $exec = new Exec();
-        }
-
         $this->exec = $exec;
     }
 

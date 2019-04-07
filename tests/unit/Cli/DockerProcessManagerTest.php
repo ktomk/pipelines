@@ -15,7 +15,7 @@ class DockerProcessManagerTest extends TestCase
 {
     public function testCreation()
     {
-        $ps = new DockerProcessManager();
+        $ps = new DockerProcessManager(new Exec());
         $this->assertInstanceOf('Ktomk\Pipelines\Cli\DockerProcessManager', $ps);
     }
 
