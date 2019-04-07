@@ -41,6 +41,42 @@ class Image
     }
 
     /**
+     * if an 'image' entry is set, validate it is a string or a section.
+     *
+     * @param array $array
+     * @throw ParseException if the image name is invalid
+     * @throws \Ktomk\Pipelines\File\ParseException
+     */
+    public static function validate(array $array)
+    {
+        if (!array_key_exists('image', $array)) {
+            return;
+        }
+
+        $image = $array['image'];
+
+        if (is_array($image) && isset($image['name'])) {
+            if (!ImageName::validate($image['name'])) {
+                ParseException::__(sprintf(
+                    "'image' invalid Docker image name: '%s'",
+                    $image['name']
+                ));
+            }
+
+            return;
+        }
+
+        if (!is_string($image)) {
+            ParseException::__("'image' requires a Docker image name");
+        }
+        if (!ImageName::validate($image)) {
+            ParseException::__(
+                sprintf("'image' invalid Docker image name: '%s'", $image)
+            );
+        }
+    }
+
+    /**
      * @return ImageName image name
      */
     public function getName()

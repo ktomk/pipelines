@@ -402,7 +402,7 @@ class FileTest extends TestCase
         $image = array(
             'image' => array('name' => '/'),
         );
-        File::validateImage($image);
+        File\Image::validate($image);
     }
 
     public function testValidateImageSectionValidName()
@@ -410,7 +410,7 @@ class FileTest extends TestCase
         $image = array(
             'image' => array('name' => 'php/5.6:latest'),
         );
-        File::validateImage($image);
+        File\Image::validate($image);
         $this->addToAssertionCount(1);
     }
 

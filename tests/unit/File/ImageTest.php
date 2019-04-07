@@ -105,4 +105,34 @@ class ImageTest extends TestCase
             $actual
         );
     }
+
+    public function provideImageArrays()
+    {
+        return array(
+            array(array(), false), # no image is not invalid
+            array(array('image' => null), true), # null image is invalid
+            array(array('image' => ''), true), # empty string image is invalid
+            array(array('image' => 'foo'), false), # string image is valid
+            array(array('image' => array()), true), # empty array image is invalid
+            array(array('image' => array('name' => '')), true), # array image is invalid if it has an empty name
+            array(array('image' => array('name' => 'foo')), false), # array image is valid if it has a name
+        );
+    }
+
+    /**
+     * @dataProvider provideImageArrays
+     * @param array $array
+     * @param $expected
+     */
+    public function testValidation(array $array, $expected)
+    {
+        $thrown = false;
+
+        try {
+            Image::validate($array);
+        } catch (ParseException $exception) {
+            $thrown = true;
+        }
+        $this->assertSame($expected, $thrown);
+    }
 }

@@ -7,7 +7,6 @@ namespace Ktomk\Pipelines;
 use InvalidArgumentException;
 use Ktomk\Pipelines\File\BbplMatch;
 use Ktomk\Pipelines\File\Image;
-use Ktomk\Pipelines\File\ImageName;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\Runner\Reference;
 
@@ -54,7 +53,7 @@ class File
         }
 
         // quick validation: image name
-        self::validateImage($array);
+        Image::validate($array);
 
         $this->pipelines = $this->parsePipelineReferences($array['pipelines']);
 
@@ -74,44 +73,6 @@ class File
         }
 
         return new self($result);
-    }
-
-    /**
-     * if an 'image' entry is set, validate it is a string or a section.
-     *
-     * TODO(tk): move into Image class
-     *
-     * @param array $array
-     * @throw ParseException if the image name is invalid
-     * @throws \Ktomk\Pipelines\File\ParseException
-     */
-    public static function validateImage(array $array)
-    {
-        if (!array_key_exists('image', $array)) {
-            return;
-        }
-
-        $image = $array['image'];
-
-        if (is_array($image) && isset($image['name'])) {
-            if (!ImageName::validate($image['name'])) {
-                ParseException::__(sprintf(
-                    "'image' invalid Docker image name: '%s'",
-                    $image['name']
-                ));
-            }
-
-            return;
-        }
-
-        if (!is_string($image)) {
-            ParseException::__("'image' requires a Docker image name");
-        }
-        if (!ImageName::validate($image)) {
-            ParseException::__(
-                sprintf("'image' invalid Docker image name: '%s'", $image)
-            );
-        }
     }
 
     /**

@@ -34,7 +34,7 @@ class Step
     public function __construct(Pipeline $pipeline, $index, array $step)
     {
         // quick validation: image name
-        File::validateImage($step);
+        Image::validate($step);
 
         // quick validation: script
         $this->parseScript($step);
