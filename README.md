@@ -197,15 +197,15 @@ Features include:
   The pipelines inside pipeline feature serves pipelines itself
   well for integration testing on Travis. In combination with
   `--deploy mount`, the original working-directory gets mounted
-  from the host again. Additional protection against recursion
-  is implemented to prevent accidental endless loops of pipelines
-  inside pipeline invocations.
+  from the host again. Additional protection against endless
+  loops by recursion is implemented to prevent accidental
+  endless loops of pipelines inside pipeline invocations.
 
 ## Environment
 
 Pipelines mimics all of the [Bitbucket Pipeline in-container
-environment variables][BBPL-ENV] \[BBPL-ENV]:
-
+environment variables][BBPL-ENV] \[BBPL-ENV], also known as
+environment parameters:
 
 * `BITBUCKET_BOOKMARK` - conditionally set by `--target`
 * `BITBUCKET_BUILD_NUMBER` - always set to '0'
@@ -246,6 +246,25 @@ via the `-e`, `--env` and `--env-file` options. These behave
 exactly as documented for the [`docker run` command][DCK-RN]
 \[DCK-RN].
 
+## Exit Code / Return Code / Status
+
+Exit status on success is 0 (zero).
+
+A non zero exit status denotes an error:
+
+- 1 (one): An argument supplied (also no argument at all) caused
+  the error.
+- 2 (two): A error is caused by the system not being able to
+  fulfill the command (e.g. a file can not be read).
+  
+### Example
+
+Not finding a file might cause exit status 2 (two) on error
+because a file is not found, however with a switch like `--show`
+the exit status might still be 1 (one) as there was an error
+showing that the file does not exists (indirectly) and the error
+is more prominently showing all pipelines of that file.
+
 ## Details
 
 ### Requirements
@@ -267,8 +286,8 @@ file.
 
 ### User Tests
 
-Successful use on Ubuntu 16.04 LTS and Mac OS X Sierra and High
-Sierra with PHP and Docker installed.
+Successful use on Ubuntu 16.04 LTS, Ubuntu 18.04 LTS and Mac OS
+X Sierra and High Sierra with PHP and Docker installed.
 
 ### Known Bugs
 
@@ -279,19 +298,22 @@ Sierra with PHP and Docker installed.
 ### Installation
 
 Installation is available by downloading the phar archive from
-Github or via Composer/Packagist.
+Github, via Composer/Packagist or with Phive.
 
 #### Download the PHAR (PHP Archive) File
 
-Downloads are available on Github. Change the tag in the URL to
-get the preferred version:
-
-    https://github.com/ktomk/pipelines/releases/download/0.0.5/pipelines.phar
+Downloads are available on Github. To obtain the latest released
+version, use the following URL:
+    
+    https://github.com/ktomk/pipelines/releases/latest/download/pipelines.phar 
 
 Rename the phar file to just "`pipelines`", set the executable
 bit and move it into a directory where executables are found.
 
-Downloads from Github are available since version 0.0.4.
+Downloads from Github are available since version 0.0.4. All
+releases are listed on the website:
+
+    https://github.com/ktomk/pipelines/releases
 
 #### Install with Composer
 
@@ -306,35 +328,47 @@ Verify the installation by invoking pipelines and output the
 version:
 
     $ pipelines --version
-    pipelines version 0.0.5
+    pipelines version 0.0.19
 
 To uninstall remove the package:
 
     $ composer global remove ktomk/pipelines
 
+
+#### Install with Phive
+
+Perhaps the most easy way to install when phive is available
+and your PHP version has the Yaml extension configured:
+
+    $ phive install pipelines
+
 #### Install from Source
 
-Alternatively checkout the source repository and symlink the
-executable `bin/pipelines` into a segment of PATH, e.g. your
-HOME/bin directory or similar. Verify the installation by
-invoking pipelines and output the version:
+To install from source, checkout the source repository and
+symlink the executable file `bin/pipelines` into a segment of
+PATH, e.g. your HOME/bin directory or similar. Verify the
+installation by invoking pipelines and output the version:
 
     $ pipelines --version
-    pipelines version 0.0.5
+    pipelines version 0.0.19
 
 To create a phar archive from sources, invoke from within the
 projects root directory the build script:
 
     $ composer build
-    > @php -dphar.readonly=0 -flib/build/build.php # build phar file
-    building 0.0.1 ...
-    pipelines version 0.0.1
+    building 0.0.19-1-gbba5a43 ...
+    pipelines version 0.0.19-1-gbba5a43
     file.....: build/pipelines.phar
-    size.....: 155 498 bytes
-    SHA-1....: 69aa4996d5fc27840f0fe5d2ef04586b8d88171c
-    SHA-256..: 48d37a278aff1f71bef12b2c338662460b68a17991f1c6573a2b16b073d4dfea
-    count....: 30 file(s)
-    signature: SHA-1 B9B1D9DCC8C6AAC4D736E52CE866C03A373972A4
+    size.....: 240 191 bytes
+    SHA-1....: 9F118A276FC755C21EA548A77A9DBAF769B93524
+    SHA-256..: 0C38CBBB12E10E80F37ECA5C4C335BF87111AC8E8D0490D38683BB3DA7E82DEF
+    file.....: 1.1.0
+    api......: 1.1.1
+    extension: 2.0.2
+    php......: 7.2.16-[...]
+    uname....: [...]
+    count....: 62 file(s)
+    signature: SHA-1 E638E7B56FAAD7171AE9838DF6074714630BD486
 
 The phar archive then is (as written in the output of the build):
 
@@ -343,18 +377,21 @@ The phar archive then is (as written in the output of the build):
 Check the version by invoking it:
 
     $ build/pipelines.phar --version
-    pipelines version 0.0.1
+    pipelines version 0.0.19-1-gbba5a43
 
 ### Todo
 
-- Support for private Docker repositories
+- Support for private Docker repositories - especially when
+  pulling all images (especially TODO: `--docker-pull` for 
+  offline use)
 - Caches support, first of all for Composer to better handle
-  offline scenarios
+  offline scenarios in PHP context (as this is a PHP tool)
 - Check Docker existence before running
 - Stop at manual steps (`--no-manual` to override)
-- Run specific steps of a pipeline (only)
+- Run specific steps of a pipeline (only)  to put the user back
+  into command
 - More accessible offline preparation (e.g.
-  `--docker-pull-images`)
+  `--docker-pull-images` or better `--docker-pull`)
 - Write section about the file format support/limitations
 - Pipeline file properties support
     - clone (1)
@@ -364,12 +401,12 @@ Check the version by invoking it:
     - definitions (1)
 - Validation command for bitbucket-pipelines.yml files (so far
   `--show` gives error on parts it runs over and non zero exit
-  code)
+  code) \[this is a moving target, so nice idea, but this is not
+  it honestly]
 - Verify steps of a single command to see if it matches an
-  executable script file or not in the project
-- Write exit status section about used exit codes (1 for argument
-  input errors, 2 for system errors caused by argument input
-  values (if so), also `--show` file format validation etc.)
+  executable script file or not in the project - nice for quick
+  pre-remote QC, needs some resolution logic and decisions which
+  can't match all wishes most likely
 - Get VCS revision from working directory
 - Use a different project directory `--project-dir <path>` to
   specify the root path to deploy into the container, which
