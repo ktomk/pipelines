@@ -216,6 +216,37 @@ class Lib
     }
 
     /**
+     * Get shell environment variables only from $_SERVER in PHP CLI
+     *
+     * Filter an array like $_SERVER in PHP CLI shell for environment
+     * variables only.
+     *
+     * @param array $server
+     * @return array|string[]
+     */
+    public static function env(array $server)
+    {
+        return array_filter(
+            // Pipelines must not support environment variable names with '=' in them
+            array_flip(preg_grep('~=~', array_keys($server)))
+            // What PHP might have added
+            + array(
+                'PHP_SELF' => null,
+                'SCRIPT_NAME' => null,
+                'SCRIPT_FILENAME' => null,
+                'PATH_TRANSLATED' => null,
+                'DOCUMENT_ROOT' => null,
+                'REQUEST_TIME_FLOAT' => null,
+                'REQUEST_TIME' => null,
+                'argv' => null,
+                'argc' => null,
+            )
+            + $server,
+            'is_string'
+        );
+    }
+
+    /**
      * check if path is absolute
      *
      * @param string $path

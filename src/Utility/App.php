@@ -120,7 +120,7 @@ class App implements Runnable
 
         $reference = $this->parseReference();
 
-        $env = $this->parseEnv($_SERVER, $reference, $workingDir);
+        $env = $this->parseEnv(Lib::env($_SERVER), $reference, $workingDir);
 
         $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';
 
@@ -134,7 +134,7 @@ class App implements Runnable
 
         $flags = $this->getRunFlags($keep, $deployMode);
 
-        $directories = new Runner\Directories($_SERVER, $workingDir);
+        $directories = new Runner\Directories(Lib::env($_SERVER), $workingDir);
 
         $runner = new Runner($prefix, $directories, $exec, $flags, $env, $streams);
 

@@ -310,4 +310,21 @@ class LibTest extends TestCase
         $actual = Lib::arrayChunkByStringLength(array('test', 'fest'), 4);
         $this->assertSame($expected, $actual);
     }
+
+    public function testEnvServerSuperglobalFiltering()
+    {
+        $server = $_SERVER;
+
+        $server['foo=bar'] = 'baz';
+        $this->assertArrayHasKey('HOME', $server, 'pre-condition');
+        $this->assertArrayHasKey('argc', $server, 'pre-condition');
+        $this->assertArrayHasKey('REQUEST_TIME', $server, 'pre-condition');
+
+        $env = Lib::env($server);
+
+        $this->assertArrayNotHasKey('foo=bar', $env, 'behavioral assertion');
+        $this->assertArrayHasKey('HOME', $server, 'behavioral assertion');
+        $this->assertArrayNotHasKey('argc', $env, 'behavioral assertion');
+        $this->assertArrayNotHasKey('REQUEST_TIME', $env, 'behavioral assertion');
+    }
 }
