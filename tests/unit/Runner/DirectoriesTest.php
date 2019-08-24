@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -23,21 +25,15 @@ class DirectoriesTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid project directory ""
-     */
     public function testCreationWithMissingDirectory()
     {
-        new Directories($_SERVER, '');
+        $this->setExpectedException('InvalidArgumentException', 'Invalid project directory ');
+        new Directories(array('HOME' => ''), '');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Server must contain a "HOME" entry
-     */
     public function testCreationWithMissingHome()
     {
+        $this->setExpectedException('InvalidArgumentException', 'Server must contain a "HOME" entry');
         new Directories(array(), __DIR__);
     }
 
@@ -59,6 +55,11 @@ class DirectoriesTest extends TestCase
             $project,
             $directories->getProject()
         );
+    }
+
+    public static function getTestProject()
+    {
+        return LibFs::normalizePathSegments(__DIR__ . '/../../..');
     }
 
     public function testPipelineLocalDeploy()

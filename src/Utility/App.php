@@ -11,6 +11,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\Pipeline;
 use Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Runner\Env;
@@ -175,7 +176,7 @@ class App implements Runnable
         $args = $this->arguments;
 
         $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
-        if (!Lib::fsIsBasename($basename)) {
+        if (!LibFs::isBasename($basename)) {
             StatusException::status(1, sprintf("not a basename: '%s'", $basename));
         }
 
@@ -273,7 +274,7 @@ class App implements Runnable
 
         /** @var null|string $file as bitbucket-pipelines.yml to process */
         $file = $args->getOptionArgument('file', null);
-        if (null === $file && null !== $file = Lib::fsFileLookUp($basename, $workingDir)) {
+        if (null === $file && null !== $file = LibFs::fileLookUp($basename, $workingDir)) {
             $buffer = dirname($file);
             if ($buffer !== $workingDir) {
                 $this->changeWorkingDir($buffer);
@@ -305,11 +306,11 @@ class App implements Runnable
         }
 
         /** @var string $path full path as bitbucket-pipelines.yml to process */
-        $path = Lib::fsIsAbsolutePath($file)
+        $path = LibFs::isAbsolutePath($file)
             ? $file
             : $workingDir . '/' . $file;
 
-        if (!Lib::fsIsReadableFile($file)) {
+        if (!LibFs::isReadableFile($file)) {
             StatusException::status(1, sprintf('not a readable file: %s', $file));
         }
 

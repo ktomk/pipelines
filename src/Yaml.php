@@ -15,7 +15,7 @@ class Yaml
      */
     public static function file($path)
     {
-        if (!Lib::fsIsReadableFile($path)) {
+        if (!LibFs::isReadableFile($path)) {
             throw new \InvalidArgumentException(
                 sprintf("not a readable file: '%s'", $path)
             );

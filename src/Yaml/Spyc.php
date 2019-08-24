@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Yaml;
 
 use Ktomk\Pipelines\ErrorCatcher;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFs;
 use Spyc as MustangostangSpyc;
 
 class Spyc implements ParserInterface
@@ -24,8 +25,8 @@ class Spyc implements ParserInterface
      */
     public function parseFile($path)
     {
-        $fsIsStreamUri = Lib::fsIsStreamUri($path);
-        if (!$fsIsStreamUri && !Lib::fsIsReadableFile($path)) {
+        $fsIsStreamUri = LibFs::isStreamUri($path);
+        if (!$fsIsStreamUri && !LibFs::isReadableFile($path)) {
             return null;
         }
 
