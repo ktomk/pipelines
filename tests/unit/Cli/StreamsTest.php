@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Cli;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Class StreamsTest

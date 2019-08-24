@@ -18,10 +18,12 @@ php:
   - '7.1snapshot'
   - '7.2snapshot'
   - '7.3snapshot'
+  - '7.4snapshot'
   - 'master'
 
 matrix:
   allow_failures:
+    - php: '7.4snapshot'
     - php: 'master'
 
 before_install:

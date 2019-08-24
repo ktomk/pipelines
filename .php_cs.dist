@@ -1,7 +1,7 @@
 <?php
 
 $config = PhpCsFixer\Config::create()
-    ->setCacheFile('build/.php_cs.cache')
+    ->setCacheFile('build/cache/.php_cs.cache')
     ->setRiskyAllowed(true)
     ->setRules(array(
         'declare_strict_types' => false,

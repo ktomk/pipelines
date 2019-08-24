@@ -9,7 +9,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @covers \Ktomk\Pipelines\Step
  */
-class StepTest extends UnitTestCase
+class StepTest extends TestCase
 {
     public function testCreation()
     {

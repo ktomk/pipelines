@@ -4,13 +4,13 @@
 
 namespace Ktomk\Pipelines\Cli;
 
-use Ktomk\Pipelines\UnitTestCase;
+use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers \Ktomk\Pipelines\Cli\Docker
  */
-class DockerTest extends UnitTestCase
+class DockerTest extends TestCase
 {
     public function testCommandDetectionAndVersionPaths()
     {

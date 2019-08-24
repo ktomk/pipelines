@@ -6,7 +6,7 @@ namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Class HelpTest

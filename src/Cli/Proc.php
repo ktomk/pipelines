@@ -76,12 +76,12 @@ class Proc
 
     public function getStandardOutput()
     {
-        return $this->buffers['stdout'];
+        return $this->buffers ? $this->buffers['stdout'] : null;
     }
 
     public function getStandardError()
     {
-        return $this->buffers['stderr'];
+        return $this->buffers ? $this->buffers['stderr'] : null;
     }
 
     /**

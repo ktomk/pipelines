@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Cli\Args;
 
 use Ktomk\Pipelines\Cli\Args;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Cli\Args\OptionFilterIterator

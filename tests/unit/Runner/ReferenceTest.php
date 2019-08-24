@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 
 use InvalidArgumentException;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\Reference

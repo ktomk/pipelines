@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Integration\File;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @coversNothing

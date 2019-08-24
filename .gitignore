@@ -2,7 +2,9 @@
 /vendor/
 
 # Environment file
-/.env
+/.env*
+!/.env.dist
 
 # Phpunit
-/phpunit.xml
+/phpunit.*xml*
+!/phpunit.xml.dist

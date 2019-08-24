@@ -4,6 +4,3 @@
 # pipelines Phar build
 /pipelines.phar
 /pipelines.phar.asc
-
-# Code-Style configuration
-/.php_cs.cache

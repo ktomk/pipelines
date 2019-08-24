@@ -8,7 +8,7 @@ use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Class DockerOptionsTest

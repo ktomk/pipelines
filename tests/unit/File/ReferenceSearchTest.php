@@ -7,7 +7,7 @@ namespace Ktomk\Pipelines\File;
 use Ktomk\Pipelines\File;
 use Ktomk\Pipelines\Pipeline;
 use Ktomk\Pipelines\Runner\Reference;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers  \Ktomk\Pipelines\File::searchReference()

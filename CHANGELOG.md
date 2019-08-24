@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- Test case base class fall-back to Phpunit create* mock
+  functions
 ### Fixed
 - Remove PHP internal variables like $argv from the environment
   variable maps in containers

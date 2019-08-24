@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\File;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Class ArtifactsTest
@@ -24,20 +24,20 @@ class ArtifactsTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'artifacts' requires a list
      */
     public function testCreationWithNonArray()
     {
+        $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'artifacts\' requires a list');
+
         new Artifacts(null);
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'artifacts' requires a list of strings, #0 is not a string
      */
     public function testCreationWithIncompleteList()
     {
+        $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'artifacts\' requires a list of strings, #0 is not a string');
+
         new Artifacts(array(null));
     }
 

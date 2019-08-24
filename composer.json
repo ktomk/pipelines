@@ -17,10 +17,14 @@
     "psr-4": {"Ktomk\\Pipelines\\": "src/"}
   },
   "autoload-dev": {
+    "classmap": ["tests/TestCase.php"],
     "psr-4": {
       "Ktomk\\Pipelines\\Integration\\": "tests/integration",
       "Ktomk\\Pipelines\\": "tests/unit"
-    }
+    },
+    "files": [
+      "tests/phpunit_class_aliases.php"
+    ]
   },
   "require": {
     "php": "^5.3.2 || ^7.0",

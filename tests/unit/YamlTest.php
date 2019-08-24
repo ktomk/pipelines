@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Yaml

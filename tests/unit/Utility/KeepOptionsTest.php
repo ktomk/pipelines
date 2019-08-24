@@ -5,12 +5,12 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
-use Ktomk\Pipelines\UnitTestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Utility\KeepOptions
  */
-class KeepOptionsTest extends UnitTestCase
+class KeepOptionsTest extends TestCase
 {
     public function testCreation()
     {

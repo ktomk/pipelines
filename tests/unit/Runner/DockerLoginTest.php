@@ -6,7 +6,7 @@ namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\File\Image;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\DockerLogin

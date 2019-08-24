@@ -13,7 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 /**
  * @covers \Ktomk\Pipelines\Runner
  */
-class RunnerTest extends UnitTestCase
+class RunnerTest extends TestCase
 {
     /**
      * @var string fixture of command for deploy mode copy

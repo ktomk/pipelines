@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Value;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Value\Properties

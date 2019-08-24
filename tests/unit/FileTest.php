@@ -4,9 +4,8 @@
 
 namespace Ktomk\Pipelines;
 
-use InvalidArgumentException;
 use Ktomk\Pipelines\Runner\Reference;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 use ReflectionException;
 use ReflectionObject;
 
@@ -394,7 +393,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException :
+     * @expectedException \Ktomk\Pipelines\File\ParseException
      * @expectedExceptionMessage 'image' invalid Docker image name: '/'
      */
     public function testValidateImageSectionInvalidName()

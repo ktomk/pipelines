@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  *

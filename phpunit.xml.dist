@@ -4,6 +4,7 @@
         bootstrap="vendor/autoload.php"
         cacheTokens="false"
         defaultTestSuite="unit"
+        cacheResultFile="build/cache/.phpunit.result.cache"
         >
     <testsuites>
         <testsuite name="unit">

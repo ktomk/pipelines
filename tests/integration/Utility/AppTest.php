@@ -5,8 +5,8 @@
 namespace Ktomk\Pipelines\Integration\Utility;
 
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\TestCase;
 use Ktomk\Pipelines\Utility\App;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @coversNothing

@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Integration\Cli;
 
 use Ktomk\Pipelines\Cli\Proc;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Class ProcTest

@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Cli\Args;
 
 use Ktomk\Pipelines\Cli\ArgsException;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Iterate over options, with argument look-ahead

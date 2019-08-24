@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\File;
 
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\File\ParseException

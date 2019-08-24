@@ -4,9 +4,9 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\TestCase;
 use Ktomk\Pipelines\Yaml\Spyc;
 use Ktomk\Pipelines\Yaml\YamlTester;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Yaml\Spyc

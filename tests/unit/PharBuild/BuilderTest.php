@@ -5,13 +5,13 @@
 namespace Ktomk\Pipelines\PharBuild;
 
 use Ktomk\Pipelines\Lib;
-use Ktomk\Pipelines\UnitTestCase;
+use Ktomk\Pipelines\TestCase;
 use ReflectionProperty;
 
 /**
  * @covers \Ktomk\Pipelines\PharBuild\Builder
  */
-class BuilderTest extends UnitTestCase
+class BuilderTest extends TestCase
 {
     /**
      * @var string test phar archive file

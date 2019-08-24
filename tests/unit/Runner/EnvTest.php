@@ -5,12 +5,12 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Args\ArgsTester;
-use Ktomk\Pipelines\UnitTestCase;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\Env
  */
-class EnvTest extends UnitTestCase
+class EnvTest extends TestCase
 {
     public function testCreation()
     {
