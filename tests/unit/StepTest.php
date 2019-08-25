@@ -131,6 +131,13 @@ class StepTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $index);
     }
 
+    public function testGetServices()
+    {
+        $step = $this->createStep();
+
+        $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $step->getServices());
+    }
+
     /**
      * @param null|array $array [optional]
      * @return Step

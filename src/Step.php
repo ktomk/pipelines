@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines;
 use Ktomk\Pipelines\File\Artifacts;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\ParseException;
+use Ktomk\Pipelines\File\StepServices;
 
 class Step
 {
@@ -16,7 +17,7 @@ class Step
     private $step;
 
     /**
-     * @var int numer of the step, starting at one
+     * @var int number of the step, starting at one
      */
     private $index;
 
@@ -74,6 +75,16 @@ class Step
         return isset($this->step['name'])
             ? (string)$this->step['name']
             : null;
+    }
+
+    /**
+     * @return StepServices
+     */
+    public function getServices()
+    {
+        $services = isset($this->step['services']) ? $this->step['services'] : array();
+
+        return new StepServices($this, $services);
     }
 
     /**
