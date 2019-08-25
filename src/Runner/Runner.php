@@ -382,20 +382,27 @@ class Runner
     private function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
     {
         $script = $step->getScript();
-        $status = null;
 
+        $buffer = '';
         foreach ($script as $line => $command) {
-            $streams->out(sprintf("\x1D+ %s\n", $command));
-            $status = $exec->pass('docker', array(
-                'exec', '-i', $name, '/bin/sh', '-c', $command,
-            ));
-            $streams->out(sprintf("\n"));
-            if (0 !== $status) {
-                $this->streams->err(sprintf("script non-zero exit status: %d\n", $status));
-
-                break;
-            }
+            $buffer .= 'printf \'\x1D+ %s\n\' ' . Lib::quoteArg($command) . "\n";
+            $buffer .= $command . "\n";
+            $buffer .= 'ret=$?' . "\n";
+            $buffer .= 'printf \'\n\'' . "\n";
+            $buffer .= 'if [ $ret -ne 0 ]; then exit $ret; fi' . "\n";
         }
+
+        $file = LibFs::tmpFilePut($buffer);
+
+        $status = $exec->pass(sprintf('< %s docker', Lib::quoteArg($file)), array(
+            'exec', '-i', $name, '/bin/sh'
+        ));
+
+        if (0 !== $status) {
+            $this->streams->err(sprintf("script non-zero exit status: %d\n", $status));
+        }
+
+        $streams->out(sprintf("\n"));
 
         return $status;
     }

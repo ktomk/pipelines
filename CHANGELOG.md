@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - File format support to check if a step has services
 - Test case base class fall-back to Phpunit create* mock
   functions
+### Changed
+- Execute script as a single script instead of executing line by
+  line
 ### Fixed
 - Container exited while running script (136, broken pipe on socket etc.)
 - Remove PHP internal variables like $argv from the environment
