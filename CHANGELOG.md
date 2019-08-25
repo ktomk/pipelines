@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Test case base class fall-back to Phpunit create* mock
   functions
 ### Fixed
+- Container exited while running script (136, broken pipe on socket etc.)
 - Remove PHP internal variables like $argv from the environment
   variable maps in containers
 
