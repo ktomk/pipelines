@@ -148,11 +148,19 @@ class ExecTester extends Exec
             sprintf("Method on exec mismatch with command '%s'", $command)
         );
 
-        $testCase::assertSame(
-            $expectedCommand,
-            $command,
-            sprintf("Command on exec mismatch with method '%s'", $method)
-        );
+        if ('~' === $expectedCommand[0]) {
+            $testCase::assertRegExp(
+                $expectedCommand,
+                $command,
+                sprintf("Command on exec mismatch with method '%s'", $method)
+            );
+        } else {
+            $testCase::assertSame(
+                $expectedCommand,
+                $command,
+                sprintf("Command on exec mismatch with method '%s'", $method)
+            );
+        }
 
         if (is_int($context)) {
             return $context;
