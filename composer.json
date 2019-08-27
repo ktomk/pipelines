@@ -46,6 +46,10 @@
       "@cs-fix",
       "@unit-test"
     ],
+    "pre-install-cmd": [
+      "tests/data/package/make-test-stub-package.sh",
+      "# fixture creation done."
+    ],
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
     "test": [
       "@composer validate --strict",

@@ -1,0 +1,2 @@
+# exclude binary blobs
+/docker-test-stub.tgz

@@ -1,0 +1,9 @@
+#!/bin/sh
+#
+#   this is a fake docker client stub that just gives a bogus version
+# number for testing and some information
+#
+echo "42.42.1 (" "${@}" ")"
+echo "  DOCKER_HOST..: ${DOCKER_HOST-"*unset*"}"
+echo "  DOCKER_CONFIG: ${DOCKER_CONFIG-"*unset*"}"
+echo "  DOCKER_TMP...: ${DOCKER_TMP-"*unset*"}"

@@ -1,0 +1,8 @@
+---
+# this file is part of pipelines
+#
+# docker client package test
+#
+
+name: no-uri
+uri: /home/the-inexistent-user/tmp/love/chocolate/fraises/package.tgz

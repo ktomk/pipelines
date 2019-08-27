@@ -1,0 +1,7 @@
+---
+# this file is part of pipelines
+#
+# docker client package test
+#
+
+name: no-uri
