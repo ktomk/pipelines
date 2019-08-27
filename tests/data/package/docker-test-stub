@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# this is a fake docker client stub that just gives a bogus version for testing
+#
+# $ tar -czf docker-test-stub.tgz docker-test-stub
+#
+echo "42.42.1 (" "${@}" ")"

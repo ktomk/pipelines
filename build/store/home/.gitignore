@@ -1,0 +1,3 @@
+# fake home directory used for integration testing the docker client
+/*
+!.gitignore

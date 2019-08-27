@@ -1,0 +1,28 @@
+---
+# this file is part of pipelines
+#
+# binary docker client package format
+#
+
+# 'name': name of the docker client represented by this package, used for
+#         the binary name after extraction, sufficed with a dot "." and the
+#         binary_sha256 hex-encoded hash
+name: docker-42.42.1-binsh-test-stub
+
+# 'uri': url/path to .tgz package (here fake special notation to have it as a
+#         file relative to the package definition file, "relative" URI)
+uri: ../../tests/data/package/docker-test-stub.tgz
+
+# 'basename': currently unused, was used earlier before 'name' to create the
+#             local binary file basename
+basename: docker-test-stub
+
+# 'sha256': hash of the .tgz package file
+sha256: 1af3681414daf27c3a1953ad0da7ac0a6c030152f488c83758864f4e27242608
+
+# 'binary': file name (path) of the binary inside the .tgz package, used to
+#           extract from the tar file.
+binary: docker-test-stub
+
+# 'binary_sha256': hash of the binary file
+binary_sha256: a38057f7c1cc10a51f6d8d08e0f8e78c1b869d024c8629f9096d522142e61bb7
