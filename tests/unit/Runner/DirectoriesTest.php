@@ -33,7 +33,7 @@ class DirectoriesTest extends TestCase
 
     public function testCreationWithMissingHome()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Server must contain a "HOME" entry');
+        $this->setExpectedException('InvalidArgumentException', 'No $HOME in environment');
         new Directories(array(), __DIR__);
     }
 
@@ -64,11 +64,46 @@ class DirectoriesTest extends TestCase
 
     public function testPipelineLocalDeploy()
     {
-        $project = realpath(__DIR__ . '/../../..');
-        $directories = new Directories($_SERVER, $project);
+        $directories = new Directories($_SERVER, self::getTestProject());
         $this->assertSame(
-            $_SERVER['HOME'] . '/.pipelines/' . basename($project),
+            $_SERVER['HOME'] . '/.pipelines/' . basename(self::getTestProject()),
             $directories->getPipelineLocalDeploy()
         );
+    }
+
+    public function provideBaseDirectories()
+    {
+        $home = '/home/dulcinea';
+
+        return array(
+            array('XDG_CACHE_HOME', null, array('HOME' => $home), $home . '/.cache'),
+            array('XDG_DATA_HOME', null, array('HOME' => $home), $home . '/.local/share'),
+            array('XDG_DATA_HOME', null, array('XDG_DATA_HOME' => '/usr/share', 'HOME' => ''), '/usr/share'),
+            array('XDG_DATA_HOME', 'pipelines/static-docker', array('HOME' => $home), $home . '/.local/share/pipelines/static-docker'),
+        );
+    }
+
+    /**
+     *
+     * @dataProvider provideBaseDirectories
+     *
+     * @param $type
+     * @param null|string $suffix
+     * @param array $env
+     * @param string $expected
+     */
+    public function testGetBaseDirectory($type, $suffix, array $env, $expected)
+    {
+        $directories = new Directories($env, self::getTestProject());
+
+        $this->assertSame($expected, $directories->getBaseDirectory($type, $suffix));
+    }
+
+    public function testGetBaseDirectoryThrows()
+    {
+        $directories = new Directories(array('HOME' => ''), self::getTestProject());
+
+        $this->setExpectedException('InvalidArgumentException', 'XDG_FOO42_HOME');
+        $directories->getBaseDirectory('XDG_FOO42_HOME');
     }
 }
