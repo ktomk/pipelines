@@ -22,7 +22,7 @@
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-html" target="build/html"/>
+        <log type="coverage-html" target="build/html" lowUpperBound="70" highLowerBound="100"/>
         <log type="testdox-html" target="build/html/testdox.html"/>
     </logging>
 </phpunit>
