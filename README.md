@@ -4,6 +4,7 @@
 
 [![Build Status](https://travis-ci.org/ktomk/pipelines.svg?branch=master)](https://travis-ci.org/ktomk/pipelines)
 [![Code Coverage](https://scrutinizer-ci.com/g/ktomk/pipelines/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ktomk/pipelines/)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ktomk/pipelines/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ktomk/pipelines/?branch=master)
 
 Command line pipeline runner written in PHP. Available from
 Github or Packagist.
@@ -97,7 +98,9 @@ for your pipeline by name or file with `-e`, `--env` and
 
 Environment variables are also loaded from dot env files named
 `.env.dist` and `.env` and processed in that order before the
-environment switches.
+environment options. Use of `--no-dot-env-files` prevents such
+automatic loading, `--no-dot-env-dot-dist` for the .env.dist
+file only.
 
 A full display of the pipelines utility options and arguments is
 available via `-h`, `--help`.
@@ -148,7 +151,8 @@ Features include:
   of a pipeline with `--keep` and with the said `--error-keep` on
   error only.
 
-  Afterwards manage left overs with `--docker-list|kill|clean`.
+  Afterwards manage left overs with `--docker-list|kill|clean` or
+  clean up with `--docker-zap`.
 
   Debugging options to dream for.
 
@@ -172,10 +176,10 @@ Features include:
   clean build in a step script while you can keep artifacts from
   pipelines locally.
 
-* **Ready for Offline**: On the plane? Or just a rainy day on
-  a remote location with broken net? Coding while abroad? Or
-  just Bitbucket down again? Before going into offline mode, make
-  use of `--images` and the shell:
+* **Ready for Offline**: On the plane? Riding Deutsche Bahn? Or
+  just a rainy day on a remote location with broken net? Coding
+  while abroad? Or just Bitbucket down again? Before going into
+  offline mode, make use of `--images` and the shell:
 
       $ pipelines --images | while read -r image; do \
         docker image pull "$image"; done;
@@ -256,7 +260,7 @@ A non zero exit status denotes an error:
   the error.
 - 2 (two): A error is caused by the system not being able to
   fulfill the command (e.g. a file can not be read).
-  
+
 ### Example
 
 Not finding a file might cause exit status 2 (two) on error
@@ -269,11 +273,10 @@ is more prominently showing all pipelines of that file.
 
 ### Requirements
 
-Pipelines requires a POSIX compatible system.
+Pipelines works best on a POSIX compatible system.
 
 Docker needs to be available locally as `docker` command as it is
-used to run pipelines and the working directory is used as volume
-in the container (with `--deploy mount`).
+used to run the pipelines.
 
 A recent PHP version is favored, the `pipelines` command needs
 it to run. It should work with PHP 5.3+, the phar build requires
@@ -282,7 +285,8 @@ especially suggested for future releases.
 
 Installing the [PHP YAML extension][PHP-YAML] is highly
 recommended as it does greatly improve parsing the pipelines
-file.
+file which is otherwise with a YAML parser that is not very
+supportive of the file-format.
 
 ### User Tests
 
@@ -304,8 +308,8 @@ Github, via Composer/Packagist or with Phive.
 
 Downloads are available on Github. To obtain the latest released
 version, use the following URL:
-    
-    https://github.com/ktomk/pipelines/releases/latest/download/pipelines.phar 
+
+    https://github.com/ktomk/pipelines/releases/latest/download/pipelines.phar
 
 Rename the phar file to just "`pipelines`", set the executable
 bit and move it into a directory where executables are found.
@@ -381,43 +385,34 @@ Check the version by invoking it:
 
 ### Todo
 
-- Support for private Docker repositories - especially when
-  pulling all images (especially TODO: `--docker-pull` for 
-  offline use)
-- Caches support, first of all for Composer to better handle
-  offline scenarios in PHP context (as this is a PHP tool)
-- Check Docker existence before running
-- Stop at manual steps (`--no-manual` to override)
-- Run specific steps of a pipeline (only)  to put the user back
-  into command
-- More accessible offline preparation (e.g.
-  `--docker-pull-images` or better `--docker-pull`)
-- Write section about the file format support/limitations
-- Pipeline file properties support
-    - clone (1)
-    - max-time (1)
-    - size (1)
-    - step.trigger (1)
-    - definitions (1)
-- Validation command for bitbucket-pipelines.yml files (so far
-  `--show` gives error on parts it runs over and non zero exit
-  code) \[this is a moving target, so nice idea, but this is not
-  it honestly]
-- Verify steps of a single command to see if it matches an
-  executable script file or not in the project - nice for quick
-  pre-remote QC, needs some resolution logic and decisions which
-  can't match all wishes most likely
-- Get VCS revision from working directory
-- Use a different project directory `--project-dir <path>` to
+- [x] Support for private Docker repositories
+- [ ] Inject docker client if docker service is enabled
+- [ ] Option to not mount docker.sock
+- [ ] Run specific steps of a pipeline (only) to put the user
+      back into command on errors w/o re-running everything
+- [ ] More accessible offline preparation (e.g.
+      `--docker-pull-images`)
+- [ ] Copy local composer cache into container for better
+      (offline) usage in PHP projects
+- [ ] Check Docker existence before running a pipeline
+- [ ] Stop at manual steps (`--no-manual` to override)
+- [ ] Pipes support
+- [ ] Write section about the file format support/limitations
+- [ ] Pipeline file properties support
+    - clone (*1)
+    - max-time (*1)
+    - size (*1)
+    - step.trigger (*1)
+    - definitions (*1)
+  (*1) if it is considered that it applies to running local
+- [ ] Get VCS revision from working directory
+- [ ] Use a different project directory `--project-dir <path>` to
   specify the root path to deploy into the container, which
   currently is the working directory (`--working-dir <path>`)
-- Run on a specific revision, reference it (`--revision <ref>`);
+- [ ] Run on a specific revision, reference it (`--revision <ref>`);
   needs a clean VCS checkout in a temporary folder which then
   should be copied into the container
-- Override the default image name (`--default-image <name>`)
-- Option to not mount docker.sock
-
-(1) if it is considered that it applies to running local
+- [ ] Override the default image name (`--default-image <name>`)
 
 ## References
 

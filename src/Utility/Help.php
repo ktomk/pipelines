@@ -126,9 +126,10 @@ Docker container maintenance options
       interrupting a running pipeline step or by keeping the
       running containers (--keep).
 
-      pipelines uses a prefix followed by '-' and a UUID for
-      container names. the prefix is either 'pipelines' or the
-      one set by --prefix <prefix>.
+      pipelines uses a prefix followed by '-' and a compound
+      name based on step-number, step-name, pipeline id and
+      image name for container names. the prefix is either
+      'pipelines' or the one set by --prefix <prefix>.
 
       three options are built-in to monitor and interact with
       leftovers. if one or more of these are given, the following
