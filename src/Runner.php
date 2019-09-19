@@ -58,6 +58,13 @@ class Runner
     private $streams;
 
     /**
+     * list of temporary directory destructible markers
+     *
+     * @var array
+     */
+    private $temporaryDirectories = array();
+
+    /**
      * DockerSession constructor.
      *
      * @param string $prefix
@@ -321,8 +328,8 @@ class Runner
 
         $streams->out("\x1D+++ copying files into container...\n");
 
-        $tmpDir = sys_get_temp_dir() . '/pipelines/cp';
-        LibFs::mkDir($tmpDir);
+        $tmpDir = LibFs::tmpDir('pipelines-cp.');
+        $this->temporaryDirectories[] = DestructibleString::rmDir($tmpDir);
         LibFs::symlink($dir, $tmpDir . '/app');
         $cd = Lib::cmd('cd', array($tmpDir . '/.'));
         $tar = Lib::cmd(
