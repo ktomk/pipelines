@@ -2,19 +2,20 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @covers \Ktomk\Pipelines\Step
+ * @covers \Ktomk\Pipelines\File\Step
  */
 class StepTest extends TestCase
 {
     public function testCreation()
     {
         $step = $this->createStep();
-        $this->assertInstanceOf('Ktomk\Pipelines\Step', $step);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $step);
     }
 
     public function testGetArtifacts()
@@ -152,10 +153,10 @@ class StepTest extends TestCase
         }
 
         /** @var File|MockObject $pipeline */
-        $file = $this->createMock('Ktomk\Pipelines\File');
+        $file = $this->createMock('Ktomk\Pipelines\File\File');
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getFile')->willReturn($file);
 
         return new Step($pipeline, 0, $array);

@@ -2,16 +2,20 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\Runner\Directories;
+use Ktomk\Pipelines\DestructibleString;
+use Ktomk\Pipelines\File\Pipeline;
+use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @covers \Ktomk\Pipelines\Runner
+ * @covers \Ktomk\Pipelines\Runner\Runner
  */
 class RunnerTest extends TestCase
 {
@@ -47,7 +51,7 @@ class RunnerTest extends TestCase
         $exec->expect('capture', 'docker', 126);
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
 
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
@@ -78,7 +82,7 @@ class RunnerTest extends TestCase
         $exec->method('capture')->willReturn(0);
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -103,7 +107,7 @@ class RunnerTest extends TestCase
     public function testErrorStatusWithPipelineHavingEmptySteps()
     {
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array());
 
         $exec = new Exec();
@@ -139,7 +143,7 @@ class RunnerTest extends TestCase
             new Streams(null, null, 'php://output')
         );
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $status = $runner->run($pipeline);
         $this->assertSame(127, $status);
     }
@@ -167,7 +171,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -198,7 +202,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -230,7 +234,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -294,7 +298,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -331,7 +335,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -376,7 +380,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -414,7 +418,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -444,7 +448,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',
@@ -472,7 +476,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => array(
@@ -514,7 +518,7 @@ class RunnerTest extends TestCase
         );
 
         /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\Pipeline');
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getSteps')->willReturn(array(
             new Step($pipeline, 0, array(
                 'image' => 'foo/bar:latest',

@@ -18,7 +18,7 @@ use UnexpectedValueException;
  * against a part of the current host environment but only if set for the
  * container as well (--env-file, -e, --env)
  *
- * @package Ktomk\Pipelines\Runner
+ * @package Ktomk\Pipelines\Runner\Runner
  */
 class EnvResolver
 {

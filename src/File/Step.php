@@ -2,12 +2,7 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
-
-use Ktomk\Pipelines\File\Artifacts;
-use Ktomk\Pipelines\File\Image;
-use Ktomk\Pipelines\File\ParseException;
-use Ktomk\Pipelines\File\StepServices;
+namespace Ktomk\Pipelines\File;
 
 class Step
 {

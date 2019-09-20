@@ -9,7 +9,7 @@ use Ktomk\Pipelines\Value\Properties;
 /**
  * Class Image
  *
- * @package Ktomk\Pipelines\File
+ * @package Ktomk\Pipelines\File\File
  */
 class Image
 {

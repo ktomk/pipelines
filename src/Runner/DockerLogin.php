@@ -10,7 +10,7 @@ use Ktomk\Pipelines\File\Image;
 /**
  * DockerLogin - docker login authentication provider
  *
- * @package Ktomk\Pipelines\Runner
+ * @package Ktomk\Pipelines\Runner\Runner
  */
 class DockerLogin
 {

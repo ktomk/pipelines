@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\File;
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\TestCase;
 
 /**

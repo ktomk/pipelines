@@ -7,7 +7,7 @@ namespace Ktomk\Pipelines\Utility;
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\File;
+use Ktomk\Pipelines\File\File;
 
 class FileOptions
 {

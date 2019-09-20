@@ -4,14 +4,12 @@
 
 namespace Ktomk\Pipelines\File;
 
-use Ktomk\Pipelines\File;
-use Ktomk\Pipelines\Pipeline;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers  \Ktomk\Pipelines\File::searchReference()
- * @covers  \Ktomk\Pipelines\File::searchTypeReference()
+ * @covers  \Ktomk\Pipelines\File\File::searchReference()
+ * @covers  \Ktomk\Pipelines\File\File::searchTypeReference()
  */
 class ReferenceSearchTest extends TestCase
 {

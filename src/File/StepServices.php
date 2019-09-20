@@ -4,14 +4,12 @@
 
 namespace Ktomk\Pipelines\File;
 
-use Ktomk\Pipelines\Step;
-
 /**
  * Class StepServices
  *
  * Services entry in a step
  *
- * @package Ktomk\Pipelines\File
+ * @package Ktomk\Pipelines\File\File
  */
 class StepServices
 {

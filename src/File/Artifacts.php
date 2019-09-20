@@ -7,7 +7,7 @@ namespace Ktomk\Pipelines\File;
 /**
  * Artifacts of a pipelines step
  *
- * @package Ktomk\Pipelines\File
+ * @package Ktomk\Pipelines\File\File
  */
 class Artifacts
 {

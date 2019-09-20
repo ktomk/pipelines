@@ -2,9 +2,7 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
-
-use Ktomk\Pipelines\File\ParseException;
+namespace Ktomk\Pipelines\File;
 
 class Pipeline
 {

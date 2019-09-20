@@ -2,13 +2,12 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\File;
 
 use InvalidArgumentException;
-use Ktomk\Pipelines\File\Image;
-use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\Glob;
 use Ktomk\Pipelines\Runner\Reference;
+use Ktomk\Pipelines\Yaml\Yaml;
 
 /**
  * Bitbucket Pipelines file

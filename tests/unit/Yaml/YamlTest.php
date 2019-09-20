@@ -2,18 +2,18 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Yaml;
 
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers \Ktomk\Pipelines\Yaml
+ * @covers \Ktomk\Pipelines\Yaml\Yaml
  */
 class YamlTest extends TestCase
 {
     public function testFileParsing()
     {
-        $path = __DIR__ . '/../../bitbucket-pipelines.yml';
+        $path = __DIR__ . '/../../../bitbucket-pipelines.yml';
 
         $struct = Yaml::file($path);
 

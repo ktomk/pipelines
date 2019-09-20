@@ -4,10 +4,10 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-use Exception;
 use InvalidArgumentException;
-use Ktomk\Pipelines\File;
-use Ktomk\Pipelines\Step;
+use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\File\ParseException;
+use Ktomk\Pipelines\File\Step;
 
 /**
  * Class FileShower
@@ -50,7 +50,7 @@ class FileShower
         /**
          * step iterator
          *
-         * @param File $file
+         * @param \Ktomk\Pipelines\File\File $file
          * @return array|Step[]
          */
         $iterator = function (File $file) {
@@ -102,7 +102,7 @@ class FileShower
                 $pipeline = $pipelines->getById($id);
 
                 $steps = (null === $pipeline) ? array() : $pipeline->getSteps();
-            } catch (File\ParseException $e) {
+            } catch (ParseException $e) {
                 $errors++;
                 $table[] = array($id, 'ERROR', $e->getParseMessage());
 

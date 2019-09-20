@@ -2,15 +2,17 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
+use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\TestCase;
 
 /**
  * Class PipelineTest
  *
- * @covers \Ktomk\Pipelines\Pipeline
+ * @covers \Ktomk\Pipelines\File\Pipeline
  */
 class PipelineTest extends TestCase
 {
@@ -22,7 +24,7 @@ class PipelineTest extends TestCase
         $file = new File(array('pipelines' => array('default' => array())));
         $definition = array(array('step' => array('script' => array(':'))));
         $pipeline = new Pipeline($file, $definition);
-        $this->assertInstanceOf('Ktomk\Pipelines\Pipeline', $pipeline);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline', $pipeline);
 
         return $pipeline;
     }
@@ -63,7 +65,7 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline($file, $definition);
         $steps = $pipeline->getSteps();
         $this->assertArrayHasKey(0, $steps);
-        $this->assertInstanceOf('Ktomk\Pipelines\Step', $steps[0]);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $steps[0]);
     }
 
     public function testGetFile()

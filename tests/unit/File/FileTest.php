@@ -2,21 +2,22 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\File;
 
+use \InvalidArgumentException;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
 use ReflectionException;
 use ReflectionObject;
 
 /**
- * @covers \Ktomk\Pipelines\File
+ * @covers \Ktomk\Pipelines\File\File
  */
 class FileTest extends TestCase
 {
     public function testCreateFromFile()
     {
-        $path = __DIR__ . '/../../' . File::FILE_NAME;
+        $path = __DIR__ . '/../../../' . File::FILE_NAME;
 
         $file = File::createFromFile($path);
 
@@ -31,7 +32,7 @@ class FileTest extends TestCase
      */
     public function testCreateFromFileWithError()
     {
-        $path = __DIR__ . '/../data/yml/error.yml';
+        $path = __DIR__ . '/../../data/yml/error.yml';
 
         File::createFromFile($path);
     }
@@ -41,7 +42,7 @@ class FileTest extends TestCase
      */
     public function testCreateFromFileWithInvalidId()
     {
-        $path = __DIR__ . '/../data/yml/invalid-pipeline-id.yml';
+        $path = __DIR__ . '/../../data/yml/invalid-pipeline-id.yml';
 
         $file = File::createFromFile($path);
 
@@ -137,10 +138,10 @@ class FileTest extends TestCase
 
         $file = new File($default);
         $pipeline = $file->getDefault();
-        $this->assertInstanceOf('Ktomk\Pipelines\Pipeline', $pipeline);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline', $pipeline);
         $steps = $pipeline->getSteps();
         $this->assertArrayHasKey(0, $steps);
-        $this->assertInstanceOf('Ktomk\Pipelines\Step', $steps[0]);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $steps[0]);
     }
 
     /**
@@ -159,7 +160,7 @@ class FileTest extends TestCase
 
     public function testGetPipelineIds()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
         $ids = $file->getPipelineIds();
         $this->assertInternalType('array', $ids);
         $this->assertArrayHasKey(12, $ids);
@@ -175,14 +176,14 @@ class FileTest extends TestCase
         $actual = $file->getPipelines();
         $this->assertGreaterThan(1, count($actual));
         $this->assertContainsOnlyInstancesOf(
-            'Ktomk\Pipelines\Pipeline',
+            'Ktomk\Pipelines\File\Pipeline',
             $actual
         );
     }
 
     public function testGetReference()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $pipeline = $file->getById('branches/master');
         $this->assertNotNull($pipeline);
@@ -230,7 +231,7 @@ class FileTest extends TestCase
      */
     public function testInvalidReferenceName()
     {
-        File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml')
+        File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')
             ->getById('branch/master'); # must be branch_es_
     }
 
@@ -263,7 +264,7 @@ class FileTest extends TestCase
 
     public function testSearchReference()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $pipeline = $file->searchTypeReference('branches', 'master');
         $this->asPlFiStName('master duplicate', $pipeline, 'direct match');
@@ -339,7 +340,7 @@ class FileTest extends TestCase
      */
     public function testSearchReferenceInvalidScopeException()
     {
-        $file = File::createFromFile(__DIR__ . '/../data/yml/bitbucket-pipelines.yml');
+        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
         $file->searchTypeReference('invalid', '');
     }
 
@@ -401,7 +402,7 @@ class FileTest extends TestCase
         $image = array(
             'image' => array('name' => '/'),
         );
-        File\Image::validate($image);
+        Image::validate($image);
     }
 
     public function testValidateImageSectionValidName()
@@ -409,7 +410,7 @@ class FileTest extends TestCase
         $image = array(
             'image' => array('name' => 'php/5.6:latest'),
         );
-        File\Image::validate($image);
+        Image::validate($image);
         $this->addToAssertionCount(1);
     }
 

@@ -2,16 +2,17 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Image;
-use Ktomk\Pipelines\Runner\ArtifactSource;
-use Ktomk\Pipelines\Runner\Directories;
-use Ktomk\Pipelines\Runner\DockerLogin;
-use Ktomk\Pipelines\Runner\Env;
+use Ktomk\Pipelines\File\Pipeline;
+use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFs;
 
 /**
  * Pipeline runner with docker under the hood

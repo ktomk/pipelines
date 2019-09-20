@@ -2,9 +2,9 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Yaml;
 
-use Ktomk\Pipelines\Yaml\ParserInterface;
+use Ktomk\Pipelines\LibFs;
 
 class Yaml
 {

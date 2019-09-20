@@ -9,12 +9,15 @@ use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\File;
+use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\File\ParseException;
+use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
-use Ktomk\Pipelines\Pipeline;
-use Ktomk\Pipelines\Runner;
+use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
+use Ktomk\Pipelines\Runner\Reference;
+use Ktomk\Pipelines\Runner\Runner;
 
 class App implements Runnable
 {
@@ -80,12 +83,12 @@ class App implements Runnable
     }
 
     /**
-     * @throws \UnexpectedValueException
-     * @throws \RuntimeException
+     *@throws \RuntimeException
      * @throws InvalidArgumentException
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
      * @throws ArgsException
      * @throws StatusException
+     * @throws \UnexpectedValueException
      * @return int
      */
     public function run()
@@ -135,7 +138,7 @@ class App implements Runnable
 
         $flags = $this->getRunFlags($keep, $deployMode);
 
-        $directories = new Runner\Directories(Lib::env($_SERVER), $workingDir);
+        $directories = new Directories(Lib::env($_SERVER), $workingDir);
 
         $runner = new Runner($prefix, $directories, $exec, $flags, $env, $streams);
 
@@ -207,7 +210,7 @@ class App implements Runnable
 
     /**
      * @param array $inherit from this environment
-     * @param Runner\Reference $reference
+     * @param Reference $reference
      * @param string $workingDir
      * @throws InvalidArgumentException
      * @throws ArgsException
@@ -339,13 +342,13 @@ class App implements Runnable
     /**
      * @throws InvalidArgumentException
      * @throws ArgsException
-     * @return Runner\Reference
+     * @return Reference
      */
     private function parseReference()
     {
         $trigger = $this->arguments->getOptionArgument('trigger');
 
-        return Runner\Reference::create($trigger);
+        return Reference::create($trigger);
     }
 
     /**
@@ -425,7 +428,7 @@ class App implements Runnable
      * @param File $pipelines
      * @param $pipelineId
      * @param FileOptions $fileOptions
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
      * @throws StatusException
      * @return Pipeline on success
      */
@@ -435,7 +438,7 @@ class App implements Runnable
 
         try {
             $pipeline = $pipelines->getById($pipelineId);
-        } catch (File\ParseException $e) {
+        } catch (ParseException $e) {
             $this->error(sprintf("pipelines: error: pipeline id '%s'", $pipelineId));
 
             throw $e;
