@@ -5,9 +5,9 @@
 namespace Ktomk\Pipelines;
 
 use InvalidArgumentException;
-use Ktomk\Pipelines\File\BbplMatch;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\ParseException;
+use Ktomk\Pipelines\Glob;
 use Ktomk\Pipelines\Runner\Reference;
 
 /**
@@ -278,7 +278,7 @@ class File
 
         $match = null;
         foreach ($patterns as $pattern) {
-            $result = BbplMatch::match($pattern, $reference);
+            $result = Glob::match($pattern, $reference);
             if ($result and (null === $match or strlen($pattern) > strlen($match))) {
                 $match = $pattern;
             }

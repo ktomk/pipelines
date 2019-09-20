@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\File\BbplMatch;
+use Ktomk\Pipelines\Glob;
 
 class ArtifactSource
 {
@@ -63,7 +63,7 @@ class ArtifactSource
     public function findByPattern($pattern)
     {
         $matcher = function ($subject) use ($pattern) {
-            return BbplMatch::match($pattern, $subject);
+            return Glob::match($pattern, $subject);
         };
 
         $paths = $this->getAllFiles();

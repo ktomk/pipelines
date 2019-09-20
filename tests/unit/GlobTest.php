@@ -2,14 +2,15 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\File;
+namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\Glob;
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers \Ktomk\Pipelines\File\BbplMatch
+ * @covers \Ktomk\Pipelines\Glob
  */
-class BbplMatchTest extends TestCase
+class GlobTest extends TestCase
 {
     /**
      * @var array
@@ -57,6 +58,27 @@ class BbplMatchTest extends TestCase
         );
 
         parent::__construct($name, $data, $dataName);
+    }
+
+    public static function provideBracePattern()
+    {
+        return array(
+            array(array(''), ''),
+            array(array('{}'), '{}'),
+            'no duplicates' => array(array(''), '{,}'),
+            'no duplicates 2' => array(array('ab'), 'a{,}b'),
+            array(array('acb', 'adb'), 'a{c,d}b'),
+            'hangover left' => array(array('a{cb', 'a{db'), 'a{{c,d}b'),
+            'hangover right' => array(array('ac}b', 'ad}b'), 'a{c,d}}b'),
+            array(array('abe', 'ace', 'ade'), 'a{b,{c,d}}e'),
+            'brace' => array(array('ab', 'ac'), 'a{b,c}'),
+            'escaped brace' => array(array('a{b,c}'), "a\\{b,c}"),
+            'escaped comma' => array(array('a,', 'ab'), "a{\\,,b}"),
+            'multiple' => array(
+                array('abdh', 'abefh', 'abgh', 'abcdh', 'abcefh', 'abcgh'),
+                'ab{,c}{d,{ef,g}}h'
+            )
+        );
     }
 
     public function provideMatchPatternLevel1()
@@ -108,13 +130,23 @@ class BbplMatchTest extends TestCase
     }
 
     /**
+     * @param $subject
+     * @param $expected
+     * @dataProvider provideBracePattern
+     */
+    public function testExpandBrace($expected, $subject)
+    {
+        $this->assertSame($expected, Glob::expandBrace($subject), $subject);
+    }
+
+    /**
      * @param string $pattern
      * @param string $subject
      * @param bool $expected
      */
     private function assert($pattern, $subject, $expected)
     {
-        $actual = BbplMatch::match($pattern, $subject);
+        $actual = Glob::match($pattern, $subject);
         $this->assertSame($expected, $actual, sprintf(
             "pattern '%s' %s subject '%s'",
             $pattern,

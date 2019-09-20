@@ -11,7 +11,7 @@
 namespace Ktomk\Pipelines\PharBuild;
 
 use DateTime;
-use Ktomk\Pipelines\File\BbplMatch;
+use Ktomk\Pipelines\Glob;
 use Ktomk\Pipelines\Lib;
 use Phar;
 
@@ -405,11 +405,11 @@ class Builder
             return $this;
         }
 
-        require_once __DIR__ . '/../../src/File/BbplMatch.php';
+        require_once __DIR__ . '/../../src/Glob.php';
 
         $result = array();
         foreach ($this->files as $key => $value) {
-            if (!BbplMatch::match($pattern, $key)) {
+            if (!Glob::match($pattern, $key)) {
                 $result[$key] = $value;
             }
         }
@@ -556,7 +556,7 @@ class Builder
     private function _glob_brace($glob, $flags)
     {
         $reservoir = array();
-        $globs = Lib::expandBrace($glob);
+        $globs = Glob::expandBrace($glob);
         foreach ($globs as $globEx) {
             $result = \glob($globEx, $flags);
             if (false === $result) {
