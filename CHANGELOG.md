@@ -4,6 +4,11 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Changed
+- Use Symfony YAML as fall-back parser, replaces
+  Mustangostang Spyc
+  
 ## [0.0.21] - 2019-09-23
 ### Fixed
 - Unintended output of "\x1D" on some container systems
