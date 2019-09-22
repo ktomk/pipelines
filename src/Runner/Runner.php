@@ -385,10 +385,10 @@ class Runner
 
         $buffer = '';
         foreach ($script as $line => $command) {
-            $buffer .= 'printf \'\x1D+ %s\n\' ' . Lib::quoteArg($command) . "\n";
+            $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
             $buffer .= $command . "\n";
             $buffer .= 'ret=$?' . "\n";
-            $buffer .= 'printf \'\n\'' . "\n";
+            $buffer .= 'printf \'\\n\'' . "\n";
             $buffer .= 'if [ $ret -ne 0 ]; then exit $ret; fi' . "\n";
         }
 
