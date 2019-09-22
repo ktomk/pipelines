@@ -229,6 +229,10 @@ environment. Example:
 
     $ BITBUCKET_BUILD_NUMBER=123 pipelines # build no. 123
 
+More information on (Bitbucket) pipelines environment variables
+can be found in [the *Pipelines Environment Variable Usage
+Reference*](./doc/PIPELINES-VARIABLE-REFERENCE.md).
+
 Additionally pipelines sets some environment variables for
 introspection:
 
