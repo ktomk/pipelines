@@ -14,7 +14,7 @@ To use pipelines set up project dependencies via `composer install` first
 See https://getcomposer.org/download/ for how to install Composer
 
 ERROR
-);
+    );
     exit(1);
 }
 

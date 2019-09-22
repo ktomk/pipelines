@@ -1,10 +1,6 @@
 <?php
 
-/*
- * pipelines
- *
- * Date: 10.06.18 22:13
- */
+/* this file is part of pipelines */
 
 namespace Ktomk\Pipelines\Runner;
 

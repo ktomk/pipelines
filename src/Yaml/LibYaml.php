@@ -27,7 +27,7 @@ class LibYaml implements ParserInterface
 
         return !is_array($result)
             ? null
-            # libyaml parser does aliases, remove any potential ones
+            # ext-yaml parser does aliases, remove any potential ones
             : json_decode(json_encode($result), true);
     }
 

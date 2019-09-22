@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "51c569faf26ad76b25c296d89ba28af0",
+    "content-hash": "d625e4220d8febf44b934a74f1178bce",
     "packages": [
         {
             "name": "mustangostang/spyc",
@@ -2287,7 +2287,7 @@
                 },
                 {
                     "name": "Gert de Pagter",
-                    "email": "backendtea@gmail.com"
+                    "email": "BackEndTea@gmail.com"
                 }
             ],
             "description": "Symfony polyfill for ctype functions",
@@ -2669,7 +2669,8 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.3.2 || ^7.0"
+        "php": "^5.3.2 || ^7.0",
+        "ext-json": "*"
     },
     "platform-dev": []
 }

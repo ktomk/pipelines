@@ -211,16 +211,16 @@ Pipelines mimics all of the [Bitbucket Pipeline in-container
 environment variables][BBPL-ENV] \[BBPL-ENV], also known as
 environment parameters:
 
-* `BITBUCKET_BOOKMARK` - conditionally set by `--target`
-* `BITBUCKET_BUILD_NUMBER` - always set to '0'
-* `BITBUCKET_BRANCH` - conditionally set by `--target`
+* `BITBUCKET_BOOKMARK` - conditionally set by `--trigger`
+* `BITBUCKET_BUILD_NUMBER` - always set to "`0`"
+* `BITBUCKET_BRANCH` - conditionally set by `--trigger`
 * `BITBUCKET_CLONE_DIR` - always set to deploy point in container
 * `BITBUCKET_COMMIT` - faux as no revision triggers a build;
     always set to "`0000000000000000000000000000000000000000`"
 * `BITBUCKET_REPO_OWNER` - current username from
     environment or if not available "`nobody`"
 * `BITBUCKET_REPO_SLUG` - base name of project directory
-* `BITBUCKET_TAG` - conditionally set by `--target`
+* `BITBUCKET_TAG` - conditionally set by `--trigger`
 * `CI` - always set to "`true`"
 
 All of these (but not `BITBUCKET_CLONE_DIR`) can be set within
@@ -387,9 +387,16 @@ Check the version by invoking it:
 
 - [x] Support for private Docker repositories
 - [ ] Inject docker client if docker service is enabled
+- [ ] Support BITBUCKET_PR_DESTINATION_BRANCH with
+      `--trigger pr:<source>:<destination>`
 - [ ] Option to not mount docker.sock
 - [ ] Run specific steps of a pipeline (only) to put the user
       back into command on errors w/o re-running everything
+- [ ] Run pipelines as current user (`--deploy mount` should
+      not enforce the container default user \[often "root"]
+      for project file operation), however the Docker utility
+      still requires you (the current user) to be root like, so
+      technically there is little win.
 - [ ] More accessible offline preparation (e.g.
       `--docker-pull-images`)
 - [ ] Copy local composer cache into container for better
