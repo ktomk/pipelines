@@ -40,12 +40,12 @@ pipelines:
             - echo "anything /feature"
     'master': # avoid duplicate names (1)
       - step:
-          name: "master"
+          name: "master duplicate" # wins in the Symfony YAML parser
           script:
             - echo "master (in quotes)"
     master: # avoid duplicate names (2)
       - step:
-          name: "master duplicate" # always wins in the known PHP YAML parsers
+          name: "master duplicate" # wins in all other known PHP YAML parsers
           script:
             - echo "master duplicate"
     '{foo,bar}': # glob pattern with braces

@@ -40,7 +40,7 @@ class Yaml
     {
         $classes = array(
             'Ktomk\Pipelines\Yaml\LibYaml',
-            'Ktomk\Pipelines\Yaml\Spyc',
+            'Ktomk\Pipelines\Yaml\Sf2Yaml',
         );
 
         $class = null;
