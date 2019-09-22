@@ -34,7 +34,6 @@ $builder
     ->add('vendor/{,composer/}*.php', $builder->snapShot())
     ->phpExec('composer -n -q install --ignore-platform-reqs')
     // Dependencies
-    ->add('vendor/mustangostang/spyc/Spyc.php')
     // build phar archive, reset timestamps
     ->build('--version')
     ->exec('git log -n1 --pretty=%ci HEAD', $timestamp)
