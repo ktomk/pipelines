@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 ### Changed
 - Use Symfony YAML as fall-back parser, replaces
-  Mustangostang Spyc
+  Mustangostang Spyc (#4)
   
 ## [0.0.21] - 2019-09-23
 ### Fixed

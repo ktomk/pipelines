@@ -1,0 +1,20 @@
+# this file is part of pipelines
+#
+# fixture file for aliases inside a yaml to re-use a pipeline
+definitions:
+  steps:
+    - step: &build-test
+        name: Build and test
+        script:
+          - mvn package
+        artifacts:
+          - target/**
+
+pipelines:
+  branches:
+    develop:
+      - step: *build-test
+    master:
+      - step:
+          <<: *build-test
+          name: Testing on Master
