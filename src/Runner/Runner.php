@@ -133,7 +133,7 @@ class Runner
      */
     public function runStep(Step $step)
     {
-        $dir = $this->directories->getProject();
+        $dir = $this->directories->getProjectDirectory();
         $env = $this->env;
         $exec = $this->exec;
         $streams = $this->streams;

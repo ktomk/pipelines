@@ -15,6 +15,9 @@ use Ktomk\Pipelines\TestCase;
  */
 class DirectoriesTest extends TestCase
 {
+    /**
+     * @return string project directory path (this project) as test project
+     */
     public static function getTestProject()
     {
         return LibFs::normalizePathSegments(__DIR__ . '/../../..');
@@ -32,14 +35,20 @@ class DirectoriesTest extends TestCase
 
     public function testCreationWithMissingDirectory()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid project directory ');
-        new Directories(array('HOME' => ''), '');
+        $this->setExpectedException('InvalidArgumentException', 'Invalid project directory: ');
+        new Directories(array('HOME' => '/home/dulcinea'), '');
     }
 
     public function testCreationWithMissingHome()
     {
-        $this->setExpectedException('InvalidArgumentException', 'No $HOME in environment');
-        new Directories(array(), __DIR__);
+        $this->setExpectedException('InvalidArgumentException', '$HOME unset or empty');
+        new Directories(array('HOME' => ''), __DIR__);
+    }
+
+    public function testCreationWithNonPortableUtilityName()
+    {
+        $this->setExpectedException('InvalidArgumentException', 'Not a portable utility name: "-f"');
+        new Directories(array('HOME' => '/greta-garbo'), __DIR__, '-f');
     }
 
     public function testName()
@@ -52,13 +61,17 @@ class DirectoriesTest extends TestCase
         );
     }
 
-    public function testProject()
+    /**
+     * The project directory is that central, it is even now named
+     * "pwd" which is "cwd", this is where the project lies.
+     */
+    public function testProjectWorkingDirectory()
     {
-        $project = realpath(__DIR__ . '/../..');
+        $project = LibFs::normalizePathSegments(__DIR__ . '/../..');
         $directories = new Directories($_SERVER, $project);
         $this->assertSame(
             $project,
-            $directories->getProject()
+            $directories->getProjectDirectory()
         );
     }
 
@@ -76,10 +89,10 @@ class DirectoriesTest extends TestCase
         $home = '/home/dulcinea';
 
         return array(
-            array('XDG_CACHE_HOME', null, array('HOME' => $home), $home . '/.cache'),
-            array('XDG_DATA_HOME', null, array('HOME' => $home), $home . '/.local/share'),
-            array('XDG_DATA_HOME', null, array('XDG_DATA_HOME' => '/usr/share', 'HOME' => ''), '/usr/share'),
-            array('XDG_DATA_HOME', 'pipelines/static-docker', array('HOME' => $home), $home . '/.local/share/pipelines/static-docker'),
+            array('XDG_CACHE_HOME', null, array('HOME' => $home), $home . '/.cache/pipelines'),
+            array('XDG_DATA_HOME', null, array('HOME' => $home), $home . '/.local/share/pipelines'),
+            array('XDG_DATA_HOME', null, array('XDG_DATA_HOME' => '/usr/share', 'HOME' => $home), '/usr/share/pipelines'),
+            array('XDG_DATA_HOME', 'static-docker', array('HOME' => $home), $home . '/.local/share/pipelines/static-docker'),
         );
     }
 
@@ -101,7 +114,7 @@ class DirectoriesTest extends TestCase
 
     public function testGetBaseDirectoryThrows()
     {
-        $directories = new Directories(array('HOME' => ''), self::getTestProject());
+        $directories = new Directories(array('HOME' => '/greta-garbo'), self::getTestProject());
 
         $this->setExpectedException('InvalidArgumentException', 'XDG_FOO42_HOME');
         $directories->getBaseDirectory('XDG_FOO42_HOME');
