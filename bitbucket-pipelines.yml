@@ -50,6 +50,16 @@ pipelines:
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
             - bin/pipelines --keep
+    docker-phar:
+      - step:
+          image: php:7.0
+          name: default pipeline inside pipelines pipeline
+          script:
+            - lib/pipelines/docker-client-install.sh
+            - docker version
+            - docker version --format {{.Client.Version}}
+            - docker version --format {{.Server.Version}}
+            - build/pipelines.phar --no-keep
     recursion:
       - step:
           image: php:7.0

@@ -48,19 +48,27 @@
     ],
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
     "test": [
-      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
-      "@php -f lib/coverage/checker.php -- build/log/clover.xml"
+      "@composer validate --strict",
+      "@phpunit-test",
+      "tests/shell/run.sh"
     ],
     "unit-test": [
       "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests/unit",
+      "@php -f lib/coverage/checker.php -- build/log/clover.xml"
+    ],
+    "integration-test": [
+      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v tests/integration"
+    ],
+    "phpunit-test": [
+      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
       "@php -f lib/coverage/checker.php -- build/log/clover.xml"
     ],
     "ci": [
       "@composer validate --strict",
       "@cs-check",
       "bin/pipelines --no-keep --verbatim --pipeline custom/lint-php-5.3",
-      "@test",
-      "@build"
+      "@build",
+      "@test"
     ]
   },
   "config": {
