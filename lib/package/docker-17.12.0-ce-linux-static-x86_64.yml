@@ -1,0 +1,10 @@
+---
+# this file is part of pipelines
+#
+# binary docker client package format
+#
+name: docker-17.12.0-ce-linux-static-x86_64
+uri: https://download.docker.com/linux/static/stable/x86_64/docker-17.12.0-ce.tgz
+sha256: 692e1c72937f6214b1038def84463018d8e320c8eaf8530546c84c2f8f9c767d
+binary: docker/docker
+binary_sha256: c77a64bf37b4e89cc4d6f35433baa44fb33e6f89e2f2c3406256e55f7a05504b

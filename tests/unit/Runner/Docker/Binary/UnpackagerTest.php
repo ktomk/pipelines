@@ -33,7 +33,7 @@ class UnpackagerTest extends TestCase
 
         return array(
             # 'name': name of the docker client represented by this package, used for binary name
-            'name' => 'docker-42.42.1-binsh-test-stub',
+            'name' => Repository::PKG_TEST,
             # 'uri': url/path to .tgz package
             'uri' => $testPackage,
             # 'basename': path inside the .tgz package of the docker binary
