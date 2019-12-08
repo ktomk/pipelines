@@ -13,6 +13,7 @@ use Ktomk\Pipelines\File\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 
 /**
  * Runner for a single step of a pipeline
@@ -135,6 +136,13 @@ class StepRunner
             return $result;
         }
 
+        list($status, $message) = $this->deployDockerClient($step, $id);
+        if (0 !== $status) {
+            $this->streams->err(rtrim($message, "\n") . "\n");
+
+            return $status;
+        }
+
         $status = $this->runStepScript($step, $streams, $exec, $name);
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
@@ -142,6 +150,16 @@ class StepRunner
         $this->shutdownStepContainer($status, $id, $exec, $name);
 
         return $status;
+    }
+
+    /**
+     * method to wrap new to have a test-point
+     *
+     * @return Repository
+     */
+    public function getDockerBinaryRepository()
+    {
+        return Repository::create($this->exec, $this->directories);
     }
 
     /**
@@ -265,6 +283,29 @@ class StepRunner
         $streams('');
 
         return null;
+    }
+
+    /**
+     * if there is the docker service in the step, deploy the
+     * docker client
+     *
+     * @param Step $step
+     * @param string $id
+     * @return array array(int $status, string $message)
+     */
+    private function deployDockerClient(Step $step, $id)
+    {
+        if (!$step->getServices()->has('docker')) {
+            return array(0, '');
+        }
+
+        $this->streams->out(' +++ docker client install...: ');
+
+        list($status, $message) = $this->getDockerBinaryRepository()->inject($id);
+
+        $this->streams->out("${message}\n");
+
+        return array($status, $message);
     }
 
     /**

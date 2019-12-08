@@ -9,6 +9,8 @@ use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
+use Ktomk\Pipelines\Runner\Docker\Binary\UnPackager;
 use Ktomk\Pipelines\Utility\OptionsMock;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -206,6 +208,86 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
 
+    /* docker client tests */
+
+    /**
+     * @covers \Ktomk\Pipelines\Runner\StepRunner::deployDockerClient()
+     */
+    public function testDockerClientInjection()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
+            ->expect('capture', 'docker', 0, 'run the container')
+            ->expect('capture', '~ docker$~', 0, 'inject (copy docker binary into container)')
+            ->expect('pass', '~ docker exec ~', 0, 'run step script')
+            ->expect('capture', 'docker', 0, 'kill')
+            ->expect('capture', 'docker', 0, 'rm');
+
+        $testDirectories = new Directories($_SERVER, $this->getTestProject());
+
+        $testRepository = $this->getMockBuilder('Ktomk\Pipelines\Runner\Docker\Binary\Repository')
+            ->setConstructorArgs(array($exec, array(), UnPackager::fromDirectories($exec, $testDirectories)))
+            ->setMethods(array('getLocalBinary'))
+            ->getMock()
+        ;
+        $testRepository->method('getLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
+
+        /** @var MockObject|StepRunner $mockRunner */
+        $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
+            ->setConstructorArgs(array(
+                RunOpts::create('pipelines-unit-test'),
+                $testDirectories,
+                $exec,
+                new Flags(),
+                Env::create(),
+                new Streams()
+            ))
+            ->setMethods(array('getDockerBinaryRepository'))
+            ->getMock();
+        $mockRunner->method('getDockerBinaryRepository')->willReturn($testRepository);
+
+        $step = $this->createTestStep(array('services' => array('docker')));
+        $actual = $mockRunner->runStep($step);
+        $this->assertSame(0, $actual);
+    }
+
+    public function testDockerClientInjectionFailure()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
+            ->expect('capture', 'docker', 0, 'run the container')
+            ->expect('capture', '~ docker$~', 63, 'inject (copy docker binary into container)');
+
+        $testDirectories = new Directories($_SERVER, $this->getTestProject());
+
+        $testRepository = $this->getMockBuilder('Ktomk\Pipelines\Runner\Docker\Binary\Repository')
+            ->setConstructorArgs(array($exec, array(), UnPackager::fromDirectories($exec, $testDirectories)))
+            ->setMethods(array('getLocalBinary'))
+            ->getMock()
+        ;
+        $testRepository->method('getLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
+
+        /** @var MockObject|StepRunner $mockRunner */
+        $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
+            ->setConstructorArgs(array(
+                RunOpts::create('pipelines-unit-test'),
+                $testDirectories,
+                $exec,
+                new Flags(),
+                Env::create(),
+                new Streams()
+            ))
+            ->setMethods(array('getDockerBinaryRepository'))
+            ->getMock();
+        $mockRunner->method('getDockerBinaryRepository')->willReturn($testRepository);
+
+        $step = $this->createTestStep(array('services' => array('docker')));
+        $actual = $mockRunner->runStep($step);
+        $this->assertSame(63, $actual);
+    }
+
     /* artifact tests */
 
     public function testArtifacts()
@@ -280,6 +362,23 @@ class StepRunnerTest extends RunnerTestCase
 
         $status = $runner->runStep($step);
         $this->assertSame(0, $status);
+    }
+
+    /* public/new */
+
+    public function testGetDockerBinaryRepository()
+    {
+        $exec = new ExecTester($this);
+        $runner = new StepRunner(
+            RunOpts::create('foo', Repository::PKG_TEST),
+            new Directories($_SERVER, 'foo'),
+            $exec,
+            new Flags(),
+            new Env(),
+            new Streams()
+        );
+        $actual = $runner->getDockerBinaryRepository();
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $actual);
     }
 
     private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')

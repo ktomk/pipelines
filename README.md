@@ -438,7 +438,7 @@ Check the version by invoking it:
 ### Todo
 
 - [x] Support for private Docker repositories
-- [ ] Inject docker client if docker service is enabled
+- [x] Inject docker client if docker service is enabled
 - [ ] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
 - [ ] Option to not mount docker.sock

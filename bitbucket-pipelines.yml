@@ -28,6 +28,8 @@ pipelines:
               | grep -q '^4.' || { composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit;
                 composer require --no-suggest --dev phpunit/phpunit ^4; }
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
+          services:
+            - docker
     lint-php-7.4:
       - step: &lint-php74
           <<: *lint-php53
@@ -40,6 +42,8 @@ pipelines:
           image: php:7.0
           script:
             - vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
     artifact-tests: # run phpunit suite w/ artifact
       - step:
           image: php:7.0
@@ -49,8 +53,19 @@ pipelines:
             - build/html/testdox.html
     docker:
       - step:
+          image: ktomk/pipelines:busybox
+          name: docker-in-docker
+          script:
+            - docker version --format {{.Client.Version}}
+            - docker version --format {{.Server.Version}}
+            - docker ps
+            - docker inspect pipelines-1.docker-in-docker.custom-docker.pipelines | head -n 8
+          services:
+            - docker
+    docker-install:
+      - step:
           image: php:7.0
-          name: default pipeline inside pipelines pipeline
+          name: docker-in-docker w/ install script
           script:
             - lib/pipelines/docker-client-install.sh
             - docker version
@@ -62,6 +77,17 @@ pipelines:
           image: php:7.0
           name: default pipeline inside pipelines pipeline
           script:
+            - docker version
+            - docker version --format {{.Client.Version}}
+            - docker version --format {{.Server.Version}}
+            - build/pipelines.phar --no-keep
+          services:
+            - docker
+    docker-phar-install:
+      - step:
+          image: php:7.0
+          name: default pipeline inside pipelines pipeline (extra docker client install)
+          script:
             - lib/pipelines/docker-client-install.sh
             - docker version
             - docker version --format {{.Client.Version}}
@@ -71,11 +97,12 @@ pipelines:
       - step:
           image: php:7.0
           script:
-            - lib/pipelines/docker-client-install.sh
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
             - docker cp --help
             - bin/pipelines --pipeline custom/recursion/middle
+          services:
+            - docker
     recursion/middle:
       - step:
           image: php:7.0
@@ -84,10 +111,11 @@ pipelines:
       - step:
           image: php:7.0
           script:
-            - lib/pipelines/docker-client-install.sh
             - docker version --format {{.Client.Version}}
             - docker version --format {{.Server.Version}}
             - bin/pipelines --pipeline custom/recursion --dry-run # must fail
+          services:
+            - docker
     private/docker-hub:
       - step:
           image:
