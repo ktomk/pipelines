@@ -1,5 +1,5 @@
 #!/bin/bash
-# run phpunit tests in different custom pipelines
+# phpunit tests in different custom pipelines test driver
 set -euo pipefail
 IFS=$'\n\t'
 
