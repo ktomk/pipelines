@@ -1,0 +1,10 @@
+---
+# this file is part of pipelines
+#
+# binary docker client package format
+#
+name: docker-19.03.1-linux-static-x86_64
+uri: https://download.docker.com/linux/static/stable/x86_64/docker-19.03.1.tgz
+sha256: 6e7d8e24ee46b13d7547d751696d01607d19c8224c1b2c867acc8c779e77734b
+binary: docker/docker
+binary_sha256: 9b6191f64cb89e706dc29390408260d643e88f7f853d8878b2fb0360186b2ac3

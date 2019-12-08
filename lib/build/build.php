@@ -23,6 +23,8 @@ $builder
     ->add('COPYING')
     ->add('src/**/*.php')
     ->add('src/Utility/App.php', $builder->replace('@.@.@', $version))
+    ->add('lib/package/*.yml')
+    ->remove('lib/package/docker-42.42.1-binsh-test-stub.yml')
     // FIXME ;!pattern
     // clean up a bit of mess
     ->remove('src/Cli/Vcs**')
