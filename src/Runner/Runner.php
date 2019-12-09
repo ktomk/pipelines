@@ -369,7 +369,10 @@ class Runner
     {
         $script = $step->getScript();
 
-        $buffer = '';
+        $buffer = Lib::cmd("<<'SCRIPT' docker", array(
+            'exec', '-i', $name, '/bin/sh'
+        ));
+        $buffer .= "\n# this /bin/sh script is generated from a pipelines pipeline:\n";
         foreach ($script as $line => $command) {
             $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
             $buffer .= $command . "\n";
@@ -377,18 +380,13 @@ class Runner
             $buffer .= 'printf \'\\n\'' . "\n";
             $buffer .= 'if [ $ret -ne 0 ]; then exit $ret; fi' . "\n";
         }
+        $buffer .= "SCRIPT\n";
 
-        $file = LibFs::tmpFilePut($buffer);
-
-        $status = $exec->pass(sprintf('< %s docker', Lib::quoteArg($file)), array(
-            'exec', '-i', $name, '/bin/sh'
-        ));
+        $status = $exec->pass($buffer, array());
 
         if (0 !== $status) {
             $this->streams->err(sprintf("script non-zero exit status: %d\n", $status));
         }
-
-        $streams->out(sprintf("\n"));
 
         return $status;
     }

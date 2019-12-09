@@ -4,6 +4,10 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Changed
+- Show scripts with `-v` and drop temporary files for scripts
+
 ## [0.0.22] - 2019-10-12
 ### Changed
 - Use Symfony YAML as fall-back parser, replaces

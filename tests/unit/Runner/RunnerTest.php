@@ -156,7 +156,7 @@ class RunnerTest extends TestCase
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker$~', 0) # docker exec
+            ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', 0) # docker kill
             ->expect('capture', 'docker', 0) # docker rm
         ;
@@ -252,7 +252,7 @@ class RunnerTest extends TestCase
         $exec
             ->expect('capture', 'docker', 1) # no id for name of potential re-use
             ->expect('capture', 'docker', 0) # run the container
-            ->expect('pass', '~ docker$~', 255)
+            ->expect('pass', '~ docker exec ~', 255)
         ;
 
         $this->keepContainerOnErrorExecTest($exec);
@@ -265,7 +265,7 @@ class RunnerTest extends TestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', $containerId) # id for name of potential re-use
-            ->expect('pass', '~ docker$~', 255)
+            ->expect('pass', '~ docker exec ~', 255)
         ;
 
         $this->keepContainerOnErrorExecTest($exec, $containerId);
@@ -281,7 +281,7 @@ class RunnerTest extends TestCase
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker$~', 0) # docker exec
+            ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . $tmpProjectDir, 0)
             ->expect('capture', 'docker', 0) # docker kill
@@ -319,7 +319,7 @@ class RunnerTest extends TestCase
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker$~', 0) # docker exec
+            ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('capture', 'docker', 0) # docker kill
             ->expect('capture', 'docker', 0) # docker rm
@@ -358,7 +358,7 @@ class RunnerTest extends TestCase
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker$~', 0)
+            ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect(
                 'pass',
@@ -403,7 +403,7 @@ class RunnerTest extends TestCase
             ->expect('capture', 'docker', 0) # docker run
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker$~', 0) # docker exec
+            ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', 0) # docker kill
             ->expect('capture', 'docker', 0) # docker rm
         ;
@@ -435,7 +435,7 @@ class RunnerTest extends TestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', "123456789\n") # existing id
-            ->expect('pass', '~ docker$~', 0) # docker exec
+            ->expect('pass', '~ docker exec ~', 0) # docker exec
         ;
 
         $runner = new Runner(
