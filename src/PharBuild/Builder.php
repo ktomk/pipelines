@@ -111,7 +111,7 @@ class Builder
         $limit = (int)min(16, max(0, $limit));
         $this->limit = $limit;
         $this->double = $limit
-            ? str_repeat('{*/,', $limit) . str_repeat('}', $limit) . '*'
+            ? str_repeat('{', $limit) . str_repeat('*/,}', $limit) . '*'
             : '*';
 
         return $this;
