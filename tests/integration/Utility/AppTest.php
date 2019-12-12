@@ -71,7 +71,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams(null, 'php://output'));
         $this->expectOutputRegex(
-            "{^info: --file overrides non-default --basename\n}"
+            '{^info: --file overrides non-default --basename$}m'
         );
         $args = array(
             'pipelines-test',

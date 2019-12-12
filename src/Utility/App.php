@@ -304,7 +304,18 @@ class App implements Runnable
      */
     private function parsePath($basename, &$workingDir)
     {
+        $buffer = (string)$workingDir;
+
         $file = $this->parseFile($basename, $workingDir);
+
+        $this->verbose(
+            sprintf(
+                'info: project directory is %s',
+                $workingDir === $buffer
+                    ? sprintf("'%s'", $workingDir)
+                    : sprintf("'%s' (pwd: '%s')", $workingDir, $buffer)
+            )
+        );
 
         if ($file !== $basename && self::BBPL_BASENAME !== $basename) {
             $this->verbose('info: --file overrides non-default --basename');

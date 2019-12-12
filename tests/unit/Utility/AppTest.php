@@ -77,7 +77,7 @@ class AppTest extends TestCase
 
     public function testFileNonDefaultBasenameChange()
     {
-        $this->expectOutputRegex('{^info: --file overrides non-default --basename}');
+        $this->expectOutputRegex('{^info: --file overrides non-default --basename$}m');
         $app = new App(new Streams(null, 'php://output'));
         $actual = $app->main(array('cmd', '--basename', 'pipelines.yml', '--file', 'my-pipelines.yml', '-v'));
         $this->assertSame(1, $actual);
