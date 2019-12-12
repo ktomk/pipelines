@@ -152,13 +152,13 @@ class RunnerTest extends TestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1) # zap
+            ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0)
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', 0) # docker kill
-            ->expect('capture', 'docker', 0) # docker rm
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm')
         ;
 
         $runner = new Runner(
@@ -250,8 +250,8 @@ class RunnerTest extends TestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1) # no id for name of potential re-use
-            ->expect('capture', 'docker', 0) # run the container
+            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
+            ->expect('capture', 'docker', 0, 'run the container')
             ->expect('pass', '~ docker exec ~', 255)
         ;
 
@@ -284,8 +284,8 @@ class RunnerTest extends TestCase
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . $tmpProjectDir, 0)
-            ->expect('capture', 'docker', 0) # docker kill
-            ->expect('capture', 'docker', 0) # docker rm
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm')
         ;
 
         $runner = new Runner(
@@ -397,15 +397,15 @@ class RunnerTest extends TestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', "123456789\n") # zap: docker ps
-            ->expect('capture', 'docker', "123456789\n") # zap: docker kill
-            ->expect('capture', 'docker', "123456789\n") # zap: docker rm
-            ->expect('capture', 'docker', 0) # docker run
+            ->expect('capture', 'docker', "123456789\n", 'zap: docker ps')
+            ->expect('capture', 'docker', "123456789\n", 'zap: docker kill')
+            ->expect('capture', 'docker', "123456789\n", 'zap: docker rm')
+            ->expect('capture', 'docker', 0, 'docker run')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', 0) # docker kill
-            ->expect('capture', 'docker', 0) # docker rm
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm')
         ;
 
         $runner = new Runner(
@@ -434,8 +434,8 @@ class RunnerTest extends TestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', "123456789\n") # existing id
-            ->expect('pass', '~ docker exec ~', 0) # docker exec
+            ->expect('capture', 'docker', "123456789\n", 'existing id')
+            ->expect('pass', '~ docker exec ~', 0)
         ;
 
         $runner = new Runner(

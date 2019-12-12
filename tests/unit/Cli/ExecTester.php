@@ -61,12 +61,13 @@ class ExecTester extends Exec
     /**
      * @param string $method
      * @param string $command
-     * @param callable|int|string $context
+     * @param callable|int|string $context (optional)
+     * @param string $message (optional)
      * @return $this
      */
-    public function expect($method, $command, $context = 0)
+    public function expect($method, $command, $context = 0, $message = null)
     {
-        $this->expects[] = array($method, $command, $context);
+        $this->expects[] = array($method, $command, $context, $message);
 
         return $this;
     }
@@ -140,25 +141,26 @@ class ExecTester extends Exec
             $expectedMethod,
             $expectedCommand,
             $context,
+            $message
             ) = $current;
 
         $testCase::assertSame(
             $expectedMethod,
             $method,
-            sprintf("Method on exec mismatch with command '%s'", $command)
+            sprintf("Method on exec mismatch with command '%s'%s", $command, $message ? " // ${message}" : '')
         );
 
         if ('~' === $expectedCommand[0]) {
             $testCase::assertRegExp(
                 $expectedCommand,
                 $command,
-                sprintf("Command on exec mismatch with method '%s'", $method)
+                sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // ${message}" : '')
             );
         } else {
             $testCase::assertSame(
                 $expectedCommand,
                 $command,
-                sprintf("Command on exec mismatch with method '%s'", $method)
+                sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // ${message}" : '')
             );
         }
 
