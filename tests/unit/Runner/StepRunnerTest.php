@@ -293,7 +293,7 @@ class StepRunnerTest extends RunnerTestCase
         list($out, $err) = ((array)$outErr) + array(null, null);
 
         return new StepRunner(
-            'pipelines-unit-test',
+            RunOpts::create('pipelines-unit-test'),
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
             new Flags($flags),

@@ -19,6 +19,7 @@ use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\Flags;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\Runner\Runner;
+use Ktomk\Pipelines\Runner\RunOpts;
 
 class App implements Runnable
 {
@@ -100,11 +101,11 @@ class App implements Runnable
 
         $this->help->run($args);
 
-        $prefix = $this->parsePrefix();
+        $runOpts = RunnerOptions::bind($args)->run();
 
         $exec = $this->parseExec();
 
-        DockerOptions::bind($args, $exec, $prefix, $this->streams)->run();
+        DockerOptions::bind($args, $exec, $runOpts->getPrefix(), $this->streams)->run();
 
         $keep = KeepOptions::bind($args)->run();
 
@@ -143,7 +144,7 @@ class App implements Runnable
 
         $directories = new Directories(Lib::env($_SERVER), $workingDir);
 
-        $runner = Runner::createEx($prefix, $directories, $exec, $flags, $env, $streams);
+        $runner = Runner::createEx($runOpts, $directories, $exec, $flags, $env, $streams);
 
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');
@@ -334,23 +335,6 @@ class App implements Runnable
         $this->verbose(sprintf("info: pipelines file is '%s'", $path));
 
         return $path;
-    }
-
-    /**
-     * @throws InvalidArgumentException
-     * @throws ArgsException
-     * @return string
-     */
-    private function parsePrefix()
-    {
-        $args = $this->arguments;
-
-        $prefix = $args->getOptionArgument('prefix', self::UTILITY_NAME);
-        if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
-            ArgsException::__(sprintf("invalid prefix: '%s'", $prefix));
-        }
-
-        return $prefix;
     }
 
     /**

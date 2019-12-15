@@ -18,9 +18,9 @@ class Runner
     const STATUS_RECURSION_DETECTED = 127;
 
     /**
-     * @var string
+     * @var RunOpts
      */
-    private $prefix;
+    private $runOpts;
 
     /**
      * @var Directories
@@ -51,7 +51,7 @@ class Runner
      *
      * The "ex" version of runner creation, moving creation out of the ctor itself.
      *
-     * @param string $prefix
+     * @param RunOpts $runOpts
      * @param Directories $directories source repository root directory based directories object
      * @param Exec $exec
      * @param Flags $flags [optional]
@@ -60,7 +60,7 @@ class Runner
      * @return Runner
      */
     public static function createEx(
-        $prefix,
+        RunOpts $runOpts,
         Directories $directories,
         Exec $exec,
         Flags $flags = null,
@@ -72,13 +72,13 @@ class Runner
         $env = null === $env ? Env::create() : $env;
         $streams = null === $streams ? Streams::create() : $streams;
 
-        return new self($prefix, $directories, $exec, $flags, $env, $streams);
+        return new self($runOpts, $directories, $exec, $flags, $env, $streams);
     }
 
     /**
      * Runner constructor.
      *
-     * @param string $prefix
+     * @param string $runOpts
      * @param Directories $directories source repository root directory based directories object
      * @param Exec $exec
      * @param Flags $flags
@@ -86,7 +86,7 @@ class Runner
      * @param Streams $streams
      */
     public function __construct(
-        $prefix,
+        RunOpts $runOpts,
         Directories $directories,
         Exec $exec,
         Flags $flags,
@@ -94,7 +94,7 @@ class Runner
         Streams $streams
     )
     {
-        $this->prefix = $prefix;
+        $this->runOpts = $runOpts;
         $this->directories = $directories;
         $this->exec = $exec;
         $this->flags = $flags;
@@ -141,7 +141,7 @@ class Runner
      */
     public function runStep(Step $step) {
         $stepRunner = new StepRunner(
-            $this->prefix,
+            $this->runOpts,
             $this->directories,
             $this->exec,
             $this->flags,

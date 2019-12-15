@@ -20,9 +20,9 @@ use Ktomk\Pipelines\LibTmp;
 class StepRunner
 {
     /**
-     * @var string
+     * @var RunOpts
      */
-    private $prefix;
+    private $runOpts;
 
     /**
      * @var Directories
@@ -59,7 +59,7 @@ class StepRunner
     /**
      * DockerSession constructor.
      *
-     * @param string $prefix
+     * @param RunOpts $runOpts
      * @param Directories $directories source repository root directory based directories object
      * @param Exec $exec
      * @param Flags $flags
@@ -67,7 +67,7 @@ class StepRunner
      * @param Streams $streams
      */
     public function __construct(
-        $prefix,
+        RunOpts $runOpts,
         Directories $directories,
         Exec $exec,
         Flags $flags,
@@ -75,7 +75,7 @@ class StepRunner
         Streams $streams
     )
     {
-        $this->prefix = $prefix;
+        $this->runOpts = $runOpts;
         $this->directories = $directories;
         $this->exec = $exec;
         $this->flags = $flags;
@@ -306,7 +306,7 @@ class StepRunner
             $nameSlug = 'no-name';
         }
 
-        return $this->prefix . '-' . implode(
+        return $this->runOpts->getPrefix() . '-' . implode(
             '.',
             array_reverse(
                 array(

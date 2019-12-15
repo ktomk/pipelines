@@ -18,7 +18,7 @@ class RunnerTest extends RunnerTestCase
     public function testCreateExCreation()
     {
         $runner = Runner::createEx(
-            'foo',
+            RunOpts::create('foo'),
             new Directories($_SERVER, $this->getTestProject()),
             $this->createMock('Ktomk\Pipelines\Cli\Exec')
         );
@@ -35,7 +35,7 @@ class RunnerTest extends RunnerTestCase
         $exec->setActive(false);
         $this->expectOutputRegex('~pipelines: pipeline with no step to execute~');
         $runner = new Runner(
-            'pipelines-unit-test',
+            RunOpts::create('pipelines-unit-test'),
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
             new Flags,
@@ -56,7 +56,7 @@ class RunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('~^pipelines: .* pipeline inside pipelines recursion detected~');
         $runner = new Runner(
-            'pipelines-unit-test',
+            RunOpts::create('pipelines-unit-test'),
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
             new Flags(),
@@ -86,7 +86,7 @@ class RunnerTest extends RunnerTestCase
         /** @var MockObject|Runner $runner */
         $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
             ->setConstructorArgs(array(
-                'foo',
+                RunOpts::create('foo'),
                 $this->createMock('Ktomk\Pipelines\Runner\Directories'),
                 ExecTester::create($this),
                 new Flags(),
@@ -109,7 +109,7 @@ class RunnerTest extends RunnerTestCase
         /** @var MockObject|Runner $runner */
         $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
             ->setConstructorArgs(array(
-                'foo',
+                RunOpts::create('foo'),
                 $this->createMock('Ktomk\Pipelines\Runner\Directories'),
                 $exec,
                 new Flags(),
