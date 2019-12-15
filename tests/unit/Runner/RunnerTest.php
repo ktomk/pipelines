@@ -7,103 +7,14 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline;
-use Ktomk\Pipelines\File\Step;
-use Ktomk\Pipelines\LibTmp;
-use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\Runner
  */
-class RunnerTest extends TestCase
+class RunnerTest extends RunnerTestCase
 {
-    /**
-     * @var string fixture of command for deploy mode copy
-     * @see setUp for initialization
-     */
-    private $deploy_copy_cmd;
-    private $deploy_copy_cmd_2;
-
-    /**
-     * @var array
-     */
-    private $cleaners = array();
-
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $this->deploy_copy_cmd = '~cd ' . sys_get_temp_dir() . '/pipelines-cp\.[^/]+/\. ' .
-            "&& echo 'app' | tar c -h -f - --no-recursion app " .
-            "| docker  cp - '\\*dry-run\\*:/\\.'~";
-
-        $this->deploy_copy_cmd_2 = '~cd ' . sys_get_temp_dir() . '/pipelines-test-suite[^/]*/\. ' .
-            '&& tar c -f - . ' .
-            "| docker  cp - '\\*dry-run\\*:/app'~";
-    }
-
-    public function testFailOnContainerCreation()
-    {
-        $exec = new ExecTester($this);
-        $exec->expect('capture', 'docker', 1);
-        $exec->expect('capture', 'docker', 126);
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $this->expectOutputRegex('~pipelines: setting up the container failed~');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            null,
-            null,
-            new Streams(null, null, 'php://output')
-        );
-
-        $actual = $runner->run($pipeline);
-        $this->assertNotSame(0, $actual);
-    }
-
-    public function testRunning()
-    {
-        /** @var Exec|MockObject $exec */
-        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
-        $exec->method('pass')->willReturn(0);
-        $exec->method('capture')->willReturn(0);
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $this->expectOutputRegex('{^\x1d\+\+\+ step #1\n}');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            null,
-            null,
-            new Streams(null, 'php://output')
-        );
-
-        $actual = $runner->run($pipeline);
-        $this->assertSame(0, $actual);
-    }
-
     public function testErrorStatusWithPipelineHavingEmptySteps()
     {
         /** @var MockObject|Pipeline $pipeline */
@@ -148,385 +59,57 @@ class RunnerTest extends TestCase
         $this->assertSame(127, $status);
     }
 
-    public function testCopy()
+    public function provideRunStatuses()
     {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1, 'zap')
-            ->expect('capture', 'docker', 0)
-            ->expect('pass', $this->deploy_copy_cmd, 0)
-            ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', 0, 'docker kill')
-            ->expect('capture', 'docker', 0, 'docker rm')
-        ;
-
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY | Flags::FLAGS),
-            null,
-            new Streams()
+        return array(
+            array(0),
+            array(1),
         );
+    }
 
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
+    /**
+     * @dataProvider provideRunStatuses
+     * @param int $status
+     */
+    public function testRunPipeline($status)
+    {
+        /** @var MockObject|Runner $runner */
+        $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
+            ->setConstructorArgs(array(
+                'foo',
+                $this->createMock('Ktomk\Pipelines\Runner\Directories'),
+                ExecTester::create($this),
+                new Flags(),
+                Env::create(),
+                Streams::create()
             ))
-        ));
+            ->setMethods(array('runStep'))
+            ->getMock();
+        $runner->method('runStep')->willReturn($status);
 
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
+        $step = $this->createTestStep();
+        $this->assertSame($status, $runner->run($step->getPipeline()));
     }
 
-    public function testCopyFails()
-    {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
-            ->expect('pass', $this->deploy_copy_cmd, 1);
-
-        $this->expectOutputRegex('{^pipelines: deploy copy failure}');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
-            null,
-            new Streams(null, null, 'php://output')
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(1, $status);
-    }
-
-    public function testCopyFailsAtSecondStage()
-    {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
-            ->expect('pass', $this->deploy_copy_cmd, 0)
-            ->expect('pass', $this->deploy_copy_cmd_2, 1);
-
-        $this->expectOutputRegex('{^pipelines: deploy copy failure}');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
-            null,
-            new Streams(null, null, 'php://output')
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(1, $status);
-    }
-
-    public function testKeepContainerOnErrorWithNonExistentContainer()
-    {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
-            ->expect('capture', 'docker', 0, 'run the container')
-            ->expect('pass', '~ docker exec ~', 255)
-        ;
-
-        $this->keepContainerOnErrorExecTest($exec);
-    }
-
-    public function testKeepContainerOnErrorWithExistingContainer()
-    {
-        $containerId = 'face42face42';
-
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', $containerId) # id for name of potential re-use
-            ->expect('pass', '~ docker exec ~', 255)
-        ;
-
-        $this->keepContainerOnErrorExecTest($exec, $containerId);
-    }
-
-    public function testArtifacts()
-    {
-        $tmpProjectDir = $this->getTestProject();
-
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
-            ->expect('pass', $this->deploy_copy_cmd, 0)
-            ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', './build/foo-package.tgz')
-            ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . $tmpProjectDir, 0)
-            ->expect('capture', 'docker', 0, 'docker kill')
-            ->expect('capture', 'docker', 0, 'docker rm')
-        ;
-
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $tmpProjectDir),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
-            null,
-            new Streams()
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-                'artifacts' => array('build/foo-package.tgz'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
-    }
-
-    public function testArtifactsNoMatch()
-    {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
-            ->expect('pass', $this->deploy_copy_cmd, 0)
-            ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', './build/foo-package.tgz')
-            ->expect('capture', 'docker', 0) # docker kill
-            ->expect('capture', 'docker', 0) # docker rm
-        ;
-
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
-            null,
-            new Streams()
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-                'artifacts' => array('build/bar-package.tgz'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
-    }
-
-    public function testArtifactsFailure()
-    {
-        $tmpProjectDir = $this->getTestProject();
-
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
-            ->expect('pass', $this->deploy_copy_cmd, 0)
-            ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', './build/foo-package.tgz')
-            ->expect(
-                'pass',
-                'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . $tmpProjectDir,
-                1
-            )
-            ->expect('capture', 'docker', 0) # docker kill
-            ->expect('capture', 'docker', 0) # docker rm
-        ;
-
-        $this->expectOutputRegex('~^pipelines: Artifact failure: \'build/foo-package.tgz\' \\(1, 1 paths, 1\\d\\d bytes\\)$~m');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $tmpProjectDir),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
-            null,
-            new Streams(null, null, 'php://output')
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-                'artifacts' => array('build/foo-package.tgz'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
-    }
-
-    public function testZapExistingContainer()
-    {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', "123456789\n", 'zap: docker ps')
-            ->expect('capture', 'docker', "123456789\n", 'zap: docker kill')
-            ->expect('capture', 'docker', "123456789\n", 'zap: docker rm')
-            ->expect('capture', 'docker', 0, 'docker run')
-            ->expect('pass', $this->deploy_copy_cmd, 0)
-            ->expect('pass', $this->deploy_copy_cmd_2, 0)
-            ->expect('pass', '~ docker exec ~', 0)
-            ->expect('capture', 'docker', 0, 'docker kill')
-            ->expect('capture', 'docker', 0, 'docker rm')
-        ;
-
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
-            null,
-            new Streams()
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
-    }
-
-    public function testKeepExistingContainer()
-    {
-        $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', "123456789\n", 'existing id')
-            ->expect('pass', '~ docker exec ~', 0)
-        ;
-
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            new Flags((Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE) ^ Flags::FLAGS),
-            null,
-            new Streams()
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
-    }
-
-    public function testDockerHubImageLogin()
+    public function testRunStep()
     {
         $exec = new Exec();
         $exec->setActive(false);
 
-        $this->expectOutputString('');
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            null,
-            null,
-            new Streams(null, null, 'php://output')
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => array(
-                    'name' => 'foo/bar:latest',
-                    'username' => 'user',
-                    'password' => 'secret',
-                ),
-                'script' => array(':'),
+        /** @var MockObject|Runner $runner */
+        $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
+            ->setConstructorArgs(array(
+                'foo',
+                $this->createMock('Ktomk\Pipelines\Runner\Directories'),
+                $exec,
+                new Flags(),
+                Env::create(),
+                new Streams()
             ))
-        ));
+            ->setMethods(null)
+            ->getMock();
 
-        $status = $runner->run($pipeline);
-        $this->assertSame(0, $status);
-    }
-
-    private function getTestProject()
-    {
-        $project = LibTmp::tmpDir('pipelines-test-suite.');
-
-        $this->cleaners[] = DestructibleString::rmDir($project);
-
-        return $project;
-    }
-
-    private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')
-    {
-        $expectedRegex = sprintf(
-            '{script non-zero exit status: 255\nerror, keeping container id %s}',
-            preg_quote($id, '{}')
-        );
-        $this->expectOutputRegex($expectedRegex);
-        $runner = new Runner(
-            'pipelines-unit-test',
-            new Directories($_SERVER, $this->getTestProject()),
-            $exec,
-            new Flags(Flags::FLAGS | Flags::FLAG_KEEP_ON_ERROR), # keep on error flag is important
-            null,
-            new Streams(null, null, 'php://output')
-        );
-
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, array(
-                'image' => 'foo/bar:latest',
-                'script' => array('fatal me an error'),
-            ))
-        ));
-
-        $status = $runner->run($pipeline);
-        $this->assertSame(255, $status);
+        $step = $this->createTestStep();
+        $this->assertSame(0, $runner->runStep($step));
     }
 }
