@@ -165,7 +165,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY | Flags::FLAGS),
             null,
             new Streams()
         );
@@ -196,7 +196,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
             null,
             new Streams(null, null, 'php://output')
         );
@@ -228,7 +228,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
             null,
             new Streams(null, null, 'php://output')
         );
@@ -292,7 +292,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $tmpProjectDir),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
             null,
             new Streams()
         );
@@ -329,7 +329,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, sys_get_temp_dir() . '/pipelines-test-suite'),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
             null,
             new Streams()
         );
@@ -374,7 +374,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $tmpProjectDir),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
             null,
             new Streams(null, null, 'php://output')
         );
@@ -412,7 +412,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            Runner::FLAG_DEPLOY_COPY | Runner::FLAGS,
+            new Flags(Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS),
             null,
             new Streams()
         );
@@ -442,7 +442,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            (Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE) ^ Runner::FLAGS,
+            new Flags((Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE) ^ Flags::FLAGS),
             null,
             new Streams()
         );
@@ -512,7 +512,7 @@ class RunnerTest extends TestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            Runner::FLAGS | Runner::FLAG_KEEP_ON_ERROR, # keep on error flag is important
+            new Flags(Flags::FLAGS | Flags::FLAG_KEEP_ON_ERROR), # keep on error flag is important
             null,
             new Streams(null, null, 'php://output')
         );

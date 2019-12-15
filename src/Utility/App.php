@@ -16,6 +16,7 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
+use Ktomk\Pipelines\Runner\Flags;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\Runner\Runner;
 
@@ -495,21 +496,21 @@ class App implements Runnable
      *
      * @param KeepOptions $keep
      * @param $deployMode
-     * @return bool|int
+     * @return Flags
      */
     private function getRunFlags(KeepOptions $keep, $deployMode)
     {
-        $flags = Runner::FLAGS;
+        $flagsValue = Flags::FLAGS;
         if ($keep->errorKeep) {
-            $flags |= Runner::FLAG_KEEP_ON_ERROR;
+            $flagsValue |= Flags::FLAG_KEEP_ON_ERROR;
         } elseif ($keep->keep) {
-            $flags &= ~(Runner::FLAG_DOCKER_KILL | Runner::FLAG_DOCKER_REMOVE);
+            $flagsValue &= ~(Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE);
         }
 
         if ('copy' === $deployMode) {
-            $flags |= Runner::FLAG_DEPLOY_COPY;
+            $flagsValue |= Flags::FLAG_DEPLOY_COPY;
         }
 
-        return $flags;
+        return new Flags($flagsValue);
     }
 }

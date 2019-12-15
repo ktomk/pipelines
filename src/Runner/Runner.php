@@ -20,13 +20,6 @@ use Ktomk\Pipelines\LibTmp;
  */
 class Runner
 {
-    const FLAGS = 19;
-    const FLAG_DOCKER_REMOVE = 1;
-    const FLAG_DOCKER_KILL = 2;
-    const FLAG_DEPLOY_COPY = 4; # copy working dir into container
-    const FLAG_KEEP_ON_ERROR = 8;
-    const FLAG_SOCKET = 16;
-
     const STATUS_NO_STEPS = 1;
     const STATUS_RECURSION_DETECTED = 127;
 
@@ -46,7 +39,7 @@ class Runner
     private $exec;
 
     /**
-     * @var int
+     * @var Flags
      */
     private $flags;
 
@@ -72,7 +65,7 @@ class Runner
      * @param string $prefix
      * @param Directories $directories source repository root directory based directories object
      * @param Exec $exec
-     * @param int $flags [optional]
+     * @param Flags $flags [optional]
      * @param Env $env [optional]
      * @param Streams $streams [optional]
      */
@@ -80,7 +73,7 @@ class Runner
         $prefix,
         Directories $directories,
         Exec $exec,
-        $flags = null,
+        Flags $flags = null,
         Env $env = null,
         Streams $streams = null
     )
@@ -88,7 +81,7 @@ class Runner
         $this->prefix = $prefix;
         $this->directories = $directories;
         $this->exec = $exec;
-        $this->flags = null === $flags ? self::FLAGS : $flags;
+        $this->flags = null === $flags ? new Flags() : $flags;
         $this->env = null === $env ? Env::create() : $env;
         $this->streams = null === $streams ? Streams::create() : $streams;
     }
@@ -137,13 +130,10 @@ class Runner
         $env = $this->env;
         $exec = $this->exec;
         $streams = $this->streams;
-        $flags = $this->flags;
+        $reuseContainer = $this->flags->reuseContainer();
+        $deployCopy = $this->flags->deployCopy();
 
         $name = $this->generateContainerName($step);
-
-        $reuseContainer =
-            ($flags & self::FLAG_KEEP_ON_ERROR)
-            || !($flags & (self::FLAG_DOCKER_KILL | self::FLAG_DOCKER_REMOVE));
 
         if (false === $reuseContainer) {
             $this->zapContainerByName($name);
@@ -160,15 +150,13 @@ class Runner
             $name
         ));
 
-        $copy = (bool)($flags & self::FLAG_DEPLOY_COPY);
-
         $id = null;
         if ($reuseContainer) {
             $id = $this->dockerGetContainerIdByName($name);
         }
 
         if (null === $id) {
-            list($id, $status) = $this->runNewContainer($name, $dir, $copy, $step);
+            list($id, $status) = $this->runNewContainer($name, $dir, $deployCopy, $step);
             if (null === $id) {
                 return $status;
             }
@@ -177,13 +165,13 @@ class Runner
         $streams->out(sprintf("    container-id...: %s\n\n", substr($id, 0, 12)));
 
         # TODO: different deployments, mount (default), mount-ro, copy
-        if (null !== $result = $this->deployCopy($copy, $id, $dir)) {
+        if (null !== $result = $this->deployCopy($deployCopy, $id, $dir)) {
             return $result;
         }
 
         $status = $this->runStepScript($step, $streams, $exec, $name);
 
-        $this->captureStepArtifacts($step, $copy && 0 === $status, $id, $dir);
+        $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
         $this->shutdownStepContainer($status, $id, $exec, $name);
 
@@ -201,7 +189,6 @@ class Runner
     {
         $env = $this->env;
         $exec = $this->exec;
-        $flags = $this->flags;
         $streams = $this->streams;
 
         $image = $step->getImage();
@@ -212,9 +199,8 @@ class Runner
 
         // enable docker client inside docker by mounting docker socket
         // FIXME give controlling options, this is serious /!\
-        $socket = (bool)($flags & self::FLAG_SOCKET);
         $mountDockerSock = array();
-        if ($socket && file_exists('/var/run/docker.sock')) {
+        if ($this->flags->useDockerSocket() && file_exists('/var/run/docker.sock')) {
             $mountDockerSock = array(
                 '-v', '/var/run/docker.sock:/var/run/docker.sock',
             );
@@ -480,7 +466,7 @@ class Runner
         $flags = $this->flags;
 
         # keep container on error
-        if (0 !== $status && $flags & self::FLAG_KEEP_ON_ERROR) {
+        if (0 !== $status && $flags->keepOnError()) {
             $this->streams->err(sprintf(
                 "error, keeping container id %s\n",
                 substr($id, 0, 12)
@@ -490,15 +476,15 @@ class Runner
         }
 
         # keep or remove container
-        if ($flags & self::FLAG_DOCKER_KILL) {
+        if ($flags->killContainer()) {
             $exec->capture('docker', array('kill', $name));
         }
 
-        if ($flags & self::FLAG_DOCKER_REMOVE) {
+        if ($flags->removeContainer()) {
             $exec->capture('docker', array('rm', $name));
         }
 
-        if (!($flags & (self::FLAG_DOCKER_KILL | self::FLAG_DOCKER_REMOVE))) {
+        if ($flags->keep()) {
             $this->streams->out(sprintf(
                 "keeping container id %s\n",
                 substr($id, 0, 12)
