@@ -15,6 +15,16 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class RunnerTest extends RunnerTestCase
 {
+    public function testCreateExCreation()
+    {
+        $runner = Runner::createEx(
+            'foo',
+            new Directories($_SERVER, $this->getTestProject()),
+            $this->createMock('Ktomk\Pipelines\Cli\Exec')
+        );
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Runner', $runner);
+    }
+
     public function testErrorStatusWithPipelineHavingEmptySteps()
     {
         /** @var MockObject|Pipeline $pipeline */
@@ -28,8 +38,8 @@ class RunnerTest extends RunnerTestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            null,
-            null,
+            new Flags,
+            Env::create(),
             new Streams(null, null, 'php://output')
         );
         $status = $runner->run($pipeline);
@@ -49,7 +59,7 @@ class RunnerTest extends RunnerTestCase
             'pipelines-unit-test',
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            null,
+            new Flags(),
             $env,
             new Streams(null, null, 'php://output')
         );

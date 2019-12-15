@@ -143,7 +143,7 @@ class App implements Runnable
 
         $directories = new Directories(Lib::env($_SERVER), $workingDir);
 
-        $runner = new Runner($prefix, $directories, $exec, $flags, $env, $streams);
+        $runner = Runner::createEx($prefix, $directories, $exec, $flags, $env, $streams);
 
         if ($noRun) {
             $this->verbose('info: not running the pipeline per --no-run option');

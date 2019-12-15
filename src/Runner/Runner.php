@@ -47,7 +47,9 @@ class Runner
     private $streams;
 
     /**
-     * Runner constructor.
+     * Static factory method.
+     *
+     * The "ex" version of runner creation, moving creation out of the ctor itself.
      *
      * @param string $prefix
      * @param Directories $directories source repository root directory based directories object
@@ -55,8 +57,9 @@ class Runner
      * @param Flags $flags [optional]
      * @param Env $env [optional]
      * @param Streams $streams [optional]
+     * @return Runner
      */
-    public function __construct(
+    public static function createEx(
         $prefix,
         Directories $directories,
         Exec $exec,
@@ -65,12 +68,38 @@ class Runner
         Streams $streams = null
     )
     {
+        $flags = null === $flags ? new Flags() : $flags;
+        $env = null === $env ? Env::create() : $env;
+        $streams = null === $streams ? Streams::create() : $streams;
+
+        return new self($prefix, $directories, $exec, $flags, $env, $streams);
+    }
+
+    /**
+     * Runner constructor.
+     *
+     * @param string $prefix
+     * @param Directories $directories source repository root directory based directories object
+     * @param Exec $exec
+     * @param Flags $flags
+     * @param Env $env
+     * @param Streams $streams
+     */
+    public function __construct(
+        $prefix,
+        Directories $directories,
+        Exec $exec,
+        Flags $flags,
+        Env $env,
+        Streams $streams
+    )
+    {
         $this->prefix = $prefix;
         $this->directories = $directories;
         $this->exec = $exec;
-        $this->flags = null === $flags ? new Flags() : $flags;
-        $this->env = null === $env ? Env::create() : $env;
-        $this->streams = null === $streams ? Streams::create() : $streams;
+        $this->flags = $flags;
+        $this->env = $env;
+        $this->streams = $streams;
     }
 
     /**
