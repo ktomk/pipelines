@@ -1,5 +1,5 @@
-# Phpunit HTML report
-/html/
+# Build Dir
+/*/
 
 # pipelines Phar build
 /pipelines.phar
