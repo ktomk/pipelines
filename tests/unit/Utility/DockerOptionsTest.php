@@ -47,6 +47,7 @@ class DockerOptionsTest extends TestCase
         );
 
         $options->run();
+        $this->addToAssertionCount(1);
     }
 
     /**

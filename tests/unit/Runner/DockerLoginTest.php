@@ -30,6 +30,7 @@ class DockerLoginTest extends TestCase
         $login = new DockerLogin($exec, $resolver);
         $image = new Image('foo/bar');
         $login->byImage($image);
+        $this->addToAssertionCount(1);
     }
 
     public function testByImageWithImage()
@@ -48,6 +49,7 @@ class DockerLoginTest extends TestCase
         );
         $image = new Image($array);
         $login->byImage($image);
+        $this->addToAssertionCount(1);
     }
 
     public function testDockerLoginHasAuth()

@@ -5,7 +5,8 @@
 namespace Ktomk\Pipelines\Cli;
 
 use BadMethodCallException;
-use PHPUnit\Framework\TestCase;
+use Ktomk\Pipelines\TestCase;
+use PHPUnit\Runner\BaseTestRunner;
 use UnexpectedValueException;
 
 /**
@@ -47,6 +48,13 @@ class ExecTester extends Exec
     public function __destruct()
     {
         $testCase = $this->testCase;
+
+        // if the test did not pass, keep the actual failure as there can
+        // only be one.
+        if (BaseTestRunner::STATUS_PASSED !== $testCase->getStatus()) {
+            return;
+        }
+
         $testCase->addToAssertionCount(1);
         if (count($this->expects)) {
             $testCase::fail(

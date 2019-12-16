@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Improve `--help` display
 - Show scripts with `-v` and drop temporary files for scripts
+### Fixed
+- Exec tester unintentionally override of phpunit test case
+  results
 
 ## [0.0.22] - 2019-10-12
 ### Changed
