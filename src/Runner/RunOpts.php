@@ -22,15 +22,21 @@ class RunOpts
     private $options;
 
     /**
+     * @var string
+     */
+    private $binaryPackage;
+
+    /**
      * Static factory method
      *
      * @param string $prefix [optional]
+     * @param string $binaryPackage package name or path to binary (string)
      *
      * @return RunOpts
      */
-    public static function create($prefix = null)
+    public static function create($prefix = null, $binaryPackage = null)
     {
-        return new self($prefix, Options::create());
+        return new self($prefix, Options::create(), $binaryPackage);
     }
 
     /**
@@ -40,11 +46,13 @@ class RunOpts
      *
      * @param string $prefix
      * @param null|Options $options
+     * @param string $binaryPackage package name or path to binary (string)
      */
-    public function __construct($prefix = null, Options $options = null)
+    public function __construct($prefix = null, Options $options = null, $binaryPackage = null)
     {
         $this->prefix = $prefix;
         $this->options = $options;
+        $this->binaryPackage = $binaryPackage;
     }
 
     /**
@@ -79,5 +87,21 @@ class RunOpts
         }
 
         return $this->options->get($name);
+    }
+
+    /**
+     * @param string $binaryPackage
+     */
+    public function setBinaryPackage($binaryPackage)
+    {
+        $this->binaryPackage = $binaryPackage;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBinaryPackage()
+    {
+        return $this->binaryPackage;
     }
 }

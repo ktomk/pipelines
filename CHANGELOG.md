@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- `--docker-client` option to specify which docker client binary
+  to use (Docker Service)
 - Docker Service in YAML injects Linux X86_64 docker client
   binary (Docker Service)
 

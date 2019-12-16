@@ -44,6 +44,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--[no-|error-]keep] [--no-run]
                  [[-e | --env] <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
+                 [--docker-client <package>]
                  [--deploy mount | copy ] [--pipeline <id>]
                  [--trigger <ref>]
        pipelines [<options>] --list | --show | --images
@@ -120,6 +121,13 @@ Keep options
                           the container kept and exit w/ container exec
                           exit status
     --no-keep             do not keep docker containers; default behaviour
+
+Docker service options
+    --docker-client <package>
+                          which docker client binary to use for the
+                          pipeline service 'docker'
+                          defaults to 'docker-19.03.1-linux-static-x86_64'
+                          package
 
 File information options
     --images              list all images in file, in order of use, w/o

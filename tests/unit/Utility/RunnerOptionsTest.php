@@ -15,7 +15,7 @@ class RunnerOptionsTest extends TestCase
 {
     public function testCreation()
     {
-        $args = Args::create(array('cmd', '--error-keep', '--prefix', 'prefix'));
+        $args = Args::create(array('cmd', '--error-keep', '--prefix', 'prefix', '--docker-client', 'test'));
         $runner = RunnerOptions::bind($args);
         $this->assertInstanceOf('Ktomk\Pipelines\Utility\RunnerOptions', $runner);
 
