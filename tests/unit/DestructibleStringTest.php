@@ -15,7 +15,7 @@ class DestructibleStringTest extends TestCase
     public function testCreation()
     {
         $tempDir = new DestructibleString(
-            LibFs::tmpDir('pipelines-test-destruction.'),
+            LibTmp::tmpDir('pipelines-test-destruction.'),
             /* @see LibFs::rmDir() */
             __NAMESPACE__ . '\LibFs::rmDir'
         );
@@ -28,7 +28,7 @@ class DestructibleStringTest extends TestCase
     public function testRmDir()
     {
         $dir = DestructibleString::rmDir(
-            LibFs::tmpDir('pipelines-test-destruction.')
+            LibTmp::tmpDir('pipelines-test-destruction.')
         );
         $this->assertDirectoryExists((string)$dir);
         $dir->__destruct();

@@ -13,6 +13,7 @@ use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibTmp;
 
 /**
  * Pipeline runner with docker under the hood
@@ -329,7 +330,7 @@ class Runner
 
         $streams->out("\x1D+++ copying files into container...\n");
 
-        $tmpDir = LibFs::tmpDir('pipelines-cp.');
+        $tmpDir = LibTmp::tmpDir('pipelines-cp.');
         $this->temporaryDirectories[] = DestructibleString::rmDir($tmpDir);
         LibFs::symlink($dir, $tmpDir . '/app');
         $cd = Lib::cmd('cd', array($tmpDir . '/.'));
@@ -385,7 +386,7 @@ class Runner
         $status = $exec->pass($buffer, array());
 
         if (0 !== $status) {
-            $this->streams->err(sprintf("script non-zero exit status: %d\n", $status));
+            $streams->err(sprintf("script non-zero exit status: %d\n", $status));
         }
 
         return $status;

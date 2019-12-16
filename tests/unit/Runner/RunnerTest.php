@@ -10,7 +10,7 @@ use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Step;
-use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -494,7 +494,7 @@ class RunnerTest extends TestCase
 
     private function getTestProject()
     {
-        $project = LibFs::tmpDir('pipelines-test-suite.');
+        $project = LibTmp::tmpDir('pipelines-test-suite.');
 
         $this->cleaners[] = DestructibleString::rmDir($project);
 

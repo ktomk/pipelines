@@ -72,6 +72,7 @@ class LibFs
     public static function isAbsolutePath($path)
     {
         // TODO: a variant with PHP stream wrapper prefix support
+        /* @see isStreamUri */
 
         $count = strspn($path, '/', 0, 3) % 2;
 
@@ -95,6 +96,26 @@ class LibFs
         }
 
         return true;
+    }
+
+    /**
+     * see 2.2 Standards permit the exclusion of bad filenames / POSIX.1-2008
+     * @link https://dwheeler.com/essays/fixing-unix-linux-filenames.html
+     *
+     * @param string $filename
+     * @return bool
+     */
+    public static function isPortableFilename($filename)
+    {
+        # A-Z, a-z, 0-9, <period>, <underscore>, and <hyphen>)
+        $result = preg_match('(^(?!-)[A-Za-z0-9._-]+$)', $filename);
+        if (false === $result) {
+            // @codeCoverageIgnoreStart
+            throw new UnexpectedValueException('preg_match pattern failed');
+            // @codeCoverageIgnoreEnd
+        }
+
+        return 1 === $result;
     }
 
     /**
@@ -148,6 +169,33 @@ class LibFs
     }
 
     /**
+     * Normalize a path as/if common in PHP
+     *
+     * E.g. w/ phar:// in front which means w/ stream wrappers in
+     * mind.
+     *
+     * @param string $path
+     * @return string
+     */
+    public static function normalizePath($path)
+    {
+        $buffer = $path;
+
+        $scheme = '';
+        // TODO support for all supported stream wrappers (w/ absolute/relative notation?)
+        /* @see isStreamUri */
+        /* @see isAbsolutePath */
+        if (0 === strpos($buffer, 'phar://') || 0 === strpos($buffer, 'file://')) {
+            $scheme = substr($buffer, 0, 7);
+            $buffer = substr($buffer, 7);
+        }
+
+        $normalized = self::normalizePathSegments($buffer);
+
+        return $scheme . $normalized;
+    }
+
+    /**
      * Resolve relative path segments in a path on it's own
      *
      * This is not realpath, not resolving any links.
@@ -166,8 +214,8 @@ class LibFs
         $prefix = '';
         $len = strspn($buffer, '/');
         if (0 < $len) {
-            $prefix = substr($path, 0, $len);
-            $buffer = substr($path, $len);
+            $prefix = substr($buffer, 0, $len);
+            $buffer = substr($buffer, $len);
         }
 
         $buffer = rtrim($buffer, '/');
@@ -283,53 +331,6 @@ class LibFs
     {
         self::unlink($link);
         symlink($target, $link);
-    }
-
-    /**
-     * Create temporary directory (which does not get cleaned up)
-     *
-     * @param string $prefix [optional]
-     * @return string path
-     */
-    public static function tmpDir($prefix = '')
-    {
-        $path = tempnam(sys_get_temp_dir(), $prefix);
-        self::rm($path);
-        self::mkDir($path, 0700);
-
-        return $path;
-    }
-
-    /**
-     * Create handle and path of a temporary file (which gets cleaned up)
-     *
-     * @return array(handle, string)
-     */
-    public static function tmpFile()
-    {
-        $handle = tmpfile();
-        if (false === $handle) {
-            // @codeCoverageIgnoreStart
-            throw new UnexpectedValueException('Unable to create temporary file');
-            // @codeCoverageIgnoreEnd
-        }
-        $meta = stream_get_meta_data($handle);
-
-        return array($handle, $meta['uri']);
-    }
-
-    /**
-     * Create temporary file w/ contents
-     *
-     * @param string $buffer
-     * @return string path of temporary file
-     */
-    public static function tmpFilePut($buffer)
-    {
-        list(, $path) = self::tmpFile();
-        file_put_contents($path, $buffer);
-
-        return $path;
     }
 
     /**

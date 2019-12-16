@@ -60,6 +60,39 @@ class LibFsTest extends TestCase
         $this->assertSame($expected, $actual, 'path is (not) basename');
     }
 
+    /**
+     * @return array
+     */
+    public function providePortableFilenames()
+    {
+        return array(
+            array('', false),
+            arraY('-', false),
+            arraY('a', true),
+            arraY('a-', true),
+            arraY('rm -rf', false),
+            arraY('rm-rf', true),
+            arraY('-rf', false),
+            arraY('0', true),
+            arraY('00000', true),
+            arraY('_-....', true),
+        );
+    }
+
+    /**
+     * test if a filename is portable
+     *
+     * @dataProvider providePortableFilenames()
+     * @covers \Ktomk\Pipelines\LibFs::isPortableFilename()
+     *
+     * @param string $filename
+     * @param bool $expected
+     */
+    public function testIsPortableFilename($filename, $expected)
+    {
+        $this->assertSame($expected, LibFs::isPortableFilename($filename));
+    }
+
     public function testMkdir()
     {
         $baseDir = sys_get_temp_dir() . '/pipelines-fs-tests';
@@ -87,6 +120,27 @@ class LibFsTest extends TestCase
         $result = rmdir($baseDir);
         $this->assertTrue($result);
         $this->assertDirectoryNotExists($baseDir);
+    }
+
+    public function providePaths()
+    {
+        return array(
+            array('/foo/../bar', '/bar'), # counter-check for normalizePathSegments
+            array('file://foo/../bar', 'file://bar'),
+            array('file:///foo/../bar', 'file:///bar'),
+            array('phar://foo/../bar', 'phar://bar'),
+            array('phar:///foo/../bar', 'phar:///bar'),
+        );
+    }
+
+    /**
+     * @dataProvider providePaths
+     * @param string $path
+     * @param string $expected
+     */
+    public function testNormalizePath($path, $expected)
+    {
+        $this->assertSame($expected, LibFs::normalizePath($path));
     }
 
     /**
@@ -178,7 +232,7 @@ class LibFsTest extends TestCase
      */
     public function testRmDirOnNonExistingDirectory()
     {
-        $dir = LibFs::tmpDir('pipelines-fs-rmdir-test.') . '/not-existing';
+        $dir = LibTmp::tmpDir('pipelines-fs-rmdir-test.') . '/not-existing';
         $this->assertDirectoryNotExists($dir);
         LibFs::rmDir($dir);
         $this->addToAssertionCount(1);
@@ -197,7 +251,7 @@ class LibFsTest extends TestCase
      */
     public function testRmDirThrowsExceptionOnNonExistingDirectory()
     {
-        $dir = LibFs::tmpDir('pipelines-fs-rmdir-test.');
+        $dir = LibTmp::tmpDir('pipelines-fs-rmdir-test.');
         $this->cleaners[] = DestructibleString::rmDir($dir);
         $this->assertDirectoryExists($dir);
         $subDir = $dir . '/test';
@@ -229,30 +283,6 @@ class LibFsTest extends TestCase
         rmdir($baseDir);
         $this->assertDirectoryNotExists($testDir);
         $this->assertDirectoryNotExists($baseDir);
-    }
-
-    /**
-     * @covers \Ktomk\Pipelines\LibFs::tmpFile
-     */
-    public function testTmpFile()
-    {
-        list($handle, $file) = LibFs::tmpFile();
-        $this->assertFileExists($file);
-        unset($handle);
-        $this->assertFileNotExists($file);
-    }
-
-    /**
-     * @covers \Ktomk\Pipelines\LibFs::tmpFilePut
-     */
-    public function testTmpFilePut()
-    {
-        $file = LibFs::tmpFilePut('FOO');
-        $this->assertFileExists($file);
-        $actual = file_get_contents($file);
-        LibFs::rm($file);
-        $this->assertSame('FOO', $actual);
-        $this->assertFileNotExists($file);
     }
 
     public function testFileLookUpSelf()
