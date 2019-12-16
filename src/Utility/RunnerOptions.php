@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ArgsException;
+use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\RunOpts;
 
 /**
@@ -59,6 +60,18 @@ class RunnerOptions
     public function parse(Args $args, RunOpts $runOpts)
     {
         $runOpts->setPrefix($this->parsePrefix($args));
+
+        $runOpts->setBinaryPackage($this->parseDockerClient($args));
+    }
+
+    /**
+     * @param Args $args
+     * @throws ArgsException
+     * @return string
+     */
+    private function parseDockerClient(Args $args)
+    {
+        return $args->getOptionArgument('docker-client', Repository::PKG_INTEGRATE);
     }
 
     /**

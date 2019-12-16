@@ -159,7 +159,10 @@ class StepRunner
      */
     public function getDockerBinaryRepository()
     {
-        return Repository::create($this->exec, $this->directories);
+        $repo = Repository::create($this->exec, $this->directories);
+        $repo->resolve($this->runOpts->getBinaryPackage());
+
+        return $repo;
     }
 
     /**

@@ -15,7 +15,7 @@ class RunOptsTest extends TestCase
 {
     public function testCreation()
     {
-        $opts = RunOpts::create('');
+        $opts = RunOpts::create('', '');
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\RunOpts', $opts);
 
         return $opts;
@@ -46,5 +46,16 @@ class RunOptsTest extends TestCase
     {
         $opts = new RunOpts();
         $this->assertNull($opts->getOption('foo.bar'));
+    }
+
+    /**
+     * @depends testCreation
+     * @param RunOpts $opts
+     */
+    public function testBinaryPackage(RunOpts $opts)
+    {
+        self::assertIsString($opts->getBinaryPackage());
+        $opts->setBinaryPackage('foo');
+        $this->assertSame('foo', $opts->getBinaryPackage());
     }
 }
