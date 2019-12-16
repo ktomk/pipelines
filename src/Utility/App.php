@@ -23,6 +23,8 @@ class App implements Runnable
 {
     const BBPL_BASENAME = 'bitbucket-pipelines.yml';
 
+    const UTILITY_NAME = 'pipelines';
+
     const VERSION = '@.@.@';
 
     /**
@@ -331,7 +333,7 @@ class App implements Runnable
     {
         $args = $this->arguments;
 
-        $prefix = $args->getOptionArgument('prefix', 'pipelines');
+        $prefix = $args->getOptionArgument('prefix', self::UTILITY_NAME);
         if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
             ArgsException::__(sprintf("invalid prefix: '%s'", $prefix));
         }
