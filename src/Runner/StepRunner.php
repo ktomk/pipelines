@@ -294,6 +294,7 @@ class StepRunner
      *
      * @param Step $step
      * @param string $id
+     * @throws
      * @return array array(int $status, string $message)
      */
     private function deployDockerClient(Step $step, $id)
@@ -304,7 +305,13 @@ class StepRunner
 
         $this->streams->out(' +++ docker client install...: ');
 
-        list($status, $message) = $this->getDockerBinaryRepository()->inject($id);
+        try {
+            list($status, $message) = $this->getDockerBinaryRepository()->inject($id);
+        } catch (\Exception $e) {
+            $this->streams->out("pipelines internal failure.\n");
+
+            throw new \InvalidArgumentException('inject docker client failed: ' . $e->getMessage(), 1, $e);
+        }
 
         $this->streams->out("${message}\n");
 

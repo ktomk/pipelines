@@ -288,6 +288,37 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(63, $actual);
     }
 
+    /**
+     *
+     */
+    public function testDockerClientInjectInvalidPackage()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
+            ->expect('capture', 'docker', 0, 'run the container');
+
+        $testDirectories = new Directories($_SERVER, $this->getTestProject());
+
+        /** @var MockObject|StepRunner $mockRunner */
+        $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
+            ->setConstructorArgs(array(
+                RunOpts::create('pipelines-unit-test', 'wrong-package'),
+                $testDirectories,
+                $exec,
+                new Flags(),
+                Env::create(),
+                new Streams(),
+            ))
+            ->setMethods(null)
+            ->getMock();
+
+        $step = $this->createTestStep(array('services' => array('docker')));
+        $this->setExpectedException('\InvalidArgumentException', 'not a readable file');
+        $mockRunner->runStep($step);
+        $this->fail('an expected exception was not thrown');
+    }
+
     /* artifact tests */
 
     public function testArtifacts()

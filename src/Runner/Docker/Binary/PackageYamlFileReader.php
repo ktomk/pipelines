@@ -30,6 +30,7 @@ class PackageYamlFileReader implements PackageInterface
     }
 
     /**
+     * @throws \InvalidArgumentException
      * @return array
      */
     public function asPackageArray()
