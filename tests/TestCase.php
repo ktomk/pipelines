@@ -22,7 +22,6 @@ class TestCase extends PhpunitTestCase
     public static function assertIsArray($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::assertIsArray($actual, $message);
 
             return;
@@ -34,7 +33,6 @@ class TestCase extends PhpunitTestCase
     public static function assertIsBool($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::assertIsBool($actual, $message);
 
             return;
@@ -46,7 +44,6 @@ class TestCase extends PhpunitTestCase
     public static function assertIsCallable($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::assertIsCallable($actual, $message);
 
             return;
@@ -58,7 +55,6 @@ class TestCase extends PhpunitTestCase
     public static function assertIsInt($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::assertIsInt($actual, $message);
 
             return;
@@ -70,7 +66,6 @@ class TestCase extends PhpunitTestCase
     public static function assertIsString($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::assertIsString($actual, $message);
 
             return;
@@ -118,7 +113,6 @@ class TestCase extends PhpunitTestCase
     public function setExpectedException($class, $message = '', $code = null)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::setExpectedException($class, $message, $code);
 
             return;
@@ -140,7 +134,6 @@ class TestCase extends PhpunitTestCase
     public function setExpectedExceptionRegExp($class, $messageRegExp = '', $code = null)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
-            /** @noinspection PhpUndefinedMethodInspection */
             parent::setExpectedExceptionRegExp($class, $messageRegExp, $code);
 
             return;
