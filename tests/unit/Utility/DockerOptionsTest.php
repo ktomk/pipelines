@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
+use Ktomk\Pipelines\Cli\DockerProcessManager;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
@@ -43,7 +44,8 @@ class DockerOptionsTest extends TestCase
             Args::create(array('cmd')),
             $exec,
             '',
-            new Streams()
+            new Streams(),
+            new DockerProcessManager($exec)
         );
 
         $options->run();
@@ -64,7 +66,8 @@ class DockerOptionsTest extends TestCase
             Args::create(array('cmd', '--docker-list', '--docker-kill', '--docker-clean')),
             $exec,
             'abc-',
-            new Streams()
+            new Streams(),
+            new DockerProcessManager($exec)
         );
 
         $exec
@@ -92,7 +95,8 @@ class DockerOptionsTest extends TestCase
             Args::create(array('cmd', '--docker-list', '--docker-kill', '--docker-clean')),
             $exec,
             'abc-',
-            new Streams()
+            new Streams(),
+            new DockerProcessManager($exec)
         );
 
         $exec
@@ -118,7 +122,8 @@ class DockerOptionsTest extends TestCase
             Args::create(array('cmd', '--docker-zap')),
             $exec,
             'abc',
-            new Streams()
+            new Streams(),
+            new DockerProcessManager($exec)
         );
 
         $exec

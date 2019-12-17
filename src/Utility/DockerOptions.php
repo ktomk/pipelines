@@ -18,6 +18,7 @@ use RuntimeException;
  * --docker-list
  * --docker-kill
  * --docker-clean
+ * --docker-zap
  *
  * @package Ktomk\Pipelines\Utility
  */
@@ -50,7 +51,7 @@ class DockerOptions
 
     public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
     {
-        return new self($args, $exec, $prefix, $streams);
+        return new self($args, $exec, $prefix, $streams, new DockerProcessManager($exec));
     }
 
     /**
@@ -60,14 +61,15 @@ class DockerOptions
      * @param Exec $exec
      * @param string $prefix
      * @param Streams $streams
+     * @param DockerProcessManager $ps
      */
-    public function __construct(Args $args, Exec $exec, $prefix, Streams $streams)
+    public function __construct(Args $args, Exec $exec, $prefix, Streams $streams, DockerProcessManager $ps)
     {
-        $this->streams = $streams;
         $this->args = $args;
         $this->exec = $exec;
-        $this->ps = new DockerProcessManager($exec);
         $this->prefix = $prefix;
+        $this->streams = $streams;
+        $this->ps = $ps;
     }
 
     /**
@@ -83,12 +85,20 @@ class DockerOptions
      */
     public function run()
     {
-        $args = $this->args;
+        $this->parse($this->args, $this->prefix);
+    }
 
+    /**
+     * @param Args $args
+     * @param string $prefix
+     * @throws StatusException
+     */
+    private function parse(Args $args, $prefix)
+    {
         $count = 0;
         $status = 0;
 
-        if (!$status && $args->hasOption('docker-list')) {
+        if ($args->hasOption('docker-list')) {
             $count++;
             $status = $this->runPs();
         }
@@ -99,30 +109,11 @@ class DockerOptions
             $hasKill = $hasClean = true;
         }
 
-        $ids = null;
-        if ($hasClean || $hasKill) {
-            $count++;
-            $ids = $this->ps->findAllContainerIdsByNamePrefix($this->prefix . '-');
-        }
+        $ids = $this->runGetIds($count, $hasClean || $hasKill, $prefix);
 
-        if (!$status && $hasKill) {
-            $count++;
-            $running = $this->ps->findRunningContainerIdsByNamePrefix($this->prefix . '-');
-            if ($running) {
-                $status = $this->ps->kill($running);
-            } else {
-                $this->info('no containers to kill');
-            }
-        }
+        $status = $this->runKill($status, $count, $hasKill, $prefix);
 
-        if (!$status && $hasClean) {
-            $count++;
-            if ($ids) {
-                $status = $this->ps->remove($ids);
-            } else {
-                $this->info('no containers to remove');
-            }
-        }
+        $status = $this->runClean($status, $count, $hasClean, $ids);
 
         if ($count) {
             StatusException::status($status);
@@ -141,16 +132,79 @@ class DockerOptions
      */
     private function runPs()
     {
-        $exec = $this->exec;
         $prefix = $this->prefix;
 
-        $status = $exec->pass(
+        return $this->exec->pass(
             'docker ps -a',
             array(
                 '--filter',
                 "name=^/${prefix}-"
             )
         );
+    }
+
+    /**
+     * @param $flag
+     * @param $count
+     * @param $prefix
+     * @return null|array
+     */
+    private function runGetIds(&$count, $flag, $prefix)
+    {
+        if (!$flag) {
+            return null;
+        }
+
+        $count++;
+
+        return $this->ps->findAllContainerIdsByNamePrefix($prefix . '-');
+    }
+
+    /**
+     * @param int $status
+     * @param int $count
+     * @param bool $hasKill
+     * @param string $prefix
+     * @return int
+     */
+    private function runKill($status, &$count, $hasKill, $prefix)
+    {
+        if ($status || !$hasKill) {
+            return $status;
+        }
+
+        if (!$status && $hasKill) {
+            $count++;
+            $running = $this->ps->findRunningContainerIdsByNamePrefix($prefix . '-');
+            if ($running) {
+                $status = $this->ps->kill($running);
+            } else {
+                $this->info('no containers to kill');
+            }
+        }
+
+        return $status;
+    }
+
+    /**
+     * @param int $status
+     * @param int $count
+     * @param bool $hasClean
+     * @param array $ids
+     * @return int
+     */
+    private function runClean($status, &$count, $hasClean, array $ids = null)
+    {
+        if ($status || !$hasClean) {
+            return $status;
+        }
+
+        $count++;
+        if ($ids) {
+            $status = $this->ps->remove($ids);
+        } else {
+            $this->info('no containers to remove');
+        }
 
         return $status;
     }
