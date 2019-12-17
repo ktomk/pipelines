@@ -65,6 +65,16 @@ class RepositoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testResolveYamlFile()
+    {
+        $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
+        $testPackagePath = __DIR__ . '/../../../../../lib/package/docker-42.42.1-binsh-test-stub.yml';
+        $this->assertSame($repo, $repo->resolve($testPackagePath));
+        $expected = UnpackagerTest::getTestPackage();
+        $actual = $repo->asPackageArray();
+        $this->assertSame($expected, $actual);
+    }
+
     /**
      * @throws \Exception
      */
