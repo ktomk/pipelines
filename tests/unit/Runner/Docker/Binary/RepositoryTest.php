@@ -75,6 +75,42 @@ class RepositoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testResolveBinaryPath()
+    {
+        $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
+        $testBinary = __DIR__ . '/../../../../data/package/docker-test-stub';
+        $this->assertSame($repo, $repo->resolve($testBinary));
+        $expected = array('prep' => array('bin_local' => $testBinary));
+        $actual = $repo->asPackageArray();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGetBinaryPath()
+    {
+        $repo = $this->createPartialMock(
+            'Ktomk\Pipelines\Runner\Docker\Binary\Repository',
+            array('getPackageLocalBinary')
+        );
+        $expected = '/foo/bin/docker';
+        $repo->method('getPackageLocalBinary')->willReturn($expected);
+        $actual = $repo->getBinaryPath();
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
+     * @covers \Ktomk\Pipelines\Runner\Docker\Binary\Repository::getPackageLocalBinary
+     */
+    public function testGetPackageLocalBinary()
+    {
+        $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
+        $testBinary = __DIR__ . '/../../../../data/package/docker-test-stub';
+        $this->assertSame($repo, $repo->resolve($testBinary));
+        $expected = array('prep' => array('bin_local' => $testBinary));
+        $package = $repo->asPackageArray();
+        $repo->getPackageLocalBinary($package);
+        $this->assertSame($expected, $package);
+    }
+
     /**
      * @throws \Exception
      */

@@ -228,10 +228,10 @@ class StepRunnerTest extends RunnerTestCase
 
         $testRepository = $this->getMockBuilder('Ktomk\Pipelines\Runner\Docker\Binary\Repository')
             ->setConstructorArgs(array($exec, array(), UnPackager::fromDirectories($exec, $testDirectories)))
-            ->setMethods(array('getLocalBinary'))
+            ->setMethods(array('getPackageLocalBinary'))
             ->getMock()
         ;
-        $testRepository->method('getLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
+        $testRepository->method('getPackageLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
 
         /** @var MockObject|StepRunner $mockRunner */
         $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
@@ -264,10 +264,10 @@ class StepRunnerTest extends RunnerTestCase
 
         $testRepository = $this->getMockBuilder('Ktomk\Pipelines\Runner\Docker\Binary\Repository')
             ->setConstructorArgs(array($exec, array(), UnPackager::fromDirectories($exec, $testDirectories)))
-            ->setMethods(array('getLocalBinary'))
+            ->setMethods(array('getPackageLocalBinary'))
             ->getMock()
         ;
-        $testRepository->method('getLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
+        $testRepository->method('getPackageLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
 
         /** @var MockObject|StepRunner $mockRunner */
         $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
