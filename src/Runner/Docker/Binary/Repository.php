@@ -111,10 +111,15 @@ class Repository implements PackageInterface
      */
     public function resolve($packageName)
     {
-        $packageDir = __DIR__ . '/../../../../lib/package';
-        $reader = new PackageYamlFileReader(
-            sprintf('%s/%s.yml', $packageDir, $packageName)
-        );
+        $ext = pathinfo($packageName, PATHINFO_EXTENSION);
+        if ('yml' === $ext) {
+            $file = $packageName;
+        } else {
+            $packageDir = __DIR__ . '/../../../../lib/package';
+            $file = sprintf('%s/%s.yml', $packageDir, $packageName);
+        }
+
+        $reader = new PackageYamlFileReader($file);
         $this->package = $reader->asPackageArray();
 
         return $this;
