@@ -551,7 +551,7 @@ class Builder
      * @param $glob
      * @param $flags
      * @throws \RuntimeException
-     * @return array|bool
+     * @return array|false
      */
     private function _glob_brace($glob, $flags)
     {
@@ -611,13 +611,6 @@ class Builder
                     ? $pattern
                     : sprintf("'%s' -> '%s'", $pattern, $glob)
             ));
-        }
-        if (!is_array($result)) {
-            // @codeCoverageIgnoreStart
-            throw new \UnexpectedValueException(
-                sprintf('glob: return value not an array: %s', var_export($result, true))
-            );
-            // @codeCoverageIgnoreEnd
         }
 
         return $result;

@@ -42,7 +42,7 @@ class Artifacts
     private function parse($artifacts)
     {
         // quick validation: requires a list of strings
-        if (!is_array($artifacts) || !count($artifacts)) {
+        if (!count($artifacts)) {
             ParseException::__("'artifacts' requires a list");
         }
 

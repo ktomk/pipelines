@@ -38,7 +38,7 @@ class StepServices
      */
     public function has($service)
     {
-        return is_string($service) ? isset($this->services[$service]) : false;
+        return isset($this->services[$service]);
     }
 
     private function parseServices($services)

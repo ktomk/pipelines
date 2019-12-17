@@ -275,14 +275,15 @@ class File
         $patterns = array_keys($array);
         unset($array);
 
-        $match = null;
+        $match = '';
         foreach ($patterns as $pattern) {
+            $pattern = (string)$pattern;
             $result = Glob::match($pattern, $reference);
-            if ($result && (null === $match || strlen($pattern) > strlen($match))) {
+            if ($result && (strlen($pattern) > strlen($match))) {
                 $match = $pattern;
             }
         }
-        if (null !== $match) {
+        if ('' !== $match) {
             return "${type}/${match}";
         }
 
