@@ -24,9 +24,9 @@ pipelines:
             - command -v composer || lib/pipelines/composer-install.sh
             - composer show -i phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
             - >
-                composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
-                | grep -q '^4.' || { composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit;
-                  composer require --no-suggest --dev phpunit/phpunit ^4; }
+              composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
+              | grep -q '^4.' || { composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit;
+                composer require --no-suggest --dev phpunit/phpunit ^4; }
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
     unit-tests: # run phpunit suite
       - step:
@@ -92,8 +92,8 @@ pipelines:
             - lib/pipelines/environment.sh
             - env
     printenv:
-        - step:
-            image: busybox
-            name: print environemnt variables
-            script:
-              - printenv
+      - step:
+          image: busybox
+          name: print environemnt variables
+          script:
+            - printenv
