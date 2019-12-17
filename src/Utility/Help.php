@@ -38,17 +38,17 @@ class Help
     {
         $this->streams->out(
             <<<'EOD'
-usage: pipelines [<options>...] [--version | [-h | --help]]
-       pipelines [-v | --verbose] [--working-dir <path>]
-                 [--[no-|error-]keep] [--prefix <prefix>]
-                 [--basename <basename>]
+usage: pipelines [<options>] --version | -h | --help
+       pipelines [<options>] [--working-dir <path>] [--file <path>]
+                 [--basename <basename>] [--prefix <prefix>] [--verbatim]
+                 [--[no-|error-]keep] [--no-run]
                  [[-e | --env] <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
-                 [--file <path>] [--dry-run] [--no-run] [--list]
-                 [--deploy mount | copy ] [--show] [--images]
-                 [--pipeline <id>] [--trigger <ref>] [--verbatim]
-       pipelines [-v | --verbose] [--dry-run] [--docker-list]
-                 [--docker-kill] [--docker-clean] [--docker-zap]
+                 [--deploy mount | copy ] [--pipeline <id>]
+                 [--trigger <ref>]
+       pipelines [<options>] --list | --show | --images
+       pipelines [<options>] [--docker-list] [--docker-kill]
+                 [--docker-clean] [--docker-zap]
 
 EOD
         );
@@ -60,91 +60,99 @@ EOD
         $this->streams->out(
             <<<'EOD'
 
+Generic options
     -h, --help            show usage and help information
-    -v, --verbose         show commands executed
-    --version             show version information only and exit
+    --version             show version information
+    -v, --verbose         be more verbose, show more information and
+                          commands to be executed
+    --dry-run             do not execute commands, e.g. invoke docker or
+                          run containers, with --verbose show the commands
+                          that would have run w/o --dry-run
 
-Common options
-    --basename <basename> set basename for pipelines file,
-                          default is 'bitbucket-pipelines.yml'
-    --deploy mount|copy   how files from the working directory
-                          are placed into the pipeline container:
-                          copy     (default) working dir is
-                                 copied into the container.
-                                 stronger isolation as the
-                                 pipeline scripts can change
-                                 all files without side-effects
-                                 in the working directory
-                          mount    the working directory is
-                                 mounted. fastest, no isolation
-    -e, --env <variable>  pass or set an environment variables
-                          for the docker container
-    --env-file <path>     pass variables from environment file
-                          to the docker container
-    --no-dot-env-files    do not pass .env.dist and .env files
-                          as environment files to docker
-    --no-dot-env-dot-dist dot not pass .env.dist as environment
-                          file to docker
-    --file <path>         path to the pipelines file, overrides
-                          looking up the <basename> file from
-                          the current working directory
+Pipeline runner options
+    --basename <basename> set basename for pipelines file, defaults to
+                          'bitbucket-pipelines.yml'
+    --deploy mount|copy   how files from the working directory are placed
+                          into the pipeline container:
+                          copy     (default) working dir is copied into
+                                 the container. stronger isolation as the
+                                 pipeline scripts can change all files
+                                 without side-effects in the working
+                                 directory
+                          mount    the working directory is mounted.
+                                 fastest, no isolation
+    --file <path>         path to the pipelines file, overrides looking up
+                          the <basename> file from the current working
+                          directory
     --trigger <ref>       build trigger, <ref> can be of either
-                          tag:<name>, branch:<name>,
-                          bookmark:<name> or pr:<branch-name>.
+                          tag:<name>, branch:<name>, bookmark:<name> or
+                          pr:<branch-name>
                           determines the pipeline to run
-    --pipeline <id>       run pipeline with <id>, see --list
-    --verbatim            only give verbatim output of the
-                          pipeline, no other information around
-                          like which step currently executes
-    --working-dir <path>  run as if pipelines was started in
-                          <path>
-
-Run control options
-    --dry-run             do not invoke docker or run containers,
-                          with --verbose shows the commands that
-                          would have run w/o the --dry-run flag
+    --pipeline <id>       run pipeline with <id>, use --list for a list of
+                          all pipeline ids available.
+    --verbatim            only give verbatim output of the pipeline, do not
+                          display other information like which step currently
+                          executes, which image is in use etc.
+    --working-dir <path>  run as if pipelines was started in <path>
     --no-run              do not run the pipeline
+    --prefix <prefix>     use a different prefix for container
+                          names, default is 'pipelines'
+
+Environment control options
+    -e, --env <variable>  pass or set an environment <variable> for the
+                          docker container, just like docker run, the
+                          variable can be the name of a variable which
+                          adds the variable to the container if exported
+                          or a variable definition with the name of the
+                          variable, the equal sign "=" and the value,
+                          e.g. --env NAME=value
+    --env-file <path>     pass variables from environment file to the
+                          docker container
+    --no-dot-env-files    do not pass .env.dist and .env files as
+                          environment files to docker
+    --no-dot-env-dot-dist dot not pass .env.dist as environment file to
+                          docker
 
 Keep options
     --keep                always keep docker containers
-    --error-keep          keep docker docker containers if a
-                          step failed; the non-zero exit status
-                          is output and the id of the container
-                          kept
-    --no-keep             do not keep docker containers; default
-                          behaviour
+    --error-keep          keep docker docker containers if a step failed;
+                          outputs the non-zero exit status and the id of
+                          the container kept and exit w/ container exec
+                          exit status
+    --no-keep             do not keep docker containers; default behaviour
 
 File information options
-    --images              list all images in file, in order
-                          of use, w/o duplicate names and exit
+    --images              list all images in file, in order of use, w/o
+                          duplicate names and exit
     --list                list pipeline <id>s in file and exit
-    --show                show information about pipelines in
-                          file and exit
+    --show                show information about pipelines in file and
+                          exit
 
 Docker container maintenance options
-      usage might leave containers on the system. either by
-      interrupting a running pipeline step or by keeping the
-      running containers (--keep).
+      usage might leave containers on the system. either by interrupting
+      a running pipeline step or by keeping the running containers
+      (--keep, --error-keep)
 
-      pipelines uses a prefix followed by '-' and a compound
-      name based on step-number, step-name, pipeline id and
-      image name for container names. the prefix is either
-      'pipelines' or the one set by --prefix <prefix>.
+      pipelines uses a prefix followed by '-' and a compound name based
+      on step-number, step-name, pipeline id and image name for container
+      names. the prefix is either 'pipelines' or the one set by
+      --prefix <prefix>
 
-      three options are built-in to monitor and interact with
-      leftovers. if one or more of these are given, the following
-      operations are executed in the order from top to down:
+      three options are built-in to monitor and interact with leftovers,
+      if one or more of these are given, the following operations are
+      executed in the order from top to down:
 
     --docker-list         list prefixed containers
     --docker-kill         kills prefixed containers
     --docker-clean        remove (non-running) containers with
                           pipelines prefix
-    --docker-zap          kill and remove all prefixed containers
+
+    --docker-zap          kill and remove all prefixed containers on one
+                          go
 
 Less common options
-    --debug               flag for trouble-shooting fatal errors
-    --prefix <prefix>     use a different prefix for container
-                          names, default is 'pipelines'
+    --debug               flag for trouble-shooting fatal errors, errors,
+                          warnings and notices
 
 EOD
         );

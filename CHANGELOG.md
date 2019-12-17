@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Changed
+- Improve `--help` display
 - Show scripts with `-v` and drop temporary files for scripts
 
 ## [0.0.22] - 2019-10-12

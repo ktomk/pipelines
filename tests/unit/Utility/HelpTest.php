@@ -29,7 +29,7 @@ class HelpTest extends TestCase
      */
     public function testShowUsage(Help $help)
     {
-        $this->expectOutputRegex('~^usage: pipelines \\[<options>...]~');
+        $this->expectOutputRegex('~^usage: pipelines \\[<options>] ~');
         $help->showUsage();
     }
 
@@ -39,7 +39,7 @@ class HelpTest extends TestCase
      */
     public function testShowHelp(Help $help)
     {
-        $this->expectOutputRegex('~^usage: pipelines \\[<options>...]~');
+        $this->expectOutputRegex('~^usage: pipelines \\[<options>] ~');
         $actual = $help->showHelp();
         $this->assertSame(0, $actual);
     }
