@@ -10,8 +10,8 @@ IFS=$'\n\t'
 # ## [0.0.13] - 2018-03-20
 
 CHANGELOG="$(
-    grep -m 1 -e '^## \[' CHANGELOG.md \
-        | sed -e 's/^## \[\([0-9.]*\)\].*$/\1/'
+  grep -m 1 -e '^## \[' CHANGELOG.md \
+  | sed -e 's/^## \[\([0-9.]*\)\].*$/\1/'
 )"
 
 TAG="${1-${CHANGELOG}}"

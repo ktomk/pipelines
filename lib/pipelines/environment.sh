@@ -53,15 +53,13 @@ USER                       current user name, informative
 HOME                       current home directory, informative
 "
 
-print_var()
-{
+print_var() {
   # shellcheck disable=SC2039
   local name=$1
   eval "printf \"%-32s:= %s\\n\" \"${name}\" \"\${${name}-*unset*}\""
 }
 
-print_vars()
-{
+print_vars() {
   # shellcheck disable=SC2039
   local vars="$1"
   # shellcheck disable=SC2034
@@ -77,10 +75,10 @@ EOF
 
 print_vars "$vars"
 
-echo "debug: this is on stderr" >&2
+>&2 echo "debug: this is on stderr"
 
 echo "directory listing of /app:"
 ls | while read -r file; do
-      printf "%s " "${file}"
-    done
+       printf "%s " "${file}"
+     done
 echo
