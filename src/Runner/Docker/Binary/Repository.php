@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Runner\Docker\Binary;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\Runner\Directories;
 
 /**
@@ -111,16 +112,23 @@ class Repository implements PackageInterface
      */
     public function resolve($packageName)
     {
-        $ext = pathinfo($packageName, PATHINFO_EXTENSION);
-        if ('yml' === $ext) {
-            $file = $packageName;
+        if ('yml' === pathinfo($packageName, PATHINFO_EXTENSION)) {
+            $ymlFile = $packageName;
+        } elseif (false !== strpos($packageName, '/') && LibFs::isReadableFile($packageName)) {
+            $localBinary = $packageName;
         } else {
             $packageDir = __DIR__ . '/../../../../lib/package';
-            $file = sprintf('%s/%s.yml', $packageDir, $packageName);
+            $ymlFile = sprintf('%s/%s.yml', $packageDir, $packageName);
         }
 
-        $reader = new PackageYamlFileReader($file);
-        $this->package = $reader->asPackageArray();
+        if (isset($ymlFile)) {
+            $reader = new PackageYamlFileReader($ymlFile);
+            $packageArray = $reader->asPackageArray();
+        } else {
+            $packageArray = array('prep' => array('bin_local' => isset($localBinary) ? $localBinary: null));
+        }
+
+        $this->package = $packageArray;
 
         return $this;
     }
@@ -158,6 +166,10 @@ class Repository implements PackageInterface
      */
     public function getLocalBinary(array $package)
     {
+        if (isset($package['prep']['bin_local'])) {
+            return $package['prep']['bin_local'];
+        }
+
         return $this->unPackager->getLocalBinary($package);
     }
 

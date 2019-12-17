@@ -75,6 +75,27 @@ class RepositoryTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testResolveBinaryPath()
+    {
+        $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
+        $testBinary = __DIR__ . '/../../../../data/package/docker-test-stub';
+        $this->assertSame($repo, $repo->resolve($testBinary));
+        $expected = array('prep' => array('bin_local' => $testBinary));
+        $actual = $repo->asPackageArray();
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGetLocalBinary()
+    {
+        $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
+        $testBinary = __DIR__ . '/../../../../data/package/docker-test-stub';
+        $this->assertSame($repo, $repo->resolve($testBinary));
+        $expected = array('prep' => array('bin_local' => $testBinary));
+        $package = $repo->asPackageArray();
+        $repo->getLocalBinary($package);
+        $this->assertSame($expected, $package);
+    }
+
     /**
      * @throws \Exception
      */
