@@ -321,6 +321,9 @@ X Sierra and High Sierra with PHP and Docker installed.
   for building the phar file the workaround was to entail the
   larger parts of the pattern.
 
+- The libyaml based parser does not support dots (".") in anchor
+  names.
+
 ### Installation
 
 [Phar (Download)](#download-the-phar-php-archive-file) |

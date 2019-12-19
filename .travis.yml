@@ -49,7 +49,7 @@ script:
   - bin/pipelines --verbose --debug --show
   - bin/pipelines --pipeline custom/docker
   - bin/pipelines --pipeline custom/unit-tests
-  - bin/pipelines --pipeline custom/lint-php-5.3
+  - bin/pipelines --deploy mount --pipeline custom/lint-php
   - bin/pipelines --deploy copy --pipeline custom/unit-tests-php-5.3
 
 notifications:
