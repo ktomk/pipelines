@@ -4,7 +4,7 @@ clone:
 pipelines:
   default:
     - step:
-        image: busybox
+        image: ktomk/pipelines:busybox
         name: pipeline features and introspection
         script:
           - echo "test" || true
@@ -93,7 +93,7 @@ pipelines:
             - env
     printenv:
       - step:
-          image: busybox
+          image: ktomk/pipelines:busybox
           name: print environemnt variables
           script:
             - printenv
