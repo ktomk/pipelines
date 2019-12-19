@@ -406,12 +406,11 @@ class StepRunner
             'exec', '-i', $name, '/bin/sh'
         ));
         $buffer .= "\n# this /bin/sh script is generated from a pipelines pipeline:\n";
+        $buffer .= "set -e\n";
         foreach ($script as $line => $command) {
+            $line && $buffer .= 'printf \'\\n\'' . "\n";
             $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
             $buffer .= $command . "\n";
-            $buffer .= 'ret=$?' . "\n";
-            $buffer .= 'printf \'\\n\'' . "\n";
-            $buffer .= 'if [ $ret -ne 0 ]; then exit $ret; fi' . "\n";
         }
         $buffer .= "SCRIPT\n";
 
