@@ -43,7 +43,7 @@ class RunnerOptions
      */
     public function run()
     {
-        $runOpts = new RunOpts();
+        $runOpts = RunOpts::create();
         $this->parse($this->args, $runOpts);
 
         return $runOpts;

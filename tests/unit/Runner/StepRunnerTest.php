@@ -7,6 +7,9 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Utility\OptionsMock;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -305,9 +308,28 @@ class StepRunnerTest extends RunnerTestCase
     {
         list($out, $err) = ((array)$outErr) + array(null, null);
 
+        $testProject = $this->getTestProject();
+
+        $options = OptionsMock::create();
+
+        if (('/app' !== $testProject) && is_dir($testProject)) { // FIXME(tk): hard encoded /app
+            // fake docker.sock file inside temporary test directory so it exists
+            $value = $testProject . '/var';
+            LibFs::mkDir($value);
+            $value .= '/run';
+            LibFs::mkDir($value);
+            $value .= '/docker.sock';
+            touch($value);
+        } else {
+            $value = LibTmp::tmpFilePut('');
+        }
+
+        $options->define('docker.socket.path', $value);
+        $runOpts = new RunOpts('pipelines-unit-test', $options);
+
         return new StepRunner(
-            RunOpts::create('pipelines-unit-test'),
-            new Directories($_SERVER, $this->getTestProject()),
+            $runOpts,
+            new Directories($_SERVER, $testProject),
             $exec,
             new Flags($flags),
             Env::create($inherit),

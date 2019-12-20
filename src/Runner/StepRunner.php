@@ -354,9 +354,10 @@ class StepRunner
         // enable docker client inside docker by mounting docker socket
         // FIXME give controlling options, this is serious /!\
         $mountDockerSock = array();
-        if ($this->flags->useDockerSocket() && file_exists('/var/run/docker.sock')) {
+        $pathDockerSock = $this->runOpts->getOption('docker.socket.path');
+        if ($this->flags->useDockerSocket() && file_exists($pathDockerSock)) {
             $mountDockerSock = array(
-                '-v', '/var/run/docker.sock:/var/run/docker.sock',
+                '-v', sprintf('%s:%s', $pathDockerSock, $pathDockerSock),
             );
         }
 
