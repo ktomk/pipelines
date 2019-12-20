@@ -10,6 +10,7 @@ IFS=$'\n\t'
 #               TEST PLAN
 #
 # [ 1] build pipelines phar
+# [ 6] list available client packages
 # [ 5] docker service inside pipelines w/ test package
 # [ 4] docker service inside pipelines
 # [ 2] pipelines inside pipelines
@@ -18,7 +19,7 @@ IFS=$'\n\t'
 
 case ${1-0} in
   0 ) echo "# 0: ${0} run"
-      run_test "${0}" 1 5 4 2 3
+      run_test "${0}" 1 6 5 4 2 3 7
       exit
       ;;
   1 ) echo "# 1: build pipelines phar"
@@ -42,8 +43,32 @@ case ${1-0} in
       exit
       ;;
   5 ) echo "# 5: docker service inside pipelines w/ test package"
-      ../../build/pipelines.phar --docker-client 'test' --pipeline custom/docker | grep 'fatal: not a readable file:' || true # must fail, "test" is invalid"
+      set +e # must fail, "test" is invalid"
+      ../../build/pipelines.phar --docker-client 'test' --pipeline custom/docker | grep 'fatal: not a readable file:'
+      ret=$?
+      set -e
+      [ $ret -ne 0 ]
       ../../build/pipelines.phar --verbatim --docker-client 'docker-42.42.1-binsh-test-stub' --pipeline custom/docker
+      exit
+      ;;
+  6 ) echo "# 6: list available client packages"
+      ../../build/pipelines.phar --docker-client-pkgs | wc -l | sed -e 's/^/number of packages: /'
+      exit
+      ;;
+  7 ) echo "# 7: relative docker client package path w/ --working-dir"
+      # 7.1: implicit working directory by the location of the bitbucket-pipelines.yml file
+      ../../build/pipelines.phar \
+        --docker-client lib/package/docker-42.42.1-binsh-test-stub.yml \
+        --pipeline custom/docker | tail -n 3
+      # 7.2: set working directory (which also matches the project)
+      ../../build/pipelines.phar --working-dir ../.. \
+        --docker-client lib/package/docker-42.42.1-binsh-test-stub.yml \
+        --pipeline custom/docker | tail -n 3
+      # 7.3: no implicit working directory
+      ../../build/pipelines.phar --file ../../bitbucket-pipelines.yml \
+        --docker-client ../../lib/package/docker-42.42.1-binsh-test-stub.yml \
+        --pipeline custom/docker | tail -n 3
+
       exit
       ;;
   * ) >&2 echo "unknown step ${1}"

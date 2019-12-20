@@ -59,6 +59,7 @@ class Repository implements PackageInterface
      *
      * @param Exec $exec
      * @param Directories $directories (UnPackager dependency)
+     *
      * @return Repository
      */
     public static function create(Exec $exec, Directories $directories)
@@ -90,6 +91,7 @@ class Repository implements PackageInterface
      *
      * @param string $containerId
      * @param string $path to static docker client binary
+     *
      * @return array array(int $status, string $message) docker client binary version (docker --version) or error
      */
     public function containerProvisionDockerClientBinary($containerId, $path)
@@ -104,9 +106,35 @@ class Repository implements PackageInterface
     }
 
     /**
+     * list all available packages in the repository (built-in)
+     *
+     * @return array|string[]
+     */
+    public function listPackages()
+    {
+        $list = array();
+
+        $packageDir = LibFs::normalizePath(__DIR__ . '/../../../../lib/package');
+
+        $regex = new \RegexIterator(
+            new \FilesystemIterator($packageDir),
+            '(^(.*)\.yml$)'
+        );
+
+        foreach ($regex as $item) {
+            $list[] = $item->getBasename('.yml');
+        }
+
+        sort($list, SORT_STRING);
+
+        return $list;
+    }
+
+    /**
      * Resolve a binary package name in this repository
      *
      * @param string $packageName
+     *
      * @throws \InvalidArgumentException
      * @return Repository
      */
@@ -125,7 +153,7 @@ class Repository implements PackageInterface
             $reader = new PackageYamlFileReader($ymlFile);
             $packageArray = $reader->asPackageArray();
         } else {
-            $packageArray = array('prep' => array('bin_local' => isset($localBinary) ? $localBinary: null));
+            $packageArray = array('prep' => array('bin_local' => isset($localBinary) ? $localBinary : null));
         }
 
         $this->package = $packageArray;
@@ -135,6 +163,7 @@ class Repository implements PackageInterface
 
     /**
      * @param string $containerId
+     *
      * @throws \InvalidArgumentException
      * @return array array(int $status, string $message) docker client binary version (docker --version) or error
      */
@@ -162,6 +191,7 @@ class Repository implements PackageInterface
      * Get binary path from local store.
      *
      * @param array $package
+     *
      * @return string
      */
     public function getLocalBinary(array $package)

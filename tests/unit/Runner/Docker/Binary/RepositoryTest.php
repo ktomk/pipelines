@@ -53,6 +53,22 @@ class RepositoryTest extends TestCase
     }
 
     /**
+     * @covers \Ktomk\Pipelines\Runner\Docker\Binary\Repository::listPackages
+     */
+    public function testListPackages()
+    {
+        $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
+        $actual = $repo->listPackages();
+        $expected = array(
+            Repository::PKG_PREVIOUS,
+            Repository::PKG_ATLBBCPP,
+            Repository::PKG_INTEGRATE,
+            Repository::PKG_TEST,
+        );
+        $this->assertSame($expected, $actual);
+    }
+
+    /**
      * @throws \Exception
      */
     public function testResolve()
