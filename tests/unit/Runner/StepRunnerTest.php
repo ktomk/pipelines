@@ -189,6 +189,20 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(0, $status);
     }
 
+    public function testMountInCopyFails()
+    {
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        $step = $this->createTestStep();
+        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array('PIPELINES_PARENT_CONTAINER_NAME' => 'foo'));
+
+        $this->expectOutputString("pipelines: fatal: can not detect /app mount point. preventing new container.\n");
+        $status = $runner->runStep($step);
+        $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
+    }
+
     /* artifact tests */
 
     public function testArtifacts()

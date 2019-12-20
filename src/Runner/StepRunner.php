@@ -93,6 +93,9 @@ class StepRunner
         $env = $this->env;
         $exec = $this->exec;
         $streams = $this->streams;
+
+        $env->setPipelinesProjectPath($dir);
+
         $reuseContainer = $this->flags->reuseContainer();
         $deployCopy = $this->flags->deployCopy();
 
@@ -360,14 +363,25 @@ class StepRunner
         $parentName = $env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
         $checkMount = $mountDockerSock && null !== $parentName;
         $deviceDir = $dir;
-        if ($checkMount) {
+        if ($checkMount && '/app' === $dir) { // FIXME(tk): hard encoded /app
             $docker = new Docker($exec);
             $deviceDir = $docker->hostDevice($parentName, $dir);
             unset($docker);
+            if ($deviceDir === $dir) {
+                $deviceDir = $env->getPipelinesProjectPath($deviceDir);
+            }
+            if ($deviceDir === $dir) {
+                $streams->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
+
+                return array(null, 1);
+            }
         }
 
         $mountWorkingDirectory = $copy
             ? array()
+            // FIXME(tk): Never mount anything not matching /home/[a-zA-Z][a-zA-Z0-9]*/[^.].*/...
+            //   + do realpath checking
+            //   + prevent dot path injections (logical fix first)
             : array('--volume', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
 
         $status = $exec->capture('docker', array(

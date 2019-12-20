@@ -72,6 +72,14 @@ class RunnerTestCase extends TestCase
         return $step;
     }
 
+    /**
+     * @param string $dir
+     */
+    protected function setTestProject($dir)
+    {
+        $this->testProject = $dir;
+    }
+
     protected function getTestProject()
     {
         if (null !== $this->testProject) {

@@ -39,6 +39,7 @@ class Env
 
     /**
      * @param null|array $inherit
+     *
      * @return Env
      */
     public static function create(array $inherit = array())
@@ -72,6 +73,7 @@ class Env
             'PIPELINES_CONTAINER_NAME' => null,
             'PIPELINES_IDS' => null,
             'PIPELINES_PARENT_CONTAINER_NAME' => null,
+            'PIPELINES_PROJECT_PATH' => null,
         );
 
         $invariant = array(
@@ -136,6 +138,7 @@ class Env
      * set the pipelines environment's running pipeline id
      *
      * @param string $id of pipeline, e.g. "default" or "branch/feature/*"
+     *
      * @return bool whether was used before (endless pipelines in pipelines loop)
      */
     public function setPipelinesId($id)
@@ -155,7 +158,44 @@ class Env
     }
 
     /**
+     * set PIPELINES_PROJECT_PATH
+     *
+     * can never be overwritten, must be set by pipelines itself for the
+     * initial pipeline. will be taken over into each sub-pipeline.
+     *
+     * @param string $path absolute path to the project directory (deploy source path)
+     */
+    public function setPipelinesProjectPath($path)
+    {
+        // TODO $path must be absolute
+
+        if (isset($this->vars['PIPELINES_PROJECT_PATH'])
+            || !isset($this->vars['PIPELINES_ID'], $this->vars['PIPELINES_IDS'])
+            || $this->vars['PIPELINES_IDS'] !== md5($this->vars['PIPELINES_ID'])
+        ) {
+            return;
+        }
+
+        $this->vars['PIPELINES_PROJECT_PATH'] = $path;
+    }
+
+    /**
+     * @param null|string $default [optional]
+     *
+     * @return null|string
+     */
+    public function getPipelinesProjectPath($default = null)
+    {
+        if (isset($this->vars['PIPELINES_PROJECT_PATH'])) {
+            return $this->vars['PIPELINES_PROJECT_PATH'];
+        }
+
+        return $default;
+    }
+
+    /**
      * @param string $option "-e" typically for Docker binary
+     *
      * @return array of options (from $option) and values, ['-e', 'val1', '-e', 'val2', ...]
      */
     public function getArgs($option)
@@ -174,6 +214,7 @@ class Env
      * get a variables value or null if not set
      *
      * @param string $name
+     *
      * @return null|string
      */
     public function getValue($name)
@@ -206,6 +247,7 @@ class Env
 
     /**
      * @param array $paths
+     *
      * @throws \InvalidArgumentException
      */
     public function collectFiles(array $paths)

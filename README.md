@@ -248,9 +248,19 @@ introspection:
 * `PIPELINES_PARENT_CONTAINER_NAME` - name of the container name
     if it was already set when the pipeline started (pipelines
     inside pipeline).
+* `PIPELINES_PROJECT_PATH` - path of the original project as if
+    it would be used for `--deploy`  with `copy` or `mount` so
+    that it is possible inside a pipeline to do `--deploy mount`
+    when the current container did not mount. A mount always
+    requires the path of the project directory on the system
+    running pipelines. With no existing mount (e.g. `--deploy
+    copy`) it would otherwise be unknown. Manipulating this parameter
+    within a pipeline leads to undefined behaviour and can have
+    system security implications.
 
-These environment variables are managed by pipelines itself and
-can not be injected.
+These environment variables are managed by pipelines itself. Some of
+them can be injected which can lead to undefined behaviour and can have
+system security implications.
 
 Next to these special purpose environment variables, any other
 environment variable can be imported into or set in the container

@@ -182,6 +182,20 @@ class EnvTest extends TestCase
         $this->assertRegExp('~^([a-z0-9]+) \1$~', $actual, 'list of hashes');
     }
 
+    public function testPipelinesProjectPath()
+    {
+        $env = Env::create();
+        $env->setPipelinesProjectPath('/my-path');
+        $this->assertNull($env->getPipelinesProjectPath(), 'needs ID/s configuration');
+
+        $env->setPipelinesId('custom/test-for-nothing');
+        $env->setPipelinesProjectPath('/my-path');
+        $this->assertSame('/my-path', $env->getPipelinesProjectPath(), 'works for ID/s');
+
+        $env->setPipelinesProjectPath('/my-path/too');
+        $this->assertSame('/my-path', $env->getPipelinesProjectPath(), 'can not overwrite');
+    }
+
     public function testInheritPipelinesId()
     {
         $inherit = array('PIPELINES_ID', 'custom/the-other-day');

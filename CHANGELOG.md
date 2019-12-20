@@ -5,9 +5,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- `PIPELINES_PROJECT_PATH` parameter
 ### Changed
 - More readable step scripts
 ### Fixed
+- Pipelines w/ `--deploy mount` inside a pipeline of `--deploy copy`,
+  the current default.
 - Busybox on Atlassian Bitbucket Cloud
 
 ## [0.0.23] - 2019-12-17

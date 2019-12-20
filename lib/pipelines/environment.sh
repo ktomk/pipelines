@@ -49,6 +49,12 @@ PIPELINES_PARENT_CONTAINER_NAME \
                            name of the parent container (pipelines run inside \
                            a pipeline, if docker client is available) \
                            otherwise not set.
+PIPELINES_PROJECT_PATH \
+                           pipelines variable: inception related, set to the \
+                           path of project directory that is the source of the\
+                           deployment outside of the container.\
+                           used to mount inside a pipeline which's deployment\
+                           does not provide any mount point.
 USER                       current user name, informative
 HOME                       current home directory, informative
 "
