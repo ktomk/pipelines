@@ -12,8 +12,14 @@ cd "${0%/*}"
 # test-...sh passed as positional parameter executes directly
 if [[ -f "./${1:-}" ]] && [[ -x "./${1:-}" ]]; then
   test="./${1}"
-  shift 1
-  "${test}" "${@}"
+  if [[ "$#" -eq 1 ]]; then
+    "${test}"
+    exit
+  fi
+  while [[ "$#" -gt 1 ]]; do
+    shift 1
+    "${test}" "${1}"
+  done
   exit
 fi
 
