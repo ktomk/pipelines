@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Utility\Options;
+
 /**
  * Runner options parameter object
  */
@@ -15,14 +17,20 @@ class RunOpts
     private $prefix;
 
     /**
+     * @var Options
+     */
+    private $options;
+
+    /**
      * Static factory method
      *
-     * @param string $prefix
+     * @param string $prefix [optional]
+     *
      * @return RunOpts
      */
-    public static function create($prefix)
+    public static function create($prefix = null)
     {
-        return new self($prefix);
+        return new self($prefix, Options::create());
     }
 
     /**
@@ -31,10 +39,12 @@ class RunOpts
      * NOTE: All run options are optional by design (pass NULL).
      *
      * @param string $prefix
+     * @param null|Options $options
      */
-    public function __construct($prefix = null)
+    public function __construct($prefix = null, Options $options = null)
     {
         $this->prefix = $prefix;
+        $this->options = $options;
     }
 
     /**
@@ -55,5 +65,19 @@ class RunOpts
     public function getPrefix()
     {
         return $this->prefix;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return null|string
+     */
+    public function getOption($name)
+    {
+        if (!isset($this->options)) {
+            return null;
+        }
+
+        return $this->options->get($name);
     }
 }

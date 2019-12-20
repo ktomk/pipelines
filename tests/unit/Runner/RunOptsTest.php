@@ -31,4 +31,20 @@ class RunOptsTest extends TestCase
         $opts->setPrefix('foo');
         $this->assertSame('foo', $opts->getPrefix());
     }
+
+    /**
+     * @depends testCreation
+     * @param RunOpts $opts
+     */
+    public function testOptions(RunOpts $opts)
+    {
+        $this->assertNull($opts->getOption('foo.bar.baz'));
+        $this->assertNotNull($opts->getOption('docker.socket.path'));
+    }
+
+    public function testOptionsWithNull()
+    {
+        $opts = new RunOpts();
+        $this->assertNull($opts->getOption('foo.bar'));
+    }
 }
