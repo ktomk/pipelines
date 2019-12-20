@@ -37,13 +37,13 @@ class AppTest extends TestCase
     }
 
     /**
-     * --verbose gives version,
-     * --prefix misses argument so exit status is 1
+     * --verbose as old test behaviour,
+     * --prefix misses argument so exit status is 1 and usage information is shown
      */
     public function testMainVerbosePrinter()
     {
         $app = new App(new Streams(null, 'php://output', null));
-        $this->expectOutputRegex('{^usage: pipelines }');
+        $this->expectOutputRegex('{^usage: pipelines }m');
         $actual = $app->main(array('cmd', '--verbose', '--prefix'));
         $this->assertSame(1, $actual);
     }

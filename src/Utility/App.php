@@ -101,11 +101,7 @@ class App implements Runnable
 
         $this->help->run($args);
 
-        $runOpts = RunnerOptions::bind($args)->run();
-
         $exec = $this->parseExec();
-
-        DockerOptions::bind($args, $exec, $runOpts->getPrefix(), $this->streams)->run();
 
         $keep = KeepOptions::bind($args)->run();
 
@@ -117,6 +113,10 @@ class App implements Runnable
 
         // TODO: obtain project dir information etc. from VCS
         // $vcs = new Vcs();
+
+        $runOpts = RunnerOptions::bind($args, $this->streams)->run();
+
+        DockerOptions::bind($args, $exec, $runOpts->getPrefix(), $this->streams)->run();
 
         $noRun = $args->hasOption('no-run');
 

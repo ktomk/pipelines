@@ -48,6 +48,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--deploy mount | copy ] [--pipeline <id>]
                  [--trigger <ref>]
        pipelines [<options>] --list | --show | --images
+       pipelines [<options>] --docker-client-pkgs
        pipelines [<options>] [--docker-list] [--docker-kill]
                  [--docker-clean] [--docker-zap]
 
@@ -128,6 +129,8 @@ Docker service options
                           pipeline service 'docker'
                           defaults to 'docker-19.03.1-linux-static-x86_64'
                           package
+    --docker-client-pkgs  list all docker client packages that ship with
+                          pipelines and exit
 
 File information options
     --images              list all images in file, in order of use, w/o
