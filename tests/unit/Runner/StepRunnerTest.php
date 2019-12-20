@@ -7,7 +7,6 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\Runner\Docker\Binary\UnPackager;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**

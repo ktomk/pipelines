@@ -327,8 +327,8 @@ X Sierra and High Sierra with PHP and Docker installed.
 ### Installation
 
 [Phar (Download)](#download-the-phar-php-archive-file) |
-[Composer](#install-with-composer) | 
-[Phive](#install-with-phive) | 
+[Composer](#install-with-composer) |
+[Phive](#install-with-phive) |
 [Source (also w/ Phar)](#install-from-source)
 
 Installation is available by downloading the phar archive from
@@ -372,14 +372,14 @@ To uninstall remove the package:
 Take a look at [Composer from getcomposer.org](COMPOSER)
 \[COMPOSER], a *Dependency Manager for PHP*. Pipelines has
 support for composer based installations, which might include
-upstream patches. 
+upstream patches.
 
 #### Install with Phive
 
 Perhaps the most easy way to install when *phive* is available:
 
     $ phive install pipelines
-    
+
 Even if your PHP version does not have the Yaml extension this
 should work out of the box. If you use *composer* and you're a
 PHP aficionado, dig into *phive* for your systems and workflow.

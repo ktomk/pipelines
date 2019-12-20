@@ -11,17 +11,13 @@ namespace PHPSTORM_META {
 
     // pattern example. `@` is replaced by argument literal value.
 
-    /** @scrutinizer ignore-call */
-    override(\PHPUnit\Framework\TestCase::/** @scrutinizer ignore-call */ createMock(0),
-        /** @scrutinizer ignore-call */
+    override(\PHPUnit\Framework\TestCase::createMock(0),
         map([
             '' => '@|\PHPUnit\Framework\MockObject\MockObject',
         ])
     );
 
-    /** @scrutinizer ignore-call */
-    override(\PHPUnit\Framework\TestCase::/** @scrutinizer ignore-call */ createPartialMock(0),
-        /** @scrutinizer ignore-call */
+    override(\PHPUnit\Framework\TestCase::createPartialMock(0),
         map([
             '' => '@|\PHPUnit\Framework\MockObject\MockObject',
         ])

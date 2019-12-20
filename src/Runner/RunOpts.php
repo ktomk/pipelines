@@ -31,7 +31,6 @@ class RunOpts
      * NOTE: All run options are optional by design (pass NULL).
      *
      * @param string $prefix
-     * @param string $binaryPackage package name or path to binary (string)
      */
     public function __construct($prefix = null)
     {

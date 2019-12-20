@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Use Symfony YAML as fall-back parser, replaces
   Mustangostang Spyc (#4)
-  
+
 ## [0.0.21] - 2019-09-23
 ### Fixed
 - Unintended output of "\x1D" on some container systems
