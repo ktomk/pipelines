@@ -26,11 +26,6 @@ class KeepOptions
     public $keep;
 
     /**
-     * @var null|bool
-     */
-    public $noKeep;
-
-    /**
      * @var Args
      */
     private $args;
@@ -58,7 +53,7 @@ class KeepOptions
      */
     public function run()
     {
-        list($this->errorKeep, $this->keep, $this->noKeep)
+        list($this->errorKeep, $this->keep)
             = $this->parse($this->args);
 
         return $this;
@@ -95,7 +90,7 @@ class KeepOptions
             StatusException::status(1, '--error-keep and --no-keep are exclusive');
         }
 
-        return array($errorKeep, $keep, $noKeep);
+        return array($errorKeep, $keep && !$noKeep);
     }
 
     /**

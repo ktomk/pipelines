@@ -26,7 +26,7 @@ class KeepOptionsTest extends TestCase
      * @param KeepOptions $keep
      * @throws StatusException
      */
-    public function testParse(KeepOptions $keep)
+    public function testRun(KeepOptions $keep)
     {
         $actual = $keep->run();
         $this->assertInstanceOf(get_class($keep), $actual);
@@ -69,5 +69,27 @@ class KeepOptionsTest extends TestCase
             $this->assertSame($expected, $exception->getMessage());
             $this->assertSame(1, $exception->getCode());
         }
+    }
+
+    public function provideParseArgs()
+    {
+        return array(
+            array(array('test-util'), array(false, false)),
+            array(array('test-util', '--no-keep'), array(false, false)),
+            array(array('test-util', '--keep'), array(false, true)),
+            array(array('test-util', '--error-keep'), array(true, false)),
+        );
+    }
+
+    /**
+     * @dataProvider provideParseArgs
+     * @throws StatusException
+     */
+    public function testParse(array $argv, array $expected)
+    {
+        $args = Args::create($argv);
+        $keep = new KeepOptions($args);
+        $actual = $keep->parse($args);
+        $this->assertSame($expected, $actual);
     }
 }
