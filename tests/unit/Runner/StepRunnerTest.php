@@ -185,7 +185,7 @@ class StepRunnerTest extends RunnerTestCase
                 'password' => 'secret',
             ),
         ));
-        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array('PIPELINES_PARENT_CONTAINER_NAME' => 'foo'));
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array());
 
         $this->expectOutputString('');
         $status = $runner->runStep($step);
@@ -226,7 +226,7 @@ class StepRunnerTest extends RunnerTestCase
         ;
 
         $step = $this->createTestStep(array('artifacts' => array('build/foo-package.tgz')));
-        $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS);
+        $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS);
 
         $status = $runner->runStep($step);
         $this->assertSame(0, $status);
@@ -247,7 +247,7 @@ class StepRunnerTest extends RunnerTestCase
         ;
 
         $step = $this->createTestStep(array('artifacts' => array('build/bar-package.tgz')));
-        $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS);
+        $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS);
 
         $status = $runner->runStep($step);
         $this->assertSame(0, $status);
@@ -276,7 +276,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('~^pipelines: Artifact failure: \'build/foo-package.tgz\' \\(1, 1 paths, 1\\d\\d bytes\\)$~m');
         $step = $this->createTestStep(array('artifacts' => array('build/foo-package.tgz')));
-        $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY  | Flags::FLAGS, array(null, 'php://output'));
+        $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS, array(null, 'php://output'));
 
         $status = $runner->runStep($step);
         $this->assertSame(0, $status);
