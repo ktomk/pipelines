@@ -315,7 +315,7 @@ class App implements Runnable
                 'info: project directory is %s',
                 $workingDir === $buffer
                     ? sprintf("'%s'", $workingDir)
-                    : sprintf("'%s' (pwd: '%s')", $workingDir, $buffer)
+                    : sprintf("'%s' (OLDPWD: '%s')", $workingDir, $buffer)
             )
         );
 

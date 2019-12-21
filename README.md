@@ -325,8 +325,7 @@ X Sierra and High Sierra with PHP and Docker installed.
 
 - Brace expansion (used for glob patterns with braces) is known
   to fail in some cases. This *could* affect matching pipelines,
-  collecting asset paths and *did* affect building the phar file.
-
+  collecting asset paths and *did* affect building the phar file.  \
   For the first two, this has never been reported or experienced,
   for building the phar file the workaround was to entail the
   larger parts of the pattern.

@@ -313,11 +313,11 @@ class StepRunner
             '.',
             array_reverse(
                 array(
-                        $project,
-                        trim($idContainerSlug, '-'),
-                        $nameSlug,
-                        $step->getIndex() + 1,
-                    )
+                    $project,
+                    trim($idContainerSlug, '-'),
+                    $nameSlug,
+                    $step->getIndex() + 1,
+                )
             )
         );
     }
