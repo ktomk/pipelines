@@ -5,7 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
-use Ktomk\Pipelines\Cli\DockerProcessManager;
+use Ktomk\Pipelines\Cli\Docker\ProcessManager;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
@@ -45,7 +45,7 @@ class DockerOptionsTest extends TestCase
             $exec,
             '',
             new Streams(),
-            new DockerProcessManager($exec)
+            new ProcessManager($exec)
         );
 
         $options->run();
@@ -67,7 +67,7 @@ class DockerOptionsTest extends TestCase
             $exec,
             'abc-',
             new Streams(),
-            new DockerProcessManager($exec)
+            new ProcessManager($exec)
         );
 
         $exec
@@ -96,7 +96,7 @@ class DockerOptionsTest extends TestCase
             $exec,
             'abc-',
             new Streams(),
-            new DockerProcessManager($exec)
+            new ProcessManager($exec)
         );
 
         $exec
@@ -123,7 +123,7 @@ class DockerOptionsTest extends TestCase
             $exec,
             'abc',
             new Streams(),
-            new DockerProcessManager($exec)
+            new ProcessManager($exec)
         );
 
         $exec
