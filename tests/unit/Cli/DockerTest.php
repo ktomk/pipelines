@@ -114,4 +114,12 @@ class DockerTest extends TestCase
         $actual = $docker->hostDevice('container-name', '/app');
         $this->assertSame('/app', $actual, 'extraction from json fixture');
     }
+
+    public function testGetProcessManager()
+    {
+        $this->assertInstanceOf(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            Docker::create()->getProcessManager()
+        );
+    }
 }

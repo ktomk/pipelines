@@ -18,6 +18,20 @@ class Docker
 
     private $name = 'docker';
 
+    /**
+     * @param null|Exec $exec [optional]
+     *
+     * @return Docker
+     */
+    public static function create(Exec $exec = null)
+    {
+        if (null === $exec) {
+            $exec = new Exec();
+        }
+
+        return new self($exec);
+    }
+
     public function __construct(Exec $exec)
     {
         $this->exec = $exec;
@@ -112,5 +126,13 @@ class Docker
         }
 
         return $mountPoint;
+    }
+
+    /**
+     * @return Docker\ProcessManager
+     */
+    public function getProcessManager()
+    {
+        return new Docker\ProcessManager($this->exec);
     }
 }

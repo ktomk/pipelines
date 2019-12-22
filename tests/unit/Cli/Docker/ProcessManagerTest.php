@@ -2,21 +2,23 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Cli;
+namespace Ktomk\Pipelines\Cli\Docker;
 
+use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\TestCase;
 
 /**
  * Class DockerProcessManagerTest
  *
- * @covers \Ktomk\Pipelines\Cli\DockerProcessManager
+ * @covers \Ktomk\Pipelines\Cli\Docker\ProcessManager
  */
-class DockerProcessManagerTest extends TestCase
+class ProcessManagerTest extends TestCase
 {
     public function testCreation()
     {
-        $ps = new DockerProcessManager(new Exec());
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\DockerProcessManager', $ps);
+        $ps = new ProcessManager(new Exec());
+        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Docker\ProcessManager', $ps);
     }
 
     public function testFindAllContainerIdsByNamePrefix()
@@ -24,7 +26,7 @@ class DockerProcessManagerTest extends TestCase
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', 0);
 
-        $ps = new DockerProcessManager($exec);
+        $ps = new ProcessManager($exec);
         $this->assertInternalType('array', $ps->findAllContainerIdsByNamePrefix('pipelines'));
     }
 
@@ -35,7 +37,7 @@ class DockerProcessManagerTest extends TestCase
     public function testInvalidPrefix()
     {
         $exec = new ExecTester($this);
-        $ps = new DockerProcessManager($exec);
+        $ps = new ProcessManager($exec);
         $ps->findAllContainerIdsByNamePrefix('**wrong**');
     }
 
@@ -44,7 +46,7 @@ class DockerProcessManagerTest extends TestCase
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', 0);
 
-        $ps = new DockerProcessManager($exec);
+        $ps = new ProcessManager($exec);
         $this->assertInternalType('array', $ps->findRunningContainerIdsByNamePrefix('pipelines'));
     }
 
@@ -53,7 +55,7 @@ class DockerProcessManagerTest extends TestCase
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', 0);
 
-        $ps = new DockerProcessManager($exec);
+        $ps = new ProcessManager($exec);
         $this->assertInternalType('int', $ps->kill(
             'fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c'
         ));
@@ -64,7 +66,7 @@ class DockerProcessManagerTest extends TestCase
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', 0);
 
-        $ps = new DockerProcessManager($exec);
+        $ps = new ProcessManager($exec);
         $this->assertInternalType('int', $ps->remove(
             array('fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c')
         ));

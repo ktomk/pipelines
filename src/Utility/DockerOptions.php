@@ -6,10 +6,9 @@ namespace Ktomk\Pipelines\Utility;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
-use Ktomk\Pipelines\Cli\DockerProcessManager;
+use Ktomk\Pipelines\Cli\Docker\ProcessManager;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\Lib;
 use RuntimeException;
 
 /**
@@ -45,13 +44,13 @@ class DockerOptions
     private $prefix;
 
     /**
-     * @var DockerProcessManager
+     * @var ProcessManager
      */
     private $ps;
 
     public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
     {
-        return new self($args, $exec, $prefix, $streams, new DockerProcessManager($exec));
+        return new self($args, $exec, $prefix, $streams, new ProcessManager($exec));
     }
 
     /**
@@ -61,9 +60,9 @@ class DockerOptions
      * @param Exec $exec
      * @param string $prefix
      * @param Streams $streams
-     * @param DockerProcessManager $ps
+     * @param ProcessManager $ps
      */
-    public function __construct(Args $args, Exec $exec, $prefix, Streams $streams, DockerProcessManager $ps)
+    public function __construct(Args $args, Exec $exec, $prefix, Streams $streams, ProcessManager $ps)
     {
         $this->args = $args;
         $this->exec = $exec;

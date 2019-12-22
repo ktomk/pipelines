@@ -2,14 +2,15 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Cli;
+namespace Ktomk\Pipelines\Cli\Docker;
 
+use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Lib;
 
 /**
  * Process manager for docker container
  */
-class DockerProcessManager
+class ProcessManager
 {
     /**
      * @var Exec
