@@ -97,7 +97,11 @@ class StepRunner
 
         $env->setPipelinesProjectPath($dir);
 
-        $name = $this->generateContainerName($step);
+        $name = StepContainer::createName(
+            $step,
+            $this->runOpts->getPrefix(),
+            $this->directories->getName()
+        );
 
         $image = $step->getImage();
         $env->setContainerName($name);
@@ -340,35 +344,6 @@ class StepRunner
         }
 
         return $ids[0];
-    }
-
-    /**
-     * @param Step $step
-     * @return string
-     */
-    private function generateContainerName(Step $step)
-    {
-        $project = $this->directories->getName();
-        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '-', $step->getPipeline()->getId());
-        if ('' === $idContainerSlug) {
-            $idContainerSlug = 'null';
-        }
-        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $step->getName());
-        if ('' === $nameSlug) {
-            $nameSlug = 'no-name';
-        }
-
-        return $this->runOpts->getPrefix() . '-' . implode(
-            '.',
-            array_reverse(
-                array(
-                    $project,
-                    trim($idContainerSlug, '-'),
-                    $nameSlug,
-                    $step->getIndex() + 1,
-                )
-            )
-        );
     }
 
     /**
