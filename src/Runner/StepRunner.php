@@ -326,24 +326,8 @@ class StepRunner
      */
     private function dockerGetContainerIdByName($name)
     {
-        $ids = null;
-
-        $status = $this->exec->capture(
-            'docker',
-            array(
-                'ps', '-qa', '--filter',
-                "name=^/${name}$"
-            ),
-            $result
-        );
-
-        $status || $ids = Lib::lines($result);
-
-        if ($status || !(is_array($ids) && 1 === count($ids))) {
-            return null;
-        }
-
-        return $ids[0];
+        return Docker::create($this->exec)->getProcessManager()
+            ->findContainerIdByName($name);
     }
 
     /**

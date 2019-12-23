@@ -107,4 +107,46 @@ class ProcessManagerTest extends TestCase
         $pm->zapContainersByName('foo');
         $this->addToAssertionCount(1);
     }
+
+    public function testFindContainerIdByName()
+    {
+        $pm = $this->createPartialMock(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            array('findAllContainerIdsByName')
+        );
+        $pm->method('findAllContainerIdsByName')->willReturn(null);
+        $this->assertNull($pm->findContainerIdByName('foo'));
+    }
+
+    public function testFindContainerIdByNameNoMatches()
+    {
+        $pm = $this->createPartialMock(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            array('findAllContainerIdsByName')
+        );
+        $pm->method('findAllContainerIdsByName')->willReturn(array());
+        $this->assertNull($pm->findContainerIdByName('foo'));
+    }
+
+    public function testFindContainerIdByNameSingleMatch()
+    {
+        $pm = $this->createPartialMock(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            array('findAllContainerIdsByName')
+        );
+        $pm->method('findAllContainerIdsByName')->willReturn(array('1234567'));
+        $this->assertSame('1234567', $pm->findContainerIdByName('foo'));
+    }
+
+    public function testFindContainerIdByNameMultipleMatches()
+    {
+        $pm = $this->createPartialMock(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            array('findAllContainerIdsByName')
+        );
+        $pm->method('findAllContainerIdsByName')->willReturn(
+            array('1234567', '3456789')
+        );
+        $this->assertNull($pm->findContainerIdByName('foo'));
+    }
 }
