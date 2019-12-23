@@ -14,6 +14,7 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
+use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
  * Runner for a single step of a pipeline
@@ -337,7 +338,7 @@ class StepRunner
      */
     private function imageLogin(Image $image)
     {
-        $login = new DockerLogin($this->exec, $this->env->getResolver());
+        $login = new ImageLogin($this->exec, $this->env->getResolver());
         $login->byImage($image);
     }
 

@@ -2,17 +2,15 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Runner;
+namespace Ktomk\Pipelines\Runner\Docker;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Image;
 
 /**
- * DockerLogin - docker login authentication provider
- *
- * @package Ktomk\Pipelines\Runner\Runner
+ * ImageLogin - docker login authentication provider for private images
  */
-class DockerLogin
+class ImageLogin
 {
     /**
      * @var Exec
