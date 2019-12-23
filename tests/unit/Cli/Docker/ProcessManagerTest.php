@@ -71,4 +71,40 @@ class ProcessManagerTest extends TestCase
             array('fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c')
         ));
     }
+
+    public function testFindAllContainerIdsByName()
+    {
+        $exec = new ExecTester($this);
+        $exec->expect('capture', 'docker', 0, 'docke ps');
+        $pm = new ProcessManager($exec);
+        $this->assertSame(
+            array(),
+            $pm->findAllContainerIdsByName('foo')
+        );
+    }
+
+    public function testZapContainersByName()
+    {
+        $pm = $this->createPartialMock(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            array('findAllContainerIdsByName', 'kill', 'remove')
+        );
+        $pm->expects($this->once())
+            ->method('kill');
+        $pm->expects($this->once())
+            ->method('remove');
+        $pm->method('findAllContainerIdsByName')
+            ->willReturn(array('1234567'));
+        $pm->zapContainersByName('foo');
+    }
+
+    public function testZapContainersByNameNoMatches()
+    {
+        $pm = $this->createPartialMock(
+            'Ktomk\Pipelines\Cli\Docker\ProcessManager',
+            array('findAllContainerIdsByName')
+        );
+        $pm->zapContainersByName('foo');
+        $this->addToAssertionCount(1);
+    }
 }
