@@ -2,13 +2,13 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Runner;
+namespace Ktomk\Pipelines\Runner\Docker;
 
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers \Ktomk\Pipelines\Runner\ArtifactSource
+ * @covers \Ktomk\Pipelines\Runner\Docker\ArtifactSource
  */
 class ArtifactSourceTest extends TestCase
 {
@@ -16,7 +16,7 @@ class ArtifactSourceTest extends TestCase
     {
         $exec = new ExecTester($this);
         $source = new ArtifactSource($exec, '*fake*', '/app');
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\ArtifactSource', $source);
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\ArtifactSource', $source);
 
         return $source;
     }
@@ -32,7 +32,7 @@ class ArtifactSourceTest extends TestCase
 
     public function testGetFiles()
     {
-        $buffer = file_get_contents(__DIR__ . '/../../data/docker-find.txt');
+        $buffer = file_get_contents(__DIR__ . '/../../../data/docker-find.txt');
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', $buffer);
         $source = new ArtifactSource($exec, '*fake*', '/app');
@@ -52,7 +52,7 @@ class ArtifactSourceTest extends TestCase
 
     public function testFindByPattern()
     {
-        $buffer = file_get_contents(__DIR__ . '/../../data/docker-find.txt');
+        $buffer = file_get_contents(__DIR__ . '/../../../data/docker-find.txt');
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', $buffer);
         $source = new ArtifactSource($exec, '*fake*', '/app');

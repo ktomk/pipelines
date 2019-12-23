@@ -2,7 +2,7 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Runner;
+namespace Ktomk\Pipelines\Runner\Docker;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Glob;
