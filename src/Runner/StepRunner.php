@@ -13,6 +13,7 @@ use Ktomk\Pipelines\File\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
