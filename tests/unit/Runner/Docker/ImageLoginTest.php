@@ -2,24 +2,24 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Runner;
+namespace Ktomk\Pipelines\Runner\Docker;
 
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers \Ktomk\Pipelines\Runner\DockerLogin
+ * @covers \Ktomk\Pipelines\Runner\Docker\ImageLogin
  */
-class DockerLoginTest extends TestCase
+class ImageLoginTest extends TestCase
 {
     public function testCreation()
     {
         $exec = new ExecTester($this);
         $resolver = function () {
         };
-        $login = new DockerLogin($exec, $resolver);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\DockerLogin', $login);
+        $login = new ImageLogin($exec, $resolver);
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\ImageLogin', $login);
     }
 
     public function testByImageWithStringImage()
@@ -27,7 +27,7 @@ class DockerLoginTest extends TestCase
         $exec = new ExecTester($this);
         $resolver = function () {
         };
-        $login = new DockerLogin($exec, $resolver);
+        $login = new ImageLogin($exec, $resolver);
         $image = new Image('foo/bar');
         $login->byImage($image);
         $this->addToAssertionCount(1);
@@ -40,7 +40,7 @@ class DockerLoginTest extends TestCase
         $resolver = function () {
         };
         $path = __DIR__ . '/../../data/docker-config-no-auth.json';
-        $login = new DockerLogin($exec, $resolver, $path);
+        $login = new ImageLogin($exec, $resolver, $path);
         $array = array(
             'name' => 'account-name/java:8u66',
             'username' => '$DOCKER_HUB_USERNAME',
@@ -57,8 +57,8 @@ class DockerLoginTest extends TestCase
         $exec = new ExecTester($this);
         $resolver = function () {
         };
-        $path = __DIR__ . '/../../data/docker-config.json';
-        $login = new DockerLogin($exec, $resolver, $path);
+        $path = __DIR__ . '/../../../data/docker-config.json';
+        $login = new ImageLogin($exec, $resolver, $path);
         $this->assertTrue($login->dockerLoginHasAuth());
         $this->assertTrue($login->dockerLoginHasAuth('existing.foo.host.example:12345'));
         $this->assertFalse($login->dockerLoginHasAuth('https://repo.foo/'));
@@ -69,7 +69,7 @@ class DockerLoginTest extends TestCase
         $exec = new ExecTester($this);
         $resolver = function () {
         };
-        $login = new DockerLogin($exec, $resolver);
+        $login = new ImageLogin($exec, $resolver);
         $actual = $login->getDockerConfigPathFromEnvironment();
         $this->assertStringEndsWith('/.docker/config.json', $actual);
     }
