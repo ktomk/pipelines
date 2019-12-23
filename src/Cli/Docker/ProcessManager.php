@@ -23,9 +23,34 @@ class ProcessManager
     }
 
     /**
+     * @param string $name
+     *
+     * @return null|array|string[] 0 or more ids, null if subsystem
+     *         unavailable, subsystem error or unsupported parameter
+     */
+    public function findAllContainerIdsByName($name)
+    {
+        $ids = null;
+
+        $status = $this->exec->capture(
+            'docker',
+            array(
+                'ps', '--no-trunc', '-qa', '--filter',
+                "name=^/\\Q${name}\\E$",
+            ),
+            $result
+        );
+
+        $status || $ids = Lib::lines($result);
+
+        return $ids;
+    }
+
+    /**
      * container ids by name prefix of running and stopped containers
      *
      * @param string $prefix
+     *
      * @return null|array of ids, null if an internal error occurred
      */
     public function findAllContainerIdsByNamePrefix($prefix)
@@ -37,6 +62,7 @@ class ProcessManager
      * container ids by name prefix of running containers
      *
      * @param string $prefix
+     *
      * @return null|array of ids, null if an internal error occurred
      */
     public function findRunningContainerIdsByNamePrefix($prefix)
@@ -46,6 +72,7 @@ class ProcessManager
 
     /**
      * @param string|string[] $idOrIds
+     *
      * @return int
      */
     public function kill($idOrIds)
@@ -55,6 +82,7 @@ class ProcessManager
 
     /**
      * @param string|string[] $idOrIds
+     *
      * @return int
      */
     public function remove($idOrIds)
@@ -63,8 +91,30 @@ class ProcessManager
     }
 
     /**
+     * @param string $name
+     */
+    public function zapContainersByName($name)
+    {
+        $ids = $this->findAllContainerIdsByName($name);
+        if (!$ids) {
+            return;
+        }
+        $this->zap($ids);
+    }
+
+    /**
+     * @param string|string[] $idOrIds
+     */
+    public function zap($idOrIds)
+    {
+        $this->kill($idOrIds);
+        $this->remove($idOrIds);
+    }
+
+    /**
      * @param string $prefix
      * @param bool $all
+     *
      * @return null|array
      */
     private function psPrefixImpl($prefix, $all = false)
@@ -81,7 +131,7 @@ class ProcessManager
             'docker',
             array(
                 'ps', '-q' . ($all ? 'a' : ''), '--no-trunc', '--filter',
-                "name=^/${prefix}"
+                "name=^/${prefix}",
             ),
             $result
         );

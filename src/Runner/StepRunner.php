@@ -505,24 +505,7 @@ class StepRunner
      */
     private function zapContainerByName($name)
     {
-        $ids = null;
-
-        $status = $this->exec->capture(
-            'docker',
-            array(
-                'ps', '-qa', '--filter',
-                "name=^/${name}$"
-            ),
-            $result
-        );
-
-        $status || $ids = Lib::lines($result);
-
-        if ($status || !(is_array($ids) && 1 === count($ids))) {
-            return;
-        }
-
-        $this->exec->capture('docker', Lib::merge('kill', $ids));
-        $this->exec->capture('docker', Lib::merge('rm', $ids));
+        Docker::create($this->exec)->getProcessManager()
+            ->zapContainersByName($name);
     }
 }
