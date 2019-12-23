@@ -59,6 +59,21 @@ class ProcessManager
     }
 
     /**
+     * @param string $name
+     *
+     * @return null|string
+     */
+    public function findContainerIdByName($name)
+    {
+        $ids = $this->findAllContainerIdsByName($name);
+        if (null === $ids || !(is_array($ids) && 1 === count($ids))) {
+            return null;
+        }
+
+        return $ids[0];
+    }
+
+    /**
      * container ids by name prefix of running containers
      *
      * @param string $prefix
