@@ -471,11 +471,11 @@ class StepRunner
 
         # keep or remove container
         if ($flags->killContainer()) {
-            $exec->capture('docker', array('kill', $name));
+            Docker::create($this->exec)->getProcessManager()->kill($name);
         }
 
         if ($flags->removeContainer()) {
-            $exec->capture('docker', array('rm', $name));
+            Docker::create($this->exec)->getProcessManager()->remove($name);
         }
 
         if ($flags->keep()) {
