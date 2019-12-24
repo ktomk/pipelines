@@ -97,14 +97,8 @@ class StepRunner
 
         $env->setPipelinesProjectPath($dir);
 
-        $reuseContainer = $this->flags->reuseContainer();
-        $deployCopy = $this->flags->deployCopy();
-
         $name = $this->generateContainerName($step);
 
-        if (false === $reuseContainer) {
-            $this->zapContainerByName($name);
-        }
         $image = $step->getImage();
         $env->setContainerName($name);
 
@@ -118,9 +112,13 @@ class StepRunner
         ));
 
         $id = null;
-        if ($reuseContainer) {
+        if ($this->flags->reuseContainer()) {
             $id = $this->dockerGetContainerIdByName($name);
+        } else {
+            $this->zapContainerByName($name);
         }
+
+        $deployCopy = $this->flags->deployCopy();
 
         if (null === $id) {
             list($id, $status) = $this->runNewContainer($name, $dir, $deployCopy, $step);
