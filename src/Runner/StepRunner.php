@@ -151,7 +151,7 @@ class StepRunner
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
-        $this->shutdownStepContainer($status, $id, $exec, $name);
+        $this->shutdownStepContainer($status, $id);
 
         return $status;
     }
@@ -451,11 +451,9 @@ class StepRunner
     /**
      * @param int $status
      * @param string $id container id
-     * @param Exec $exec
-     * @param string $name container name
      * @throws \RuntimeException
      */
-    private function shutdownStepContainer($status, $id, Exec $exec, $name)
+    private function shutdownStepContainer($status, $id)
     {
         $flags = $this->flags;
 
@@ -471,11 +469,11 @@ class StepRunner
 
         # keep or remove container
         if ($flags->killContainer()) {
-            $exec->capture('docker', array('kill', $name));
+            Docker::create($this->exec)->getProcessManager()->kill($id);
         }
 
         if ($flags->removeContainer()) {
-            $exec->capture('docker', array('rm', $name));
+            Docker::create($this->exec)->getProcessManager()->remove($id);
         }
 
         if ($flags->keep()) {
