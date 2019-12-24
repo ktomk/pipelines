@@ -28,6 +28,16 @@ case ${1-0} in
       ../../bin/pipelines -v --dry-run --pipeline custom/unit-tests
       exit
       ;;
+  3 ) echo "# 3: keep and reuse container"
+      ../../bin/pipelines --docker-zap >/dev/null
+      ../../bin/pipelines --keep | grep 'keeping container id'
+      docker ps | grep 'pipelines-1.pipeline-features-and-introspection.default.pipelines'
+      ../../bin/pipelines --keep | grep 'keeping container id'
+      docker ps | grep 'pipelines-1.pipeline-features-and-introspection.default.pipelines'
+      ../../bin/pipelines | tail -1 | grep -v 'keeping container id'
+      docker ps | grep -v 'pipelines-1.pipeline-features-and-introspection.default.pipelines'
+      exit
+      ;;
   * ) >&2 echo "unknown step ${1}"
       exit 1
       ;;
