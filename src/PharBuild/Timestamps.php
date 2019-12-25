@@ -159,7 +159,7 @@ class Timestamps
 
     private function readUint($pos, $bytes)
     {
-        $res = /** @scrutinizer ignore-call */ unpack('L', substr($this->contents, $pos, $bytes));
+        $res = /** @scrutinizer ignore-call */ unpack('V', substr($this->contents, $pos, $bytes));
 
         return $res[1];
     }
@@ -180,7 +180,7 @@ class Timestamps
 
         // set starting position and skip past manifest length
         $pos = $match[0][1] + strlen($match[0][0]);
-        $stubEnd = $pos + $this->readUint($pos, 4);
+        $manifestEnd = $pos + 4 + $this->readUint($pos, 4);
 
         $pos += 4;
         $numFiles = $this->readUint($pos, 4);
@@ -200,11 +200,11 @@ class Timestamps
         $pos += 4 + $metadataLength;
 
         $compressedSizes = 0;
-        while ($pos < $stubEnd) {
+        while (($numFiles > 0) && ($pos < $manifestEnd - 24)) {
             $filenameLength = $this->readUint($pos, 4);
             $pos += 4 + $filenameLength;
 
-            // skip file size and timestamp
+            // skip filesize and timestamp
             $pos += 2*4;
 
             $compressedSizes += $this->readUint($pos, 4);
@@ -221,6 +221,6 @@ class Timestamps
             throw new \LogicException('All files were not processed, something must have gone wrong'); // @codeCoverageIgnore
         }
 
-        return $pos + $compressedSizes;
+        return $manifestEnd + $compressedSizes;
     }
 }
