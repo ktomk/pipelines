@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   to use (Docker Service)
 - Docker Service in YAML injects Linux X86_64 docker client
   binary (Docker Service)
+### Changed
+- Internal improvements of the step runner
 
 ## [0.0.24] - 2019-12-21
 ### Added

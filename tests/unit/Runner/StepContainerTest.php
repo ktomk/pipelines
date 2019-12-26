@@ -81,6 +81,63 @@ class StepContainerTest extends TestCase
         $this->assertSame('1234567', $container->getId());
     }
 
+    public function testKillAndRemoveThrowsNot()
+    {
+        $exec = new ExecTester($this);
+        $container = new StepContainer($this->getStepMock(), $exec);
+
+        $container->killAndRemove(false, false);
+        $this->addToAssertionCount(1);
+
+        $exec->expect('capture', 'docker', 0, 'rm');
+        $container->killAndRemove(false, true);
+        $this->addToAssertionCount(1);
+    }
+
+    public function testKillAndRemove()
+    {
+        $exec = new ExecTester($this);
+        $container = new StepContainer($this->getStepMock(), $exec);
+        $container->generateName('pipelines', 'test-project');
+
+        $exec->expect('capture', 'docker', '1234567', 'fake container id');
+        $container->keepOrKill(true);
+
+        $exec->expect('capture', 'docker');
+        $exec->expect('capture', 'docker');
+        $container->killAndRemove(true, true);
+    }
+
+    public function testRun()
+    {
+        $exec = new ExecTester($this);
+        $container = new StepContainer($this->getStepMock(), $exec);
+        $this->assertNull($container->getId(), 'precondition');
+        # $container->generateName('pipelines', 'test-project');
+
+        $exec->expect('capture', 'docker', '1234567', 'run');
+        $actual = $container->run(array());
+        self::assertIsArray($actual);
+        $this->assertCount(3, $actual);
+        $this->assertSame('1234567', $container->getId());
+        $this->assertSame('1234567', $container->getDisplayId());
+    }
+
+    public function testRunDryRun()
+    {
+        $exec = new ExecTester($this);
+        $container = new StepContainer($this->getStepMock(), $exec);
+        $this->assertNull($container->getId(), 'precondition');
+        # $container->generateName('pipelines', 'test-project');
+
+        $exec->expect('capture', 'docker', '', 'run');
+        $actual = $container->run(array());
+        self::assertIsArray($actual);
+        $this->assertCount(3, $actual);
+        $this->assertNull($container->getId());
+        $this->assertSame('*dry-run*', $container->getDisplayId());
+    }
+
     /**
      * @return \Ktomk\Pipelines\File\Step|\PHPUnit\Framework\MockObject\MockObject
      */

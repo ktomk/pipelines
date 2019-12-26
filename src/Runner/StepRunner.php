@@ -88,6 +88,7 @@ class StepRunner
 
     /**
      * @param Step $step
+     *
      * @return null|int exist status of step script or null if the run operation failed
      */
     public function runStep(Step $step)
@@ -147,7 +148,7 @@ class StepRunner
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
-        $this->shutdownStepContainer($status, $id);
+        $this->shutdownStepContainer($container, $status);
 
         return $status;
     }
@@ -170,6 +171,7 @@ class StepRunner
      * @param bool $copy
      * @param string $id container id
      * @param string $dir to put artifacts in (project directory)
+     *
      * @throws \RuntimeException
      */
     private function captureStepArtifacts(Step $step, $copy, $id, $dir)
@@ -201,12 +203,13 @@ class StepRunner
     }
 
     /**
-     * @see Runner::captureStepArtifacts()
-     *
      * @param ArtifactSource $source
      * @param string $pattern
      * @param string $dir
+     *
      * @throws \RuntimeException
+     * @see Runner::captureStepArtifacts()
+     *
      */
     private function captureArtifactPattern(ArtifactSource $source, $pattern, $dir)
     {
@@ -245,6 +248,7 @@ class StepRunner
      * @param bool $copy
      * @param string $id container id
      * @param string $dir directory to copy contents into container
+     *
      * @throws \RuntimeException
      * @return null|int null if all clear, integer for exit status
      */
@@ -294,6 +298,7 @@ class StepRunner
      *
      * @param Step $step
      * @param string $id
+     *
      * @throws
      * @return array array(int $status, string $message)
      */
@@ -320,6 +325,7 @@ class StepRunner
 
     /**
      * @param Image $image
+     *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
      */
@@ -382,13 +388,15 @@ class StepRunner
             //   + prevent dot path injections (logical fix first)
             : array('--volume', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
 
-        $status = $exec->capture('docker', array(
-            'run', '-i', '--name', $container->getName(),
-            $env->getArgs('-e'),
-            $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
-            $mountDockerSock,
-            '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName()
-        ), $out, $err);
+        list($status, $out, $err) = $container->run(
+            array(
+                '-i', '--name', $container->getName(),
+                $env->getArgs('-e'),
+                $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
+                $mountDockerSock,
+                '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName(),
+            )
+        );
         if (0 !== $status) {
             $streams->out("    container-id...: *failure*\n\n");
             $streams->err("pipelines: setting up the container failed\n");
@@ -398,9 +406,9 @@ class StepRunner
 
             return array(null, $status);
         }
-        $id = rtrim($out) ?: '*dry-run*'; # side-effect: internal exploit of no output with true exit status
+        $id = $container->getDisplayId();
 
-        return array($id, 0);
+        return array($id, $status);
     }
 
     /**
@@ -408,6 +416,7 @@ class StepRunner
      * @param Streams $streams
      * @param Exec $exec
      * @param string $name container name
+     *
      * @return null|int should never be null, status, non-zero if a command failed
      */
     private function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
@@ -415,7 +424,7 @@ class StepRunner
         $script = $step->getScript();
 
         $buffer = Lib::cmd("<<'SCRIPT' docker", array(
-            'exec', '-i', $name, '/bin/sh'
+            'exec', '-i', $name, '/bin/sh',
         ));
         $buffer .= "\n# this /bin/sh script is generated from a pipelines pipeline:\n";
         $buffer .= "set -e\n";
@@ -436,13 +445,13 @@ class StepRunner
     }
 
     /**
+     * @param StepContainer $container
      * @param int $status
-     * @param string $id container id
-     * @throws \RuntimeException
      */
-    private function shutdownStepContainer($status, $id)
+    private function shutdownStepContainer(StepContainer $container, $status)
     {
         $flags = $this->flags;
+        $id = $container->getDisplayId();
 
         # keep container on error
         if (0 !== $status && $flags->keepOnError()) {
@@ -454,14 +463,8 @@ class StepRunner
             return;
         }
 
-        # keep or remove container
-        if ($flags->killContainer()) {
-            Docker::create($this->exec)->getProcessManager()->kill($id);
-        }
-
-        if ($flags->removeContainer()) {
-            Docker::create($this->exec)->getProcessManager()->remove($id);
-        }
+        # keep or kill/remove container
+        $container->killAndRemove($flags->killContainer(), $flags->removeContainer());
 
         if ($flags->keep()) {
             $this->streams->out(sprintf(

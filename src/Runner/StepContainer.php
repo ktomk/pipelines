@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\Lib;
 
 /**
  * Class StepContainer
@@ -112,6 +113,19 @@ class StepContainer
     }
 
     /**
+     * the display id
+     *
+     *   side-effect: if id is null, this signals a dry-run which is made
+     * visible by the string "*dry-run*"
+     *
+     * @return string
+     */
+    public function getDisplayId()
+    {
+        return isset($this->id) ? $this->id : '*dry-run*';
+    }
+
+    /**
      * @return null|string ID of (once) running container or null if not yet running
      */
     public function getId()
@@ -148,5 +162,38 @@ class StepContainer
         }
 
         return $this->id = $processManager->findContainerIdByName($name);
+    }
+
+    /**
+     * @param bool $kill
+     * @param bool $remove
+     */
+    public function killAndRemove($kill, $remove)
+    {
+        $id = $this->getDisplayId();
+
+        if ($kill) {
+            Docker::create($this->exec)->getProcessManager()->kill($id);
+        }
+
+        if ($remove) {
+            Docker::create($this->exec)->getProcessManager()->remove($id);
+        }
+    }
+
+    /**
+     * @param array $args
+     *
+     * @return array array(int $status, string $out, string $err)
+     */
+    public function run(array $args)
+    {
+        $status = $this->exec->capture('docker', Lib::merge('run', $args), $out, $err);
+
+        if (0 === $status) {
+            $this->id = rtrim($out) ?: null;
+        }
+
+        return array($status, $out, $err);
     }
 }
