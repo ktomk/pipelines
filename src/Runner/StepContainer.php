@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Step;
 
@@ -14,6 +15,11 @@ use Ktomk\Pipelines\File\Step;
  */
 class StepContainer
 {
+    /**
+     * @var null|string id of the (running) container
+     */
+    private $id;
+
     /**
      * @var null|string name of the container
      */
@@ -106,10 +112,41 @@ class StepContainer
     }
 
     /**
+     * @return null|string ID of (once) running container or null if not yet running
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
      * @return null|string name of the container, NULL if no name generated yet
      */
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @param bool $keep a container on true, kill on false (if it exists)
+     *
+     * @return null|string
+     */
+    public function keepOrKill($keep)
+    {
+        $name = $this->name;
+        if (null === $name) {
+            throw new \BadMethodCallException('Container has no name yet');
+        }
+
+        $processManager = Docker::create($this->exec)->getProcessManager();
+
+        if (false === $keep) {
+            $processManager->zapContainersByName($name);
+
+            return $this->id = null;
+        }
+
+        return $this->id = $processManager->findContainerIdByName($name);
     }
 }

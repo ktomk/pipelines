@@ -118,12 +118,7 @@ class StepRunner
             $name
         ));
 
-        $id = null;
-        if ($this->flags->reuseContainer()) {
-            $id = $this->dockerGetContainerIdByName($name);
-        } else {
-            $this->zapContainerByName($name);
-        }
+        $id = $container->keepOrKill($this->flags->reuseContainer());
 
         $deployCopy = $this->flags->deployCopy();
 
@@ -324,16 +319,6 @@ class StepRunner
     }
 
     /**
-     * @param string $name
-     * @return null|string
-     */
-    private function dockerGetContainerIdByName($name)
-    {
-        return Docker::create($this->exec)->getProcessManager()
-            ->findContainerIdByName($name);
-    }
-
-    /**
      * @param Image $image
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
@@ -483,14 +468,5 @@ class StepRunner
                 substr($id, 0, 12)
             ));
         }
-    }
-
-    /**
-     * @param string $name
-     */
-    private function zapContainerByName($name)
-    {
-        Docker::create($this->exec)->getProcessManager()
-            ->zapContainersByName($name);
     }
 }

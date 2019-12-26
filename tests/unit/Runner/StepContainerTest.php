@@ -58,6 +58,29 @@ class StepContainerTest extends TestCase
         $this->assertSame($expected, $actual);
     }
 
+    public function testKeepOrKillThrowsException()
+    {
+        $container = new StepContainer($this->getStepMock(), new ExecTester($this));
+
+        $this->setExpectedException('BadMethodCallException', 'Container has no name yet');
+        $container->keepOrKill(false);
+    }
+
+    public function testKeepOrKill()
+    {
+        $exec = new ExecTester($this);
+        $container = new StepContainer($this->getStepMock(), $exec);
+        $container->generateName('pipelines', 'test-project');
+
+        $exec->expect('capture', 'docker');
+        $this->assertNull($container->keepOrKill(false));
+
+        $exec->expect('capture', 'docker', '1234567');
+        $this->assertSame('1234567', $container->keepOrKill(true));
+
+        $this->assertSame('1234567', $container->getId());
+    }
+
     /**
      * @return \Ktomk\Pipelines\File\Step|\PHPUnit\Framework\MockObject\MockObject
      */
