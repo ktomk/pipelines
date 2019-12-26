@@ -123,7 +123,7 @@ class StepRunner
         $deployCopy = $this->flags->deployCopy();
 
         if (null === $id) {
-            list($id, $status) = $this->runNewContainer($name, $dir, $deployCopy, $step);
+            list($id, $status) = $this->runNewContainer($container, $dir, $deployCopy, $step);
             if (null === $id) {
                 return $status;
             }
@@ -330,13 +330,14 @@ class StepRunner
     }
 
     /**
-     * @param string $name
+     * @param StepContainer $container
      * @param string $dir
      * @param bool $copy
      * @param Step $step
+     *
      * @return array array(string|null $id, int $status)
      */
-    private function runNewContainer($name, $dir, $copy, Step $step)
+    private function runNewContainer(StepContainer $container, $dir, $copy, Step $step)
     {
         $env = $this->env;
         $exec = $this->exec;
@@ -382,7 +383,7 @@ class StepRunner
             : array('--volume', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
 
         $status = $exec->capture('docker', array(
-            'run', '-i', '--name', $name,
+            'run', '-i', '--name', $container->getName(),
             $env->getArgs('-e'),
             $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
             $mountDockerSock,
