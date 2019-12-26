@@ -4,6 +4,9 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\ExecTest;
+use Ktomk\Pipelines\Cli\ExecTester;
+use Ktomk\Pipelines\File\Step;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -18,7 +21,7 @@ class StepContainerTest extends TestCase
     {
         $step = $this->getStepMock();
 
-        $container = new StepContainer($step);
+        $container = new StepContainer($step, new ExecTester($this));
         $this->assertNotNull($container);
 
         $container = StepContainer::create($step);
@@ -26,15 +29,6 @@ class StepContainerTest extends TestCase
 
         return $container;
     }
-
-    public function testGenerateName()
-    {
-        $container = new StepContainer($this->getStepMock());
-        $expected = 'pipelines-1.no-name.null.test-project';
-        $actual = $container->generateName('pipelines', 'test-project');
-        $this->assertSame($expected, $actual);
-    }
-
     public function testCreateName()
     {
         $expected = 'pipelines-1.no-name.null.test-project';
@@ -45,6 +39,25 @@ class StepContainerTest extends TestCase
         );
         $this->assertSame($expected, $actual);
     }
+
+    public function testGenerateName()
+    {
+        $container = new StepContainer($this->getStepMock(), new ExecTester($this));
+        $expected = 'pipelines-1.no-name.null.test-project';
+        $actual = $container->generateName('pipelines', 'test-project');
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testGetName()
+    {
+        $container = new StepContainer($this->getStepMock(), new ExecTester($this));
+        $this->assertNull($container->getName(), 'no name generated yet');
+        $container->generateName('pipelines', 'test-project');
+        $expected = 'pipelines-1.no-name.null.test-project';
+        $actual = $container->getName();
+        $this->assertSame($expected, $actual);
+    }
+
     /**
      * @return \Ktomk\Pipelines\File\Step|\PHPUnit\Framework\MockObject\MockObject
      */

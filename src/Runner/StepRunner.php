@@ -99,14 +99,15 @@ class StepRunner
 
         $env->setPipelinesProjectPath($dir);
 
-        $name = StepContainer::createName(
-            $step,
+        $container = StepContainer::create($step, $exec);
+
+        $name = $container->generateName(
             $this->runOpts->getPrefix(),
-            $this->directories->getName()
+            $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName()
         );
+        $env->setContainerName($name);
 
         $image = $step->getImage();
-        $env->setContainerName($name);
 
         # launch container
         $streams->out(sprintf(

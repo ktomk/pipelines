@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Step;
 
 /**
@@ -14,18 +15,32 @@ use Ktomk\Pipelines\File\Step;
 class StepContainer
 {
     /**
+     * @var null|string name of the container
+     */
+    private $name;
+
+    /**
      * @var Step
      */
     private $step;
+
+    /**
+     * @var Exec
+     */
+    private $exec;
 
     /**
      * @param Step $step
      *
      * @return StepContainer
      */
-    public static function create(Step $step)
+    public static function create(Step $step, Exec $exec = null)
     {
-        return new self($step);
+        if (null === $exec) {
+            $exec = new Exec();
+        }
+
+        return new self($step, $exec);
     }
 
     /**
@@ -44,10 +59,12 @@ class StepContainer
      * StepContainer constructor.
      *
      * @param Step $step
+     * @param Exec $exec
      */
-    public function __construct(Step $step)
+    public function __construct(Step $step, Exec $exec)
     {
         $this->step = $step;
+        $this->exec = $exec;
     }
 
     /**
@@ -77,7 +94,7 @@ class StepContainer
             $nameSlug = 'no-name';
         }
 
-        return $prefix . '-' . implode(
+        return $this->name = $prefix . '-' . implode(
             '.',
             array(
                 $step->getIndex() + 1,
@@ -86,5 +103,13 @@ class StepContainer
                 $project,
             )
         );
+    }
+
+    /**
+     * @return null|string name of the container, NULL if no name generated yet
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 }
