@@ -70,7 +70,7 @@ class Docker
 
         # parse version string
         $return = preg_match(
-            '~^(\d+\\.\d+\\.\d+(?:-ce)?)\\n$~',
+            '~^(\d+\\.\d+\\.\d+(?:-ce)?|master-dockerproject-20(?:19|[2-9]\d)-[01]\d-[0-3][1-9])\\n$~',
             $out,
             $matches
         );
