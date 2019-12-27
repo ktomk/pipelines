@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- Support of Docker in rootless mode and a How-To in the docs folder.
 - Support of `DOCKER_HOST` parameter for `unix://` sockets (Docker Service)
 - `--docker-client-pkgs` option to list available docker client binary
   packages (Docker Service)
