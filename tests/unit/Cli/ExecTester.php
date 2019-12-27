@@ -59,8 +59,9 @@ class ExecTester extends Exec
         if (count($this->expects)) {
             $testCase::fail(
                 sprintf(
-                    'Failed assertion that expected number of exec\'s were done (%d left)',
-                    count($this->expects)
+                    'Failed assertion that expected number of exec\'s were done (%d left)%s',
+                    count($this->expects),
+                    sprintf(":\n  - %s", implode("\n  - ", $this->expectMessages()))
                 )
             );
         }
@@ -119,6 +120,26 @@ class ExecTester extends Exec
         throw new BadMethodCallException(
             'This exec tester can not be used in tests that require setting it to active.'
         );
+    }
+
+    /**
+     * @return array
+     */
+    private function expectMessages()
+    {
+        $expects = $this->expects;
+        $messages = array();
+        foreach ($expects as $current) {
+            list (
+                $expectedMethod,
+                $expectedCommand,
+                $context,
+                $message
+                ) = $current;
+            $messages[] = sprintf("%s: %s%s", $expectedMethod, $expectedCommand, $message ? " // ${message}" : '');
+        }
+
+        return $messages;
     }
 
     /**
