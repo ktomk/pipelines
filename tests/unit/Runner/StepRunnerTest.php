@@ -208,6 +208,20 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
 
+    public function testRunStepWithoutMountingDockerSocket()
+    {
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        $step = $this->createTestStep();
+        $flags = Flags::FLAG_DOCKER_REMOVE | Flags::FLAG_DOCKER_KILL;
+        $runner = $this->createTestStepRunner($exec, $flags, array(null, 'php://output'), array('PIPELINES_PARENT_CONTAINER_NAME' => 'foo'));
+
+        $this->expectOutputString('');
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status);
+    }
+
     /* docker client tests */
 
     /**

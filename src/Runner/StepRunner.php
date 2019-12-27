@@ -354,15 +354,7 @@ class StepRunner
         # process docker login if image demands so, but continue on failure
         $this->imageLogin($image);
 
-        // enable docker client inside docker by mounting docker socket
-        // FIXME give controlling options, this is serious /!\
-        $mountDockerSock = array();
-        $pathDockerSock = $this->runOpts->getOption('docker.socket.path');
-        if ($this->flags->useDockerSocket() && file_exists($pathDockerSock)) {
-            $mountDockerSock = array(
-                '-v', sprintf('%s:%s', $pathDockerSock, $pathDockerSock),
-            );
-        }
+        $mountDockerSock = $this->obtainDockerSocketMount();
 
         $parentName = $env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
         $checkMount = $mountDockerSock && null !== $parentName;
@@ -409,6 +401,32 @@ class StepRunner
         $id = $container->getDisplayId();
 
         return array($id, $status);
+    }
+
+    /**
+     * enable docker client inside docker by mounting docker socket
+     *
+     * @return array docker socket volume args for docker run, empty if not mounting
+     */
+    private function obtainDockerSocketMount()
+    {
+        $args = array();
+
+        // FIXME give more controlling options, this is serious /!\
+        if (!$this->flags->useDockerSocket()) {
+            return $args;
+        }
+
+        $hostPathDockerSocket = $this->runOpts->getOption('docker.socket.path');
+
+        $pathDockerSock = $this->runOpts->getOption('docker.socket.path');
+        if (file_exists($hostPathDockerSocket)) {
+            $args = array(
+                '-v', sprintf('%s:%s', $hostPathDockerSocket, $pathDockerSock),
+            );
+        }
+
+        return $args;
     }
 
     /**
