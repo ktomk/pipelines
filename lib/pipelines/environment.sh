@@ -10,7 +10,7 @@ IFS="$(printf ' \n\t')"
 
 # variable names and descriptions taken from <https://confluence.atlassian.com/
 #     bitbucket/environment-variables-794502608.html>
-# additional variables by pipelines
+# additional variables by pipelines and docker
 vars="
 BITBUCKET_BOOKMARK         For use with Mercurial projects.
 BITBUCKET_BRANCH           The branch on which the build was kicked off. \
@@ -36,6 +36,11 @@ BITBUCKET_TAG              The tag of a commit that kicked off the build. This \
                            Not available for builds against branches.
 CI	                       Default value is true. Gets set whenever a pipeline \
                            runs.
+DOCKER_HOST                docker variable: host Docker client connects to (\
+                           defaults to socket; depending on system)
+DOCKER_CONTEXT             docker variable: context to use
+DOCKER_CONFIG              docker variable: path to configuration
+DOCKER_TMPDIR              docker variable: temporary directory
 PIPELINES_CONTAINER_NAME   pipelines variable: name of the container that is \
                            running.
 PIPELINES_ID               pipelines variable: the id of the pipeline that is \
