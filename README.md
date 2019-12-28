@@ -248,6 +248,8 @@ introspection:
 * `PIPELINES_PARENT_CONTAINER_NAME` - name of the container name
     if it was already set when the pipeline started (pipelines
     inside pipeline).
+* `PIPELINES_PIP_CONTAINER_NAME` - name of the first (initial) pipeline
+    container. Used by pipelines inside pipelines (pip).
 * `PIPELINES_PROJECT_PATH` - path of the original project as if
     it would be used for `--deploy`  with `copy` or `mount` so
     that it is possible inside a pipeline to do `--deploy mount`

@@ -73,6 +73,7 @@ class Env
             'PIPELINES_CONTAINER_NAME' => null,
             'PIPELINES_IDS' => null,
             'PIPELINES_PARENT_CONTAINER_NAME' => null,
+            'PIPELINES_PIP_CONTAINER_NAME' => null,
             'PIPELINES_PROJECT_PATH' => null,
         );
 
@@ -132,6 +133,7 @@ class Env
         }
 
         $this->vars['PIPELINES_CONTAINER_NAME'] = $name;
+        $this->setFirstPipelineVariable('PIPELINES_PIP_CONTAINER_NAME', $name);
     }
 
     /**

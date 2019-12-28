@@ -54,6 +54,9 @@ PIPELINES_PARENT_CONTAINER_NAME \
                            name of the parent container (pipelines run inside \
                            a pipeline, if docker client is available) \
                            otherwise not set.
+PIPELINES_PIP_CONTAINER_NAME \
+                           pipelines variable: inception related, set to the
+                           initial (first) container name.
 PIPELINES_PROJECT_PATH \
                            pipelines variable: inception related, set to the \
                            path of project directory that is the source of the\
