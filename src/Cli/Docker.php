@@ -94,25 +94,25 @@ class Docker
      * inspect a container for a mount on $mountPoint on the host system and
      * return it (the "device").
      *
-     * @param string $container name to inspect
-     * @param string $mountPoint absolute path to search for a host mount for
-     * @throws \RuntimeException
-     * @return bool|string
+     * @param string $container name or id to inspect
+     * @param string $mountPoint absolute path in the container to search for a mount for
+     *
+     * @return null|string null if no such mount point in the container, path on host if
      */
-    public function hostDevice($container, $mountPoint)
+    public function hostConfigBind($container, $mountPoint)
     {
         $exec = $this->exec;
 
         $status = $exec->capture('docker', array(
-            'inspect', $container
+            'inspect', $container,
         ), $out);
         if (0 !== $status) {
-            return $mountPoint;
+            return null;
         }
 
         $data = json_decode($out, true);
         if (!isset($data[0]['HostConfig']['Binds'])) {
-            return $mountPoint;
+            return null;
         }
 
         $binds = $data[0]['HostConfig']['Binds'];
@@ -125,7 +125,26 @@ class Docker
             }
         }
 
-        return $mountPoint;
+        return null;
+    }
+
+    /**
+     * inspect a container for a mount on $mountPoint on the host system and
+     * return it (the "device").
+     *
+     * @param string $container name or id to inspect
+     * @param string $mountPoint absolute path to search for a host mount for
+     *
+     * @return bool|string
+     */
+    public function hostDevice($container, $mountPoint)
+    {
+        $result = $this->hostConfigBind($container, $mountPoint);
+        if (null === $result) {
+            return $mountPoint;
+        }
+
+        return $result;
     }
 
     /**
