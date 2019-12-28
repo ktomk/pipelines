@@ -168,15 +168,7 @@ class Env
     public function setPipelinesProjectPath($path)
     {
         // TODO $path must be absolute
-
-        if (isset($this->vars['PIPELINES_PROJECT_PATH'])
-            || !isset($this->vars['PIPELINES_ID'], $this->vars['PIPELINES_IDS'])
-            || $this->vars['PIPELINES_IDS'] !== md5($this->vars['PIPELINES_ID'])
-        ) {
-            return;
-        }
-
-        $this->vars['PIPELINES_PROJECT_PATH'] = $path;
+        $this->setFirstPipelineVariable('PIPELINES_PROJECT_PATH', $path);
     }
 
     /**
@@ -286,6 +278,25 @@ class Env
         }
 
         return $this->resolver;
+    }
+
+    /**
+     * set am environment variable only if not yet set and in the first
+     * pipeline.
+     *
+     * @param string $name
+     * @param string $value
+     */
+    private function setFirstPipelineVariable($name, $value)
+    {
+        if (isset($this->vars[$name])
+            || !isset($this->vars['PIPELINES_ID'], $this->vars['PIPELINES_IDS'])
+            || $this->vars['PIPELINES_IDS'] !== md5($this->vars['PIPELINES_ID'])
+        ) {
+            return;
+        }
+
+        $this->vars[$name] = $value;
     }
 
     /**
