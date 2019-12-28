@@ -154,7 +154,25 @@ class EnvTest extends TestCase
         $this->assertContains('PIPELINES_CONTAINER_NAME=dream-blue', $args);
     }
 
-    public function testGetVar()
+    /**
+     * @covers \Ktomk\Pipelines\Runner\Env::getInheritValue
+     */
+    public function testGetInheritValue()
+    {
+        $inherit = array(
+            'DOCKER_HOST' => 'unix:///var/run/docker.sock',
+            'DOCKER_TMP' => false,
+        );
+        $env = Env::create($inherit);
+        $actual = $env->getInheritValue('DOCKER_HOST');
+        $this->assertSame('unix:///var/run/docker.sock', $actual);
+        $actual = $env->getInheritValue('DOCKER_TMP');
+        $this->assertNull($actual);
+        $actual = $env->getInheritValue('FOO_BAR_LE_BAZ');
+        $this->assertNull($actual);
+    }
+
+    public function testGetValue()
     {
         $env = Env::create();
         $actual = $env->getValue('BITBUCKET_BUILD_NUMBER');

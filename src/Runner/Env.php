@@ -53,13 +53,13 @@ class Env
     /**
      * Initialize default environment used in a Bitbucket Pipeline
      *
-     * As the runner mimic some values, defaults are available
+     * As the runner mimics some values, defaults are available
      *
-     * @param array $inherit Environment variable store to inherit from
+     * @param array $inherit Environment variables to inherit from
      */
     public function initDefaultVars(array $inherit)
     {
-        $this->inherit = $inherit;
+        $this->inherit = array_filter($inherit, 'is_string');
 
         $inheritable = array(
             'BITBUCKET_BOOKMARK' => null,
@@ -208,6 +208,21 @@ class Env
         }
 
         return $args;
+    }
+
+    /**
+     * get a variables' value from the inherited
+     * environment or null if not set
+     *
+     * @param $name
+     *
+     * @return null|string
+     */
+    public function getInheritValue($name)
+    {
+        return isset($this->inherit[$name])
+            ? $this->inherit[$name]
+            : null;
     }
 
     /**

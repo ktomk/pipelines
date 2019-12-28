@@ -419,7 +419,13 @@ class StepRunner
 
         $hostPathDockerSocket = $this->runOpts->getOption('docker.socket.path');
 
+        $dockerHost = $this->env->getInheritValue('DOCKER_HOST');
+        if (null !== $dockerHost && 0 === strpos($dockerHost, 'unix://')) {
+            $hostPathDockerSocket = LibFs::normalizePath(substr($dockerHost, 7));
+        }
+
         $pathDockerSock = $this->runOpts->getOption('docker.socket.path');
+
         if (file_exists($hostPathDockerSocket)) {
             $args = array(
                 '-v', sprintf('%s:%s', $hostPathDockerSocket, $pathDockerSock),

@@ -208,6 +208,8 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
 
+    /* docker socket tests */
+
     public function testRunStepWithoutMountingDockerSocket()
     {
         $exec = new Exec();
@@ -216,6 +218,24 @@ class StepRunnerTest extends RunnerTestCase
         $step = $this->createTestStep();
         $flags = Flags::FLAG_DOCKER_REMOVE | Flags::FLAG_DOCKER_KILL;
         $runner = $this->createTestStepRunner($exec, $flags, array(null, 'php://output'), array('PIPELINES_PARENT_CONTAINER_NAME' => 'foo'));
+
+        $this->expectOutputString('');
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status);
+    }
+
+    public function testRunStepWithDockerHostParameterDockerSocket()
+    {
+        $inherit = array(
+            'DOCKER_HOST' => 'unix:///var/run/docker.sock',
+        );
+
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        $step = $this->createTestStep();
+        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), $inherit);
 
         $this->expectOutputString('');
         $status = $runner->runStep($step);
