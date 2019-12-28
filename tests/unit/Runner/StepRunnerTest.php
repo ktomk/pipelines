@@ -208,6 +208,38 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
 
+    public function testMountWithoutHostConfig()
+    {
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        $step = $this->createTestStep();
+        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array());
+
+        $this->expectOutputString('');
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status, 'passed as detected as non-pip');
+    }
+
+    public function testWithHostConfig()
+    {
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        $step = $this->createTestStep();
+        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $inherit = array(
+            'PIPELINES_PARENT_CONTAINER_NAME' => 'foo',
+            'PIPELINES_PIP_CONTAINER_NAME' => 'foo',
+        );
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), $inherit);
+
+        $this->expectOutputString("pipelines: fatal: can not detect /app mount point. preventing new container.\n");
+        $status = $runner->runStep($step);
+        $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
+    }
+
     /* docker socket tests */
 
     public function testRunStepWithoutMountingDockerSocket()

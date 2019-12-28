@@ -346,7 +346,6 @@ class StepRunner
     private function runNewContainer(StepContainer $container, $dir, $copy, Step $step)
     {
         $env = $this->env;
-        $exec = $this->exec;
         $streams = $this->streams;
 
         $image = $step->getImage();
@@ -357,16 +356,12 @@ class StepRunner
         $mountDockerSock = $this->obtainDockerSocketMount();
 
         $parentName = $env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
+        $hostDeviceDir = $this->pipHostConfigBind($dir);
         $checkMount = $mountDockerSock && null !== $parentName;
-        $deviceDir = $dir;
-        if ($checkMount && '/app' === $dir) { // FIXME(tk): hard encoded /app
-            $docker = new Docker($exec);
-            $deviceDir = $docker->hostDevice($parentName, $dir);
-            unset($docker);
-            if ($deviceDir === $dir) {
-                $deviceDir = $env->getPipelinesProjectPath($deviceDir);
-            }
-            if ($deviceDir === $dir) {
+        $deviceDir = $hostDeviceDir ?: $dir;
+        if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
+            $deviceDir = $env->getPipelinesProjectPath($deviceDir);
+            if ($deviceDir === $dir || null === $deviceDir) {
                 $streams->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
 
                 return array(null, 1);
@@ -433,6 +428,26 @@ class StepRunner
         }
 
         return $args;
+    }
+
+    /**
+     * get host path from mount point if in pip level 2+
+     *
+     * @param mixed $mountPoint
+     * @return null|string
+     */
+    private function pipHostConfigBind($mountPoint)
+    {
+        // if there is a parent name, this is level 2+
+        if (null === $this->env->getValue('PIPELINES_PARENT_CONTAINER_NAME')) {
+            return null;
+        }
+
+        if (null === $pipName = $this->env->getValue('PIPELINES_PIP_CONTAINER_NAME')) {
+            return null;
+        }
+
+        return Docker::create($this->exec)->hostConfigBind($pipName, $mountPoint);
     }
 
     /**
