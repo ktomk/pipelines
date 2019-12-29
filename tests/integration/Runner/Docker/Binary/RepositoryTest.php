@@ -120,12 +120,12 @@ class RepositoryTest extends TestCase
 
         $exec->expect('capture', 'docker', 0, 'container id by name');
         $exec->expect('capture', 'docker', 0, 'run container');
-        $exec->expect('capture', '~^2>&1 < /[^ ]+ docker$~', 0, 'inject');
         $exec->expect('pass', '~^<<\'SCRIPT\' docker exec ~', 0, 'run step script');
         $exec->expect('capture', 'docker', 'kill');
         $exec->expect('capture', 'docker', 'rm');
 
-        $this->expectOutputRegex('~\Qdocker client install...\E~');
-        $runner->runStep($step);
+        $this->expectOutputRegex('~\Qpipelines-integration-test-2.no-name.null.pipelines-test-suite\E~');
+        $actual = $runner->runStep($step);
+        $this->assertSame(0, $actual);
     }
 }

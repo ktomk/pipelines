@@ -19,7 +19,7 @@ IFS=$'\n\t'
 
 case ${1-0} in
   0 ) echo "# 0: ${0} run"
-      run_test "${0}" 1 6 5 4 2 3 7
+      run_test "${0}" 8 1 6 5 4 2 3 7
       exit
       ;;
   1 ) echo "# 1: build pipelines phar"
@@ -69,6 +69,10 @@ case ${1-0} in
         --docker-client ../../lib/package/docker-42.42.1-binsh-test-stub.yml \
         --pipeline custom/docker | tail -n 3
 
+      exit
+      ;;
+  8 ) echo "# 8: recursion detection (non-phar)"
+      ../../bin/pipelines --pipeline custom/recursion || test $? -eq 127
       exit
       ;;
   * ) >&2 echo "unknown step ${1}"

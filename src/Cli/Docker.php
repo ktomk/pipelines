@@ -117,11 +117,10 @@ class Docker
 
         $binds = $data[0]['HostConfig']['Binds'];
 
-        $end = ":${mountPoint}";
-
         foreach ($binds as $bind) {
-            if (substr($bind, -strlen($end)) === $end) {
-                return substr($bind, 0, -strlen($end));
+            $pattern = sprintf('(^([^:]+):%s(?::ro)?$)', preg_quote($mountPoint, '()'));
+            if (preg_match($pattern, $bind, $matches)) {
+                return $matches[1];
             }
         }
 

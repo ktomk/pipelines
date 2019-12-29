@@ -309,7 +309,10 @@ class StepRunnerTest extends RunnerTestCase
     /* docker client tests */
 
     /**
-     * @covers \Ktomk\Pipelines\Runner\StepRunner::deployDockerClient()
+     * Test to install the test-stub for docker client
+     *
+     * Previously tested for docker client injection (copy), now tests
+     * with mounting (here: no mount, so install the test package)
      */
     public function testDockerClientInjection()
     {
@@ -317,7 +320,6 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
             ->expect('capture', 'docker', 0, 'run the container')
-            ->expect('capture', '~ docker$~', 0, 'inject (copy docker binary into container)')
             ->expect('pass', '~ docker exec ~', 0, 'run step script')
             ->expect('capture', 'docker', 0, 'kill')
             ->expect('capture', 'docker', 0, 'rm');
@@ -350,40 +352,38 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(0, $actual);
     }
 
-    public function testDockerClientInjectionFailure()
+    /**
+     * @covers \Ktomk\Pipelines\Runner\StepRunner::obtainDockerClientMount()
+     */
+    public function testDockerClientMount()
     {
+        $inherit = array(
+            'PIPELINES_PARENT_CONTAINER_NAME' => 'parent_container_name',
+            'PIPELINES_PIP_CONTAINER_NAME' => 'parent_container_name',
+        );
+
         $exec = new ExecTester($this);
-        $exec
-            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
-            ->expect('capture', 'docker', 0, 'run the container')
-            ->expect('capture', '~ docker$~', 63, 'inject (copy docker binary into container)');
-
-        $testDirectories = new Directories($_SERVER, $this->getTestProject());
-
-        $testRepository = $this->getMockBuilder('Ktomk\Pipelines\Runner\Docker\Binary\Repository')
-            ->setConstructorArgs(array($exec, array(), UnPackager::fromDirectories($exec, $testDirectories)))
-            ->setMethods(array('getPackageLocalBinary'))
-            ->getMock()
-        ;
-        $testRepository->method('getPackageLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
-
-        /** @var MockObject|StepRunner $mockRunner */
-        $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
-            ->setConstructorArgs(array(
-                RunOpts::create('pipelines-unit-test'),
-                $testDirectories,
-                $exec,
-                new Flags(),
-                Env::create(),
-                new Streams(),
-            ))
-            ->setMethods(array('getDockerBinaryRepository'))
-            ->getMock();
-        $mockRunner->method('getDockerBinaryRepository')->willReturn($testRepository);
 
         $step = $this->createTestStep(array('services' => array('docker')));
-        $actual = $mockRunner->runStep($step);
-        $this->assertSame(63, $actual);
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), $inherit);
+
+        $this->expectOutputString('');
+        $exec->expect('capture', 'docker', 0, 'ps');
+        $buffer = json_encode(array(array(
+            'HostConfig' => array(
+                'Binds' => array('/dev/null:/usr/bin/docker:ro'),
+            ),
+        )));
+        $exec->expect('capture', 'docker', 0, 'obtain socket bind');
+        $exec->expect('capture', 'docker', $buffer, 'obtain client bind');
+        $exec->expect('capture', 'docker', 0, 'obtain mount bind');
+        $exec->expect('capture', 'docker', 0, 'run');
+        $exec->expect('pass', '~ docker exec ~', 0, 'script');
+        $exec->expect('capture', 'docker', 0, 'kill');
+        $exec->expect('capture', 'docker', 0, 'rm');
+
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status);
     }
 
     /**
@@ -393,9 +393,7 @@ class StepRunnerTest extends RunnerTestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
-            ->expect('capture', 'docker', 0, 'run the container');
-
+            ->expect('capture', 'docker', 1, 'no id for name of potential re-use');
         $testDirectories = new Directories($_SERVER, $this->getTestProject());
 
         /** @var MockObject|StepRunner $mockRunner */

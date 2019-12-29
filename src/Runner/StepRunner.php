@@ -137,13 +137,6 @@ class StepRunner
             return $result;
         }
 
-        list($status, $message) = $this->deployDockerClient($step, $id);
-        if (0 !== $status) {
-            $this->streams->err(rtrim($message, "\n") . "\n");
-
-            return $status;
-        }
-
         $status = $this->runStepScript($step, $streams, $exec, $name);
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
@@ -293,37 +286,6 @@ class StepRunner
     }
 
     /**
-     * if there is the docker service in the step, deploy the
-     * docker client
-     *
-     * @param Step $step
-     * @param string $id
-     *
-     * @throws
-     * @return array array(int $status, string $message)
-     */
-    private function deployDockerClient(Step $step, $id)
-    {
-        if (!$step->getServices()->has('docker')) {
-            return array(0, '');
-        }
-
-        $this->streams->out(' +++ docker client install...: ');
-
-        try {
-            list($status, $message) = $this->getDockerBinaryRepository()->inject($id);
-        } catch (\Exception $e) {
-            $this->streams->out("pipelines internal failure.\n");
-
-            throw new \InvalidArgumentException('inject docker client failed: ' . $e->getMessage(), 1, $e);
-        }
-
-        $this->streams->out("${message}\n");
-
-        return array($status, $message);
-    }
-
-    /**
      * @param Image $image
      *
      * @throws \RuntimeException
@@ -355,6 +317,8 @@ class StepRunner
 
         $mountDockerSock = $this->obtainDockerSocketMount();
 
+        $mountDockerClient = $this->obtainDockerClientMount($step);
+
         $mountWorkingDirectory = $this->obtainWorkingDirMount($copy, $dir, $mountDockerSock);
         if ($mountWorkingDirectory && is_int($mountWorkingDirectory[1])) {
             return $mountWorkingDirectory;
@@ -366,6 +330,7 @@ class StepRunner
                 $env->getArgs('-e'),
                 $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
                 $mountDockerSock,
+                $mountDockerClient,
                 '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName(),
             )
         );
@@ -381,6 +346,27 @@ class StepRunner
         $id = $container->getDisplayId();
 
         return array($id, $status);
+    }
+
+    private function obtainDockerClientMount(Step $step)
+    {
+        # 'docker.client.path'
+        $path = '/usr/bin/docker';
+
+        if (!$step->getServices()->has('docker')) {
+            return array();
+        }
+
+        // prefer pip mount over package
+        $hostPath = $this->pipHostConfigBind($path);
+        if (null !== $hostPath) {
+            return array('-v', sprintf('%s:%s:ro', $hostPath, $path));
+        }
+
+        $local = $this->getDockerBinaryRepository()->getBinaryPath();
+        chmod($local, 0755);
+
+        return array('-v', sprintf('%s:%s:ro', $local, $path));
     }
 
     /**
