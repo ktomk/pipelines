@@ -204,14 +204,14 @@ class EnvTest extends TestCase
     {
         $env = Env::create();
         $env->setPipelinesProjectPath('/my-path');
-        $this->assertNull($env->getPipelinesProjectPath(), 'needs ID/s configuration');
+        $this->assertNull($env->getValue('PIPELINES_PROJECT_PATH'), 'needs ID/s configuration');
 
         $env->setPipelinesId('custom/test-for-nothing');
         $env->setPipelinesProjectPath('/my-path');
-        $this->assertSame('/my-path', $env->getPipelinesProjectPath(), 'works for ID/s');
+        $this->assertSame('/my-path', $env->getValue('PIPELINES_PROJECT_PATH'), 'works for ID/s');
 
         $env->setPipelinesProjectPath('/my-path/too');
-        $this->assertSame('/my-path', $env->getPipelinesProjectPath(), 'can not overwrite');
+        $this->assertSame('/my-path', $env->getValue('PIPELINES_PROJECT_PATH'), 'can not overwrite');
     }
 
     public function testInheritPipelinesId()

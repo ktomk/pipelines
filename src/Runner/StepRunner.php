@@ -442,7 +442,7 @@ class StepRunner
         $checkMount = $mountDockerSock && null !== $parentName;
         $deviceDir = $hostDeviceDir ?: $dir;
         if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
-            $deviceDir = $this->env->getPipelinesProjectPath($deviceDir);
+            $deviceDir = $this->env->getValue('PIPELINES_PROJECT_PATH');
             if ($deviceDir === $dir || null === $deviceDir) {
                 $this->streams->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
 

@@ -174,20 +174,6 @@ class Env
     }
 
     /**
-     * @param null|string $default [optional]
-     *
-     * @return null|string
-     */
-    public function getPipelinesProjectPath($default = null)
-    {
-        if (isset($this->vars['PIPELINES_PROJECT_PATH'])) {
-            return $this->vars['PIPELINES_PROJECT_PATH'];
-        }
-
-        return $default;
-    }
-
-    /**
      * @param string $option "-e" typically for Docker binary
      *
      * @return array of options (from $option) and values, ['-e', 'val1', '-e', 'val2', ...]
