@@ -412,14 +412,23 @@ class StepRunner
             return $args;
         }
 
-        $hostPathDockerSocket = $this->runOpts->getOption('docker.socket.path');
+        $defaultSocketPath = $this->runOpts->getOption('docker.socket.path');
+        $hostPathDockerSocket = $defaultSocketPath;
+
+        // pipelines inside pipelines
+        $hostPath = $this->pipHostConfigBind($defaultSocketPath);
+        if (null !== $hostPath) {
+            return array(
+                '-v', sprintf('%s:%s', $hostPath, $defaultSocketPath),
+            );
+        }
 
         $dockerHost = $this->env->getInheritValue('DOCKER_HOST');
         if (null !== $dockerHost && 0 === strpos($dockerHost, 'unix://')) {
             $hostPathDockerSocket = LibFs::normalizePath(substr($dockerHost, 7));
         }
 
-        $pathDockerSock = $this->runOpts->getOption('docker.socket.path');
+        $pathDockerSock = $defaultSocketPath;
 
         if (file_exists($hostPathDockerSocket)) {
             $args = array(

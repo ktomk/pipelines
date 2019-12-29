@@ -274,6 +274,38 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(0, $status);
     }
 
+    public function testRunStepWithPipDockerSocket()
+    {
+        $inherit = array(
+            'DOCKER_HOST' => 'unix:///run/user/1000/docker.sock',
+            'PIPELINES_PARENT_CONTAINER_NAME' => 'parent_container_name',
+            'PIPELINES_PIP_CONTAINER_NAME' => 'parent_container_name',
+        );
+
+        $exec = new ExecTester($this);
+
+        $step = $this->createTestStep();
+        $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), $inherit);
+
+        $this->expectOutputString('');
+        $exec->expect('capture', 'docker', 0, 'ps');
+
+        $buffer = json_encode(array(array(
+            'HostConfig' => array(
+                'Binds' => array('/dev/null:' . $this->getTestProject() . '/var/run/docker.sock'),
+            ),
+        )));
+        $exec->expect('capture', 'docker', $buffer, 'obtain socket bind');
+        $exec->expect('capture', 'docker', 0, 'obtain mount bind');
+        $exec->expect('capture', 'docker', 0, 'run');
+        $exec->expect('pass', '~ docker exec ~', 0, 'script');
+        $exec->expect('capture', 'docker', 0, 'kill');
+        $exec->expect('capture', 'docker', 0, 'rm');
+
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status);
+    }
+
     /* docker client tests */
 
     /**
