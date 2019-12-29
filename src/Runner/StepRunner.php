@@ -355,25 +355,10 @@ class StepRunner
 
         $mountDockerSock = $this->obtainDockerSocketMount();
 
-        $parentName = $env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
-        $hostDeviceDir = $this->pipHostConfigBind($dir);
-        $checkMount = $mountDockerSock && null !== $parentName;
-        $deviceDir = $hostDeviceDir ?: $dir;
-        if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
-            $deviceDir = $env->getPipelinesProjectPath($deviceDir);
-            if ($deviceDir === $dir || null === $deviceDir) {
-                $streams->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
-
-                return array(null, 1);
-            }
+        $mountWorkingDirectory = $this->obtainWorkingDirMount($copy, $dir, $mountDockerSock);
+        if ($mountWorkingDirectory && is_int($mountWorkingDirectory[1])) {
+            return $mountWorkingDirectory;
         }
-
-        $mountWorkingDirectory = $copy
-            ? array()
-            // FIXME(tk): Never mount anything not matching /home/[a-zA-Z][a-zA-Z0-9]*/[^.].*/...
-            //   + do realpath checking
-            //   + prevent dot path injections (logical fix first)
-            : array('--volume', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
 
         list($status, $out, $err) = $container->run(
             array(
@@ -437,6 +422,38 @@ class StepRunner
         }
 
         return $args;
+    }
+
+    /**
+     * @param bool $copy
+     * @param string $dir
+     * @param array $mountDockerSock
+     *
+     * @return array mount options or array(null, int $status) for error handling
+     */
+    private function obtainWorkingDirMount($copy, $dir, array $mountDockerSock)
+    {
+        if ($copy) {
+            return array();
+        }
+
+        $parentName = $this->env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
+        $hostDeviceDir = $this->pipHostConfigBind($dir);
+        $checkMount = $mountDockerSock && null !== $parentName;
+        $deviceDir = $hostDeviceDir ?: $dir;
+        if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
+            $deviceDir = $this->env->getPipelinesProjectPath($deviceDir);
+            if ($deviceDir === $dir || null === $deviceDir) {
+                $this->streams->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
+
+                return array(null, 1);
+            }
+        }
+
+        // FIXME(tk): Never mount anything not matching /home/[a-zA-Z][a-zA-Z0-9]*/[^.].*/...
+        //   + do realpath checking
+        //   + prevent dot path injections (logical fix first)
+        return array('-v', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
     }
 
     /**
