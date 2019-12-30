@@ -169,7 +169,14 @@ Features include:
 
   Alternatively files can be mounted into the container instead
   with `--deploy mount` which normally is faster, but the working
-  tree might become changed by the container script.
+  tree might become changed by the container script which can be
+  a problem when Docker runs system-wide as containers do not isolate
+  users (e.g. root is root).  \
+  Better with `--deploy mount` is using
+  Docker in rootless mode where files manipulated in the container /
+  pipeline are accessible to the own user account (like root is user).
+
+  * Further reading: [*How-To Rootless Pipelines*](doc/PIPELINES-HOWTO-ROOTLESS.md)
 
 * **Pipeline Integration**: Export files from the pipeline by
   making use of artifacts, these are copied back into the working
@@ -194,13 +201,14 @@ Features include:
   ("`atlassian/default-image:latest`").
 
 * **Pipelines inside Pipeline**: As a special feature and by
-  default pipelines mounts the docker socket into each container
-  (on systems where the socket is available). That allows to
-  launch pipelines from a pipeline as long as the docker client
-  is available in the pipeline's container.
+default pipelines mounts the docker socket into each container (on
+  systems where the socket is available).  \
+  That allows to launch pipelines from a pipeline as long as the Docker
+  client is available in the pipeline's container. Pipelines will take
+  care to have the Docker client as `/usr/bin/docker` when the pipeline
+  has the `docker` service (`services: \n - docker`).  \
   This feature is similar to [run Docker commands in Bitbucket
-  Pipelines][BBPL-DCK] \[BBPL-DCK] but w/o mounting the Docker
-  CLI executable in the container.
+  Pipelines][BBPL-DCK] \[BBPL-DCK].
 
   The pipelines inside pipeline feature serves pipelines itself
   well for integration testing on Travis. In combination with
@@ -209,9 +217,12 @@ Features include:
   loops by recursion is implemented to prevent accidental
   endless loops of pipelines inside pipeline invocations.
 
+  * Further reading: [*How-To Docker Client Binary Packages for
+    Pipelines*](doc/PIPELINES-HOWTO-DOCKER-CLIENT-BINARY.md)
+
 ## Environment
 
-Pipelines mimics all of the [Bitbucket Pipeline in-container
+Pipelines mimics "all" of the [Bitbucket Pipeline in-container
 environment variables][BBPL-ENV] \[BBPL-ENV], also known as
 environment parameters:
 
@@ -228,7 +239,7 @@ environment parameters:
 * `CI` - always set to "`true`"
 
 All of these (but not `BITBUCKET_CLONE_DIR`) can be set within
-the environment pipelines runs and are taken over into container
+the environment pipelines runs in and are taken over into container
 environment. Example:
 
     $ BITBUCKET_BUILD_NUMBER=123 pipelines # build no. 123
@@ -302,7 +313,7 @@ Pipelines works best on a POSIX compatible system having a PHP
 runtime.
 
 Docker needs to be available locally as `docker` command as it is
-used to run the pipelines.
+used to run the pipelines. Rootless Docker is supported.
 
 A recent PHP version is favored, the `pipelines` command needs
 it to run. It should work with PHP 5.3+, the phar build requires
@@ -311,8 +322,8 @@ especially suggested for future releases.
 
 Installing the [PHP YAML extension][PHP-YAML] \[PHP-YAML] is
 highly recommended as it does greatly improve parsing the
-pipelines file which is otherwise with a YAML parser that is not
-overly supportive of the file-format.
+pipelines file which is otherwise with a YAML parser on it's
+own.
 
 ### User Tests
 
@@ -340,7 +351,8 @@ X Sierra and High Sierra with PHP and Docker installed.
 [Phar (Download)](#download-the-phar-php-archive-file) |
 [Composer](#install-with-composer) |
 [Phive](#install-with-phive) |
-[Source (also w/ Phar)](#install-from-source)
+[Source (also w/ Phar)](#install-from-source) |
+[Full Project (Development)](#install-full-project-for-development)
 
 Installation is available by downloading the phar archive from
 Github, via Composer/Packagist or with Phive and it should always
@@ -437,6 +449,22 @@ Check the version by invoking it:
     $ build/pipelines.phar --version
     pipelines version 0.0.19-1-gbba5a43
 
+### Install Full Project For Development
+
+When working with git clone, clone the repository
+and then invoke `composer install`. The project
+is then setup for development.
+
+Alternatively it's possible to do the same via
+composer directly:
+
+~~~
+$ composer create-project --prefer-source --keep-vcs ktomk/pipelines
+~~~
+
+Follow the instructions in [*Install from Source*](#install-from-source)
+to use the development version.
+
 ### Todo
 
 - [x] Support for private Docker repositories
@@ -450,9 +478,11 @@ Check the version by invoking it:
       not enforce the container default user \[often "root"]
       for project file operation), however the Docker utility
       still requires you (the current user) to be root like, so
-      technically there is little win.
+      technically there is little win (see [Rootless
+      Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md) for what works
+      better in this regard already)
 - [ ] More accessible offline preparation (e.g.
-      `--docker-pull-images`)
+      `--docker-pull-images`, `--go-offline`)
 - [ ] Copy local composer cache into container for better
       (offline) usage in PHP projects
 - [ ] Check Docker existence before running a pipeline
