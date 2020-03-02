@@ -46,6 +46,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--docker-client <package>]
                  [--deploy mount | copy ] [--pipeline <id>]
+                 [(--step | --steps) <steps>]
                  [--trigger <ref>]
        pipelines [<options>] --list | --show | --images
        pipelines [<options>] --docker-client-pkgs
@@ -92,6 +93,11 @@ Pipeline runner options
                           determines the pipeline to run
     --pipeline <id>       run pipeline with <id>, use --list for a list of
                           all pipeline ids available.
+    --step, --steps <steps>
+                          execute not all but this/these <steps>. duplicates
+                          and different order allowed, <steps> are a comma/
+                          space separated list of step and step ranges, e.g.
+                          1 2 3; 1-3; 1,2-3; 3-1 or -1,3- and 1,1,2,2,3,3.
     --verbatim            only give verbatim output of the pipeline, do not
                           display other information like which step currently
                           executes, which image is in use etc.

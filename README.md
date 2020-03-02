@@ -160,6 +160,13 @@ Features include:
   of a pipeline with `--keep` and with the said `--error-keep` on
   error only.
 
+  Continue on a (failed) step with the `--steps <steps>` argument,
+  the `<steps>` option can be any step number or sequence, separate
+  multiple with comma, you can even repeat steps or reverse order.
+
+  For example, if the second step failed, to continue use `--steps 2-`
+  to re-run the second and all following steps.
+
   Afterwards manage left overs with `--docker-list|kill|clean` or
   clean up with `--docker-zap`.
 
@@ -479,11 +486,11 @@ to use the development version.
 
 - [x] Support for private Docker repositories
 - [x] Inject docker client if docker service is enabled
+- [x] Run specific steps of a pipeline (only) to put the user
+      back into command on errors w/o re-running everything
 - [ ] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
 - [ ] Option to not mount docker.sock
-- [ ] Run specific steps of a pipeline (only) to put the user
-      back into command on errors w/o re-running everything
 - [ ] Run pipelines as current user (`--deploy mount` should
       not enforce the container default user \[often "root"]
       for project file operation), however the Docker utility

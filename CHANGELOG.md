@@ -5,6 +5,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- `--steps` option to specify which step(s) of a pipeline to run. Same as
+  `--step` and to reserve both. `1` as well as `1,2,3`, `1-3` or `-2,3-`
+  are valid
 ### Fixed
 - Base unit-test-case exception expectation optional message parameter
 - Travis build pulling php:5.3

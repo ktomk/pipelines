@@ -94,4 +94,21 @@ class PipelineTest extends TestCase
             $pipeline->jsonSerialize()
         );
     }
+
+    public function testSetStepsExpression()
+    {
+        $file = new File(array('pipelines' => array('default' => array(
+            array('step' => array('script' => array(':')))
+        ))));
+        $pipeline = $file->getById('default');
+
+        $pipeline->setStepsExpression(null);
+        $this->addToAssertionCount(1);
+
+        $pipeline->setStepsExpression('1,1,1');
+        $this->addToAssertionCount(1);
+
+        $this->assertInstanceOf('ArrayIterator', $pipeline->getSteps()->getIterator());
+        $this->addToAssertionCount(1);
+    }
 }

@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\File;
 
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\Pipeline\Steps;
+use Ktomk\Pipelines\Value\StepExpression;
 
 class Pipeline
 {
@@ -21,8 +22,10 @@ class Pipeline
 
     /**
      * Pipeline constructor.
+     *
      * @param File $file
      * @param array $definition
+     *
      * @throws \Ktomk\Pipelines\File\ParseException
      */
     public function __construct(File $file, array $definition)
@@ -52,6 +55,24 @@ class Pipeline
     public function getId()
     {
         return $this->file->getIdFrom($this);
+    }
+
+    /**
+     * @param string $expression [optional]
+     */
+    public function setStepsExpression($expression = null)
+    {
+        if (null === $expression) {
+            return;
+        }
+
+        // parse, resolve early
+        $array = StepExpression::createFromString($expression)
+            ->resolveSteps($this->getSteps());
+
+        $this->steps->setGetIteratorFunctor(function () use ($array) {
+            return new \ArrayIterator($array);
+        });
     }
 
     /**

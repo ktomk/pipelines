@@ -136,9 +136,12 @@ class App implements Runnable
 
         $streams = $this->parseStreams();
 
+        $steps = $args->getOptionArgument(array('step', 'steps'));
+
         $this->parseRemainingOptions();
 
         $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions);
+        $pipeline->setStepsExpression($steps);
 
         $flags = $this->getRunFlags($keep, $deployMode);
 
