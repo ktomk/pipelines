@@ -2,20 +2,22 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\File;
+namespace Ktomk\Pipelines\File\Pipeline;
 
+use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
- * @covers \Ktomk\Pipelines\File\Step
+ * @covers \Ktomk\Pipelines\File\Pipeline\Step
  */
 class StepTest extends TestCase
 {
     public function testCreation()
     {
         $step = $this->createStep();
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $step);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step);
     }
 
     public function testGetArtifacts()

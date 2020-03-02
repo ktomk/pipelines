@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\File;
 
-use \InvalidArgumentException;
+use InvalidArgumentException;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
 use ReflectionException;
@@ -167,7 +167,7 @@ class FileTest extends TestCase
         $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline', $pipeline);
         $steps = $pipeline->getSteps();
         $this->assertArrayHasKey(0, $steps);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $steps[0]);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $steps[0]);
     }
 
     /**

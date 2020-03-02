@@ -4,9 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
-use Ktomk\Pipelines\Cli\ExecTest;
 use Ktomk\Pipelines\Cli\ExecTester;
-use Ktomk\Pipelines\File\Step;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -139,12 +137,12 @@ class StepContainerTest extends TestCase
     }
 
     /**
-     * @return \Ktomk\Pipelines\File\Step|\PHPUnit\Framework\MockObject\MockObject
+     * @return \Ktomk\Pipelines\File\Pipeline\Step|\PHPUnit\Framework\MockObject\MockObject
      */
     private function getStepMock()
     {
         $step = $this->createPartialMock(
-            'Ktomk\Pipelines\File\Step',
+            'Ktomk\Pipelines\File\Pipeline\Step',
             array('getPipeline')
         );
         $step->method('getPipeline')

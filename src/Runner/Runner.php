@@ -7,7 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\Pipeline;
-use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\File\Pipeline\Step;
 
 /**
  * Pipeline runner with docker under the hood
@@ -136,7 +136,8 @@ class Runner
     }
 
     /**
-     * @param Step $step
+     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
+     *
      * @return int status (as in exit status, 0 OK, !0 NOK)
      */
     public function runStep(Step $step) {

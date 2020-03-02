@@ -6,7 +6,7 @@ namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline;
-use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -50,7 +50,8 @@ class RunnerTestCase extends TestCase
 
     /**
      * @param null|array $extra
-     * @return Step
+     *
+     * @return \Ktomk\Pipelines\File\Pipeline\Step
      */
     protected function createTestStep(array $extra = null)
     {
@@ -67,7 +68,7 @@ class RunnerTestCase extends TestCase
         ));
         $pipelineSteps = $pipeline->getSteps();
         $step = $pipelineSteps[0];
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $step, 'creating the test step failed');
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step, 'creating the test step failed');
 
         return $step;
     }

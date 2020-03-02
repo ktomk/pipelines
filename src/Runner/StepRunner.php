@@ -9,7 +9,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Image;
-use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
@@ -87,7 +87,7 @@ class StepRunner
     }
 
     /**
-     * @param Step $step
+     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
      *
      * @return null|int exist status of step script or null if the run operation failed
      */
@@ -301,7 +301,7 @@ class StepRunner
      * @param StepContainer $container
      * @param string $dir
      * @param bool $copy
-     * @param Step $step
+     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
      *
      * @return array array(string|null $id, int $status)
      */
@@ -459,7 +459,7 @@ class StepRunner
     }
 
     /**
-     * @param Step $step
+     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
      * @param Streams $streams
      * @param Exec $exec
      * @param string $name container name

@@ -7,7 +7,7 @@ namespace Ktomk\Pipelines\Utility;
 use InvalidArgumentException;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
-use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\File\Pipeline\Step;
 
 /**
  * Class FileShower
@@ -142,7 +142,8 @@ class FileShower
     }
 
     /**
-     * @param array|Step[] $steps
+     * @param array|\Ktomk\Pipelines\File\Pipeline\Step[] $steps
+     *
      * @return array
      */
     private function getImagesAndNames(array $steps)

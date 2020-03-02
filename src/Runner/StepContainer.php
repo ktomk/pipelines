@@ -6,7 +6,7 @@ namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 
 /**

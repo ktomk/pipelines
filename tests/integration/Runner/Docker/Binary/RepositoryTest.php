@@ -8,7 +8,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
-use Ktomk\Pipelines\File\Step;
+use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Directories;

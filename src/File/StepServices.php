@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\File\Pipeline\Step;
+
 /**
  * Class StepServices
  *

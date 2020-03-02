@@ -4,9 +4,6 @@
 
 namespace Ktomk\Pipelines\File;
 
-use Ktomk\Pipelines\File\File;
-use Ktomk\Pipelines\File\ParseException;
-use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -65,7 +62,7 @@ class PipelineTest extends TestCase
         $pipeline = new Pipeline($file, $definition);
         $steps = $pipeline->getSteps();
         $this->assertArrayHasKey(0, $steps);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Step', $steps[0]);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $steps[0]);
     }
 
     public function testGetFile()

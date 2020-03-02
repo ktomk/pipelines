@@ -17,7 +17,7 @@ class StepServicesTest extends TestCase
 {
     public function testCreation()
     {
-        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Step'), array());
+        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), array());
         $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $services);
     }
 
@@ -26,7 +26,7 @@ class StepServicesTest extends TestCase
         $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'services\' requires a list of services');
 
         $yaml = (object)array();
-        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Step'), $yaml);
+        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
         $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $services);
     }
 
@@ -35,13 +35,13 @@ class StepServicesTest extends TestCase
         $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'services\' service name string expected');
 
         $yaml = array('fine', array('scrap'), (object)array());
-        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Step'), $yaml);
+        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
         $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $services);
     }
 
     public function testHas()
     {
-        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Step'), array('docker'));
+        $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), array('docker'));
         $this->assertTrue($services->has('docker'));
         $this->assertFalse($services->has('mysql'));
     }
