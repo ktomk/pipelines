@@ -103,9 +103,11 @@ class Timestamps
             $fileFlags = $this->readUint($pos, 4);
             $permission = $fileFlags & 0x000001FF;
             if ($permission === 0666) {
+                // @codeCoverageIgnoreStart
                 $permission = 0644;
                 $compression = $fileFlags & 0xFFFFF000;
                 $this->contents = substr_replace($this->contents, pack('L', $permission | $compression), $pos, 4);
+                // @codeCoverageIgnoreEnd
             }
             $pos += 4;
 
