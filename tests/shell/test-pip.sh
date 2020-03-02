@@ -43,12 +43,18 @@ case ${1-0} in
       exit
       ;;
   5 ) echo "# 5: docker service inside pipelines w/ test package"
-      set +e # must fail, "test" is invalid"
-      ../../build/pipelines.phar --docker-client 'test' --pipeline custom/docker | grep 'fatal: not a readable file:'
+      set +e # must fail, "test" is invalid
+      ../../build/pipelines.phar --docker-client 'test' --pipeline custom/docker 2>&1 | grep given
       ret=$?
       set -e
       [ $ret -ne 0 ]
-      ../../build/pipelines.phar --verbatim --docker-client 'docker-42.42.1-binsh-test-stub' --pipeline custom/docker
+      set +e # must fail, "docker-42.42.1-binsh-test-stub" is invalid
+      ../../build/pipelines.phar --docker-client 'docker-42.42.1-binsh-test-stub' --pipeline custom/docker 2>&1 | grep given
+      ret=$?
+      set -e
+      [ $ret -ne 0 ]
+      ls -al ../../lib/package/docker-42.42.1-binsh-test-stub.yml
+      ../../build/pipelines.phar --docker-client './lib/package/docker-42.42.1-binsh-test-stub.yml' --pipeline custom/docker
       exit
       ;;
   6 ) echo "# 6: list available client packages"
