@@ -170,12 +170,13 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     /**
      * @param int $index of step, from the zero based index in the list of steps
      * @param array $step
+     * @param array $env [optional] environment variables in array notation for the new step
      *
      * @return Step
      */
-    private function step($index, array $step)
+    private function step($index, array $step, array $env = array())
     {
-        return new Step($this->pipeline, $index, $step);
+        return new Step($this->pipeline, $index, $step, $env);
     }
 
     /**
@@ -216,10 +217,15 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
             $group[] = $step['step'];
         }
 
+        $total = count($group);
         foreach ($group as $index => $step) {
             $this->steps[] = $this->step(
                 count($this->steps),
-                $step
+                $step,
+                array(
+                    'BITBUCKET_PARALLEL_STEP' => $index,
+                    'BITBUCKET_PARALLEL_STEP_COUNT' => $total,
+                )
             );
         }
     }

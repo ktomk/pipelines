@@ -128,7 +128,13 @@ class StepTest extends TestCase
         $this->assertArrayHasKey('image', $actual);
     }
 
-    public function testGetIndex() {
+    public function testGetEnv()
+    {
+        $this->assertSame(array(), $this->createStep()->getEnv());
+    }
+
+    public function testGetIndex()
+    {
         $index = $this->createStep()->getIndex();
         $this->assertInternalType('int', $index);
         $this->assertGreaterThanOrEqual(0, $index);
@@ -143,6 +149,7 @@ class StepTest extends TestCase
 
     /**
      * @param null|array $array [optional]
+     *
      * @return Step
      */
     private function createStep(array $array = null)

@@ -27,12 +27,21 @@ class Step
     private $pipeline;
 
     /**
+     * @var array step environment variables
+     *   BITBUCKET_PARALLEL_STEP - zero-based index of the current step in the group, e.g. 0, 1, 2, ...
+     *   BITBUCKET_PARALLEL_STEP_COUNT - total number of steps in the group, e.g. 5.
+     */
+    private $env;
+
+    /**
      * Step constructor.
+     *
      * @param Pipeline $pipeline
      * @param int $index
      * @param array $step
+     * @param array $env [optional] environment variables in array notation for the new step
      */
-    public function __construct(Pipeline $pipeline, $index, array $step)
+    public function __construct(Pipeline $pipeline, $index, array $step, array $env = array())
     {
         // quick validation: image name
         Image::validate($step);
@@ -43,6 +52,7 @@ class Step
         $this->pipeline = $pipeline;
         $this->index = $index;
         $this->step = $step;
+        $this->env = $env;
     }
 
     /**
@@ -128,6 +138,14 @@ class Step
     public function getPipeline()
     {
         return $this->pipeline;
+    }
+
+    /**
+     * @return array step container environment variables (e.g. parallel a step)
+     */
+    public function getEnv()
+    {
+        return $this->env;
     }
 
     /**

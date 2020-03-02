@@ -51,6 +51,41 @@ class Env
     }
 
     /**
+     * @param array $vars
+     * @return array w/ a string variable definition (name=value) per value
+     */
+    public static function createVarDefinitions(array $vars)
+    {
+        $array = array();
+
+        foreach ($vars as $name => $value) {
+            if (isset($value)) {
+                $array[] = sprintf('%s=%s', $name, $value);
+            }
+        }
+
+        return $array;
+    }
+
+    /**
+     * @param string $option "-e" typically for Docker binary
+     * @param array $vars variables as hashmap
+     *
+     * @return array of options (from $option) and values, ['-e', 'val1', '-e', 'val2', ...]
+     */
+    public static function createArgVarDefinitions($option, array $vars)
+    {
+        $args = array();
+
+        foreach (self::createVarDefinitions($vars) as $definition) {
+            $args[] = $option;
+            $args[] = $definition;
+        }
+
+        return $args;
+    }
+
+    /**
      * Initialize default environment used in a Bitbucket Pipeline
      *
      * As the runner mimics some values, defaults are available
@@ -180,12 +215,10 @@ class Env
      */
     public function getArgs($option)
     {
-        $args = $this->collected;
-
-        foreach ($this->getVarDefinitions() as $definition) {
-            $args[] = $option;
-            $args[] = $definition;
-        }
+        $args = Lib::merge(
+            $this->collected,
+            self::createArgVarDefinitions($option, $this->vars)
+        );
 
         return $args;
     }
@@ -285,21 +318,5 @@ class Env
         }
 
         $this->vars[$name] = $value;
-    }
-
-    /**
-     * @return array w/ a string variable definition (name=value) per value
-     */
-    private function getVarDefinitions()
-    {
-        $array = array();
-
-        foreach ($this->vars as $name => $value) {
-            if (isset($value)) {
-                $array[] = sprintf('%s=%s', $name, $value);
-            }
-        }
-
-        return $array;
     }
 }

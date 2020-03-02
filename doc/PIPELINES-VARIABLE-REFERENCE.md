@@ -32,8 +32,8 @@ fashion (façon).
 | `BITBUCKET_EXIT_CODE`                   | -/-   | currently unsupported |
 | `BITBUCKET_GIT_HTTP_ORIGIN`             | -/-   | currently unsupported |
 | `BITBUCKET_GIT_SSH_ORIGIN`              | -/-   | currently unsupported |
-| `BITBUCKET_PARALLEL_STEP`               | -/-   | currently unsupported |
-| `BITBUCKET_PARALLEL_STEP_COUNT`         | -/-   | currently unsupported |
+| `BITBUCKET_PARALLEL_STEP`               | *all* | in parallel step set to zero-based index of the current step in the group, e.g. 0, 1, 2, ... |
+| `BITBUCKET_PARALLEL_STEP_COUNT`         | *all* | in parallel step set total number of steps in the group, e.g. 5. |
 | `BITBUCKET_PR_DESTINATION_BRANCH`       | -/-   | currently unsupported |
 | `BITBUCKET_PR_ID`                       | -/-   | currently unsupported |
 | `BITBUCKET_PROJECT_KEY`                 | -/-   | currently unsupported |
@@ -59,11 +59,13 @@ values.
 ### Unsupported Features and Environment Variables
 
 Some variables yet do not make sense as the pipelines utility
-does not support the underlying feature. For example, parallel
-step execution is not (yet) supported, therefore the variables
-`BITBUCKET_PARALLEL_STEP` and `BITBUCKET_PARALLEL_STEP_COUNT`
-are not set. Setting them before call makes not much sense
-as they would be set for every step, not just the parallel ones.
+does not support the underlying feature.
+
+For example, the variable `BITBUCKET_DEPLOYMENT_ENVIRONMENT` and
+the depployments are not (yet) supported, therefore the variable
+`BITBUCKET_DEPLOYMENT_ENVIRONMENT` is not set. Setting it before
+call makes not much sense as it would be set for every script,
+and not the deployment script only.
 
 Another example is `BITBUCKET_EXIT_CODE`. Even thought this
 variable is easy to be set by the current piplines runner

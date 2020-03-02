@@ -328,6 +328,7 @@ class StepRunner
             array(
                 '-i', '--name', $container->getName(),
                 $env->getArgs('-e'),
+                $env::createArgVarDefinitions('-e', $step->getEnv()),
                 $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
                 $mountDockerSock,
                 $mountDockerClient,
@@ -446,6 +447,7 @@ class StepRunner
      * get host path from mount point if in pip level 2+
      *
      * @param mixed $mountPoint
+     *
      * @return null|string
      */
     private function pipHostConfigBind($mountPoint)

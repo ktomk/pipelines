@@ -1,0 +1,19 @@
+clone:
+  depth: 1
+image: ktomk/pipelines:busybox
+
+pipelines:
+  default:
+    - step:
+        name: 'step #1'
+        script:
+          - printenv | sort
+    - parallel:
+        - step:
+            name: 'step #2'
+            script:
+              - printenv | sort
+        - step:
+            name: 'step #3'
+            script:
+              - printenv | sort

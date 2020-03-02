@@ -36,6 +36,7 @@ class FileTest extends TestCase
             array($dir . '/bitbucket-pipelines.yml'),
             array($dir . '/images.yml'),
             array($dir . '/no-default-pipeline.yml'),
+            array($dir . '/steps.yml'),
             array($dir . '/pull-requests-pipeline.yml'),
         );
     }
