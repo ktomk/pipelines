@@ -15,7 +15,7 @@ use ReflectionObject;
  */
 class FileTest extends TestCase
 {
-    public function testCreateFromFile()
+    public function testCreateFromDefaultFile()
     {
         $path = __DIR__ . '/../../../' . File::FILE_NAME;
 
@@ -24,6 +24,31 @@ class FileTest extends TestCase
         $this->assertNotNull($file);
 
         return $file;
+    }
+
+    public function provideWorkingYmlFiles()
+    {
+        $dir = __DIR__ . '/../../data/yml';
+
+        return array(
+            array($dir . '/alias.yml'),
+            array($dir . '/alias2.yml'),
+            array($dir . '/bitbucket-pipelines.yml'),
+            array($dir . '/images.yml'),
+            array($dir . '/no-default-pipeline.yml'),
+            array($dir . '/pull-requests-pipeline.yml'),
+        );
+    }
+
+    /**
+     * @dataProvider provideWorkingYmlFiles
+     *
+     * @param string $path
+     */
+    public function testCreateFromFile($path)
+    {
+        $file = File::createFromFile($path);
+        $this->assertNotNull($file);
     }
 
     /**
@@ -63,7 +88,8 @@ class FileTest extends TestCase
     }
 
     /**
-     * @depends testCreateFromFile
+     * @depends testCreateFromDefaultFile
+     *
      * @param File $file
      */
     public function testGetImage(File $file)
@@ -168,7 +194,8 @@ class FileTest extends TestCase
     }
 
     /**
-     * @depends testCreateFromFile
+     * @depends testCreateFromDefaultFile
+     *
      * @param File $file
      */
     public function testGetPipelines(File $file)
