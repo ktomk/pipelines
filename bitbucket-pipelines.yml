@@ -22,6 +22,7 @@ pipelines:
           image: cespi/php-5.3:cli-latest
           script:
             - command -v composer || lib/pipelines/composer-install.sh
+            - composer config secure-http false && composer config disable-tls true
             - composer show -i phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
             - >
               composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
