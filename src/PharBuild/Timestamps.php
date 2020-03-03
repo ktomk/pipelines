@@ -100,9 +100,10 @@ class Timestamps
             $pos += 3*4;
 
             // update or skip file flags - see Bug #77022, use 0644 over 0666
+            //                           - see Bug #79082, use 0644 over 0664
             $fileFlags = $this->readUint($pos, 4);
             $permission = $fileFlags & 0x000001FF;
-            if ($permission === 0666) {
+            if ($permission === 0666 || $permission === 0664) {
                 // @codeCoverageIgnoreStart
                 $permission = 0644;
                 $compression = $fileFlags & 0xFFFFF000;
