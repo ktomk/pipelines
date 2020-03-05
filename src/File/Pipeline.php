@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\File;
 
 use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\File\Pipeline\Steps;
 
 class Pipeline
 {
@@ -14,7 +15,7 @@ class Pipeline
     private $file;
 
     /**
-     * @var array|Step[]
+     * @var Steps
      */
     private $steps;
 
@@ -32,7 +33,7 @@ class Pipeline
         }
 
         $this->file = $file;
-        $this->steps = $this->parseSteps($definition);
+        $this->steps = new Steps($this, $definition);
     }
 
     /**
@@ -54,7 +55,7 @@ class Pipeline
     }
 
     /**
-     * @return array|Step[]
+     * @return Step[]|Steps
      */
     public function getSteps()
     {
@@ -69,46 +70,6 @@ class Pipeline
      */
     public function jsonSerialize()
     {
-        $steps = array();
-        foreach ($this->steps as $step) {
-            $steps[] = $step->jsonSerialize();
-        }
-
-        return array(
-            'steps' => $steps,
-        );
-    }
-
-    /**
-     * @param array $definition
-     * @throws \Ktomk\Pipelines\File\ParseException
-     * @return array
-     */
-    private function parseSteps(array $definition) {
-        $steps = array();
-        foreach ($definition as $index => $step) {
-            if (!is_array($step)) {
-                ParseException::__('Pipeline requires a list of steps');
-            }
-            $steps[] = $this->step($index, $step);
-        }
-
-        return $steps;
-    }
-
-    /**
-     * @param int $index of step, from the zero based index in the list of steps
-     * @param array $step
-     * @return Step
-     */
-    private function step($index, array $step)
-    {
-        if (!isset($step['step'])) {
-            ParseException::__(
-                "Missing required property 'step'"
-            );
-        }
-
-        return new Step($this, $index, $step['step']);
+        return $this->steps->jsonSerialize();
     }
 }

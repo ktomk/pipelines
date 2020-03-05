@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\File\Pipeline\Steps;
 
 /**
  * Class FileShower
@@ -101,7 +102,7 @@ class FileShower
             try {
                 $pipeline = $pipelines->getById($id);
 
-                $steps = (null === $pipeline) ? array() : $pipeline->getSteps();
+                $steps = (null === $pipeline) ? null : $pipeline->getSteps();
             } catch (ParseException $e) {
                 $errors++;
                 $table[] = array($id, 'ERROR', $e->getParseMessage());
@@ -142,16 +143,16 @@ class FileShower
     }
 
     /**
-     * @param array|\Ktomk\Pipelines\File\Pipeline\Step[] $steps
+     * @param Steps $steps
      *
      * @return array
      */
-    private function getImagesAndNames(array $steps)
+    private function getImagesAndNames(Steps $steps = null)
     {
         $images = array();
         $names = array();
 
-        foreach ($steps as $step) {
+        foreach ($steps ?: array() as $step) {
             $image = $step->getImage()->getName();
             if (File::DEFAULT_IMAGE !== $image) {
                 $images[] = $image;
