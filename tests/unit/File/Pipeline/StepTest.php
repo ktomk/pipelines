@@ -138,7 +138,7 @@ class StepTest extends TestCase
     {
         $step = $this->createStep();
 
-        $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $step->getServices());
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $step->getServices());
     }
 
     /**

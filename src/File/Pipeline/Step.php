@@ -8,7 +8,6 @@ use Ktomk\Pipelines\File\Artifacts;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline;
-use Ktomk\Pipelines\File\StepServices;
 
 class Step
 {

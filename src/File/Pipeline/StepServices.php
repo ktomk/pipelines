@@ -2,9 +2,9 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\File;
+namespace Ktomk\Pipelines\File\Pipeline;
 
-use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\File\ParseException;
 
 /**
  * Class StepServices

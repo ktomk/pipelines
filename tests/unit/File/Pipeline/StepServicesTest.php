@@ -2,14 +2,14 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\File;
+namespace Ktomk\Pipelines\File\Pipeline;
 
 use Ktomk\Pipelines\TestCase;
 
 /**
  * Class StepServicesTest
  *
- * @covers \Ktomk\Pipelines\File\StepServices
+ * @covers \Ktomk\Pipelines\File\Pipeline\StepServices
  *
  * @package Ktomk\Pipelines\File\File
  */
@@ -18,7 +18,7 @@ class StepServicesTest extends TestCase
     public function testCreation()
     {
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), array());
-        $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $services);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
     }
 
     public function testCreationParseException()
@@ -27,7 +27,7 @@ class StepServicesTest extends TestCase
 
         $yaml = (object)array();
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $services);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
     }
 
     public function testCreationCauseRealProblems()
@@ -36,7 +36,7 @@ class StepServicesTest extends TestCase
 
         $yaml = array('fine', array('scrap'), (object)array());
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\StepServices', $services);
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
     }
 
     public function testHas()
