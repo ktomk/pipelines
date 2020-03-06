@@ -392,7 +392,7 @@ To uninstall remove the package:
 
     $ composer global remove ktomk/pipelines
 
-Take a look at [Composer from getcomposer.org](COMPOSER)
+Take a look at [Composer from getcomposer.org][COMPOSER]
 \[COMPOSER], a *Dependency Manager for PHP*. Pipelines has
 support for composer based installations, which might include
 upstream patches.
@@ -407,7 +407,7 @@ Even if your PHP version does not have the Yaml extension this
 should work out of the box. If you use *composer* and you're a
 PHP aficionado, dig into *phive* for your systems and workflow.
 
-Take a look at [Phive from Phar.io](PHARIO) \[PHARIO], the *PHAR
+Take a look at [Phive from Phar.io][PHARIO] \[PHARIO], the *PHAR
 Installation and Verification Environment (PHIVE)*. Pipelines has
 full support for phar.io/phar based installations which includes
 support for the **phive** utility including upstream patches.

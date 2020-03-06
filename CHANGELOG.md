@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Read Me and Change Log fixes for links
 - Travis build w/ peer verification issues in composer (disabling
   HTTPS/TLS in custom/unit-tests-php-5.3 pipeline)
 - Patch fstat permission bits after PHP bug #79082 fix to restore
@@ -218,3 +219,30 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.0.1] - 2018-01-10
 ### Added
 - Initial release
+
+[0.0.1]: https://github.com/ktomk/pipelines/releases/tag/0.0.1
+[0.0.2]: https://github.com/ktomk/pipelines/releases/tag/0.0.2
+[0.0.3]: https://github.com/ktomk/pipelines/releases/tag/0.0.3
+[0.0.4]: https://github.com/ktomk/pipelines/releases/tag/0.0.4
+[0.0.5]: https://github.com/ktomk/pipelines/releases/tag/0.0.5
+[0.0.6]: https://github.com/ktomk/pipelines/releases/tag/0.0.6
+[0.0.7]: https://github.com/ktomk/pipelines/releases/tag/0.0.7
+[0.0.8]: https://github.com/ktomk/pipelines/releases/tag/0.0.8
+[0.0.9]: https://github.com/ktomk/pipelines/releases/tag/0.0.9
+[0.0.10]: https://github.com/ktomk/pipelines/releases/tag/0.0.10
+[0.0.11]: https://github.com/ktomk/pipelines/releases/tag/0.0.11
+[0.0.12]: https://github.com/ktomk/pipelines/releases/tag/0.0.12
+[0.0.13]: https://github.com/ktomk/pipelines/releases/tag/0.0.13
+[0.0.14]: https://github.com/ktomk/pipelines/releases/tag/0.0.14
+[0.0.15]: https://github.com/ktomk/pipelines/releases/tag/0.0.15
+[0.0.16]: https://github.com/ktomk/pipelines/releases/tag/0.0.16
+[0.0.17]: https://github.com/ktomk/pipelines/releases/tag/0.0.17
+[0.0.18]: https://github.com/ktomk/pipelines/releases/tag/0.0.18
+[0.0.19]: https://github.com/ktomk/pipelines/releases/tag/0.0.19
+[0.0.20]: https://github.com/ktomk/pipelines/releases/tag/0.0.20
+[0.0.21]: https://github.com/ktomk/pipelines/releases/tag/0.0.21
+[0.0.22]: https://github.com/ktomk/pipelines/releases/tag/0.0.22
+[0.0.23]: https://github.com/ktomk/pipelines/releases/tag/0.0.23
+[0.0.24]: https://github.com/ktomk/pipelines/releases/tag/0.0.24
+[0.0.25]: https://github.com/ktomk/pipelines/releases/tag/0.0.25
+[unreleased]: https://github.com/ktomk/pipelines
