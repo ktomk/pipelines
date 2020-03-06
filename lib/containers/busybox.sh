@@ -19,7 +19,7 @@
 #         && /bin/cat /opt/atlassian/pipelines/agent/tmp/build_result) \
 #       || /bin/echo 1)
 #
-#   (formated for readability)
+#   (formatted for readability)
 #
 #   as the official docker hub image of busybox does not have the mkfifo
 # utility at /usr/bin/mkfifo, the build setup errors and the pipeline step/s

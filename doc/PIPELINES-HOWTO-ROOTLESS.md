@@ -1,6 +1,6 @@
 # How-To Rootless Pipelines
 
-The pipelines utility runs the pipelines with Docker. [Rootless]\[ROOTLESS] mode was
+The pipelines utility runs the pipelines with Docker. [Rootless] \[ROOTLESS] mode was
 introduced in Docker Engine 19.03.
 
 If the local user has Docker running in rootless mode, it is possible to
@@ -84,9 +84,11 @@ This How-To describes how to install docker rootless on Ubuntu 18.04 LTS
 ## How To Progress
 
 Switching the Docker daemon to rootless needs Docker to pull images again as
-they are stored in the users home folder (e.g. `~/.local/share/docker`).
+they are stored in the users home folder (e.g. `~/.local/share/docker`). See
+[**Ready for Offline** in Read Me](../README.md) on how to pull pipeline images
+in batches.
 
-to switch back from rootless to system:
+To switch back from rootless to system:
 
 ~~~
 $ systemctl --user stop docker; sudo systemctl start docker \
@@ -101,7 +103,7 @@ $ sudo systemctl stop docker; systemctl --user start docker \
 To better integrate with your own users' environment, one could
 
 * Run Docker rootless on login
-* Add environment parameter to bashrc / zsh / profile
+* Add environment parameter to bashrc / zsh / shell profile
 
 depending on preference.
 
@@ -112,4 +114,3 @@ This is covered in [Rootless] \[ROOTLESS] as well.
 * \[ROOTLESS]: https://docs.docker.com/engine/security/rootless/
 
 [Rootless]: https://docs.docker.com/engine/security/rootless/
-

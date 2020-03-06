@@ -6,7 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
-- Read Me and Change Log fixes for links
+- Read Me and Change Log fixes for links, WS fixes and typo for other
+  documentation files (.md, comment in .sh)
 - Travis build w/ peer verification issues in composer (disabling
   HTTPS/TLS in custom/unit-tests-php-5.3 pipeline)
 - Patch fstat permission bits after PHP bug #79082 fix to restore

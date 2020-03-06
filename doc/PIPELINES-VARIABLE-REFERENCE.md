@@ -203,11 +203,11 @@ project:
 * `BITBUCKET_REPO_FULL_NAME`
 * `BITBUCKET_REPO_OWNER`
 * `BITBUCKET_REPO_OWNER_UUID`
-* `BITBUCKET_REPO_SLUG` - if not matching project base name 
+* `BITBUCKET_REPO_SLUG` - if not matching project base name
 * `BITBUCKET_REPO_UUID`
 
 ***Note:** Perhaps UUID values are gained best via the Bitbucket
-Cloud REST API on the shell command line.*  
+Cloud REST API on the shell command line.*
 
 ## References
 

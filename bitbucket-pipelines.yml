@@ -127,4 +127,4 @@ pipelines:
           image: ktomk/pipelines:busybox
           name: print environemnt variables
           script:
-            - printenv
+            - printenv | sort
