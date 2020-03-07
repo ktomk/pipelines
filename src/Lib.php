@@ -220,4 +220,22 @@ class Lib
     {
         return defined('PHP_BINARY') ? constant('PHP_BINARY') : PHP_BINDIR . '/php';
     }
+
+    /**
+     * Empty "coalesce" function
+     *
+     * @return mixed
+     */
+    public static function emptyCoalesce()
+    {
+        foreach (func_get_args() as $arg) {
+            if (empty($arg)) {
+                continue;
+            }
+
+            return $arg;
+        }
+
+        return null;
+    }
 }

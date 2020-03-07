@@ -139,4 +139,11 @@ class LibTest extends TestCase
         $this->assertArrayNotHasKey('argc', $env, 'behavioral assertion');
         $this->assertArrayNotHasKey('REQUEST_TIME', $env, 'behavioral assertion');
     }
+
+    public function testEmptyCoalesce()
+    {
+        $this->assertNull(Lib::emptyCoalesce());
+        $this->assertNull(Lib::emptyCoalesce(false));
+        $this->assertTrue(Lib::emptyCoalesce(null, false, '0', '', array(), true));
+    }
 }
