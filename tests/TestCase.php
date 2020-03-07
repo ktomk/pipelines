@@ -110,7 +110,7 @@ class TestCase extends PhpunitTestCase
         );
     }
 
-    public function setExpectedException($class, $message = '', $code = null)
+    public function setExpectedException($class, $message = null, $code = null)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::setExpectedException($class, $message, $code);
