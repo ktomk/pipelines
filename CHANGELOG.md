@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Travis build pulling php:5.3
 - Read Me and Change Log fixes for links, WS fixes and typo for other
   documentation files (.md, comment in .sh)
 - Travis build w/ peer verification issues in composer (disabling
