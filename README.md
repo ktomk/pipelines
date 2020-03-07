@@ -27,7 +27,9 @@ Runs pipeline commands from [`bitbucket-pipelines.yml`][BBPL]
 
 Memory and time limits are ignored. Press ctrl+c to quit.
 
-The Bitbucket limit of 10 steps per pipeline is ignored.
+The Bitbucket limit of 100 (previously 10) steps per pipeline
+is ignored. Use `--steps <steps>` to specify which step(s) to
+execute in which order.
 
 Exit status is from last pipeline script command, if a command
 fails the following script commands and steps are not executed.
@@ -106,6 +108,9 @@ environment options. Use of `--no-dot-env-files` prevents such
 automatic loading, `--no-dot-env-dot-dist` for the .env.dist
 file only.
 
+More information on pipelines environment variables in the
+[*environment* section](#environment) below.
+
 A full display of the pipelines utility options and arguments is
 available via `-h`, `--help`.
 
@@ -113,9 +118,9 @@ available via `-h`, `--help`.
 
 Give your project and pipeline changes a quick test run from the
 staging area. As pipelines are normally executed far away,
-setting them up becomes cumbersome, especially with the guide
-given in [Bitbucket Pipelines documentation][BBPL-LOCAL-RUN]
-\[BBPL-LOCAL-RUN].
+setting them up becomes cumbersome, the guide given in [Bitbucket
+Pipelines documentation][BBPL-LOCAL-RUN] \[BBPL-LOCAL-RUN] has some
+hints and is of help, but it is not about a bitbucket pipelines runner.
 
 This is where the `pipelines` command jumps in.
 
@@ -232,8 +237,8 @@ environment parameters:
 * `BITBUCKET_CLONE_DIR` - always set to deploy point in container
 * `BITBUCKET_COMMIT` - faux as no revision triggers a build;
     always set to "`0000000000000000000000000000000000000000`"
-* `BITBUCKET_REPO_OWNER` - current username from
-    environment or if not available "`nobody`"
+* `BITBUCKET_REPO_OWNER` - current username from environment or
+    if not available "`nobody`"
 * `BITBUCKET_REPO_SLUG` - base name of project directory
 * `BITBUCKET_TAG` - conditionally set by `--trigger`
 * `CI` - always set to "`true`"
@@ -245,7 +250,7 @@ environment. Example:
     $ BITBUCKET_BUILD_NUMBER=123 pipelines # build no. 123
 
 More information on (Bitbucket) pipelines environment variables
-can be found in [the *Pipelines Environment Variable Usage
+can be found in the [*Pipelines Environment Variable Usage
 Reference*](./doc/PIPELINES-VARIABLE-REFERENCE.md).
 
 Additionally pipelines sets some environment variables for
@@ -258,9 +263,9 @@ introspection:
     recursion, preventing execution until system failure.
 * `PIPELINES_PARENT_CONTAINER_NAME` - name of the container name
     if it was already set when the pipeline started (pipelines
-    inside pipeline).
+    inside pipeline "pip").
 * `PIPELINES_PIP_CONTAINER_NAME` - name of the first (initial) pipeline
-    container. Used by pipelines inside pipelines (pip).
+    container. Used by pipelines inside pipelines ("pip").
 * `PIPELINES_PROJECT_PATH` - path of the original project as if
     it would be used for `--deploy`  with `copy` or `mount` so
     that it is possible inside a pipeline to do `--deploy mount`
@@ -280,6 +285,11 @@ environment variable can be imported into or set in the container
 via the `-e`, `--env` and `--env-file` options. These behave
 exactly as documented for the [`docker run` command][DCK-RN]
 \[DCK-RN].
+
+Instead of specifying custom environment parameters for each
+invocation, pipelines by default automatically uses the `.env.dist`
+and `.env` files from each project supporting the same file-format
+for environment variables as docker.
 
 ## Exit Status
 

@@ -40,7 +40,8 @@ class File
 
     /**
      * @param $path
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      * @return File
      */
     public static function createFromFile($path)
@@ -57,7 +58,8 @@ class File
      * File constructor.
      *
      * @param array $array
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      */
     public function __construct(array $array)
     {
@@ -75,7 +77,7 @@ class File
     }
 
     /**
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
      * @return Image
      */
     public function getImage()
@@ -123,6 +125,7 @@ class File
      * Searches the pipeline that matches the reference
      *
      * @param Reference $reference
+     *
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
      * @return null|string id if found, null otherwise
@@ -143,7 +146,8 @@ class File
      * Searches a reference
      *
      * @param Reference $reference
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
      * @return null|Pipeline
@@ -164,7 +168,8 @@ class File
      *
      * @param string $type of pipeline, can be branches, tags or bookmarks
      * @param string $reference
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
      * @return null|Pipeline
@@ -292,7 +297,8 @@ class File
 
     /**
      * @param array $array
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      * @return array
      */
     private function parsePipelineReferences(array &$array)

@@ -451,10 +451,6 @@ class StepRunner
     private function pipHostConfigBind($mountPoint)
     {
         // if there is a parent name, this is level 2+
-        if (null === $this->env->getValue('PIPELINES_PARENT_CONTAINER_NAME')) {
-            return null;
-        }
-
         if (null === $pipName = $this->env->getValue('PIPELINES_PIP_CONTAINER_NAME')) {
             return null;
         }

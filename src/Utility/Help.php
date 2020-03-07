@@ -42,7 +42,7 @@ usage: pipelines [<options>] --version | -h | --help
        pipelines [<options>] [--working-dir <path>] [--file <path>]
                  [--basename <basename>] [--prefix <prefix>] [--verbatim]
                  [--[no-|error-]keep] [--no-run]
-                 [[-e | --env] <variable>] [--env-file <path>]
+                 [(-e | --env) <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--docker-client <package>]
                  [--deploy mount | copy ] [--pipeline <id>]
