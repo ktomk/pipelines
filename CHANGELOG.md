@@ -4,7 +4,7 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.26] - 2020-03-09
 ### Added
 - `--steps` option to specify which step(s) of a pipeline to run. Same as
   `--step` and to reserve both. `1` as well as `1,2,3`, `1-3` or `-2,3-`
@@ -252,4 +252,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.23]: https://github.com/ktomk/pipelines/releases/tag/0.0.23
 [0.0.24]: https://github.com/ktomk/pipelines/releases/tag/0.0.24
 [0.0.25]: https://github.com/ktomk/pipelines/releases/tag/0.0.25
+[0.0.26]: https://github.com/ktomk/pipelines/releases/tag/0.0.26
 [unreleased]: https://github.com/ktomk/pipelines
