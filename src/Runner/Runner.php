@@ -57,6 +57,7 @@ class Runner
      * @param Flags $flags [optional]
      * @param Env $env [optional]
      * @param Streams $streams [optional]
+     *
      * @return Runner
      */
     public static function createEx(
@@ -104,6 +105,7 @@ class Runner
 
     /**
      * @param Pipeline $pipeline
+     *
      * @throws \RuntimeException
      * @return int status (as in exit status, 0 OK, !0 NOK)
      */
@@ -119,17 +121,16 @@ class Runner
             return self::STATUS_RECURSION_DETECTED;
         }
 
-        foreach ($pipeline->getSteps() as $step) {
-            $status = $this->runStep($step);
-            if (0 !== $status) {
-                return $status;
-            }
-        }
+        $steps = $pipeline->getSteps()->getIterator();
+        $steps->setNoManual($this->runOpts->isNoManual());
+        list($status, $steps) = $this->runSteps($steps);
 
-        if (!isset($status)) {
-            $this->streams->err("pipelines: pipeline with no step to execute\n");
-
-            return self::STATUS_NO_STEPS;
+        if (0 === $status && $steps->isManual()) {
+            $this->streams->err(sprintf(
+                "pipelines: step #%d is manual. use `--steps %d-` to continue or `--no-manual` to override\n",
+                $steps->getStepIndex() + 1,
+                $steps->getStepIndex() + 1
+            ));
         }
 
         return $status;
@@ -140,7 +141,8 @@ class Runner
      *
      * @return int status (as in exit status, 0 OK, !0 NOK)
      */
-    public function runStep(Step $step) {
+    public function runStep(Step $step)
+    {
         $stepRunner = new StepRunner(
             $this->runOpts,
             $this->directories,
@@ -151,5 +153,28 @@ class Runner
         );
 
         return $stepRunner->runStep($step);
+    }
+
+    /**
+     * @param Pipeline\StepsIterator $steps
+     *
+     * @return array(int, Pipeline\StepsIterator)
+     */
+    private function runSteps(Pipeline\StepsIterator $steps)
+    {
+        foreach ($steps as $step) {
+            $status = $this->runStep($step);
+            if (0 !== $status) {
+                break;
+            }
+        }
+
+        if (!isset($status)) {
+            $this->streams->err("pipelines: pipeline with no step to execute\n");
+
+            return array(self::STATUS_NO_STEPS, $steps);
+        }
+
+        return array($status, $steps);
     }
 }

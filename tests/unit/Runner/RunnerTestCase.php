@@ -63,9 +63,9 @@ class RunnerTestCase extends TestCase
                 'script' => array(':'),
             );
 
-        $pipeline->method('getSteps')->willReturn(array(
-            new Step($pipeline, 0, $stepArray)
-        ));
+        $pipeline->method('getSteps')->willReturn(
+            new Pipeline\Steps($pipeline, array(array('step' => $stepArray)))
+        );
         $pipelineSteps = $pipeline->getSteps();
         $step = $pipelineSteps[0];
         $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step, 'creating the test step failed');

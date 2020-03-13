@@ -27,8 +27,7 @@ class Image
      * if an 'image' entry is set, validate it is a string or a section.
      *
      * @param array $array
-     * @throw ParseException if the image name is invalid
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException if the image name is invalid
      */
     public static function validate(array $array)
     {

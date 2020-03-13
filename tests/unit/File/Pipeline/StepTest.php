@@ -147,12 +147,30 @@ class StepTest extends TestCase
         $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $step->getServices());
     }
 
+    public function testManual()
+    {
+        $manualStep = array(
+            'trigger' => 'manual',
+            'script' => array(':'),
+        );
+
+        $this->assertFalse($this->createStep(null, 0)->isManual());
+
+        $this->assertFalse($this->createStep($manualStep, 0)->isManual(), 'first step can never be manual');
+
+        $this->assertFalse($this->createStep(null, 1)->isManual());
+
+        $this->assertTrue($this->createStep($manualStep, 1)->isManual(), 'second step can be manual');
+    }
+
     /**
      * @param null|array $array [optional]
      *
+     * @param int $index [optional]
+     *
      * @return Step
      */
-    private function createStep(array $array = null)
+    private function createStep(array $array = null, $index = 0)
     {
         if (null === $array) {
             # a (minimum) array to successfully create a step
@@ -168,6 +186,6 @@ class StepTest extends TestCase
         $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $pipeline->method('getFile')->willReturn($file);
 
-        return new Step($pipeline, 0, $array);
+        return new Step($pipeline, $index, $array);
     }
 }

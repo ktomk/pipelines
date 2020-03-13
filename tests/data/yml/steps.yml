@@ -6,6 +6,7 @@ pipelines:
   default:
     - step:
         name: 'step #1'
+        trigger: automatic
         script:
           - printenv | sort
     - parallel:
@@ -17,3 +18,8 @@ pipelines:
             name: 'step #3'
             script:
               - printenv | sort
+    - step:
+        name: 'step #4'
+        trigger: manual
+        script:
+          - printenv | sort

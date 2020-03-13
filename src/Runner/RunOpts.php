@@ -27,6 +27,16 @@ class RunOpts
     private $binaryPackage;
 
     /**
+     * @var null|string of step expression or null if not set
+     */
+    private $steps;
+
+    /**
+     * @var bool
+     */
+    private $noManual = false;
+
+    /**
      * Static factory method
      *
      * @param string $prefix [optional]
@@ -103,5 +113,37 @@ class RunOpts
     public function getBinaryPackage()
     {
         return $this->binaryPackage;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getSteps()
+    {
+        return $this->steps;
+    }
+
+    /**
+     * @param null|string $steps
+     */
+    public function setSteps($steps)
+    {
+        $this->steps = $steps;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNoManual()
+    {
+        return $this->noManual;
+    }
+
+    /**
+     * @param bool $noManual
+     */
+    public function setNoManual($noManual)
+    {
+        $this->noManual = (bool)$noManual;
     }
 }

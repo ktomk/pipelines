@@ -46,6 +46,9 @@ class Step
         // quick validation: image name
         Image::validate($step);
 
+        // quick validation: trigger
+        $this->validateTrigger($step, (bool)$env);
+
         // quick validation: script
         $this->parseScript($step);
 
@@ -106,6 +109,18 @@ class Step
     }
 
     /**
+     * @return bool
+     */
+    public function isManual()
+    {
+        if (0 === $this->index) {
+            return  false;
+        }
+
+        return (isset($this->step['trigger']) && 'manual' === $this->step['trigger']);
+    }
+
+    /**
      * Specify data which should be serialized to JSON
      *
      * @return array
@@ -146,6 +161,28 @@ class Step
     public function getEnv()
     {
         return $this->env;
+    }
+
+    /**
+     *
+     *
+     * @param array $array
+     * @param bool $isPrallelStep
+     */
+    private function validateTrigger(array $array, $isPrallelStep)
+    {
+        if (!array_key_exists('trigger', $array)) {
+            return;
+        }
+
+        $trigger = $array['trigger'];
+        if ($isPrallelStep) {
+            ParseException::__("Unexpected property 'trigger' in parallel step");
+        }
+
+        if (!in_array($trigger, array('manual', 'automatic'), true)) {
+            ParseException::__("'trigger' expects either 'manual' or 'automatic'");
+        }
     }
 
     /**

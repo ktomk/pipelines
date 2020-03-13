@@ -46,7 +46,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--docker-client <package>]
                  [--deploy mount | copy ] [--pipeline <id>]
-                 [(--step | --steps) <steps>]
+                 [(--step | --steps) <steps>] [--no-manual]
                  [--trigger <ref>]
        pipelines [<options>] --list | --show | --images
        pipelines [<options>] --docker-client-pkgs
@@ -98,6 +98,9 @@ Pipeline runner options
                           and different order allowed, <steps> are a comma/
                           space separated list of step and step ranges, e.g.
                           1 2 3; 1-3; 1,2-3; 3-1 or -1,3- and 1,1,2,2,3,3.
+    --no-manual           ignore manual steps, by default manual steps stop
+                          the pipeline execution when not the first step
+                          in the pipeline invocation
     --verbatim            only give verbatim output of the pipeline, do not
                           display other information like which step currently
                           executes, which image is in use etc.

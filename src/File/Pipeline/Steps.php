@@ -28,12 +28,37 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      * @var array|Step[] steps of the pipeline
      * @see parseSteps
      */
-    private $steps;
+    private $steps = array();
 
     /**
      * @var callable
      */
     private $getIteratorFunctor;
+
+    /**
+     * Get full iteration of steps' steps
+     *
+     * Gracefully handles null for steps.
+     *
+     * @param $steps
+     *
+     * @return StepsIterator
+     */
+    public static function fullIter($steps)
+    {
+        if (null === $steps) {
+            return new StepsIterator(new \ArrayIterator(array()));
+        }
+
+        if (!$steps instanceof Steps) {
+            throw new \InvalidArgumentException('Invalid steps argument');
+        }
+
+        $iter = $steps->getIterator();
+        $iter->setNoManual(true);
+
+        return $iter;
+    }
 
     /**
      * Pipeline constructor.
@@ -135,13 +160,19 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     /* @see \IteratorAggregate */
 
     /**
-     * @return \ArrayIterator|Step[]
+     * @return Step[]|StepsIterator
      */
     public function getIterator()
     {
-        return is_callable($this->getIteratorFunctor)
-            ? call_user_func($this->getIteratorFunctor, $this)
-            : new \ArrayIterator($this->steps);
+        if (is_callable($this->getIteratorFunctor)) {
+            return new StepsIterator(
+                call_user_func($this->getIteratorFunctor, $this)
+            );
+        }
+
+        return new StepsIterator(
+            new \ArrayIterator($this->steps)
+        );
     }
 
     private function parseSteps(array $definition)
@@ -151,7 +182,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
         foreach ($definition as $node) {
             if (!is_array($node)) {
-                ParseException::__(sprintf('Step expected array, got %s', gettype($node)));
+                ParseException::__(sprintf('Step expected, got %s', gettype($node)));
             }
             if (empty($node)) {
                 ParseException::__('Step expected, got empty array');
@@ -160,10 +191,10 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
             $keys = array_keys($node);
             $name = $keys[0];
             if (!in_array($name, array('step', 'parallel'), true)) {
-                ParseException::__(sprintf('Unknown pipeline step "%s", expected "step" or "parallel"', $name));
+                ParseException::__(sprintf("Unexpected pipeline property '%s', expected 'step' or 'parallel'", $name));
             }
 
-            $this->node($node, $name);
+            $this->parseNode($node, $name);
         }
     }
 
@@ -174,8 +205,12 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * @return Step
      */
-    private function step($index, array $step, array $env = array())
+    private function parseStep($index, array $step, array $env = array())
     {
+        if (0 === $index && isset($step['trigger']) && 'manual' === $step['trigger']) {
+            ParseException::__("The first step of a pipeline can't be manually triggered");
+        }
+
         return new Step($this->pipeline, $index, $step, $env);
     }
 
@@ -183,12 +218,12 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      * @param array $node
      * @param $name
      */
-    private function node(array $node, $name)
+    private function parseNode(array $node, $name)
     {
         $this->array[] = $node;
         switch ($name) {
             case 'step':
-                $this->steps[] = $this->step(count($this->steps), $node[$name]);
+                $this->steps[] = $this->parseStep(count($this->steps), $node[$name]);
 
                 break;
             case 'parallel':
@@ -219,7 +254,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
         $total = count($group);
         foreach ($group as $index => $step) {
-            $this->steps[] = $this->step(
+            $this->steps[] = $this->parseStep(
                 count($this->steps),
                 $step,
                 array(

@@ -7,7 +7,9 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\Pipeline;
+use Ktomk\Pipelines\Yaml\Yaml;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -29,7 +31,9 @@ class RunnerTest extends RunnerTestCase
     {
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-        $pipeline->method('getSteps')->willReturn(array());
+        $pipeline->method('getSteps')->willReturn(
+            $this->createPartialMock('Ktomk\Pipelines\File\Pipeline\Steps', array())
+        );
 
         $exec = new Exec();
         $exec->setActive(false);
@@ -121,5 +125,32 @@ class RunnerTest extends RunnerTestCase
 
         $step = $this->createTestStep();
         $this->assertSame(0, $runner->runStep($step));
+    }
+
+    public function testStopAtManualStep()
+    {
+        $exec = new Exec();
+        $exec->setActive(false);
+
+        /** @var MockObject|Runner $runner */
+        $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
+            ->setConstructorArgs(array(
+                RunOpts::create('foo'),
+                $this->createMock('Ktomk\Pipelines\Runner\Directories'),
+                $exec,
+                new Flags(),
+                Env::create(),
+                new Streams(null, 'php://output', 'php://output')
+            ))
+            ->setMethods(null)
+            ->getMock();
+
+        $path = __DIR__ . '/../../data/yml/steps.yml';
+        $array = Yaml::file($path);
+        $file = new File($array);
+        $pipeline = $file->getDefault();
+
+        $this->expectOutputRegex('~^pipelines: step #4 is manual. use `--steps 4-` to continue or `--no-manual` to override$~m');
+        $this->assertSame(0, $runner->run($pipeline));
     }
 }

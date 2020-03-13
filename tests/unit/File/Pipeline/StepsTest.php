@@ -29,48 +29,71 @@ class StepsTest extends TestCase
         return $steps;
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\File\Pipeline\Step
+     */
     public function testParseErrors()
     {
         $pipeline = $this->getTestPipeline();
 
         # things are needed
-        try {
-            new Steps($pipeline, array());
-            $this->fail('an expected exception has not been thrown');
-        } catch (ParseException $e) {
-            $this->addToAssertionCount(1);
-        }
+        $this->assertParseException(
+            $pipeline,
+            array(),
+            'Steps requires a tree of steps'
+        );
 
         # steps (the list) is needed
-        try {
-            new Steps($pipeline, array('foo'));
-            $this->fail('an expected exception has not been thrown');
-        } catch (ParseException $e) {
-            $this->addToAssertionCount(1);
-        }
+        $this->assertParseException(
+            $pipeline,
+            array('foo'),
+            'Step expected, got string'
+        );
 
         # concrete steps are needed
-        try {
-            new Steps($pipeline, array(array()));
-            $this->fail('an expected exception has not been thrown');
-        } catch (ParseException $e) {
-            $this->addToAssertionCount(1);
-        }
+        $this->assertParseException(
+            $pipeline,
+            array(array()),
+            'Step expected, got empty array'
+        );
 
         # concrete steps are needed
-        try {
-            new Steps($pipeline, array(array('wrong-name' => array())));
-            $this->fail('an expected exception has not been thrown');
-        } catch (ParseException $e) {
-            $this->addToAssertionCount(1);
-        }
+        $this->assertParseException(
+            $pipeline,
+            array(array('wrong-name' => array())),
+            "Unexpected pipeline property 'wrong-name', expected 'step' or 'parallel'"
+        );
+
         # concrete steps are needed
-        try {
-            new Steps($pipeline, array(array('parallel' => array(array()))));
-            $this->fail('an expected exception has not been thrown');
-        } catch (ParseException $e) {
-            $this->addToAssertionCount(1);
-        }
+        $this->assertParseException(
+            $pipeline,
+            array(array('parallel' => array(array()))),
+            'Parallel step must consist of steps only'
+        );
+
+        # trigger: manual not on first step
+        $this->assertParseException(
+            $pipeline,
+            array(array('step' => array('trigger' => 'manual'))),
+            "The first step of a pipeline can't be manually triggered"
+        );
+
+        # trigger not in parallel step
+        $this->assertParseException(
+            $pipeline,
+            array(
+                array('step' => array('trigger' => 'automatic', 'script' => array(':'))),
+                array('parallel' => array(array('step' => array('trigger' => 'manual'))))
+            ),
+            "Unexpected property 'trigger' in parallel step"
+        );
+
+        # trigger: manual or automatic only
+        $this->assertParseException(
+            $pipeline,
+            array(array('step' => array('trigger' => 'foo'))),
+            "'trigger' expects either 'manual' or 'automatic'"
+        );
     }
 
     public function testGetSteps()
@@ -188,6 +211,34 @@ class StepsTest extends TestCase
             'steps',
             $steps->jsonSerialize()
         );
+    }
+
+    public function testFullIter()
+    {
+        $this->assertNotNull(Steps::fullIter(null));
+
+        try {
+            Steps::fullIter(array());
+            $this->fail('An expected exception has not been thrown');
+        } catch (\InvalidArgumentException $ex) {
+            $this->addToAssertionCount(1);
+        }
+
+        $steps = $this->createConfiguredMock('Ktomk\Pipelines\File\Pipeline\Steps', array(
+            'getIterator' => $this->createMock('Ktomk\Pipelines\File\Pipeline\StepsIterator')
+        ));
+
+        $this->assertNotNull(Steps::fullIter($steps));
+    }
+
+    private function assertParseException(Pipeline $pipeline, array $array, $expected)
+    {
+        try {
+            new Steps($pipeline, $array);
+            $this->fail('an expected exception has not been thrown');
+        } catch (ParseException $e) {
+            $this->assertSame($expected, $e->getParseMessage());
+        }
     }
 
     /**

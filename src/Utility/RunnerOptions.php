@@ -107,6 +107,10 @@ class RunnerOptions
         $runOpts->setBinaryPackage($this->parseDockerClient($args));
 
         $this->parseDockerClientListPackages($args);
+
+        $runOpts->setSteps($args->getOptionArgument(array('step', 'steps')));
+
+        $runOpts->setNoManual($args->hasOption('no-manual'));
     }
 
     /**

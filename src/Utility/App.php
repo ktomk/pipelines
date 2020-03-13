@@ -136,12 +136,9 @@ class App implements Runnable
 
         $streams = $this->parseStreams();
 
-        $steps = $args->getOptionArgument(array('step', 'steps'));
-
         $this->parseRemainingOptions();
 
-        $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions);
-        $pipeline->setStepsExpression($steps);
+        $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions, $runOpts);
 
         $flags = $this->getRunFlags($keep, $deployMode);
 
@@ -433,7 +430,7 @@ class App implements Runnable
      * @throws StatusException
      * @return Pipeline on success
      */
-    private function getRunPipeline(File $pipelines, $pipelineId, FileOptions $fileOptions)
+    private function getRunPipeline(File $pipelines, $pipelineId, FileOptions $fileOptions, RunOpts $runOpts)
     {
         $this->verbose(sprintf("info: running pipeline '%s'", $pipelineId));
 
@@ -453,6 +450,8 @@ class App implements Runnable
         if (!$pipeline) {
             StatusException::status(1, 'no pipeline to run!');
         }
+
+        $pipeline->setStepsExpression($runOpts->getSteps());
 
         return $pipeline;
     }

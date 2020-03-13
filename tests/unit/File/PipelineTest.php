@@ -108,7 +108,9 @@ class PipelineTest extends TestCase
         $pipeline->setStepsExpression('1,1,1');
         $this->addToAssertionCount(1);
 
-        $this->assertInstanceOf('ArrayIterator', $pipeline->getSteps()->getIterator());
-        $this->addToAssertionCount(1);
+        $this->assertInstanceOf(
+            'Ktomk\Pipelines\File\Pipeline\StepsIterator',
+            $pipeline->getSteps()->getIterator()
+        );
     }
 }

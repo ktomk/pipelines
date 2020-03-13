@@ -57,7 +57,7 @@ class FileShower
         $iterator = function (File $file) {
             $return = array();
             foreach ($file->getPipelines() as $id => $pipeline) {
-                foreach ($pipeline->getSteps() as $index => $step) {
+                foreach (Steps::fullIter($pipeline->getSteps()) as $index => $step) {
                     $return["${id}:/step/${index}"] = $step;
                 }
             }
@@ -152,7 +152,7 @@ class FileShower
         $images = array();
         $names = array();
 
-        foreach ($steps ?: array() as $step) {
+        foreach (Steps::fullIter($steps) as $step) {
             $image = $step->getImage()->getName();
             if (File::DEFAULT_IMAGE !== $image) {
                 $images[] = $image;

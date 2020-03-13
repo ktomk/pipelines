@@ -177,6 +177,31 @@ class TestCase extends PhpunitTestCase
     }
 
     /**
+     * Returns a configured test double for the specified class.
+     *
+     * @param string $originalClassName
+     * @param array  $configuration
+     *
+     * @throws Exception
+     * @return MockObject
+     *
+     */
+    protected function createConfiguredMock($originalClassName, array $configuration)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            return parent::createConfiguredMock($originalClassName, $configuration);
+        }
+
+        $o = $this->createMock($originalClassName);
+
+        foreach ($configuration as $method => $return) {
+            $o->method($method)->willReturn($return);
+        }
+
+        return $o;
+    }
+
+    /**
      * Returns a partial test double for the specified class.
      *
      * @param string   $originalClassName
