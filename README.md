@@ -31,6 +31,11 @@ The Bitbucket limit of 100 (previously 10) steps per pipeline
 is ignored. Use `--steps <steps>` to specify which step(s) to
 execute in which order.
 
+If the next pipeline step has a manual trigger, pipelines stops
+the execution and outputs a short message on standard error
+giving info about the fact. Manual triggers can be ignored with
+the `--no-manual` option.
+
 Exit status is from last pipeline script command, if a command
 fails the following script commands and steps are not executed.
 
@@ -209,7 +214,7 @@ Features include:
 
 * **Default Image**: The pipelines command uses the default
   image like Bitbucket Pipelines does. Get started out of the
-  box, but keep in mind it has roughly 2 GB
+  box, but keep in mind it has roughly 3 GB (previously 2 GB)
   ("`atlassian/default-image:latest`").
 
 * **Pipelines inside Pipeline**: As a special feature and by
@@ -223,10 +228,10 @@ default pipelines mounts the docker socket into each container (on
   Pipelines][BBPL-DCK] \[BBPL-DCK].
 
   The pipelines inside pipeline feature serves pipelines itself
-  well for integration testing on Travis. In combination with
-  `--deploy mount`, the original working-directory gets mounted
-  from the host again. Additional protection against endless
-  loops by recursion is implemented to prevent accidental
+  well for integration testing the projects build on Travis. In
+  combination with `--deploy mount`, the original working-directory
+  gets mounted from the host again. Additional protection against
+  endless loops by recursion is implemented to prevent accidental
   endless loops of pipelines inside pipeline invocations.
 
   * Further reading: [*How-To Docker Client Binary Packages for
@@ -356,7 +361,7 @@ X Sierra and High Sierra with PHP and Docker installed.
 - Brace expansion (used for glob patterns with braces) is known
   to fail in some cases. This *could* affect matching pipelines,
   collecting asset paths and *did* affect building the phar file.  \
-  For the first two, this has never been reported or experienced,
+  For the first two, this has *never* been reported nor experienced,
   for building the phar file the workaround was to entail the
   larger parts of the pattern.
 
@@ -409,7 +414,7 @@ To uninstall remove the package:
 
     $ composer global remove ktomk/pipelines
 
-Take a look at [Composer from getcomposer.org][COMPOSER]
+Take a look at [Composer from *`getcomposer.org`*][COMPOSER]
 \[COMPOSER], a *Dependency Manager for PHP*. Pipelines has
 support for composer based installations, which might include
 upstream patches.
@@ -424,10 +429,10 @@ Even if your PHP version does not have the Yaml extension this
 should work out of the box. If you use *composer* and you're a
 PHP aficionado, dig into *phive* for your systems and workflow.
 
-Take a look at [Phive from Phar.io][PHARIO] \[PHARIO], the *PHAR
+Take a look at [Phive from *`phar.io`*][PHARIO] \[PHARIO], the *PHAR
 Installation and Verification Environment (PHIVE)*. Pipelines has
 full support for phar.io/phar based installations which includes
-support for the **phive** utility including upstream patches.
+support for the *phive* utility including upstream patches.
 
 #### Install from Source
 
@@ -488,6 +493,7 @@ to use the development version.
 - [x] Inject docker client if docker service is enabled
 - [x] Run specific steps of a pipeline (only) to put the user
       back into command on errors w/o re-running everything
+- [x] Stop at manual steps (`--no-manual` to override)
 - [ ] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
 - [ ] Option to not mount docker.sock
@@ -503,24 +509,25 @@ to use the development version.
 - [ ] Copy local composer cache into container for better
       (offline) usage in PHP projects
 - [ ] Check Docker existence before running a pipeline
-- [ ] Stop at manual steps (`--no-manual` to override)
-- [ ] Pipes support
+- [ ] Pipes support (*pipe* feature)
 - [ ] Write section about the file format support/limitations
 - [ ] Pipeline file properties support
-    - clone (*1)
-    - max-time (*1)
-    - size (*1)
-    - step.trigger (*1)
-    - definitions (*1)
-  (*1) if it is considered that it applies to running local
-- [ ] Get VCS revision from working directory
+    - [X] step.trigger (`--steps` / `--no-manual` options)
+    - [ ] clone (*git-deployment* feature)
+    - definitions (incremental support)
+    - max-time (never needed this)
+    - size (likely neglected for local run, limited support for
+      [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))
+    - [ ] step.after-script (*afte-script* feature)
+- [ ] Get VCS revision from working directory (*git-deployment* feature)
 - [ ] Use a different project directory `--project-dir <path>` to
   specify the root path to deploy into the container, which
   currently is the working directory (`--working-dir <path>`)
 - [ ] Run on a specific revision, reference it (`--revision <ref>`);
   needs a clean VCS checkout in a temporary folder which then
-  should be copied into the container
-- [ ] Override the default image name (`--default-image <name>`)
+  should be copied into the container (*git-deployment* feature)
+- [ ] Override the default image name (`--default-image <name>`; never
+  needed this)
 
 ## References
 

@@ -167,7 +167,7 @@ Docker container maintenance options
     --docker-clean        remove (non-running) containers with
                           pipelines prefix
 
-    --docker-zap          kill and remove all prefixed containers on one
+    --docker-zap          kill and remove all prefixed containers in one
                           go
 
 Less common options

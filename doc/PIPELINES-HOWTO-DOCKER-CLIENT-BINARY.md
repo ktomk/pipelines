@@ -1,20 +1,21 @@
 # How-To Docker Client Binary Packages for Pipelines
 
-Pipelines ships with some hard-encoded packages for low number different
-docker client versions including the exact one as the time of writing
-that is used by Atlassian Bitbucket Cloud Pipelines Plugin.
+Pipelines ships with some hard-encoded packages for a smaller number
+of different docker client versions including the exact same one at the
+time of writing that is used by Atlassian Bitbucket Cloud Pipelines
+Plugin.
 
 These packages are meta-data information on how to obtain a static
 binary of the Docker client and allow to use a static Docker client
 binary in a reproducible manner.
 
 Static Docker client binaries are useful for pipelines as they can be
-mounted into nearly any linux container without further installation
+mounted into nearly any Linux container without further installation
 requirements (next to provide connectivity to the Docker daemon).
 
 This document is about how-to obtain the static docker client binary and
 all the meta-data to create such packages as well as how to use it next
-to existing packages or or for improving pipelines with new package
+to existing packages or for improving pipelines with new package
 definitions.
 
 Be it a local `.yml` package file, a package that ships with the
@@ -55,7 +56,7 @@ description about each of these:
 * `docker-17.12.0-ce-linux-static-x86_64`: this version was in use when
   using the [`docker-client-install.sh`] script inside a pipeline.
 * `docker-18.09.1-linux-static-x86_64`: this version was found in use
-  by the atlassian bitbucket cloud pipelines plugin:
+  by the Atlassian Bitbucket Cloud Pipelines Plugin:
   ~~~shell script
   $ docker --version
   Docker version 18.09.1, build 4c52b90
@@ -178,7 +179,7 @@ YAML
 When done you find a `.yml` file with the name in the current directory.
 
 > ***Note:*** You can find another description of each part of the
-> package format in the commented package:
+> package format in the commented package after `composer install`:
 > [lib/package/docker-42.42.1-binsh-test-stub.yml][1]
 
 [1]: ../lib/package/docker-42.42.1-binsh-test-stub.yml

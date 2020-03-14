@@ -19,33 +19,33 @@ fashion (façon).
 
 ## Default Variables
 
-| Variable Name                           | Options       | Comment  |
-| --------------------------------------- |---------------| -------- |
-| `CI`                                    | *all* | always set to "`true`" |
-| `BITBUCKET_BOOKMARK`                    | `--trigger <ref>` where `<ref>` is `bookmark:<name>` | Mercurial projects |
-| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>` or `pr:<name>` | source branch |
-| `BITBUCKET_BUILD_NUMBER`                | *all* | always set to "`0`" |
-| `BITBUCKET_CLONE_DIR`                   | *all* | set by pipelines, it is the deploy directory (not clone directory) as pipelines has more options than cloning (it currently actually never clones) |
-| `BITBUCKET_COMMIT`                      | *all* | always set to "`0000000000000000000000000000000000000000`" |
-| `BITBUCKET_DEPLOYMENT_ENVIRONMENT`      | -/-   | currently unsupported |
-| `BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID` | -/-   | currently unsupported |
-| `BITBUCKET_EXIT_CODE`                   | -/-   | currently unsupported |
-| `BITBUCKET_GIT_HTTP_ORIGIN`             | -/-   | currently unsupported |
-| `BITBUCKET_GIT_SSH_ORIGIN`              | -/-   | currently unsupported |
-| `BITBUCKET_PARALLEL_STEP`               | *all* | in parallel step set to zero-based index of the current step in the group, e.g. 0, 1, 2, ... |
-| `BITBUCKET_PARALLEL_STEP_COUNT`         | *all* | in parallel step set total number of steps in the group, e.g. 5. |
-| `BITBUCKET_PR_DESTINATION_BRANCH`       | -/-   | currently unsupported |
-| `BITBUCKET_PR_ID`                       | -/-   | currently unsupported |
-| `BITBUCKET_PROJECT_KEY`                 | -/-   | currently unsupported |
-| `BITBUCKET_PROJECT_UUID`                | -/-   | currently unsupported |
-| `BITBUCKET_REPO_FULL_NAME`              | -/-   | currently unsupported |
-| `BITBUCKET_REPO_OWNER`                  | *all* | always set to current username from environment or if not available "`nobody`" (which might align w/ the Apache httpd project) |
-| `BITBUCKET_REPO_OWNER_UUID`             | -/-   | currently unsupported |
-| `BITBUCKET_REPO_SLUG`                   | *all* | always set to base name of project directory |
-| `BITBUCKET_REPO_UUID`                   | -/-   | currently unsupported |
-| `BITBUCKET_STEP_RUN_NUMBER`             | -/-   | currently unsupported |
-| `BITBUCKET_STEP_TRIGGERER_UUID`         | -/-   | currently unsupported |
-| `BITBUCKET_TAG`                         | `--trigger <ref>` where `<ref>` is `tag:<name>` | Git projects |
+| Variable Name                           | Remarks                    |
+| --------------------------------------- |----------------------------|
+| `CI`                                    | *all* options; always set to "`true`" |
+| `BITBUCKET_BOOKMARK`                    | `--trigger <ref>` where `<ref>` is `bookmark:<name>`; for Mercurial projects |
+| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>` or `pr:<name>`; source branch |
+| `BITBUCKET_BUILD_NUMBER`                | *all* options; always set to "`0`" |
+| `BITBUCKET_CLONE_DIR`                   | *all* options; set by pipelines, it is the deploy directory inside the container (not clone directory) as pipelines has more options than cloning (it currently actually never clones) |
+| `BITBUCKET_COMMIT`                      | *all* options; always set to "`0000000000000000000000000000000000000000`" |
+| `BITBUCKET_DEPLOYMENT_ENVIRONMENT`      | -/-; currently unsupported |
+| `BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID` | -/-; currently unsupported |
+| `BITBUCKET_EXIT_CODE`                   | -/-; currently unsupported; *after-script* feature |
+| `BITBUCKET_GIT_HTTP_ORIGIN`             | -/-; currently unsupported |
+| `BITBUCKET_GIT_SSH_ORIGIN`              | -/-; currently unsupported |
+| `BITBUCKET_PARALLEL_STEP`               | *all* options; in a parallel step set to zero-based index of the current step in the group, e.g. 0, 1, 2, ... |
+| `BITBUCKET_PARALLEL_STEP_COUNT`         | *all* options; in a parallel step set to the total number of steps in the group, e.g. 5. |
+| `BITBUCKET_PR_DESTINATION_BRANCH`       | -/-; currently unsupported |
+| `BITBUCKET_PR_ID`                       | -/-; currently unsupported |
+| `BITBUCKET_PROJECT_KEY`                 | -/-; currently unsupported |
+| `BITBUCKET_PROJECT_UUID`                | -/-; currently unsupported |
+| `BITBUCKET_REPO_FULL_NAME`              | -/-; currently unsupported |
+| `BITBUCKET_REPO_OWNER`                  | *all* options; always set to current username from environment or if not available "`nobody`" (which might align w/ the Apache httpd project) |
+| `BITBUCKET_REPO_OWNER_UUID`             | -/-; currently unsupported |
+| `BITBUCKET_REPO_SLUG`                   | *all* options; always set to base name of project directory |
+| `BITBUCKET_REPO_UUID`                   | -/-; currently unsupported |
+| `BITBUCKET_STEP_RUN_NUMBER`             | -/-; currently unsupported |
+| `BITBUCKET_STEP_TRIGGERER_UUID`         | -/-; currently unsupported |
+| `BITBUCKET_TAG`                         | `--trigger <ref>` where `<ref>` is `tag:<name>`; Git projects |
 
 ## Comments on Support and Usage
 
