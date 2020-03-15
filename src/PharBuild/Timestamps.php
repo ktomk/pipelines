@@ -3,7 +3,7 @@
 /*
  * this file is part of pipelines
  *
- * Copyright (c) 2017, 2018 Tom Klingenberg <ktomk@github.com>
+ * Copyright (c) 2017-2019 Tom Klingenberg <ktomk@github.com>
  *
  * terms specific to this file (the "this software and associated
  * documentation files"):

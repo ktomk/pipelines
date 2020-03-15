@@ -471,6 +471,40 @@ Check the version by invoking it:
     $ build/pipelines.phar --version
     pipelines version 0.0.19-1-gbba5a43
 
+##### Reproducible Phar Builds
+
+The pipelines project practices reproducible builds since it's first
+phar build. The build is self-contained, which means that the repository
+ships with all required files to build with only little dependencies:
+
+- PHP (not 5.3+ but 5.4+ due to less portable code in
+  [`build.php`](lib/build/build.php) /
+  [`Builder.php`](src/PharBuild/Builder.php))
+- Composer
+- Git
+
+Reproducible builds of the phar file would be incomplete without the
+fine work from the composer projects `phar-utils` (Seldaek/Jordi
+Boggiano) which is forked by the pipelines project in [`Timestamps.php`
+](src/PharBuild/Timestamps.php) by keeping the original license with the
+file (MIT), providing bug-fixes to upstream under that license (see
+[Phar-Utils #2](https://github.com/Seldaek/phar-utils/pull/2) and
+[Phar-Utils #3](https://github.com/Seldaek/phar-utils/pull/3)).
+
+This file is used to set the timestamps inside the phar file to that
+of the release as otherwise those would be at the time of build. This
+is the same as the Composer project does (see
+[Composer #3927](https://github.com/composer/composer/issues/3927)).
+
+Additionally in the pipelines project that file is used to change the
+access permissions of the files in the phar. That is because across PHP
+versions the behaviour has changed so the build is kept backwards and
+forwards compatible. As this has been noticed later in the project
+history, the build might show different binaries depending on which PHP
+version is used (see [PHP #77022](https://bugs.php.net/bug.php?id=77022)
+and [PHP #79082](https://bugs.php.net/bug.php?id=79082)) and the patch
+state of the timestamps file.
+
 ### Install Full Project For Development
 
 When working with git clone, clone the repository

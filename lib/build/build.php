@@ -6,6 +6,7 @@
  * build phar file
  *
  * usage: composer build
+ * usage: php -d phar.readonly=0 -f lib/build/build.php
  */
 
 use Ktomk\Pipelines\PharBuild\Builder;
