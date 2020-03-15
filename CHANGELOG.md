@@ -4,12 +4,12 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.27] - 2020-03-15
 ### Added
 - `--no-manual` option to not stop at manual step(s). The new default is
   to stop at steps marked manual `trigger: manual`. The first step of a
-  pipeline can not be manual, and the first step execute with `--steps`
-  will never stop even it has a `trigger: manual`.
+  pipeline can not be manual, and the first step executed with `--steps`
+  will never stop even if it has a `trigger: manual`.
 ### Fixed
 - Base unit-test-case missing shim createConfguredMock method
 
@@ -262,4 +262,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.24]: https://github.com/ktomk/pipelines/releases/tag/0.0.24
 [0.0.25]: https://github.com/ktomk/pipelines/releases/tag/0.0.25
 [0.0.26]: https://github.com/ktomk/pipelines/releases/tag/0.0.26
+[0.0.27]: https://github.com/ktomk/pipelines/releases/tag/0.0.27
 [unreleased]: https://github.com/ktomk/pipelines
