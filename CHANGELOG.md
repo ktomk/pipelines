@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Changed
+- Phar build: Do not require platform dependencies for composer install
 - Travis build: Handle GPG key import before install completely
 ### Fixed
 - Tainted phar build on Travis since 0.0.25 (adding "+" to versions in

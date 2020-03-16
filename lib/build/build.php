@@ -33,7 +33,7 @@ $builder
     ->remove('src/PharBuild/*')
     // Composer autoloader has a flaw and requires a full install w/ --no-dev
     // for the non-dev autoloader used in the phar file
-    ->phpExec('composer -n -q install --no-dev')
+    ->phpExec('composer -n -q install --ignore-platform-reqs --no-dev')
     ->add('vendor/{,composer/}*.php', $builder->snapShot())
     ->phpExec('composer -n -q install --ignore-platform-reqs')
     // Dependencies
