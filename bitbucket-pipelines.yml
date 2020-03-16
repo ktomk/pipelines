@@ -42,6 +42,7 @@ pipelines:
       - step:
           image: php:7.0
           script:
+            - lib/pipelines/composer-install.sh
             - vendor/bin/phpunit --testsuite unit,integration
           services:
             - docker

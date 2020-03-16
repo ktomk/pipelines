@@ -23,7 +23,7 @@ if [ ! -f "${package}" ]; then
     exit 1
   fi
 
-  php composer-setup.php --quiet
+  php composer-setup.php --quiet --version 1.10.1
   RESULT=$?
   rm -f composer-setup.php
 

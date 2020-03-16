@@ -39,6 +39,7 @@ file.....: %d.%d.%d
 api......: %d.%d.%d
 extension: %d.%d.%s
 php......: %d.%d.%s
+composer.: %s
 uname....: %s
 count....: 2 file(s)
 signature: SHA-1 1F7B029FA816B7668EEBADAACF86C039CA4B1E1B

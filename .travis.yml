@@ -30,6 +30,7 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_a90e500b3cd1_key -iv $encrypted_a90e500b3cd1_iv -in ktomk-phive-sign.gpg.enc -out ktomk-phive-sign.gpg -d
   - gpg --import ktomk-phive-sign.gpg
   - rm ktomk-phive-sign.gpg
+  - composer self-update 1.10.1
 
 install:
   - echo "${TRAVIS_PHP_VERSION}"
