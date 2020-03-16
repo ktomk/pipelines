@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Changed
+- Travis build: Handle GPG key import before install completely
 ### Fixed
 - Tainted phar build on Travis since 0.0.25 (adding "+" to versions in
   error)
