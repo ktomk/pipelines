@@ -4,6 +4,11 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Fixed
+- Tainted phar build on Travis since 0.0.25 (adding "+" to versions in
+  error)
+
 ## [0.0.27] - 2020-03-15
 ### Added
 - `--no-manual` option to not stop at manual step(s). The new default is
