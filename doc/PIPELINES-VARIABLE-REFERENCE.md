@@ -23,7 +23,7 @@ fashion (façon).
 | --------------------------------------- |----------------------------|
 | `CI`                                    | *all* options; always set to "`true`" |
 | `BITBUCKET_BOOKMARK`                    | `--trigger <ref>` where `<ref>` is `bookmark:<name>`; for Mercurial projects |
-| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>` or `pr:<name>`; source branch |
+| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>`, `pr:<name>`, `pr:<source>:<desitnation>`; source branch |
 | `BITBUCKET_BUILD_NUMBER`                | *all* options; always set to "`0`" |
 | `BITBUCKET_CLONE_DIR`                   | *all* options; set by pipelines, it is the deploy directory inside the container (not clone directory) as pipelines has more options than cloning (it currently actually never clones) |
 | `BITBUCKET_COMMIT`                      | *all* options; always set to "`0000000000000000000000000000000000000000`" |
@@ -34,7 +34,7 @@ fashion (façon).
 | `BITBUCKET_GIT_SSH_ORIGIN`              | -/-; currently unsupported |
 | `BITBUCKET_PARALLEL_STEP`               | *all* options; in a parallel step set to zero-based index of the current step in the group, e.g. 0, 1, 2, ... |
 | `BITBUCKET_PARALLEL_STEP_COUNT`         | *all* options; in a parallel step set to the total number of steps in the group, e.g. 5. |
-| `BITBUCKET_PR_DESTINATION_BRANCH`       | -/-; currently unsupported |
+| `BITBUCKET_PR_DESTINATION_BRANCH`       | `--trigger <ref>` where `<ref>` is `pr:<source>:<desitnation>` for the `<destination>` branch (see as well `BITBUCKET_BRANCH`); destination branch |
 | `BITBUCKET_PR_ID`                       | -/-; currently unsupported |
 | `BITBUCKET_PROJECT_KEY`                 | -/-; currently unsupported |
 | `BITBUCKET_PROJECT_UUID`                | -/-; currently unsupported |

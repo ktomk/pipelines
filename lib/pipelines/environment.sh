@@ -26,7 +26,13 @@ BITBUCKET_CLONE_DIR        The absolute path of the directory that the \
                            container.
 BITBUCKET_COMMIT           The commit hash of a commit that kicked off the \
                            build.
-BITBUCKET_REPO_OWNER	   The name of the account in which the repository \
+BITBUCKET_PR_DESTINATION_BRANCH \
+                           The name of the pull request destination branch \
+                           in combination with BITBUCKET_BRANCH available on \
+                           pull request --trigger pr:<source>:<destination> .\
+                           \
+                           Only available on a pull request triggered build.
+BITBUCKET_REPO_OWNER	     The name of the account in which the repository \
                            lives.
 BITBUCKET_REPO_SLUG	       The URL-friendly version of a repository name. For \
                            more information, see What is a slug?.

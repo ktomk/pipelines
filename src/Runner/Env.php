@@ -150,11 +150,42 @@ class Env
         if (!isset($map[$type])) {
             throw new \UnexpectedValueException(sprintf('Unknown reference type: "%s"', $type));
         }
-        $var = $map[$type];
 
-        if (!isset($this->vars[$var])) {
-            $this->vars[$var] = $ref->getName();
+        if ($this->addPrReference($ref)) {
+            return;
         }
+
+        $this->addVar($map[$type], $ref->getName());
+    }
+
+    /**
+     * add a variable if not yet set (real add new)
+     *
+     * @param string $name
+     * @param string $value
+     */
+    public function addVar($name, $value)
+    {
+        if (!isset($this->vars[$name])) {
+            $this->vars[$name] = $value;
+        }
+    }
+
+    public function addPrReference(Reference $reference)
+    {
+        if ('pr' !== $reference->getType()) {
+            return false;
+        }
+
+        list($var['BITBUCKET_BRANCH'], $var['BITBUCKET_PR_DESTINATION_BRANCH'])
+            = explode(':', $reference->getName(), 2)
+            + array(null, null);
+
+        foreach ($var as $name => $value) {
+            isset($value) && $this->addVar($name, $value);
+        }
+
+        return true;
     }
 
     /**

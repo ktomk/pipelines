@@ -528,7 +528,7 @@ to use the development version.
 - [x] Run specific steps of a pipeline (only) to put the user
       back into command on errors w/o re-running everything
 - [x] Stop at manual steps (`--no-manual` to override)
-- [ ] Support BITBUCKET_PR_DESTINATION_BRANCH with
+- [x] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
 - [ ] Option to not mount docker.sock
 - [ ] Run pipelines as current user (`--deploy mount` should

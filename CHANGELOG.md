@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 ### Changed
 - Pin composer version in phar build; show which composer version in use
+- Add destination to pull request --trigger pr:<source>:<destination>
 
 ## [0.0.28] - 2020-03-16
 ### Changed

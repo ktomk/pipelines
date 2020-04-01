@@ -111,6 +111,9 @@ class EnvTest extends TestCase
 
         $env->addReference(Reference::create('pr:feature'));
         $this->assertCount($default + 2, $env->getArgs('-e'), 'full reference does add variables');
+
+        $env->addReference(Reference::create('pr:topic:master'));
+        $this->assertCount($default + 4, $env->getArgs('-e'), 'pr destination does add variables');
     }
 
     public function testAddRefTypeIfSet()
