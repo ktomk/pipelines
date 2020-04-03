@@ -2,6 +2,11 @@
 #
 # install docker client
 #
+# this file is kept for historical reasons now, only. instead of
+# installing the docker client inside a container, it can be automatically
+# injected with the `service: - docker` in yaml, a specific docker client
+# can be controlled with `--docker-client` argument.
+#
 set -u
 IFS="$(printf '\n\t ')"
 
