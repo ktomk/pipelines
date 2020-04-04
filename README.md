@@ -552,7 +552,7 @@ to use the development version.
     - max-time (never needed this)
     - size (likely neglected for local run, limited support for
       [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))
-    - [ ] step.after-script (*after-script* feature)
+    - [X] step.after-script (*after-script* feature)
 - [ ] Get VCS revision from working directory (*git-deployment* feature)
 - [ ] Use a different project directory `--project-dir <path>` to
   specify the root path to deploy into the container, which

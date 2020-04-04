@@ -508,6 +508,46 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $actual);
     }
 
+    public function testAfterScript()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'after-script')
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm');
+
+        $step = $this->createTestStepFromFixture('after-script.yml');
+        $runner = $this->createTestStepRunner($exec, Flags::FLAGS, 'php://output');
+
+        $this->expectOutputRegex('{^After script:}m');
+
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status);
+    }
+
+    public function testAfterScriptFailing()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0)
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 123, 'after-script')
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm');
+
+        $step = $this->createTestStepFromFixture('after-script.yml');
+        $runner = $this->createTestStepRunner($exec, Flags::FLAGS, array('php://output', 'php://output'));
+
+        $this->expectOutputRegex('{^after-script non-zero exit status: 123$}m');
+
+        $status = $runner->runStep($step);
+        $this->assertSame(0, $status);
+    }
+
     private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')
     {
         $expectedRegex = sprintf(

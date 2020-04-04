@@ -470,24 +470,34 @@ class StepRunner
      */
     private function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
     {
-        $script = $step->getScript();
+        $cmdBuffer = Lib::cmd("<<'SCRIPT' docker", array(
+                'exec', '-i', $name, '/bin/sh',
+            )) . "\n";
 
-        $buffer = Lib::cmd("<<'SCRIPT' docker", array(
-            'exec', '-i', $name, '/bin/sh',
-        ));
-        $buffer .= "\n# this /bin/sh script is generated from a pipelines pipeline:\n";
+        $buffer = $cmdBuffer;
+        $buffer .= "# this /bin/sh script is generated from a pipeline step.\n";
         $buffer .= "set -e\n";
-        foreach ($script as $line => $command) {
-            $line && $buffer .= 'printf \'\\n\'' . "\n";
-            $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
-            $buffer .= $command . "\n";
-        }
-        $buffer .= "SCRIPT\n";
+        $buffer .= $this->generateScript($step->getScript());
 
         $status = $exec->pass($buffer, array());
 
         if (0 !== $status) {
             $streams->err(sprintf("script non-zero exit status: %d\n", $status));
+        }
+
+        if (!($script = $step->getAfterScript())) {
+            return $status;
+        }
+
+        $streams->out("After script:\n");
+        $buffer = $cmdBuffer;
+        $buffer .= "# pipelines generated after-script.\n";
+        $buffer .= sprintf("BITBUCKET_EXIT_CODE=%d\n", $status);
+        $buffer .= "export BITBUCKET_EXIT_CODE\n";
+        $buffer .= $this->generateScript($script);
+        $afterStatus = $exec->pass($buffer, array());
+        if (0 !== $afterStatus) {
+            $streams->err(sprintf("after-script non-zero exit status: %d\n", $afterStatus));
         }
 
         return $status;
@@ -521,5 +531,23 @@ class StepRunner
                 substr($id, 0, 12)
             ));
         }
+    }
+
+    /**
+     * @param array|string[] $script
+     *
+     * @return string
+     */
+    private function generateScript(array $script)
+    {
+        $buffer = '';
+        foreach ($script as $line => $command) {
+            $line && $buffer .= 'printf \'\\n\'' . "\n";
+            $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
+            $buffer .= $command . "\n";
+        }
+        $buffer .= "SCRIPT\n";
+
+        return $buffer;
     }
 }

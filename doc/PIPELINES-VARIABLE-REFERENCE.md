@@ -29,7 +29,7 @@ fashion (façon).
 | `BITBUCKET_COMMIT`                      | *all* options; always set to "`0000000000000000000000000000000000000000`" |
 | `BITBUCKET_DEPLOYMENT_ENVIRONMENT`      | -/-; currently unsupported |
 | `BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID` | -/-; currently unsupported |
-| `BITBUCKET_EXIT_CODE`                   | -/-; currently unsupported; *after-script* feature |
+| `BITBUCKET_EXIT_CODE`                   | *all* options; set to the exit status of the `script` for use in the `after-script` |
 | `BITBUCKET_GIT_HTTP_ORIGIN`             | -/-; currently unsupported |
 | `BITBUCKET_GIT_SSH_ORIGIN`              | -/-; currently unsupported |
 | `BITBUCKET_PARALLEL_STEP`               | *all* options; in a parallel step set to zero-based index of the current step in the group, e.g. 0, 1, 2, ... |
@@ -66,11 +66,6 @@ the depployments are not (yet) supported, therefore the variable
 `BITBUCKET_DEPLOYMENT_ENVIRONMENT` is not set. Setting it before
 call makes not much sense as it would be set for every script,
 and not the deployment script only.
-
-Another example is `BITBUCKET_EXIT_CODE`. Even thought this
-variable is easy to be set by the current piplines runner
-implementation, there is no such *after-script* handling feature
-yet where that variable is of practical use.
 
 However:
 

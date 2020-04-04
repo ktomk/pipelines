@@ -26,6 +26,10 @@ BITBUCKET_CLONE_DIR        The absolute path of the directory that the \
                            container.
 BITBUCKET_COMMIT           The commit hash of a commit that kicked off the \
                            build.
+BITBUCKET_EXIT_CODE        The exit status of the last executed command from \
+                           a script. If a script command returns non-zero \
+                           it is the last executed command. \
+                           Set in the after-script.
 BITBUCKET_PR_DESTINATION_BRANCH \
                            The name of the pull request destination branch \
                            in combination with BITBUCKET_BRANCH available on \

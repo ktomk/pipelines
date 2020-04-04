@@ -163,6 +163,16 @@ class StepTest extends TestCase
         $this->assertTrue($this->createStep($manualStep, 1)->isManual(), 'second step can be manual');
     }
 
+    public function testGetAfterScript()
+    {
+        $afterScriptStep = array(
+            'script' => array(':'),
+            'after-script' => array(':'),
+        );
+        $this->assertSame(array(), $this->createStep(null)->getAfterScript());
+        $this->assertSame(array(':'), $this->createStep($afterScriptStep)->getAfterScript());
+    }
+
     /**
      * @param null|array $array [optional]
      *

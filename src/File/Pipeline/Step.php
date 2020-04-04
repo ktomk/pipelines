@@ -49,8 +49,9 @@ class Step
         // quick validation: trigger
         $this->validateTrigger($step, (bool)$env);
 
-        // quick validation: script
+        // quick validation: script + after-script
         $this->parseScript($step);
+        $this->parseAfterScript($step);
 
         $this->pipeline = $pipeline;
         $this->index = $index;
@@ -106,6 +107,18 @@ class Step
     public function getScript()
     {
         return $this->step['script'];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getAfterScript()
+    {
+        if (isset($this->step['after-script'])) {
+            return $this->step['after-script'];
+        }
+
+        return array();
     }
 
     /**
@@ -196,15 +209,32 @@ class Step
         if (!isset($step['script'])) {
             ParseException::__("'step' requires a script");
         }
-        if (!is_array($step['script']) || !count($step['script'])) {
-            ParseException::__("'script' requires a list of commands");
+        $this->parseNamedScript('script', $step);
+    }
+
+    private function parseAfterScript(array $step)
+    {
+        if (isset($step['after-script'])) {
+            $this->parseNamedScript('after-script', $step);
+        }
+    }
+
+    /**
+     * @param $script
+     * @param mixed $name
+     */
+    private function parseNamedScript($name, array $script)
+    {
+        if (!is_array($script[$name]) || !count($script[$name])) {
+            ParseException::__("'${name}' requires a list of commands");
         }
 
-        foreach ($step['script'] as $index => $line) {
+        foreach ($script[$name] as $index => $line) {
             if (!is_scalar($line) && null !== $line) {
                 ParseException::__(
                     sprintf(
-                        "'script' requires a list of commands, step #%d is not a command",
+                        "'%s' requires a list of commands, step #%d is not a command",
+                        $name,
                         $index
                     )
                 );

@@ -129,3 +129,17 @@ pipelines:
           name: print environemnt variables
           script:
             - printenv | sort
+    after-script:
+      - step:
+          name: Happy
+          script:
+            - echo "fine"
+          after-script:
+            - 'echo "BITBUCKET_EXIT_CODE: ${BITBUCKET_EXIT_CODE}"'
+      - step:
+          name: Broken
+          script:
+            - exit 123
+            - echo "already broken"
+          after-script:
+            - 'echo "BITBUCKET_EXIT_CODE: ${BITBUCKET_EXIT_CODE}"'

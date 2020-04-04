@@ -5,10 +5,12 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\DestructibleString;
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Yaml\Yaml;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
@@ -51,7 +53,7 @@ class RunnerTestCase extends TestCase
     /**
      * @param null|array $extra
      *
-     * @return \Ktomk\Pipelines\File\Pipeline\Step
+     * @return Step
      */
     protected function createTestStep(array $extra = null)
     {
@@ -71,6 +73,26 @@ class RunnerTestCase extends TestCase
         $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step, 'creating the test step failed');
 
         return $step;
+    }
+
+    /**
+     * @param string $file
+     * @param int $step
+     * @param string $pipeline
+     *
+     * @return Step
+     */
+    protected function createTestStepFromFixture($file, $step = 1, $pipeline = 'default')
+    {
+        $path = __DIR__ . '/../../data/yml/' . $file;
+        $array = Yaml::file($path);
+        $fileObject = new File($array);
+        $pipelineObject = $fileObject->getById($pipeline);
+        $this->assertNotNull($pipelineObject);
+        $pipelineSteps = $pipelineObject->getSteps();
+        $this->assertArrayHasKey($step - 1, $pipelineSteps);
+
+        return $pipelineSteps[$step - 1];
     }
 
     /**
