@@ -4,6 +4,10 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Fixed
+- Corrections in Read Me and Change Log
+
 ## [0.0.29] - 2020-04-04
 ### Changed
 - Pin composer version in phar build; show which composer version in use
@@ -277,4 +281,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.26]: https://github.com/ktomk/pipelines/releases/tag/0.0.26
 [0.0.27]: https://github.com/ktomk/pipelines/releases/tag/0.0.27
 [0.0.28]: https://github.com/ktomk/pipelines/releases/tag/0.0.28
+[0.0.29]: https://github.com/ktomk/pipelines/releases/tag/0.0.29
 [unreleased]: https://github.com/ktomk/pipelines
