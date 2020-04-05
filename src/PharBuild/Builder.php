@@ -449,7 +449,7 @@ class Builder
      *
      * @param string $command
      * @param string $return [by-ref]  last line of the output (w/o newline/white space at end)
-     *@throws \RuntimeException
+     * @throws \RuntimeException
      * @return $this
      * @see Builder::exec()
      *

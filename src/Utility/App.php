@@ -87,7 +87,7 @@ class App implements Runnable
     }
 
     /**
-     *@throws \RuntimeException
+     * @throws \RuntimeException
      * @throws InvalidArgumentException
      * @throws ParseException
      * @throws ArgsException
