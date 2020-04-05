@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Patch fstat permission bits after PHP bug #79082 & #77022 fix to restore
+  reproducible phar build
 - Correct missing link in Change Log
 
 ## [0.0.30] - 2020-04-05

@@ -43,6 +43,7 @@ install:
 
 script:
   - vendor/bin/phpunit tests
+  - git reset --hard HEAD
   - composer build
   - echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
   - ls -al build/pipelines.phar.asc
