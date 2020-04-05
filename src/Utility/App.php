@@ -67,6 +67,7 @@ class App implements Runnable
 
     /**
      * @param array $arguments including the utility name in the first argument
+     *
      * @throws InvalidArgumentException
      * @return int 0-255
      */
@@ -216,6 +217,7 @@ class App implements Runnable
      * @param array $inherit from this environment
      * @param Reference $reference
      * @param string $workingDir
+     *
      * @throws InvalidArgumentException
      * @throws ArgsException
      * @return Env
@@ -270,6 +272,7 @@ class App implements Runnable
     /**
      * @param string $basename
      * @param string $workingDir
+     *
      * @throws InvalidArgumentException
      * @throws StatusException
      * @throws ArgsException
@@ -299,6 +302,7 @@ class App implements Runnable
     /**
      * @param string $basename
      * @param string $workingDir
+     *
      * @throws InvalidArgumentException
      * @throws ArgsException
      * @throws StatusException
@@ -310,14 +314,12 @@ class App implements Runnable
 
         $file = $this->parseFile($basename, $workingDir);
 
-        $this->verbose(
-            sprintf(
-                'info: project directory is %s',
-                $workingDir === $buffer
-                    ? sprintf("'%s'", $workingDir)
-                    : sprintf("'%s' (OLDPWD: '%s')", $workingDir, $buffer)
-            )
-        );
+        $this->verbose(sprintf(
+            'info: project directory is %s',
+            $workingDir === $buffer
+                ? sprintf("'%s'", $workingDir)
+                : sprintf("'%s' (OLDPWD: '%s')", $workingDir, $buffer)
+        ));
 
         if ($file !== $basename && self::BBPL_BASENAME !== $basename) {
             $this->verbose('info: --file overrides non-default --basename');
@@ -403,6 +405,7 @@ class App implements Runnable
 
     /**
      * @param string $directory
+     *
      * @throws StatusException
      */
     private function changeWorkingDir($directory)
@@ -426,6 +429,7 @@ class App implements Runnable
      * @param File $pipelines
      * @param $pipelineId
      * @param FileOptions $fileOptions
+     *
      * @throws ParseException
      * @throws StatusException
      * @return Pipeline on success
@@ -482,6 +486,7 @@ class App implements Runnable
      *
      * @param KeepOptions $keep
      * @param $deployMode
+     *
      * @return Flags
      */
     private function getRunFlags(KeepOptions $keep, $deployMode)

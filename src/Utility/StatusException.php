@@ -23,12 +23,10 @@ class StatusException extends Exception
     public function __construct($message = '', $code = 0, Exception $previous = null)
     {
         if (!is_int($code) || $code < 0 || $code > 255) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    'Code must be integer in range from 0 to 255, %s given',
-                    var_export($code, true)
-                )
-            );
+            throw new \InvalidArgumentException(sprintf(
+                'Code must be integer in range from 0 to 255, %s given',
+                var_export($code, true)
+            ));
         }
 
         parent::__construct($message, $code, $previous);

@@ -7,7 +7,6 @@ namespace Ktomk\Pipelines\Runner;
 use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\OptionFilterIterator;
-use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use UnexpectedValueException;
 
@@ -46,6 +45,7 @@ class EnvResolver
      * resolve a string or an array of strings
      *
      * @param array|string $stringOrArray
+     *
      * @throws \UnexpectedValueException
      * @return array|string
      * @see resolveString
@@ -62,6 +62,7 @@ class EnvResolver
 
     /**
      * @param Args $args
+     *
      * @throws \InvalidArgumentException
      */
     public function addArguments(Args $args)
@@ -87,12 +88,10 @@ class EnvResolver
     {
         $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         if (false === $lines) {
-            throw new InvalidArgumentException(
-                sprintf(
-                    "File read error: '%s'",
-                    $file
-                )
-            );
+            throw new InvalidArgumentException(sprintf(
+                "File read error: '%s'",
+                $file
+            ));
         }
         $this->addLines($lines);
     }
@@ -100,7 +99,6 @@ class EnvResolver
     /**
      * add a file but only if it exists (similar to --env-file option)
      *
-     * @see addFile
      * @param string $file path to (potentially existing) file
      * @throws \InvalidArgumentException
      * @return bool file was added
@@ -118,6 +116,7 @@ class EnvResolver
 
     /**
      * @param array $lines
+     *
      * @throws \InvalidArgumentException
      */
     public function addLines(array $lines)
@@ -132,6 +131,7 @@ class EnvResolver
      * add a variable definition (-e, --env option)
      *
      * @param string $definition variable definition, either name only or w/ equal sign
+     *
      * @throws \InvalidArgumentException
      */
     public function addDefinition($definition)
@@ -159,6 +159,7 @@ class EnvResolver
      * get value of variable
      *
      * @param string $name of variable to obtain value from
+     *
      * @return null|string value, null if unset
      */
     public function getValue($name)
@@ -176,6 +177,7 @@ class EnvResolver
      * context.
      *
      * @param $string
+     *
      * @throws \UnexpectedValueException
      * @return string
      */

@@ -127,7 +127,7 @@ class Step
     public function isManual()
     {
         if (0 === $this->index) {
-            return  false;
+            return false;
         }
 
         return (isset($this->step['trigger']) && 'manual' === $this->step['trigger']);
@@ -202,6 +202,7 @@ class Step
      * Parse a step script section
      *
      * @param array $step
+     *
      * @throws \Ktomk\Pipelines\File\ParseException
      */
     private function parseScript(array $step)
@@ -231,13 +232,11 @@ class Step
 
         foreach ($script[$name] as $index => $line) {
             if (!is_scalar($line) && null !== $line) {
-                ParseException::__(
-                    sprintf(
-                        "'%s' requires a list of commands, step #%d is not a command",
-                        $name,
-                        $index
-                    )
-                );
+                ParseException::__(sprintf(
+                    "'%s' requires a list of commands, step #%d is not a command",
+                    $name,
+                    $index
+                ));
             }
         }
     }
