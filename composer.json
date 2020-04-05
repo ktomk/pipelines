@@ -57,14 +57,17 @@
       "tests/shell/run.sh"
     ],
     "unit-test": [
-      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests/unit",
+      "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests/unit",
       "@php -f lib/coverage/checker.php -- build/log/clover.xml"
     ],
     "integration-test": [
-      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v tests/integration"
+      "@phpunit tests/integration"
+    ],
+    "phpunit": [
+      "@php -d phar.readonly=0 -d error_reporting=-1 -d error_log= -d log_errors=1 -d display_errors=0 -f vendor/bin/phpunit -- -v"
     ],
     "phpunit-test": [
-      "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
+      "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
       "@php -f lib/coverage/checker.php -- build/log/clover.xml"
     ],
     "which": [

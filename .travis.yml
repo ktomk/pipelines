@@ -42,7 +42,7 @@ install:
   - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
 
 script:
-  - vendor/bin/phpunit tests
+  - composer phpunit
   - git reset --hard HEAD
   - composer build
   - echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
