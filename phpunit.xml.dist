@@ -6,6 +6,12 @@
         defaultTestSuite="unit"
         cacheResultFile="build/cache/.phpunit.result.cache"
         >
+    <php>
+        <ini name="error_reporting" value="-1" />
+        <ini name="display_errors" value="0" />
+        <ini name="log_errors" value="1" />
+        <ini name="error_log" value="" />
+    </php>
     <testsuites>
         <testsuite name="unit">
             <directory>tests/unit</directory>
