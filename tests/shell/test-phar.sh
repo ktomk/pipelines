@@ -10,11 +10,10 @@ IFS=$'\n\t'
 #               TEST PLAN
 #
 # [ 1] build pipelines phar
-# [ 2]
+# [ 2] check last file by checksum
 #
 
 PROJECT_DIR=../..
-cd "${PROJECT_DIR}"
 
 case ${1-0} in
   0 ) echo "# 0: ${0} run"
@@ -22,12 +21,14 @@ case ${1-0} in
       exit
       ;;
   1 ) echo "# 1: build pipelines phar"
+      cd "${PROJECT_DIR}"
       rm -f build/pipelines.phar
       php -d phar.readonly=0 -f lib/build/build.php | grep 'signature:'
       build/pipelines.phar --version
       exit
       ;;
-  2 ) echo "# 2: check file specs"
+  2 ) echo "# 2: check last file by checksum"
+      cd "${PROJECT_DIR}"
     <<'EOD' php -f /dev/stdin -- \
           build/pipelines.phar \
           vendor/symfony/yaml/Symfony/Component/Yaml/Yaml.php

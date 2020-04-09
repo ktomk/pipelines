@@ -3,13 +3,18 @@
 # this file is part of pipelines
 #
 # test runner for shell test-drivers
+#
+# usage: ./tests/shell/run.sh [<case> [<test>..]]
+#
+# example: ./tests/shell/run.sh test-phar.sh 1 2
+#
 set -euo pipefail
 IFS=$'\n\t'
 
 cd "${0%/*}"
 
 ##
-# test-...sh passed as positional parameter executes directly
+# optional: test-*.sh [<test>..] as positional parameter
 if [[ -f "./${1:-}" ]] && [[ -x "./${1:-}" ]]; then
   test="./${1}"
   if [[ "$#" -eq 1 ]]; then

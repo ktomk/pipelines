@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Shell test runner usage information
 - Travis build configuration validation fixes
 - Do not hide errors in Phpunit test-suite
 
