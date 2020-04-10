@@ -37,7 +37,7 @@ $builder
     ->add('vendor/{,composer/}*.php', $builder->snapShot())
     ->phpExec('composer -n -q install --ignore-platform-reqs')
     // Dependencies
-    ->add('vendor/symfony/yaml/Symfony/Component/Yaml/{,Exception/}{{Yaml,Inline,Parser,Unescaper,Except*,ParseEx*,Runt*}.php,LICENSE}')
+    ->add('vendor/ktomk/symfony-yaml/Symfony/Component/Yaml/{,Exception/}{{Yaml,Inline,Parser,Unescaper,Except*,ParseEx*,Runt*}.php,LICENSE}')
     // build phar archive, reset timestamps
     ->build('--version')
     ->exec('git log -n1 --pretty=%ci HEAD', $timestamp)

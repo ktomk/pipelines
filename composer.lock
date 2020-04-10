@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "311d5ab489e2a73db490ac722666de4c",
+    "content-hash": "2558db952ac588870a4e198dce0966ef",
     "packages": [
         {
-            "name": "symfony/yaml",
-            "version": "v2.6.13",
+            "name": "ktomk/symfony-yaml",
+            "version": "v2.6.13.1",
             "target-dir": "Symfony/Component/Yaml",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/yaml.git",
-                "reference": "c044d1744b8e91aaaa0d9bac683ab87ec7cbf359"
+                "url": "https://github.com/ktomk/yaml.git",
+                "reference": "bd89e684400328959f5bd4098b0a6adef7f55f39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/c044d1744b8e91aaaa0d9bac683ab87ec7cbf359",
-                "reference": "c044d1744b8e91aaaa0d9bac683ab87ec7cbf359",
+                "url": "https://api.github.com/repos/ktomk/yaml/zipball/bd89e684400328959f5bd4098b0a6adef7f55f39",
+                "reference": "bd89e684400328959f5bd4098b0a6adef7f55f39",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2015-07-26T08:59:42+00:00"
+            "time": "2020-04-10T22:22:00+00:00"
         }
     ],
     "packages-dev": [
@@ -2661,5 +2661,6 @@
         "php": "^5.3.3 || ^7.0",
         "ext-json": "*"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "plugin-api-version": "1.1.0"
 }
