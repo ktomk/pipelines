@@ -19,6 +19,9 @@ use PHPUnit\Util\InvalidArgumentHelper;
  */
 class TestCase extends PhpunitTestCase
 {
+    private $expectedException;
+    private $expectedExceptionMessage;
+
     public static function assertIsArray($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -73,6 +76,27 @@ class TestCase extends PhpunitTestCase
 
         self::assertInternalType('string', $actual, $message);
     }
+
+    /**
+     * assertContains() with string haystacks >>> assertStringContainsString
+     *
+     * assertStringContainsString was added in Phpunit 8 to lighten up usage
+     * of assertContains power-factory
+     * @param mixed $needle
+     * @param mixed $haystack
+     * @param mixed $message
+     */
+    public static function assertStringContainsString($needle, $haystack, $message = '')
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::assertStringContainsString($needle, $haystack, $message);
+
+            return;
+        }
+
+        self::assertContains($needle, $haystack, $message);
+    }
+
     /**
      * Backwards compatible assertions (as far as in use)
      *
@@ -110,6 +134,100 @@ class TestCase extends PhpunitTestCase
         );
     }
 
+    /* exceptions */
+
+    protected function setUp()
+    {
+        $this->expectedException = null;
+        $this->expectedExceptionMessage = null;
+    }
+
+    /**
+     * @param string $exception
+     */
+    public function expectException($exception)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::expectException($exception);
+
+            return;
+        }
+
+        $this->expectedException = $exception;
+        $this->setExpectedException($exception);
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws Exception
+     */
+    public function expectExceptionMessage($message)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::expectExceptionMessage($message);
+
+            return;
+        }
+
+        if (null === $this->expectedException) {
+            throw new \BadMethodCallException('Hmm this is message without class *gg* - reflection?');
+        }
+
+        $this->expectedExceptionMessage = $message;
+        $this->setExpectedException($this->expectedException, $message);
+    }
+
+    /**
+     * @param int|string $code
+     *
+     * @throws Exception
+     */
+    public function expectExceptionCode($code)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::expectExceptionCode($code);
+
+            return;
+        }
+
+        $this->setExpectedException($this->expectedException, $this->expectedExceptionMessage, $code);
+    }
+
+    /**
+     * Phpunit 8 deprecated (first silently) expectExceptionMessageRegExp(),
+     * will be gone in Phpunit 9.
+     *
+     * @param string $messageRegExp
+     *
+     * @throws Exception
+     */
+    public function expectExceptionMessageMatches($messageRegExp)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::expectExceptionMessageMatches($messageRegExp);
+
+            return;
+        }
+
+        $this->expectExceptionMessageRegExp($messageRegExp);
+    }
+
+    public function expectExceptionMessageRegExp($messageRegExp)
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::expectExceptionMessageRegExp($messageRegExp);
+
+            return;
+        }
+
+        if (null === $this->expectedException) {
+            throw new \BadMethodCallException('Hmm this is message-regex without class *gg* - reflection?');
+        }
+
+        $this->setExpectedExceptionRegExp($this->expectedException, $messageRegExp);
+    }
+
     public function setExpectedException($class, $message = null, $code = null)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -143,14 +261,16 @@ class TestCase extends PhpunitTestCase
             $this->expectException($class);
         }
 
-        if (is_callable('parent::expectExceptionMessageRegExp')) {
-            $this->expectExceptionMessageRegExp($messageRegExp);
+        if (is_callable('parent::expectExceptionMessageMatches')) {
+            $this->expectExceptionMessageMatches($messageRegExp);
         }
 
         if (null !== $code && is_callable('parent::expectExceptionCode')) {
             $this->expectExceptionCode($code);
         }
     }
+
+    /* mocks */
 
     /**
      * Returns a test double for the specified class.

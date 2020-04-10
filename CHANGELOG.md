@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   same configuration
 - Composer scripts `which` and `which-php` to obtain the path to composer
   in use and php in use
+### Changed
+- Test-case forward compatibility for Phpunit 8 (for PHP 7.4 build)
 ### Fixed
 - Code coverage w/ PHP 7.4 / Xdebug 2.9.3
 - Composer script `ci` to run pipelines by build PHP version
