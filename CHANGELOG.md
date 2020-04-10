@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- Travis PHP 7.4 build
 - Composer script `phpunit` for use in diverse test scripts using the
   same configuration
 - Composer scripts `which` and `which-php` to obtain the path to composer
