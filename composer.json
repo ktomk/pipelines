@@ -67,6 +67,12 @@
       "@php -d phar.readonly=0 -f vendor/bin/phpunit -- -v --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
       "@php -f lib/coverage/checker.php -- build/log/clover.xml"
     ],
+    "which": [
+      "echo ${COMPOSER_BINARY}"
+    ],
+    "which-php": [
+      "echo ${PHP_BINARY}"
+    ],
     "ci": [
       "@composer validate --strict",
       "@cs-check",
