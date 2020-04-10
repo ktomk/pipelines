@@ -191,7 +191,8 @@ class LibFsTest extends TestCase
         $this->assertFileExists($file . '.new');
         LibFs::rm($file . '.new');
 
-        $this->setExpectedException('RuntimeException', $file);
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage($file);
         LibFs::rename($file, $file . '.new');
     }
 
@@ -257,7 +258,8 @@ class LibFsTest extends TestCase
         $subDir = $dir . '/test';
         file_put_contents($subDir, 'DATA');
         $this->assertDirectoryNotExists($subDir);
-        $this->setExpectedException('UnexpectedValueException', 'Failed to open directory');
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('Failed to open directory');
         LibFs::rmDir($subDir);
     }
 

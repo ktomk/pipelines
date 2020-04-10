@@ -34,11 +34,12 @@ class ParseExceptionTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage message string
      */
     public function testThrowing()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('message string');
+
         ParseException::__('message string');
     }
 }

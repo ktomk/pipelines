@@ -47,11 +47,12 @@ class StatusExceptionTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Code must be integer in range from 0 to 255, -1 given
      */
     public function testMinimumCodeZeroOneOff()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Code must be integer in range from 0 to 255, -1 given');
+
         new StatusException('', -1);
     }
 
@@ -67,21 +68,23 @@ class StatusExceptionTest extends TestCase
 
     /**
      * @throws StatusException (never)
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Code must be integer in range from 0 to 255, 256 given
      */
     public function testMaximumCode255OneOff()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Code must be integer in range from 0 to 255, 256 given');
+
         throw new StatusException('', 256);
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\Utility\StatusException
-     * @expectedExceptionMessage Foo Le Bar
-     * @expectedExceptionCode 22
      */
     public function testStatus()
     {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('Foo Le Bar');
+        $this->expectExceptionCode(22);
+
         StatusException::status(22, 'Foo Le Bar');
     }
 }

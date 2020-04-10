@@ -53,7 +53,8 @@ class PackageYamlFileReaderTest extends TestCase
     {
         $file = '';
         $reader = new PackageYamlFileReader($file);
-        $this->setExpectedException('InvalidArgumentException', 'not a readable file: ');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('not a readable file: ');
         $reader->asPackageArray();
     }
 }

@@ -21,11 +21,12 @@ class ArgsTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage There must be at least one argument (the command name)
      */
     public function testMissingCommand()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('There must be at least one argument (the command name)');
+
         Args::create(array());
     }
 
@@ -104,11 +105,12 @@ class ArgsTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage option --volume is not optional
      */
     public function testMandatoryOption()
     {
+        $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
+        $this->expectExceptionMessage('option --volume is not optional');
+
         $args = new Args(array('--prefix', 'value'));
         $args->getOptionArgument('volume', null, true);
     }
@@ -123,21 +125,23 @@ class ArgsTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage option --prefix requires an argument
      */
     public function testMandatoryOptionArgument()
     {
+        $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
+        $this->expectExceptionMessage('option --prefix requires an argument');
+
         $args = new Args(array('--prefix'));
         $args->getOptionArgument('prefix', 100);
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage option --prefix requires an argument
      */
     public function testMandatoryOptionArgumentWithParameters()
     {
+        $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
+        $this->expectExceptionMessage('option --prefix requires an argument');
+
         $args = new Args(array('--prefix', '--'));
         $args->getOptionArgument('prefix', 100);
     }

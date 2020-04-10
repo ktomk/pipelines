@@ -30,7 +30,7 @@ class EnvTest extends TestCase
     {
         $env = new Env();
         $array = $env->getArgs('-e');
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
         $this->assertCount(0, $array);
 
         $env->initDefaultVars(array());
@@ -65,10 +65,10 @@ class EnvTest extends TestCase
     {
         $env = Env::create();
         $args = $env->getArgs('-e');
-        $this->assertInternalType('array', $args);
+        $this->assertIsArray($args);
         while ($args) {
             $argument = array_pop($args);
-            $this->assertInternalType('string', $argument);
+            $this->assertIsString($argument);
             $this->assertGreaterThan(0, strpos($argument, '='), 'must be a variable definition');
             $this->assertGreaterThan(0, count($args));
             $option = array_pop($args);
@@ -300,11 +300,12 @@ class EnvTest extends TestCase
     }
 
     /**
-     * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage Unknown reference type: "foo"
      */
     public function testAddReferenceOfUnknownType()
     {
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('Unknown reference type: "foo"');
+
         $env = new Env();
 
         $reference = $this->createMock('\Ktomk\Pipelines\Runner\Reference');

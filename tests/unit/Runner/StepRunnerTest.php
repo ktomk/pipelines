@@ -410,7 +410,8 @@ class StepRunnerTest extends RunnerTestCase
             ->getMock();
 
         $step = $this->createTestStep(array('services' => array('docker')));
-        $this->setExpectedException('\InvalidArgumentException', 'not a readable file');
+        $this->expectException('\InvalidArgumentException');
+        $this->expectExceptionMessage('not a readable file');
         $mockRunner->runStep($step);
         $this->fail('an expected exception was not thrown');
     }

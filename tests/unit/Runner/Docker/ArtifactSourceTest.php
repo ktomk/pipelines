@@ -37,7 +37,7 @@ class ArtifactSourceTest extends TestCase
         $exec->expect('capture', 'docker', $buffer);
         $source = new ArtifactSource($exec, '*fake*', '/app');
         $actual = $source->getAllFiles();
-        $this->assertInternalType('array', $actual);
+        $this->assertIsArray($actual);
         $this->assertGreaterThanOrEqual(18, count($actual));
     }
 
@@ -61,7 +61,7 @@ class ArtifactSourceTest extends TestCase
             'build/html/PharBuild/dashboard.html',
         );
         $result = $source->findByPattern('build/html/**.html');
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $actual = array_intersect($expected, $result);
         $this->assertSame($expected, $actual, 'all expected must be found');
     }

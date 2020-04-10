@@ -12,11 +12,12 @@ use Ktomk\Pipelines\TestCase;
 class ArgsExceptionTest extends TestCase
 {
     /**
-     * @expectedException \Ktomk\Pipelines\Cli\ArgsException
-     * @expectedExceptionMessage test
      */
     public function testGive()
     {
+        $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
+        $this->expectExceptionMessage('test');
+
         ArgsException::__('test');
     }
 }

@@ -164,7 +164,7 @@ class UnpackagerTest extends TestCase
             $unpackager->getLocalBinary($package);
             $this->fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
-            $this->assertContains('Extraction collision: "', $ex->getMessage());
+            self::assertStringContainsString('Extraction collision: "', $ex->getMessage());
         }
 
         $prepare = $unpackager->preparePackage($package);
@@ -175,7 +175,7 @@ class UnpackagerTest extends TestCase
             $unpackager->getLocalBinary($package);
             $this->fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
-            $this->assertContains('/docker-test-stub.tgz.', $ex->getMessage());
+            self::assertStringContainsString('/docker-test-stub.tgz.', $ex->getMessage());
         }
     }
 
@@ -204,7 +204,8 @@ class UnpackagerTest extends TestCase
             $this->assertSame('Nonzero tar exit status: 1', $ex->getMessage());
         }
 
-        $this->setExpectedException('UnexpectedValueException', 'Not a readable file:');
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('Not a readable file:');
         $unpacker->extractFromTgzFile($pkg['uri'] . '.fake', 'fake', $dest);
     }
 
@@ -232,7 +233,7 @@ class UnpackagerTest extends TestCase
             $unpackager->verifyFileHash($package['uri'], 'fake-hash');
             $this->fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
-            $this->assertContains('sha256 checksum mismatch: "fake-hash" for file "', $ex->getMessage());
+            self::assertStringContainsString('sha256 checksum mismatch: "fake-hash" for file "', $ex->getMessage());
         }
 
         // non-existent file throws exception
@@ -240,7 +241,7 @@ class UnpackagerTest extends TestCase
             $unpackager->verifyFileHash($package['uri'] . '.fake', 'fake-hash');
             $this->fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
-            $this->assertContains('not a readable file:', $ex->getMessage());
+            self::assertStringContainsString('not a readable file:', $ex->getMessage());
         }
     }
 

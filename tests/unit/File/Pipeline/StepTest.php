@@ -41,31 +41,34 @@ class StepTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'script' requires a list of commands
      */
     public function testRequiresListOfCommands()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'script\' requires a list of commands');
+
         $this->createStep(array(
             'script' => array(),
         ));
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'step' requires a script
      */
     public function testRequiresScript()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'step\' requires a script');
+
         $this->createStep(array());
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'script' requires a list of commands, step #1 is not a command
      */
     public function testRequiresScriptAsListOfCommands()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'script\' requires a list of commands, step #1 is not a command');
+
         $this->createStep(array(
             'script' => array(
                 ': # valid',
@@ -84,11 +87,12 @@ class StepTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage invalid Docker image name
      */
     public function testInvalidImageName()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('invalid Docker image name');
+
         $this->createStep(array(
             'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
             'script' => array(':'),
@@ -136,7 +140,7 @@ class StepTest extends TestCase
     public function testGetIndex()
     {
         $index = $this->createStep()->getIndex();
-        $this->assertInternalType('int', $index);
+        $this->assertIsInt($index);
         $this->assertGreaterThanOrEqual(0, $index);
     }
 

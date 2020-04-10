@@ -17,15 +17,16 @@ class YamlTest extends TestCase
 
         $struct = Yaml::file($path);
 
-        $this->assertInternalType('array', $struct);
+        $this->assertIsArray($struct);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage not a readable file: 'xxx'
      */
     public function testCreateFromNonExistentFile()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('not a readable file: \'xxx\'');
+
         Yaml::file('xxx');
     }
 

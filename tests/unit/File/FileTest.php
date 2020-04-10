@@ -53,11 +53,12 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage /error.yml; verify the file contains valid YAML
      */
     public function testCreateFromFileWithError()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('/error.yml; verify the file contains valid YAML');
+
         $path = __DIR__ . '/../../data/yml/error.yml';
 
         File::createFromFile($path);
@@ -80,11 +81,12 @@ class FileTest extends TestCase
     /**
      * @param File $file
      * @depends testCreateFromFileWithInvalidId
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage file parse error: invalid pipeline id '
      */
     public function testGetPipelinesWithInvalidIdParseError(File $file)
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('file parse error: invalid pipeline id \'');
+
         $file->getPipelines();
     }
 
@@ -98,7 +100,7 @@ class FileTest extends TestCase
         $image = $file->getImage();
         $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
         $imageString = (string)$image;
-        $this->assertInternalType('string', $imageString);
+        $this->assertIsString($imageString);
         $expectedImage = File::DEFAULT_IMAGE;
         $this->assertSame($expectedImage, $imageString);
     }
@@ -130,11 +132,12 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Missing required property 'pipelines'
      */
     public function testMissingPipelineException()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Missing required property \'pipelines\'');
+
         new File(array());
     }
 
@@ -172,11 +175,12 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage 'image' requires a Docker image name
      */
     public function testImageNameRequired()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('\'image\' requires a Docker image name');
+
         new File(
             array(
                 'image' => null,
@@ -189,7 +193,7 @@ class FileTest extends TestCase
     {
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
         $ids = $file->getPipelineIds();
-        $this->assertInternalType('array', $ids);
+        $this->assertIsArray($ids);
         $this->assertArrayHasKey(12, $ids);
         $this->assertSame('custom/unit-tests', $ids[12]);
     }
@@ -254,39 +258,43 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid id 'branch/master'
      */
     public function testInvalidReferenceName()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid id \'branch/master\'');
+
         File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')
             ->getById('branch/master'); # must be branch_es_
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage section
      */
     public function testNoSectionException()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('section');
+
         new File(array('pipelines' => array()));
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'default' requires a list of steps
      */
     public function testNoListInSectionException()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'default\' requires a list of steps');
+
         new File(array('pipelines' => array('default' => 1)));
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'branches' requires a list
      */
     public function testNoListInBranchesSectionException()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'branches\' requires a list');
+
         new File(array('pipelines' => array('branches' => 1)));
     }
 
@@ -363,21 +371,23 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
-     * @expectedExceptionMessage Invalid type 'invalid'
      */
     public function testSearchReferenceInvalidScopeException()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid type \'invalid\'');
+
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
         $file->searchTypeReference('invalid', '');
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage custom/0: named pipeline required
      */
     public function testParseErrorOnGetById()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('custom/0: named pipeline required');
+
         $file = new File(array(
             'pipelines' => array(
                 'custom' => array(
@@ -410,11 +420,12 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage invalid Docker image name
      */
     public function testInvalidImageName()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('invalid Docker image name');
+
         new File(array(
             'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
             'pipelines' => array('default' => array()),
@@ -422,11 +433,12 @@ class FileTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'image' invalid Docker image name: '/'
      */
     public function testValidateImageSectionInvalidName()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'image\' invalid Docker image name: \'/\'');
+
         $image = array(
             'image' => array('name' => '/'),
         );

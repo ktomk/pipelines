@@ -54,11 +54,12 @@ class BuilderTest extends TestCase
     }
 
     /**
-     * @expectedException \PharException
-     * @expectedExceptionMessageRegExp ~^illegal stub for phar "/[a-zA-Z0-9/.]+\.phar"$~
      */
     public function testIllegalStub()
     {
+        $this->expectException('PharException');
+        $this->expectExceptionMessageMatches('~^illegal stub for phar "/[a-zA-Z0-9/.]+\\.phar"$~');
+
         $this->needsPharWriteAccess();
 
         $builder = Builder::create('fake.phar');
@@ -78,7 +79,7 @@ class BuilderTest extends TestCase
         $this->expectOutputString("error reading file: data:no-comma-in-URL\n");
         $builder->errHandle = fopen('php://output', 'wb');
         $callback = $builder->dropFirstLine();
-        $this->assertInternalType('callable', $callback);
+        $this->assertIsCallable($callback);
         // violate rfc2397 by intention to provoke read error
         $actual = @call_user_func($callback, 'data:no-comma-in-URL');
         $this->assertNull($actual);
@@ -89,22 +90,23 @@ class BuilderTest extends TestCase
         $this->builder = $builder = Builder::create('fake.phar');
         $this->assertFNE($builder);
         $callback = $builder->replace('abc', '123');
-        $this->assertInternalType('callable', $callback);
+        $this->assertIsCallable($callback);
         $result = call_user_func($callback, 'data:,abc');
         $this->assertArrayHasKey(0, $result);
         $this->assertArrayHasKey(1, $result);
         $this->assertSame('str', $result[0]);
-        $this->assertInternalType('string', $result[1]);
+        $this->assertIsString($result[1]);
         $this->assertSame('123', $result[1]);
     }
 
     /**
-     * @expectedException \UnexpectedValueException
-     * @expectedExceptionMessage unknown type: type
      * @throws \ReflectionException
      */
     public function testBuildFilesInvalidType()
     {
+        $this->expectException('UnexpectedValueException');
+        $this->expectExceptionMessage('unknown type: type');
+
         $this->needsPharWriteAccess();
         $this->builder = $builder = Builder::create('fake.phar');
         $this->assertFNE($builder);

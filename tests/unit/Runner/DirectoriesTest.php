@@ -35,19 +35,22 @@ class DirectoriesTest extends TestCase
 
     public function testCreationWithMissingDirectory()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Invalid project directory: ');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid project directory: ');
         new Directories(array('HOME' => '/home/dulcinea'), '');
     }
 
     public function testCreationWithMissingHome()
     {
-        $this->setExpectedException('InvalidArgumentException', '$HOME unset or empty');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('$HOME unset or empty');
         new Directories(array('HOME' => ''), __DIR__);
     }
 
     public function testCreationWithNonPortableUtilityName()
     {
-        $this->setExpectedException('InvalidArgumentException', 'Not a portable utility name: "-f"');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Not a portable utility name: "-f"');
         new Directories(array('HOME' => '/greta-garbo'), __DIR__, '-f');
     }
 
@@ -116,7 +119,8 @@ class DirectoriesTest extends TestCase
     {
         $directories = new Directories(array('HOME' => '/greta-garbo'), self::getTestProject());
 
-        $this->setExpectedException('InvalidArgumentException', 'XDG_FOO42_HOME');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('XDG_FOO42_HOME');
         $directories->getBaseDirectory('XDG_FOO42_HOME');
     }
 }

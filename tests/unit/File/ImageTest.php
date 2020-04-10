@@ -18,11 +18,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'image' invalid Docker image name: '/'
      */
     public function testCreateFromInvalidName()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'image\' invalid Docker image name: \'/\'');
+
         new Image('/');
     }
 
@@ -39,11 +40,12 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage unknown 'image' property 'superfluous'
      */
     public function testCreateFromArrayWithSuperfluousProperties()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('unknown \'image\' property \'superfluous\'');
+
         $array = array(
             'superfluous' => null,
             'name' => 'account-name/java:8u66',
@@ -53,20 +55,22 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'image' expects either 'a string' or 'a section'
      */
     public function testCreateFromObject()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'image\' expects either \'a string\' or \'a section\'');
+
         new Image((object)array());
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'image' needs a name
      */
     public function testCreateMissingName()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'image\' needs a name');
+
         new Image(array());
     }
 

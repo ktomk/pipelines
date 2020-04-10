@@ -27,15 +27,16 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertInternalType('array', $ps->findAllContainerIdsByNamePrefix('pipelines'));
+        $this->assertIsArray($ps->findAllContainerIdsByNamePrefix('pipelines'));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Invalid container name prefix "**wrong**"
      */
     public function testInvalidPrefix()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid container name prefix "**wrong**"');
+
         $exec = new ExecTester($this);
         $ps = new ProcessManager($exec);
         $ps->findAllContainerIdsByNamePrefix('**wrong**');
@@ -47,7 +48,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertInternalType('array', $ps->findRunningContainerIdsByNamePrefix('pipelines'));
+        $this->assertIsArray($ps->findRunningContainerIdsByNamePrefix('pipelines'));
     }
 
     public function testKill()
@@ -56,7 +57,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertInternalType('int', $ps->kill(
+        $this->assertIsInt($ps->kill(
             'fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c'
         ));
     }
@@ -67,7 +68,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertInternalType('int', $ps->remove(
+        $this->assertIsInt($ps->remove(
             array('fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c')
         ));
     }

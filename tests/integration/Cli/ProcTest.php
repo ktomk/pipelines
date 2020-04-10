@@ -25,14 +25,14 @@ class ProcTest extends TestCase
         $outBuffer = $proc->getStandardOutput();
         $errorBuffer = $proc->getStandardError();
 
-        $this->assertInternalType('string', $outBuffer);
+        $this->assertIsString($outBuffer);
         $this->assertSame(
             getcwd() . "\n",
             $outBuffer,
             'compare pwd -P output against getcwd() return value'
         );
 
-        $this->assertInternalType('string', $errorBuffer);
+        $this->assertIsString($errorBuffer);
         $this->assertSame('', $errorBuffer);
     }
 

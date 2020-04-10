@@ -23,7 +23,8 @@ class StepServicesTest extends TestCase
 
     public function testCreationParseException()
     {
-        $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'services\' requires a list of services');
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'services\' requires a list of services');
 
         $yaml = (object)array();
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
@@ -32,7 +33,8 @@ class StepServicesTest extends TestCase
 
     public function testCreationCauseRealProblems()
     {
-        $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'services\' service name string expected');
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'services\' service name string expected');
 
         $yaml = array('fine', array('scrap'), (object)array());
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);

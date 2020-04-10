@@ -30,7 +30,7 @@ class YamlTester
 
         $testCase = $this->testCase;
 
-        $testCase::assertInternalType('bool', $parser::isAvailable(), 'static availability returns bool');
+        $testCase::assertIsBool($parser::isAvailable(), 'static availability returns bool');
 
         $testCase::assertNull($parser->parseFile('xxx'), 'non existing file returns NULL');
 

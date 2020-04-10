@@ -18,11 +18,12 @@ class ImageNameTest extends TestCase
     }
 
     /**
-     * @expectedException \Ktomk\Pipelines\File\ParseException
-     * @expectedExceptionMessage 'image' invalid Docker image name: 'foo bar'
      */
     public function testInvalidImageName()
     {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'image\' invalid Docker image name: \'foo bar\'');
+
         $invalid = 'foo bar';
         new ImageName($invalid);
     }

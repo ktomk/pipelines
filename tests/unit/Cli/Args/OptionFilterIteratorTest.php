@@ -50,12 +50,13 @@ class OptionFilterIteratorTest extends TestCase
 
     /**
      * @dataProvider provideInvalidOptions
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage invalid option -
      * @param string $option (invalid one)
      */
     public function testInvalidOptions($option)
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('invalid option -');
+
         $args = new Args(array('cmd', '--foo', '-f', '--bar', '-b'));
         new OptionFilterIterator($args, $option);
     }

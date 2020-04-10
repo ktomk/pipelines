@@ -50,7 +50,7 @@ class StepExpressionTest extends TestCase
     public function testCreateFromString($expression, array $expected = null)
     {
         if (null === $expected) {
-            $this->setExpectedException('InvalidArgumentException');
+            $this->expectException('InvalidArgumentException');
         }
         $expr = StepExpression::createFromString($expression);
         $this->assertInstanceOf('Ktomk\Pipelines\Value\StepExpression', $expr);
@@ -60,14 +60,14 @@ class StepExpressionTest extends TestCase
     public function testResolveCountableOutOfBounds()
     {
         $expr = StepExpression::createFromString('1-5');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $expr->resolveCountable(array(1));
     }
 
     public function testResolveCountOutOfBounds()
     {
         $expr = StepExpression::createFromString('1-5');
-        $this->setExpectedException('InvalidArgumentException');
+        $this->expectException('InvalidArgumentException');
         $expr->resolveCount(0);
     }
 
@@ -101,7 +101,7 @@ class StepExpressionTest extends TestCase
     public function testResolveCountable($expression, array $expected = null)
     {
         if (null === $expected) {
-            $this->setExpectedException('InvalidArgumentException');
+            $this->expectException('InvalidArgumentException');
         }
 
         $actual = StepExpression::createFromString($expression)

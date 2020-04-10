@@ -130,11 +130,12 @@ class PropertiesTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage property/ies "foo" required
      */
     public function testExportWithRequiredKeyMissing()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('property/ies "foo" required');
+
         $properties = new Properties();
         $array = array('bar' => 'le bar');
         $properties->import($array, array_keys($array));

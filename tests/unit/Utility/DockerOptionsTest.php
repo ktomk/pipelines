@@ -54,12 +54,13 @@ class DockerOptionsTest extends TestCase
 
     /**
      * @throws StatusException
-     * @expectedException \Ktomk\Pipelines\Utility\StatusException
-     * @expectedExceptionMessage
-     * @expectedExceptionCode 0
      */
     public function testHappyPath()
     {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('');
+        $this->expectExceptionCode(0);
+
         $exec = ExecTester::create($this);
 
         $options = new DockerOptions(
@@ -83,12 +84,13 @@ class DockerOptionsTest extends TestCase
 
     /**
      * @throws StatusException
-     * @expectedException \Ktomk\Pipelines\Utility\StatusException
-     * @expectedExceptionMessage
-     * @expectedExceptionCode 0
      */
     public function testNoContainersToKill()
     {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('');
+        $this->expectExceptionCode(0);
+
         $exec = ExecTester::create($this);
 
         $options = new DockerOptions(
@@ -110,12 +112,13 @@ class DockerOptionsTest extends TestCase
 
     /**
      * @throws StatusException
-     * @expectedException \Ktomk\Pipelines\Utility\StatusException
-     * @expectedExceptionMessage
-     * @expectedExceptionCode 0
      */
     public function testDockerZap()
     {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('');
+        $this->expectExceptionCode(0);
+
         $exec = ExecTester::create($this);
 
         $options = new DockerOptions(

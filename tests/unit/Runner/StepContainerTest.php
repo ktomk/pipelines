@@ -60,7 +60,8 @@ class StepContainerTest extends TestCase
     {
         $container = new StepContainer($this->getStepMock(), new ExecTester($this));
 
-        $this->setExpectedException('BadMethodCallException', 'Container has no name yet');
+        $this->expectException('BadMethodCallException');
+        $this->expectExceptionMessage('Container has no name yet');
         $container->keepOrKill(false);
     }
 

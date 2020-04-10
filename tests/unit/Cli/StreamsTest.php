@@ -78,11 +78,12 @@ class StreamsTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage failed to open '/this-is-no-file-to/open/really' for reading
      */
     public function testExceptionOnOpening()
     {
+        $this->expectException('RuntimeException');
+        $this->expectExceptionMessage('failed to open \'/this-is-no-file-to/open/really\' for reading');
+
         @new Streams('/this-is-no-file-to/open/really');
     }
 }

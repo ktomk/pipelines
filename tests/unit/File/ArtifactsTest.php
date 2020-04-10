@@ -27,7 +27,8 @@ class ArtifactsTest extends TestCase
      */
     public function testCreationWithNonArray()
     {
-        $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'artifacts\' requires a list');
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'artifacts\' requires a list');
 
         new Artifacts(null);
     }
@@ -36,7 +37,8 @@ class ArtifactsTest extends TestCase
      */
     public function testCreationWithIncompleteList()
     {
-        $this->setExpectedException('Ktomk\Pipelines\File\ParseException', '\'artifacts\' requires a list of strings, #0 is not a string');
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'artifacts\' requires a list of strings, #0 is not a string');
 
         new Artifacts(array(null));
     }

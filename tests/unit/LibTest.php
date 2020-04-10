@@ -46,7 +46,7 @@ class LibTest extends TestCase
     {
         $actual = Lib::cmd('foo', array('bar', 'baz'));
         $expected = 'foo bar baz';
-        $this->assertInternalType('string', $actual);
+        $this->assertIsString($actual);
         $this->assertSame($actual, $expected);
     }
 
@@ -104,15 +104,16 @@ class LibTest extends TestCase
 
     public function testPhpBinary()
     {
-        $this->assertInternalType('string', Lib::phpBinary());
+        $this->assertIsString(Lib::phpBinary());
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage maximum length of 2 is too little
      */
     public function testArrayChunkByStringLengthThrowsException()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('maximum length of 2 is too little');
+
         Lib::arrayChunkByStringLength(array('test'), 2);
     }
 

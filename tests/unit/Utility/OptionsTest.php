@@ -18,7 +18,7 @@ class OptionsTest extends TestCase
     {
         $options = Options::create();
         $this->assertNull($options->get('foo.bar.baz'));
-        $this->assertInternalType('string', $options->get('docker.socket.path'));
+        $this->assertIsString($options->get('docker.socket.path'));
     }
 
     public function testOptionsMock()
@@ -29,7 +29,7 @@ class OptionsTest extends TestCase
         $this->assertNotNull($options->define('foo.bar.baz', 'top')->get('foo.bar.baz'));
         $this->assertSame('top', $options->get('foo.bar.baz'));
 
-        $this->assertInternalType('string', $options->get('docker.socket.path'));
+        $this->assertIsString($options->get('docker.socket.path'));
         $options->define('docker.socket.path', '/var/run/super-docker.sock');
         $this->assertSame('/var/run/super-docker.sock', $options->get('docker.socket.path'));
     }

@@ -44,7 +44,8 @@ class RunnerOptionsTest extends TestCase
     public function testInvalidPrefix()
     {
         $args = Args::create(array('cmd', '--prefix', '123'));
-        $this->setExpectedException('Ktomk\Pipelines\Cli\ArgsException', 'invalid prefix: \'123\'');
+        $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
+        $this->expectExceptionMessage('invalid prefix: \'123\'');
         RunnerOptions::bind($args, Streams::create())->run();
     }
 
@@ -57,7 +58,9 @@ class RunnerOptionsTest extends TestCase
         $args = Args::create(array('cmd', '--docker-client-pkgs'));
         $streams = new Streams(null, 'php://output', null);
         $this->expectOutputRegex('(^\Qdocker-42.42.1-binsh-test-stub\E$)m');
-        $this->setExpectedException('Ktomk\Pipelines\Utility\StatusException', '', 0);
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('');
+        $this->expectExceptionCode(0);
         RunnerOptions::bind($args, $streams)->run();
     }
 
@@ -69,9 +72,13 @@ class RunnerOptionsTest extends TestCase
     {
         $args = Args::create(array('cmd', '--docker-client', 'oh-so-much-fake'));
         $streams = new Streams(null, 'php://output', null);
-        $this->setExpectedExceptionRegExp(
-            'Ktomk\Pipelines\Cli\ArgsException',
-            '(\Q \'oh-so-much-fake\' given\E$)m',
+        $this->expectException(
+            'Ktomk\Pipelines\Cli\ArgsException'
+        );
+        $this->expectExceptionMessageMatches(
+            '(\Q \'oh-so-much-fake\' given\E$)m'
+        );
+        $this->expectExceptionCode(
             1
         );
         RunnerOptions::bind($args, $streams)->run();

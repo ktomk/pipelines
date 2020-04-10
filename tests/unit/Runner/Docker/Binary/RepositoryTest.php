@@ -133,7 +133,8 @@ class RepositoryTest extends TestCase
     public function testResolveThrows()
     {
         $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
-        $this->setExpectedException('InvalidArgumentException', 'not a readable file: ');
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('not a readable file: ');
         $repo->resolve('bogus-package-name');
     }
 

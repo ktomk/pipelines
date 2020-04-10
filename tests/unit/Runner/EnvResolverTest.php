@@ -76,11 +76,12 @@ class EnvResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage File read error: '/abc/xyz/nada-kar-la-da'
      */
     public function testAddInvalidFile()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('File read error: \'/abc/xyz/nada-kar-la-da\'');
+
         $resolver = new EnvResolver(array('UID' => '1000'));
         @$resolver->addFile('/abc/xyz/nada-kar-la-da');
     }
@@ -100,11 +101,12 @@ class EnvResolverTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
-     * @expectedExceptionMessage Variable definition error: '$'
      */
     public function testInvalidDefinition()
     {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Variable definition error: \'$\'');
+
         $resolver = new EnvResolver(array('UID' => '1000'));
         $resolver->addDefinition('$');
     }
@@ -148,7 +150,7 @@ class EnvResolverTest extends TestCase
             'g' => 'TOP',
         );
 
-        $this->assertInternalType('callable', $resolver);
+        $this->assertIsCallable($resolver);
 
         # string mode
         $actual = array_map($resolver, $input);
