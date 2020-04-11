@@ -79,7 +79,7 @@
     "ci": [
       "@composer validate --strict",
       "@cs-check",
-      "bin/pipelines --verbatim --pipeline custom/lint-php",
+      "@php -f bin/pipelines -- --verbatim --pipeline custom/lint-php",
       "@build",
       "@test"
     ]

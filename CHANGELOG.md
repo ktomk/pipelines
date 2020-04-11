@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Composer scripts `which` and `which-php` to obtain the path to composer
   in use and php in use
 ### Fixed
+- Composer script `ci` to run pipelines by build PHP version
 - Shell test runner usage information
 - Travis build configuration validation fixes
 - Do not hide errors in Phpunit test-suite
