@@ -1,9 +1,9 @@
-sudo: required
+os: linux
+dist: xenial
+language: php
 
 services:
   - docker
-
-language: php
 
 git:
   depth: 3
@@ -21,7 +21,7 @@ php:
   - '7.4snapshot'
   - 'master'
 
-matrix:
+jobs:
   allow_failures:
     - php: '7.4snapshot'
     - php: 'master'
@@ -60,9 +60,8 @@ notifications:
   email: false
 
 deploy:
-  skip_cleanup: true
   provider: releases
-  api_key:
+  token:
     secure: 4xNiXhCoBqLy2CkocUjn2zPKFYr7xod3b02EQ0HG2qNPEJBt+DeZomcck7BsiMcbmbzfTy4vqHX+B5iWmiUMqniYiYwSs28TQYrj6mlY6nav6jfTAkQiLO2Wl/JbV/X1lLIFALGfWkbHgCpgqhF7aOTX9CazcAviqr3WD9CRctlibBTsSdyaBtG9tNrsbjlg4gY/DLBODD4vsbXWok1kXR7gQWy+DeXFvw5BAEOlmI8YP2mpByv7+iGuNSRXIP66xrrIP6OZWooSiNsiNTBcwmUwqu5Ax6QKnY+iWX7oXnzjUsW7JhHmh/dndK8+e/ejPQKjmqGNaJtRFIG+tHKq25Ql32yCmtXTPr1OcJSWtZLPrHLSlptjcVcjXUEoO28CDG3/+3ENcPp3lw3VqVwHb25ySJgLWusiINyYY9tsTZBzeIW5ez/NrPRkjPI8BmJbUSS2eopSPR93WkPF6FURnbLD+aWKPqV4Dj4wCZhldRt+gn0mNmSgm1b/YOUhnlKKctThujmobj5ymoHKQol2GlQwQhLc+J2qThSsw9CvtHUZ4ZXY/+ae/CSIZodcdyZD540YRJoamwiLxUragvOHkeuwjYCZWyw77gUc9jbZVXr8/SCHaA96pCRMwTWPDJYAKJ6jA7mUn9Xb7PxFJxWhFzwPKE8+JSkLTvWVa3JZ66Y=
   file:
     - build/pipelines.phar

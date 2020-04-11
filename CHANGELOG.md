@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Travis build configuration validation fixes
 - Do not hide errors in Phpunit test-suite
 
 ## [0.0.31] - 2020-04-06
