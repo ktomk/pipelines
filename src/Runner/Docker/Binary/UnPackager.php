@@ -18,7 +18,7 @@ use Ktomk\Pipelines\Runner\Directories;
  *   Binaries are packaged in the docker project below https://download.docker.com/linux/static/stable/...
  * in versioned .tgz files (e.g. x86_64/docker-19.03.1.tgz).
  *
- *   The docker binary is a single file inside such a .tgz file, which es getting extracted and then
+ *   The docker binary is a single file inside such a .tgz file, which is getting extracted and then
  * is called the binary in the local store.
  *
  *   Both the download of the .tgz file as well as the extraction of the docker binary from it is

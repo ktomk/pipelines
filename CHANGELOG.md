@@ -4,13 +4,13 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.32] - 2020-04-11
 ### Added
 - Travis PHP 7.4 build
 - Composer script `phpunit` for use in diverse test scripts using the
   same configuration
 - Composer scripts `which` and `which-php` to obtain the path to composer
-  in use and php in use
+  and php in use
 ### Changed
 - Test-case forward compatibility for Phpunit 8 (for PHP 7.4 build)
 ### Fixed
@@ -310,4 +310,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.29]: https://github.com/ktomk/pipelines/releases/tag/0.0.29
 [0.0.30]: https://github.com/ktomk/pipelines/releases/tag/0.0.30
 [0.0.31]: https://github.com/ktomk/pipelines/releases/tag/0.0.31
+[0.0.32]: https://github.com/ktomk/pipelines/releases/tag/0.0.32
 [unreleased]: https://github.com/ktomk/pipelines

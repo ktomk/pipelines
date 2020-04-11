@@ -13,7 +13,7 @@ IFS="$(printf ' \n\t')"
 # additional variables by pipelines and docker
 vars="
 BITBUCKET_BOOKMARK         For use with Mercurial projects.
-BITBUCKET_BRANCH           The branch on which the build was kicked of. \
+BITBUCKET_BRANCH           The branch on which the build was kicked off. \
                            This value is only available on branches. \
                            \
                            Not available for builds against tags, or custom \
