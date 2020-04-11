@@ -58,7 +58,7 @@
     ],
     "unit-test": [
       "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests/unit",
-      "@php -f lib/coverage/checker.php -- build/log/clover.xml"
+      "@php -f lib/build/coverage-checker.php -- build/log/clover.xml"
     ],
     "integration-test": [
       "@phpunit tests/integration"
@@ -68,7 +68,7 @@
     ],
     "phpunit-test": [
       "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
-      "@php -f lib/coverage/checker.php -- build/log/clover.xml"
+      "@php -f lib/build/coverage-checker.php -- build/log/clover.xml"
     ],
     "which": [
       "echo ${COMPOSER_BINARY}"
