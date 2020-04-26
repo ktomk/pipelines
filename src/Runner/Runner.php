@@ -79,7 +79,7 @@ class Runner
     /**
      * Runner constructor.
      *
-     * @param string $runOpts
+     * @param RunOpts $runOpts
      * @param Directories $directories source repository root directory based directories object
      * @param Exec $exec
      * @param Flags $flags

@@ -46,11 +46,14 @@ class Yaml
         $class = null;
 
         foreach ($classes as $class) {
-            if ($class::isAvailable()) {
-                break;
+            if (is_subclass_of($class, 'Ktomk\Pipelines\Yaml\ParserInterface')
+                && $class::isAvailable()) {
+                return new $class();
             }
         }
 
-        return new $class;
+        // @codeCoverageIgnoreStart
+        throw new \BadMethodCallException(sprintf('No YAML parser available'));
+        // @codeCoverageIgnoreEnd
     }
 }

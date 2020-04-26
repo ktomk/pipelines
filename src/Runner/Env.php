@@ -177,9 +177,10 @@ class Env
             return false;
         }
 
-        list($var['BITBUCKET_BRANCH'], $var['BITBUCKET_PR_DESTINATION_BRANCH'])
-            = explode(':', $reference->getName(), 2)
-            + array(null, null);
+        $var = array_combine(
+            array('BITBUCKET_BRANCH', 'BITBUCKET_PR_DESTINATION_BRANCH'),
+            explode(':', $reference->getName(), 2) + array(null, null)
+        );
 
         foreach ($var as $name => $value) {
             isset($value) && $this->addVar($name, $value);

@@ -14,7 +14,7 @@ class ExceptionHandler
     /**
      * @var bool
      */
-    private $showStacktrace = false;
+    private $showStacktrace;
 
     /**
      * @var Help
@@ -62,7 +62,7 @@ class ExceptionHandler
         $status = $e->getCode();
         $message = $e->getMessage();
 
-        if ($this->isUnexpectedException($e)) {
+        if (!is_int($status) || $this->isUnexpectedException($e)) {
             // catch unexpected exceptions for user-friendly message
             $status = 2;
             $message = sprintf('fatal: %s', $e->getMessage());

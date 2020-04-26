@@ -458,7 +458,6 @@ class Builder
     {
         list($utility, $parameters) = preg_split('(\s)', $command, 2) + array(1 => null);
 
-        $status = null;
         $phpUtility = sprintf(
             '%s -f %s --',
             escapeshellcmd(Lib::phpBinary()),
