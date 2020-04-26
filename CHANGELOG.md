@@ -4,10 +4,11 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.33] - 2020-04-26
 ### Changed
 - Readme for container re-use
 ### Fixed
+- Build for Phpunit 7.5+
 - Diverse lower-level code issues
 
 ## [0.0.32] - 2020-04-11

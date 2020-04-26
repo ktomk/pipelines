@@ -715,7 +715,7 @@ class Builder
     {
         if (defined('STDERR')) {
             // @codeCoverageIgnoreStart
-            // explicit: phpunit can not test this code cleanly as it is always
+            // explicit: phpunit 6 can not test this code cleanly as it is always
             // not defined in phpt tests due to PHP having STDERR not set when a
             // php file read is STDIN (which is the case for phpt tests for PHP
             // code) so this is a work around as this code is tested w/ phpt.
@@ -728,15 +728,18 @@ class Builder
             }
             // @codeCoverageIgnoreEnd
         } else {
+            // @codeCoverageIgnoreStart
+            // explicit: phpunit 7.5+ can not test this code cleanly as it is
+            // a fall-back for a previous phpunit version not having STDERR in
+            // phpt tests available (see above)
             $handle = fopen('php://stderr', 'wb');
             if (false === $handle) {
-                // @codeCoverageIgnoreStart
                 $message = 'fatal i/o error: failed to open php://stderr';
                 $this->errors[] = $message;
 
                 throw new \RuntimeException($message);
-                // @codeCoverageIgnoreEnd
             }
+            // @codeCoverageIgnoreEnd
         }
 
         return $handle;
