@@ -183,7 +183,7 @@ class App implements Runnable
     {
         $args = $this->arguments;
 
-        $basename = $args->getOptionArgument('basename', self::BBPL_BASENAME);
+        $basename = $args->getStringOptionArgument('basename', self::BBPL_BASENAME);
         if (!LibFs::isBasename($basename)) {
             StatusException::status(1, sprintf("not a basename: '%s'", $basename));
         }
@@ -201,7 +201,7 @@ class App implements Runnable
     {
         $args = $this->arguments;
 
-        $deployMode = $args->getOptionArgument('deploy', 'copy');
+        $deployMode = $args->getStringOptionArgument('deploy', 'copy');
 
         if (!in_array($deployMode, array('mount', 'copy'), true)) {
             StatusException::status(

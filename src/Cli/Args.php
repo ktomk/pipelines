@@ -124,6 +124,27 @@ class Args extends ArgsArgs
     }
 
     /**
+     * Get the argument of an option.
+     *
+     * NOTE: returns only the first option value if multiple options would match
+     *
+     * @param string|string[] $option
+     * @param string $default
+     * @param bool $required [optional]
+     * @throws \InvalidArgumentException
+     * @throws ArgsException
+     * @return string
+     */
+    public function getStringOptionArgument($option, $default, $required = false)
+    {
+        if (!is_string($default)) {
+            throw new InvalidArgumentException(sprintf('default value must be string, %s given', gettype($default)));
+        }
+
+        return (string)$this->getOptionArgument($option, $default, $required);
+    }
+
+    /**
      * @return string
      */
     public function getUtility()

@@ -20,8 +20,6 @@ class ArgsTest extends TestCase
         $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args', $args);
     }
 
-    /**
-     */
     public function testMissingCommand()
     {
         $this->expectException('InvalidArgumentException');
@@ -105,6 +103,7 @@ class ArgsTest extends TestCase
     }
 
     /**
+     * @throws ArgsException
      */
     public function testMandatoryOption()
     {
@@ -125,6 +124,7 @@ class ArgsTest extends TestCase
     }
 
     /**
+     * @throws ArgsException
      */
     public function testMandatoryOptionArgument()
     {
@@ -136,6 +136,7 @@ class ArgsTest extends TestCase
     }
 
     /**
+     * @throws ArgsException
      */
     public function testMandatoryOptionArgumentWithParameters()
     {
@@ -144,5 +145,20 @@ class ArgsTest extends TestCase
 
         $args = new Args(array('--prefix', '--'));
         $args->getOptionArgument('prefix', 100);
+    }
+
+    /**
+     * @throws ArgsException
+     */
+    public function testGetStringOptionArgumentThrows()
+    {
+        $args = new Args(array('--prefix', '--'));
+
+        $this->assertSame('default', $args->getStringOptionArgument('suffix', 'default'));
+
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('default value must be string, integer given');
+
+        $args->getStringOptionArgument('prefix', 100);
     }
 }

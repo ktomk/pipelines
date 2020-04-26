@@ -121,7 +121,7 @@ class RunnerOptions
     private function parseDockerClient(Args $args)
     {
         $default = Repository::PKG_INTEGRATE;
-        $binaryClient = $args->getOptionArgument('docker-client', $default);
+        $binaryClient = $args->getStringOptionArgument('docker-client', $default);
         if ($binaryClient !== $default) {
             $repository = self::createRepository();
 
@@ -161,7 +161,7 @@ class RunnerOptions
      */
     private function parsePrefix(Args $args)
     {
-        $prefix = $args->getOptionArgument('prefix', App::UTILITY_NAME);
+        $prefix = $args->getStringOptionArgument('prefix', App::UTILITY_NAME);
         if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
             ArgsException::__(sprintf("invalid prefix: '%s'", $prefix));
         }
