@@ -394,9 +394,9 @@ class App implements Runnable
     {
         $args = $this->arguments;
 
-        $buffer = $args->getOptionArgument('working-dir', false);
+        $buffer = $args->getStringOptionArgument('working-dir', '');
 
-        if (false !== $buffer) {
+        if ('' !== $buffer) {
             $this->changeWorkingDir($buffer);
         }
 
