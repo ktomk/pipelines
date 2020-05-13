@@ -137,7 +137,7 @@ class StepRunner
             return $result;
         }
 
-        $status = $this->runStepScript($step, $streams, $exec, $name);
+        $status = StepScriptRunner::createRunStepScript($step, $streams, $exec, $name);
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
@@ -461,49 +461,6 @@ class StepRunner
     }
 
     /**
-     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
-     * @param Streams $streams
-     * @param Exec $exec
-     * @param string $name container name
-     *
-     * @return null|int should never be null, status, non-zero if a command failed
-     */
-    private function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
-    {
-        $cmdBuffer = Lib::cmd("<<'SCRIPT' docker", array(
-                'exec', '-i', $name, '/bin/sh',
-            )) . "\n";
-
-        $buffer = $cmdBuffer;
-        $buffer .= "# this /bin/sh script is generated from a pipeline step.\n";
-        $buffer .= "set -e\n";
-        $buffer .= $this->generateScript($step->getScript());
-
-        $status = $exec->pass($buffer, array());
-
-        if (0 !== $status) {
-            $streams->err(sprintf("script non-zero exit status: %d\n", $status));
-        }
-
-        if (!($script = $step->getAfterScript())) {
-            return $status;
-        }
-
-        $streams->out("After script:\n");
-        $buffer = $cmdBuffer;
-        $buffer .= "# pipelines generated after-script.\n";
-        $buffer .= sprintf("BITBUCKET_EXIT_CODE=%d\n", $status);
-        $buffer .= "export BITBUCKET_EXIT_CODE\n";
-        $buffer .= $this->generateScript($script);
-        $afterStatus = $exec->pass($buffer, array());
-        if (0 !== $afterStatus) {
-            $streams->err(sprintf("after-script non-zero exit status: %d\n", $afterStatus));
-        }
-
-        return $status;
-    }
-
-    /**
      * @param StepContainer $container
      * @param int $status
      */
@@ -531,23 +488,5 @@ class StepRunner
                 substr($id, 0, 12)
             ));
         }
-    }
-
-    /**
-     * @param array|string[] $script
-     *
-     * @return string
-     */
-    private function generateScript(array $script)
-    {
-        $buffer = '';
-        foreach ($script as $line => $command) {
-            $line && $buffer .= 'printf \'\\n\'' . "\n";
-            $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
-            $buffer .= $command . "\n";
-        }
-        $buffer .= "SCRIPT\n";
-
-        return $buffer;
     }
 }
