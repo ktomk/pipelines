@@ -151,54 +151,55 @@ integration work fostering your agility and vendor independence.
 Features include:
 
 * **Dev Mode**: Pipeline from your working tree like never
-  before. Pretend to be on any branch, tag or bookmark
-  (`--trigger`) even in a different repository or none at all.
+    before. Pretend to be on any branch, tag or bookmark
+    (`--trigger`) even in a different repository or none at all.
 
-  Check if the reference matches a pipeline or just run the
-  default (default) or a specific one (`--pipeline`). Use a
-  different pipelines file (`--file`) or swap the "repository" by
-  changing the working directory (`--working-dir <path>`).
+    Check if the reference matches a pipeline or just run the
+    default (default) or a specific one (`--pipeline`). Use a
+    different pipelines file (`--file`) or swap the "repository" by
+    changing the working directory (`--working-dir <path>`).
 
-  If a pipeline step fails, the steps container can be kept for
-  further inspection on error with the `--error-keep` option.
-  The container id is shown which makes it easy to spawn a shell
-  inside:
+    If a pipeline step fails, the steps container can be kept for
+    further inspection on error with the `--error-keep` option.
+    The container id is shown which makes it easy to spawn a shell
+    inside:
 
-      $ docker exec -it $ID /bin/sh
+    ```
+    $ docker exec -it $ID /bin/sh
+    ```
+    Containers can be always kept for debugging and manual testing
+    of a pipeline with `--keep` and with the said `--error-keep` on
+    error only.
 
-  Containers can be always kept for debugging and manual testing
-  of a pipeline with `--keep` and with the said `--error-keep` on
-  error only.
+    Continue on a (failed) step with the `--steps <steps>` argument,
+    the `<steps>` option can be any step number or sequence, separate
+    multiple with comma, you can even repeat steps or reverse order.
 
-  Continue on a (failed) step with the `--steps <steps>` argument,
-  the `<steps>` option can be any step number or sequence, separate
-  multiple with comma, you can even repeat steps or reverse order.
+    For example, if the second step failed, to continue use `--steps 2-`
+    to re-run the second and all following steps.
 
-  For example, if the second step failed, to continue use `--steps 2-`
-  to re-run the second and all following steps.
+    Afterwards manage left overs with `--docker-list|kill|clean` or
+    clean up with `--docker-zap`.
 
-  Afterwards manage left overs with `--docker-list|kill|clean` or
-  clean up with `--docker-zap`.
-
-  Debugging options to dream for.
+    Debugging options to dream for.
 
 * **Container Isolation**: There is one container per step, like
-  it is on Bitbucket.
+    it is on Bitbucket.
 
-  The files are isolated by being copied into the container
-  before the pipeline step script is executed (implicit
-  `--deploy copy`).
+    The files are isolated by being copied into the container
+    before the pipeline step script is executed (implicit
+    `--deploy copy`).
 
-  Alternatively files can be mounted into the container instead
-  with `--deploy mount` which normally is faster, but the working
-  tree might become changed by the container script which can be
-  a problem when Docker runs system-wide as containers do not isolate
-  users (e.g. root is root).  \
-  Better with `--deploy mount` is using
-  Docker in rootless mode where files manipulated in the container /
-  pipeline are accessible to the own user account (like root is user).
+    Alternatively files can be mounted into the container instead
+    with `--deploy mount` which normally is faster, but the working
+    tree might become changed by the container script which can be
+    a problem when Docker runs system-wide as containers do not isolate
+    users (e.g. root is root).  \
+    Better with `--deploy mount` is using
+    Docker in rootless mode where files manipulated in the container /
+    pipeline are accessible to the own user account (like root is user).
 
-  * Further reading: [*How-To Rootless Pipelines*](doc/PIPELINES-HOWTO-ROOTLESS.md)
+    * Further reading: [*How-To Rootless Pipelines*](doc/PIPELINES-HOWTO-ROOTLESS.md)
 
 * **Pipeline Integration**: Export files from the pipeline by
   making use of artifacts, these are copied back into the working
@@ -557,9 +558,9 @@ to use the development version.
 - [ ] Pipeline file properties support
     - [X] step.trigger (`--steps` / `--no-manual` options)
     - [ ] clone (*git-deployment* feature)
-    - definitions (incremental support)
-    - max-time (never needed this)
-    - size (likely neglected for local run, limited support for
+    - [ ] definitions (incremental support)
+    - [ ] max-time (never needed this)
+    - [ ] size (likely neglected for local run, limited support for
       [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))
     - [X] step.after-script (*after-script* feature)
 - [ ] Get VCS revision from working directory (*git-deployment* feature)
