@@ -14,7 +14,7 @@ class ExceptionHandler
     /**
      * @var bool
      */
-    private $showStacktrace;
+    private $showStacktraceFlag;
 
     /**
      * @var Help
@@ -35,7 +35,7 @@ class ExceptionHandler
     {
         $this->streams = $streams;
         $this->help = $help;
-        $this->showStacktrace = $showStacktrace;
+        $this->showStacktraceFlag = $showStacktrace;
     }
 
     /**
@@ -62,27 +62,69 @@ class ExceptionHandler
         $status = $e->getCode();
         $message = $e->getMessage();
 
+        // "catch" unexpected exceptions for user-friendly message
         if (!is_int($status) || $this->isUnexpectedException($e)) {
-            // catch unexpected exceptions for user-friendly message
             $status = 2;
             $message = sprintf('fatal: %s', $e->getMessage());
         }
 
-        if (0 !== $status && '' !== $message) {
-            $this->error(sprintf('pipelines: %s', $message));
-        }
-
-        if ($e instanceof ArgsException) {
-            $this->help->showUsage();
-        }
-
-        if ($this->showStacktrace) {
-            $this->debugException($e);
-        }
+        $this->showError($status, $message);
+        $this->showUsage($e);
+        $this->showStacktrace($e);
 
         return $status;
     }
 
+    /**
+     * Show error message
+     *
+     * @param int $status
+     * @param string $message
+     */
+    private function showError($status, $message)
+    {
+        if (0 !== $status && '' !== $message) {
+            $this->error(sprintf('pipelines: %s', $message));
+        }
+    }
+
+    /**
+     * Some exceptions can show usage
+     *
+     * @param Exception $e
+     */
+    private function showUsage(Exception $e)
+    {
+        if ($e instanceof ArgsException) {
+            $this->help->showUsage();
+        }
+    }
+
+    /**
+     * Show a stacktrace for debugging purposes (`--debug`` flag)
+     *
+     * @param Exception $e
+     */
+    private function showStacktrace(Exception $e)
+    {
+        if ($this->showStacktraceFlag) {
+            $this->debugException($e);
+        }
+    }
+
+    /**
+     * Some exceptions are not unexpected
+     *
+     * The pipelines utility uses *some* exceptions to signal program
+     * flow in context of the command line utility. E.g. to not call
+     * exit() somewhere deep in the code (StatusException), lazy command
+     * line argument handling (ArgsException) and lazy pipelines.yml
+     * file parsing (ParseException).
+     *
+     * @param Exception $e
+     *
+     * @return bool
+     */
     private function isUnexpectedException(Exception $e)
     {
         return (
