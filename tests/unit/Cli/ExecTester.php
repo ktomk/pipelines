@@ -21,6 +21,8 @@ class ExecTester extends Exec
 
     private $expects = array();
 
+    private $debugMessages = array();
+
     /**
      * @param TestCase $testCase
      * @return ExecTester
@@ -38,7 +40,7 @@ class ExecTester extends Exec
     public function __construct(TestCase $testCase)
     {
         $this->testCase = $testCase;
-        parent::__construct();
+        parent::__construct(array($this, 'addDebugMessage'));
         parent::setActive(false);
     }
 
@@ -92,6 +94,8 @@ class ExecTester extends Exec
      */
     public function capture($command, array $arguments, &$out = null, &$err = null)
     {
+        parent::capture($command, $arguments, $out, $err);
+
         return $this->dealInvokeExpectation(__FUNCTION__, $command, $arguments, $out, $err);
     }
 
@@ -104,6 +108,8 @@ class ExecTester extends Exec
      */
     public function pass($command, array $arguments)
     {
+        parent::pass($command, $arguments);
+
         return $this->dealInvokeExpectation(__FUNCTION__, $command, $arguments);
     }
 
@@ -120,6 +126,22 @@ class ExecTester extends Exec
         throw new BadMethodCallException(
             'This exec tester can not be used in tests that require setting it to active.'
         );
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getDebugMessages()
+    {
+        return $this->debugMessages;
+    }
+
+    /**
+     * @param string $message
+     */
+    protected function addDebugMessage($message)
+    {
+        $this->debugMessages[] = $message;
     }
 
     /**
