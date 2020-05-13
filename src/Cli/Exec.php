@@ -54,11 +54,11 @@ class Exec
     {
         $buffer = Lib::cmd($command, $arguments);
         $this->debug($buffer);
-        $proc = new Proc($buffer);
         if (!$this->active) {
             return 0;
         }
 
+        $proc = new Proc($buffer);
         $status = $proc->run();
         $this->debug("exit status: ${status}");
         $out = $proc->getStandardOutput();
