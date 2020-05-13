@@ -549,6 +549,10 @@ to use the development version.
       (offline) usage in PHP projects
 - [ ] Check Docker existence before running a pipeline
 - [ ] Pipes support (*pipe* feature)
+    - [X] Show scripts with pipe/s
+    - [X] Fake run script with pipe/s showing information
+    - [ ] Create test/demo pipe
+    - [ ] Run script with pipe/s
 - [ ] Write section about the file format support/limitations
 - [ ] Pipeline file properties support
     - [X] step.trigger (`--steps` / `--no-manual` options)

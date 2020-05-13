@@ -102,10 +102,39 @@ class StepScriptRunner
     private function generateScript(array $script)
     {
         $buffer = '';
-        foreach ($script as $line => $command) {
+        foreach ($script as $index => $line) {
+            $command = $this->generateCommand($line);
             $line && $buffer .= 'printf \'\\n\'' . "\n";
             $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
             $buffer .= $command . "\n";
+        }
+
+        return $buffer;
+    }
+
+    /**
+     * @param array|string $line
+     *
+     * @return string
+     */
+    private function generateCommand($line)
+    {
+        $standard = is_scalar($line) || null === $line;
+        $pipe = is_array($line) && isset($line['pipe']) && is_string($line['pipe']);
+
+        if ($standard) {
+            return (string)$line;
+        }
+
+        $buffer = '';
+
+        if ($pipe) {
+            $buffer .= "echo \"pipe: {$line['pipe']} (pending feature)\" # pipe feature is pending\n";
+            if (isset($line['variables']) && is_array($line['variables'])) {
+                foreach ($line['variables'] as $name => $value) {
+                    $buffer .= "echo '  ${name} (${value}):' ${value}\n";
+                }
+            }
         }
 
         return $buffer;
