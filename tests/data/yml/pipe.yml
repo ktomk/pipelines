@@ -1,0 +1,20 @@
+clone:
+  depth: 1
+image: ktomk/pipelines:busybox
+
+pipelines:
+
+  branches:
+    develop:
+    - step:
+        name: Deploy to staging
+        deployment: staging
+        script:
+          - pipe: atlassian/rsync-deploy:0.4.2
+            variables:
+              USER: 'ec2-user'
+              SERVER: '${SERVER_HOST}'
+              REMOTE_PATH: '/home/ec2-user/app'
+              LOCAL_PATH: '$PWD'
+              EXTRA_ARGS: '--exclude=".git*"'
+          - 'echo "Hello, World!"'

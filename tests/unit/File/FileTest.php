@@ -52,6 +52,16 @@ class FileTest extends TestCase
         $this->assertNotNull($file);
     }
 
+    public function testCreateFromPipeFile()
+    {
+        $path = __DIR__ . '/../../data/yml/pipe.yml';
+        $file = File::createFromFile($path);
+        $this->assertNotNull($file);
+
+        $default = $file->getById('branches/develop');
+        $this->assertNotNull($default);
+    }
+
     /**
      */
     public function testCreateFromFileWithError()

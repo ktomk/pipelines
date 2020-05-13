@@ -231,13 +231,21 @@ class Step
         }
 
         foreach ($script[$name] as $index => $line) {
-            if (!is_scalar($line) && null !== $line) {
-                ParseException::__(sprintf(
-                    "'%s' requires a list of commands, step #%d is not a command",
-                    $name,
-                    $index
-                ));
-            }
+            $this->parseNamedScriptLine($name, $index, $line);
+        }
+    }
+
+    private function parseNamedScriptLine($name, $index, $line)
+    {
+        $standard = is_scalar($line) || null === $line;
+        $pipe = is_array($line) && isset($line['pipe']) && is_string($line['pipe']);
+
+        if (!($standard || ('script' === $name && $pipe))) {
+            ParseException::__(sprintf(
+                "'%s' requires a list of commands, step #%d is not a command",
+                $name,
+                $index
+            ));
         }
     }
 }
