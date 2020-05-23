@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Docker name tag syntax (in doc)
 - Change log two release links
 
 ## [0.0.34] - 2020-05-13

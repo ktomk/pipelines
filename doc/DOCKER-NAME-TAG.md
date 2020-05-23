@@ -52,7 +52,7 @@ If not present, the command uses Docker’s public registry located at
                 := <name-comp> ( "/" <name-comp> )?
     <name-comp> := <name> ( <seperator> <name> )*
     <name>      := [a-z0-9]+
-    <seperator> := ( "." | "_" "_"? | "-" )+
+    <seperator> := ( "." | "_" "_"? | "-"+ )
 
     "-" := ASCII 45 dash
     "." := ASCII 46 period
