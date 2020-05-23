@@ -62,7 +62,6 @@ notifications:
   email: false
 
 deploy:
-  skip_cleanup: true
   provider: releases
   token:
     secure: 4xNiXhCoBqLy2CkocUjn2zPKFYr7xod3b02EQ0HG2qNPEJBt+DeZomcck7BsiMcbmbzfTy4vqHX+B5iWmiUMqniYiYwSs28TQYrj6mlY6nav6jfTAkQiLO2Wl/JbV/X1lLIFALGfWkbHgCpgqhF7aOTX9CazcAviqr3WD9CRctlibBTsSdyaBtG9tNrsbjlg4gY/DLBODD4vsbXWok1kXR7gQWy+DeXFvw5BAEOlmI8YP2mpByv7+iGuNSRXIP66xrrIP6OZWooSiNsiNTBcwmUwqu5Ax6QKnY+iWX7oXnzjUsW7JhHmh/dndK8+e/ejPQKjmqGNaJtRFIG+tHKq25Ql32yCmtXTPr1OcJSWtZLPrHLSlptjcVcjXUEoO28CDG3/+3ENcPp3lw3VqVwHb25ySJgLWusiINyYY9tsTZBzeIW5ez/NrPRkjPI8BmJbUSS2eopSPR93WkPF6FURnbLD+aWKPqV4Dj4wCZhldRt+gn0mNmSgm1b/YOUhnlKKctThujmobj5ymoHKQol2GlQwQhLc+J2qThSsw9CvtHUZ4ZXY/+ae/CSIZodcdyZD540YRJoamwiLxUragvOHkeuwjYCZWyw77gUc9jbZVXr8/SCHaA96pCRMwTWPDJYAKJ6jA7mUn9Xb7PxFJxWhFzwPKE8+JSkLTvWVa3JZ66Y=
@@ -73,7 +72,7 @@ deploy:
     condition: '$TRAVIS_PHP_VERSION = 7.2'
     tags: true
     repo: ktomk/pipelines
-
+  edge: true
 env:
   global:
     secure: 2UP09p6h0NTe+Cwxl8d8d47b5MJjNjx6AmXIg+2zLRc+ggGBhbHAZMk/1TKf8n/j4g0OSXgikdRBkaSGkfQ1jHulWuenuRKwY9/C16lRTXUpcCRQxlHby3twyDBKWhhZs/2dH6iCtyMGi38qmhObh1pmcADrE81PqF6/HBDONIyd2e9m9+Ruq76mWciyiuybm62L0G1kQREphuBIHlCB3aF1hcuO64BcMCrpS5l1q04FQyFx0dOPBKe64HXAjxHOp5bZzAZMmQMhaCKapj+/WddQwyopWDGnqQGgba9nFzGLpb3i+wmWLJJF8QSnVQo4withoE4SzoOgu7fqnpw6s29gYQoJWZ+lT2AupQFQzn1EymvLp9GOco8Wabqc7x1Vl17g+cqlb7qGiYmWm059qmqi0FDs1W3SHrlnpaV4N373IL2pvwKY89yi70fo9M1jyetFezg1jugGKU46v/AjeJ1fKX+6/lxXH7nayke9gbd0GmI0I63r94eCFgy81fIMR7+4J2JhkdP131ZVZMdrgBIgUdPsdFzhTJcZAxZVxeiRy8xAOrlOXrjL9HvGbgcYqENdFEu/0lGeZLvd+W+MqwWfmBbtlLTDVlXoO6Y9VmGODLEePlKSXEiRwMta4zxwCMagzgx1+cNUrb9u09MLjKVlrIpyCG4MM33q0mSiJdg=
