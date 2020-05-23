@@ -126,7 +126,7 @@ pipelines:
     printenv:
       - step:
           image: ktomk/pipelines:busybox
-          name: print environemnt variables
+          name: print environment variables
           script:
             - printenv | sort
     after-script:

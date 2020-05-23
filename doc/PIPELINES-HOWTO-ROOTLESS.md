@@ -12,69 +12,86 @@ This How-To describes how to install docker rootless on Ubuntu 18.04 LTS
 
 ## Installing Docker Rootless
 
-1. If Docker is installed as daemon (standard), stop it:
+1.  If Docker is installed as daemon (standard), stop it:
 
-       # systemctl stop docker
+    ```
+    # systemctl stop docker
+    ```
 
-   This should be the only command that needs to be executed as root.
+    This should be the only command that needs to be executed as root.
 
-2. Read the installation instructions by reading the source code of the
-   docker rootless installer:
+2.  Read the installation instructions by reading the source code of the
+    docker rootless installer:
 
-       $ curl -fsSL https://get.docker.com/rootless -o get-docker.sh
+    ```bash
+    $ curl -fsSL https://get.docker.com/rootless -o get-docker.sh
+    $ less get-docker.sh
+    ```
 
-       $ less get-docker.sh
+3.  Install docker rootless following the scripted instructions:
 
-3. Install docker rootless following the scripted instructions:
+    ```bash
+    $ sh get-docker.sh
+    ```
 
-       $ sh get-docker.sh
+    The script should run through so that there should be no manual
+    intervention necessary. At the very end the script displays the
+    DOCKER_HOST environment parameter with it's value and how to
+    export it to the environment like this:
 
-   The script should run through so that there should be no manual
-   intervention necessary. At the very end the script displays the
-   DOCKER_HOST environment parameter with it's value and how to
-   export it to the environment like this:
+    ```bash
+    $ export DOCKER_HOST=unix:///run/user/1000/docker.sock
+    ```
 
-       export DOCKER_HOST=unix:///run/user/1000/docker.sock
+    It also shows which commands to run to start Docker rootless:
 
-   It also shows which commands to run to start Docker rootless:
+    ```text
+    systemctl --user (start|stop|restart) docker
+    ```
 
-       systemctl --user (start|stop|restart) docker
-
-4. Prepare the environment to run pipelines with Docker rootless:
+4.  Prepare the environment to run pipelines with Docker rootless:
 
     1. If the `DOCKER_HOST` environment parameter is not set, export it to
     the environment first:
 
-           $ export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/docker.sock"
+    ```bash
+    $ export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/docker.sock"
+    ```
 
     This environment parameter is necessary so that the Docker client
     knows how to connect to the Docker rootless daemon.
 
     2. Start the Docker rootless daemon if not yet started:
 
-           $ systemctl --user start docker
+    ```bash
+    $ systemctl --user start docker
+    ```
 
     Use `status` instead of `start` to see if and how the daemon is running.
 
     Use `stop` to stop it again.
 
-5. Test pipelines to run with Docker rootless.  \
-   (this is done in the pipelines project itself)  \
-   Easiest and fastest is to run the default pipeline w/ mount as it does
-   not change anything in the project:
+5.  Test pipelines to run with Docker rootless (done in the pipelines project
+    itself)
+    Easiest and fastest is to run the default pipeline w/ mount as it does
+    not change anything in the project:
 
-       $ pipelines --deploy mount
+    ```bash
+    $ pipelines --deploy mount
+    ```
 
-   If the installation of Docker rootless is incomplete, you well see the
-   pipelines utility to complain about setting up the container providing
-   more info that docker has issues connecting to the Docker daemon like so:
+    If the installation of Docker rootless is incomplete, you well see the
+    pipelines utility to complain about setting up the container providing
+    more info that docker has issues connecting to the Docker daemon like so:
 
-   >     pipelines: setting up the container failed
-   >     docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
-   >     See 'docker run --help'.
-   >
-   >
-   >     exit status: 125
+    > ```bash
+    > pipelines: setting up the container failed
+    > docker: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?.
+    > See 'docker run --help'.
+    >
+    >
+    > exit status: 125
+    > ```
 
    This means either the `DOCKER_HOST` environment parameter is either missing
    or not pointing to the correct socket *or* the Daemon is not running. The
@@ -90,15 +107,15 @@ in batches.
 
 To switch back from rootless to system:
 
-~~~
+```bash
 $ systemctl --user stop docker; sudo systemctl start docker \
   && export DOCKER_HOST="unix:///var/run/docker.sock"
-~~~
+```
 and back to rootless:
-~~~
+```bash
 $ sudo systemctl stop docker; systemctl --user start docker \
   && export DOCKER_HOST="unix://${XDG_RUNTIME_DIR}/docker.sock"
-~~~
+```
 
 To better integrate with your own users' environment, one could
 

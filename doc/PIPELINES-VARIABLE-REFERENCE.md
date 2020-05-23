@@ -1,4 +1,4 @@
-# Pipelines Environment Variable Usage Reference
+# Pipelines Environment Variable Usage
 
 Environment variables (sometimes also called environment
 parameters) are a first grade citizen of the pipelines utility.
@@ -23,7 +23,7 @@ fashion (façon).
 | --------------------------------------- |----------------------------|
 | `CI`                                    | *all* options; always set to "`true`" |
 | `BITBUCKET_BOOKMARK`                    | `--trigger <ref>` where `<ref>` is `bookmark:<name>`; for Mercurial projects |
-| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>`, `pr:<name>`, `pr:<source>:<desitnation>`; source branch |
+| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>`, `pr:<name>`, `pr:<source>:<destination>`; source branch |
 | `BITBUCKET_BUILD_NUMBER`                | *all* options; always set to "`0`" |
 | `BITBUCKET_CLONE_DIR`                   | *all* options; set by pipelines, it is the deploy directory inside the container (not clone directory) as pipelines has more options than cloning (it currently actually never clones) |
 | `BITBUCKET_COMMIT`                      | *all* options; always set to "`0000000000000000000000000000000000000000`" |
@@ -34,7 +34,7 @@ fashion (façon).
 | `BITBUCKET_GIT_SSH_ORIGIN`              | -/-; currently unsupported |
 | `BITBUCKET_PARALLEL_STEP`               | *all* options; in a parallel step set to zero-based index of the current step in the group, e.g. 0, 1, 2, ... |
 | `BITBUCKET_PARALLEL_STEP_COUNT`         | *all* options; in a parallel step set to the total number of steps in the group, e.g. 5. |
-| `BITBUCKET_PR_DESTINATION_BRANCH`       | `--trigger <ref>` where `<ref>` is `pr:<source>:<desitnation>` for the `<destination>` branch (see as well `BITBUCKET_BRANCH`); destination branch |
+| `BITBUCKET_PR_DESTINATION_BRANCH`       | `--trigger <ref>` where `<ref>` is `pr:<source>:<destination>` for the `<destination>` branch (see as well `BITBUCKET_BRANCH`); destination branch |
 | `BITBUCKET_PR_ID`                       | -/-; currently unsupported |
 | `BITBUCKET_PROJECT_KEY`                 | -/-; currently unsupported |
 | `BITBUCKET_PROJECT_UUID`                | -/-; currently unsupported |
@@ -124,7 +124,7 @@ can be provided w/ the `--env-file <path>` option of the
 `pipelines` (or `docker`) utility.
 
 * `.gitignore` file:
-    ~~~
+    ```gitignore
     # ...
 
     # Private environment variable files (dot env)
@@ -132,13 +132,13 @@ can be provided w/ the `--env-file <path>` option of the
     !/.env.dist
 
     # ...
-    ~~~
+    ```
 
     *(for more information on the `.gitignore` file format best
     see the [gitignore documentation][GIT-IGNORE] \[GIT-IGNORE])*
 
 * `.env.dist` file:
-    ~~~
+    ```bash
     # ---
     # Pipeline: Gitlab Cloud Project
     #
@@ -153,20 +153,20 @@ can be provided w/ the `--env-file <path>` option of the
     AWS_REGION=eu-west-1
     AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY
-    ~~~
+    ```
 
     *(secrets in this `.env` file are hidden, only their
     variable names are given, e.g. `AWS_SECRET_ACCESS_KEY`)*
 
 * `.env` file:
-    ~~~
+    ```bash
     # ---
     # Pipeline: AWS ECR
     #
     AWS_REGION=eu-west-1
     AWS_ACCESS_KEY_ID=ETI1ZUOWJ2GO5Q8IDFDC
     AWS_SECRET_ACCESS_KEY=IzuobhF55og9fel6hleyuo4UOA0lUL9+GE2RmH6J
-    ~~~
+    ```
 
 This example provides the project-wide information which
 environment variables are required for it. Additionally the
@@ -203,8 +203,8 @@ project:
 * `BITBUCKET_REPO_SLUG` - if not matching project base name
 * `BITBUCKET_REPO_UUID`
 
-***Note:** Perhaps UUID values are gained best via the Bitbucket
-Cloud REST API on the shell command line.*
+> **Note:** Perhaps UUID values are gained best via the Bitbucket
+Cloud REST API on the shell command line.
 
 ## References
 

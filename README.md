@@ -25,7 +25,8 @@ pipelines
 Runs pipeline commands from [`bitbucket-pipelines.yml`][BBPL]
 \[BBPL].
 
-Memory and time limits are ignored. Press ctrl+c to quit.
+Memory and time limits are ignored. Press <kbd>ctrl</kbd> +
+<kbd>c</kbd> to quit.
 
 The Bitbucket limit of 100 (previously 10) steps per pipeline
 is ignored. Use `--steps <steps>` to specify which step(s) to
@@ -45,12 +46,12 @@ the file, pipelines tells it and exists with non-zero status.
 To execute a different pipeline use the `--pipeline <id>` option
 where `<id>` is one of the list by the `--list` option. Even more
 information about the pipelines is available via `--show`. Both
-`--list` and `--show` will output and exit.
+`--list` and `--show` output and exit.
 
 Run the pipeline as if a tag/branch or bookmark has been pushed
 with `--trigger <ref>` where `<ref>` is `tag:<name>`,
-`branch:<name>`, `bookmark:<name>` or `pr:<branch-name>`. If
-there is no tag, branch, bookmark or pull-request pipeline with
+`branch:<name>`, `bookmark:<name>` or `pr:<branch-name>[:<destination>]`
+. If there is no tag, branch, bookmark or pull-request pipeline with
 that name, the name is compared against the patterns of the
 referenced type and if found, that pipeline is run.
 
@@ -148,97 +149,118 @@ be passed into each pipeline as needed. You can even switch to a
 different CI/CD service like Github/Travis with little
 integration work fostering your agility and vendor independence.
 
+### Features
+
 Features include:
 
-* **Dev Mode**: Pipeline from your working tree like never
-    before. Pretend to be on any branch, tag or bookmark
-    (`--trigger`) even in a different repository or none at all.
+#### Dev Mode
+Pipeline from your working tree like never before. Pretend to be
+on any branch, tag or bookmark (`--trigger`) even in a different
+repository or none at all.
 
-    Check if the reference matches a pipeline or just run the
-    default (default) or a specific one (`--pipeline`). Use a
-    different pipelines file (`--file`) or swap the "repository" by
-    changing the working directory (`--working-dir <path>`).
+Check if the reference matches a pipeline or just run the default
+(default) or a specific one (`--list`, `--pipeline`). Use a
+different pipelines file (`--file`) or swap the "repository" by
+changing the working directory (`--working-dir <path>`).
 
-    If a pipeline step fails, the steps container can be kept for
-    further inspection on error with the `--error-keep` option.
-    The container id is shown which makes it easy to spawn a shell
-    inside:
+If a pipeline step fails, the steps container can be kept for
+further inspection on error with the `--error-keep` option. The
+container id is shown which makes it easy to spawn a shell
+inside:
 
-    ```
-    $ docker exec -it $ID /bin/sh
-    ```
-    Containers can be always kept for debugging and manual testing
-    of a pipeline with `--keep` and with the said `--error-keep` on
-    error only.
+```bash
+$ docker exec -it $ID /bin/sh
+```
 
-    Continue on a (failed) step with the `--steps <steps>` argument,
-    the `<steps>` option can be any step number or sequence, separate
-    multiple with comma, you can even repeat steps or reverse order.
+Containers can be always kept for debugging and manual testing
+of a pipeline with `--keep` and with the said `--error-keep` on
+error only.
 
-    For example, if the second step failed, to continue use `--steps 2-`
-    to re-run the second and all following steps.
+Continue on a (failed) step with the `--steps <steps>` argument,
+the `<steps>` option can be any step number or sequence, separate
+multiple with comma, you can even repeat steps or reverse order.
 
-    Afterwards manage left overs with `--docker-list|kill|clean` or
-    clean up with `--docker-zap`.
+For example, if the second step failed, to continue use
+`--steps 2-` to re-run the second and all following steps.
 
-    Debugging options to dream for.
+Afterwards manage left overs with `--docker-list|kill|clean` or
+clean up with `--docker-zap`.
 
-* **Container Isolation**: There is one container per step, like
-    it is on Bitbucket.
+Debugging options to dream for.
 
-    The files are isolated by being copied into the container
-    before the pipeline step script is executed (implicit
-    `--deploy copy`).
+#### Container Isolation
 
-    Alternatively files can be mounted into the container instead
-    with `--deploy mount` which normally is faster, but the working
-    tree might become changed by the container script which can be
-    a problem when Docker runs system-wide as containers do not isolate
-    users (e.g. root is root).  \
-    Better with `--deploy mount` is using
-    Docker in rootless mode where files manipulated in the container /
-    pipeline are accessible to the own user account (like root is user).
+There is one container per step, like it is on Bitbucket.
 
-    * Further reading: [*How-To Rootless Pipelines*](doc/PIPELINES-HOWTO-ROOTLESS.md)
+The files are isolated by being copied into the container before
+the pipeline step script is executed (implicit `--deploy copy`).
 
-* **Pipeline Integration**: Export files from the pipeline by
-  making use of artifacts, these are copied back into the working
-  tree while in (implicit) `--deploy copy` mode. Artifacts files
-  are always created by the user running pipelines. This also
-  (near) perfectly emulates the file format `artifacts` section
-  with the benefit/downside that you might want to prepare a
-  clean build in a step script while you can keep artifacts from
-  pipelines locally.
+Alternatively files can be mounted into the container instead
+with `--deploy mount` which normally is faster, but the working
+tree might become changed by the container script which can be a
+problem when Docker runs system-wide as containers do not
+isolate users (e.g. root is root).
 
-* **Ready for Offline**: On the plane? Riding Deutsche Bahn? Or
-  just a rainy day on a remote location with broken net? Coding
-  while abroad? Or just Bitbucket down again? Before going into
-  offline mode, make use of `--images` and the shell:
+Better with `--deploy mount` is using Docker in rootless mode
+where files manipulated in the container pipeline are accessible
+to the own user account (like root is user).
 
-      $ pipelines --images | while read -r image; do \
-        docker image pull "$image"; done;
+* Further reading: [*How-To Rootless Pipelines*](doc/PIPELINES-HOWTO-ROOTLESS.md)
 
-* **Default Image**: The pipelines command uses the default
-  image like Bitbucket Pipelines does. Get started out of the
-  box, but keep in mind it has roughly 3 GB (previously 2 GB)
-  ("`atlassian/default-image:latest`").
+#### Pipeline Integration
 
-* **Pipelines inside Pipeline**: As a special feature and by
-default pipelines mounts the docker socket into each container (on
-  systems where the socket is available).  \
-  That allows to launch pipelines from a pipeline as long as the Docker
-  client is available in the pipeline's container. Pipelines will take
-  care to have the Docker client as `/usr/bin/docker` when the pipeline
-  has the `docker` service (`services: \n - docker`).  \
-  This feature is similar to [run Docker commands in Bitbucket
-  Pipelines][BBPL-DCK] \[BBPL-DCK].
+Export files from the pipeline by making use of artifacts, these
+are copied back into the working tree while in (implicit)
+`--deploy copy` mode. Artifacts files are always created by the
+user running pipelines. This also (near) perfectly emulates the
+file format `artifacts` section with the benefit/downside that
+you might want to prepare a clean build in a pipeline step
+script while you can keep artifacts from pipelines locally.
 
-  The pipelines inside pipeline feature serves pipelines itself
-  well for integration testing the projects build on Travis. In
-  combination with `--deploy mount`, the original working-directory
-  gets mounted from the host again. Additional protection against
-  endless loops by recursion is implemented to prevent accidental
-  endless loops of pipelines inside pipeline invocations.
+#### Ready for Offline
+
+On the plane? Riding Deutsche Bahn? Or just a rainy day on a
+remote location with broken net? Coding while abroad? Or just
+Bitbucket down again? Before going into offline mode, make
+use of `--images` and the shell:
+
+```bash
+$ pipelines --images | while read -r image; do \
+   docker image pull "$image"; done;
+```
+
+As an alternative or when the Docker containers are available
+locally only, build all containers before going offline if
+they need to. Pipelines always prefers locally stored
+containers.
+
+#### Default Image
+
+The pipelines command uses the default image like Bitbucket
+Pipelines does ("`atlassian/default-image`"). Get started out
+of the box, but keep in mind it has roughly 3 GB (previously
+2 GB) uncompressed.
+
+#### Pipelines inside Pipeline
+
+As a special feature and by default pipelines mounts the docker
+socket into each container (on systems where the socket is
+available).
+That allows to launch pipelines from a pipeline as long as the
+Docker client is available in the pipeline's container.
+Pipelines will take care to have the Docker client as
+`/usr/bin/docker` when the pipeline has the `docker` service
+(`services: \n - docker`).
+This feature is similar to [run Docker commands in Bitbucket
+Pipelines][BBPL-DCK] \[BBPL-DCK].
+
+The pipelines inside pipeline feature serves pipelines itself
+well for integration testing the projects build on Travis. In
+combination with `--deploy mount`, the original working-directory
+gets mounted from the host again. Additional protection against
+endless loops by recursion is implemented to prevent accidental
+pipelines inside pipeline invocations that would be endlessly
+on going.
 
   * Further reading: [*How-To Docker Client Binary Packages for
     Pipelines*](doc/PIPELINES-HOWTO-DOCKER-CLIENT-BINARY.md)
@@ -513,19 +535,28 @@ state of the timestamps file.
 
 ### Install Full Project For Development
 
-When working with git clone, clone the repository
-and then invoke `composer install`. The project
-is then setup for development.
+When working with `git`, clone the repository and then invoke
+`composer install`. The project is setup for development then.
 
-Alternatively it's possible to do the same via
-composer directly:
+Alternatively it's possible to do the same via composer directly:
 
 ~~~
 $ composer create-project --prefer-source --keep-vcs ktomk/pipelines
+...
+$ cd pipelines
 ~~~
 
+Verify the installation by invoking the local build:
+
+~~~
+$ composer ci
+~~~
+
+Should exit with status `0` when it went fine, non `0` when there is an
+issue. Composer tells which individual script did fail.
+
 Follow the instructions in [*Install from Source*](#install-from-source)
-to use the development version.
+to use the development version for `pipelines`.
 
 ### Todo
 

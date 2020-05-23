@@ -25,7 +25,7 @@ Encoding is US-ASCII.
 ### Image Name
 
 A container consists of the name of an image optionally followed by a
-tag (seperated by a colon).
+tag (separated by a colon).
 
     <image-name> := <prefix>? <name-components>
 
@@ -50,9 +50,9 @@ If not present, the command uses Docker’s public registry located at
 
     <name-components>
                 := <name-comp> ( "/" <name-comp> )?
-    <name-comp> := <name> ( <seperator> <name> )*
+    <name-comp> := <name> ( <separator> <name> )*
     <name>      := [a-z0-9]+
-    <seperator> := ( "." | "_" "_"? | "-"+ )
+    <separator> := ( "." | "_" "_"? | "-"+ )
 
     "-" := ASCII 45 dash
     "." := ASCII 46 period
