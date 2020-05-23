@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Updated Readme for instructions
 ### Fixed
+- After-script ignored all script errors, fix is to exit on first error
 - Remove outdated docker client package `basename` property from test
   harness
 - Add Apache-2.0 license text (in doc)
