@@ -43,12 +43,12 @@ class Artifacts
     {
         // quick validation: requires a list of strings
         if (!count($artifacts)) {
-            ParseException::__("'artifacts' requires a list");
+            throw new ParseException("'artifacts' requires a list");
         }
 
         foreach ($artifacts as $index => $string) {
             if (!is_string($string)) {
-                ParseException::__(sprintf(
+                throw new ParseException(sprintf(
                     "'artifacts' requires a list of strings, #%d is not a string",
                     $index
                 ));

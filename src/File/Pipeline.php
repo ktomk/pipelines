@@ -32,7 +32,7 @@ class Pipeline
     {
         // quick validation
         if (!isset($definition[0])) {
-            ParseException::__('Pipeline requires a list of steps');
+            throw new ParseException('Pipeline requires a list of steps');
         }
 
         $this->file = $file;

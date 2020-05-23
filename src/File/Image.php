@@ -39,7 +39,7 @@ class Image
 
         if (is_array($image) && isset($image['name'])) {
             if (!ImageName::validate($image['name'])) {
-                ParseException::__(sprintf(
+                throw new ParseException(sprintf(
                     "'image' invalid Docker image name: '%s'",
                     $image['name']
                 ));
@@ -49,10 +49,10 @@ class Image
         }
 
         if (!is_string($image)) {
-            ParseException::__("'image' requires a Docker image name");
+            throw new ParseException("'image' requires a Docker image name");
         }
         if (!ImageName::validate($image)) {
-            ParseException::__(
+            throw new ParseException(
                 sprintf("'image' invalid Docker image name: '%s'", $image)
             );
         }
@@ -114,7 +114,7 @@ class Image
         } elseif (is_array($image)) {
             $this->parseArray($image);
         } else {
-            ParseException::__(
+            throw new ParseException(
                 "'image' expects either 'a string' or 'a section'"
             );
         }
@@ -127,7 +127,7 @@ class Image
     private function parseString($name)
     {
         if (!ImageName::validate($name)) {
-            ParseException::__(
+            throw new ParseException(
                 sprintf("'image' invalid Docker image name: '%s'", $name)
             );
         }
@@ -142,7 +142,7 @@ class Image
     private function parseArray(array $image)
     {
         if (!isset($image['name'])) {
-            ParseException::__("'image' needs a name");
+            throw new ParseException("'image' needs a name");
         }
         $this->parseString($image['name']);
         unset($image['name']);
@@ -151,7 +151,7 @@ class Image
         $image = $this->properties->import($image, $entries);
 
         if (!empty($image)) {
-            ParseException::__(sprintf(
+            throw new ParseException(sprintf(
                 "unknown 'image' property '%s', expects either a string or a section",
                 key($image)
             ));

@@ -190,11 +190,11 @@ class Step
 
         $trigger = $array['trigger'];
         if ($isPrallelStep) {
-            ParseException::__("Unexpected property 'trigger' in parallel step");
+            throw new ParseException("Unexpected property 'trigger' in parallel step");
         }
 
         if (!in_array($trigger, array('manual', 'automatic'), true)) {
-            ParseException::__("'trigger' expects either 'manual' or 'automatic'");
+            throw new ParseException("'trigger' expects either 'manual' or 'automatic'");
         }
     }
 
@@ -208,7 +208,7 @@ class Step
     private function parseScript(array $step)
     {
         if (!isset($step['script'])) {
-            ParseException::__("'step' requires a script");
+            throw new ParseException("'step' requires a script");
         }
         $this->parseNamedScript('script', $step);
     }
@@ -227,7 +227,7 @@ class Step
     private function parseNamedScript($name, array $script)
     {
         if (!is_array($script[$name]) || !count($script[$name])) {
-            ParseException::__("'${name}' requires a list of commands");
+            throw new ParseException("'${name}' requires a list of commands");
         }
 
         foreach ($script[$name] as $index => $line) {
@@ -241,7 +241,7 @@ class Step
         $pipe = is_array($line) && isset($line['pipe']) && is_string($line['pipe']);
 
         if (!($standard || ('script' === $name && $pipe))) {
-            ParseException::__(sprintf(
+            throw new ParseException(sprintf(
                 "'%s' requires a list of commands, step #%d is not a command",
                 $name,
                 $index

@@ -30,7 +30,7 @@ class ParseExceptionTest extends TestCase
      */
     public function testGetParseMessage(ParseException $exception)
     {
-        $this->assertNull($exception->getParseMessage());
+        self::assertIsString($exception->getParseMessage());
     }
 
     /**
@@ -40,6 +40,6 @@ class ParseExceptionTest extends TestCase
         $this->expectException('Ktomk\Pipelines\File\ParseException');
         $this->expectExceptionMessage('message string');
 
-        ParseException::__('message string');
+        throw new ParseException('message string');
     }
 }

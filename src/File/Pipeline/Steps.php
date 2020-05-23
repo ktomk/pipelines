@@ -72,7 +72,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     {
         // quick validation
         if (!isset($definition[0])) {
-            ParseException::__('Steps requires a tree of steps');
+            throw new ParseException('Steps requires a tree of steps');
         }
 
         $this->pipeline = $pipeline;
@@ -182,16 +182,16 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
         foreach ($definition as $node) {
             if (!is_array($node)) {
-                ParseException::__(sprintf('Step expected, got %s', gettype($node)));
+                throw new ParseException(sprintf('Step expected, got %s', gettype($node)));
             }
             if (empty($node)) {
-                ParseException::__('Step expected, got empty array');
+                throw new ParseException('Step expected, got empty array');
             }
 
             $keys = array_keys($node);
             $name = $keys[0];
             if (!in_array($name, array('step', 'parallel'), true)) {
-                ParseException::__(sprintf("Unexpected pipeline property '%s', expected 'step' or 'parallel'", $name));
+                throw new ParseException(sprintf("Unexpected pipeline property '%s', expected 'step' or 'parallel'", $name));
             }
 
             $this->parseNode($node, $name);
@@ -208,7 +208,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     private function parseStep($index, array $step, array $env = array())
     {
         if (0 === $index && isset($step['trigger']) && 'manual' === $step['trigger']) {
-            ParseException::__("The first step of a pipeline can't be manually triggered");
+            throw new ParseException("The first step of a pipeline can't be manually triggered");
         }
 
         return new Step($this->pipeline, $index, $step, $env);
@@ -247,7 +247,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
         $group = array();
         foreach ($node as $step) {
             if (!(isset($step['step']) && is_array($step['step']))) {
-                ParseException::__('Parallel step must consist of steps only');
+                throw new ParseException('Parallel step must consist of steps only');
             }
             $group[] = $step['step'];
         }

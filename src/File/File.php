@@ -48,7 +48,7 @@ class File
     {
         $result = Yaml::file($path);
         if (!$result) {
-            ParseException::__(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
+            throw new ParseException(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
         }
 
         return new self($result);
@@ -65,7 +65,7 @@ class File
     {
         // quick validation: pipelines require
         if (!isset($array['pipelines']) || !is_array($array['pipelines'])) {
-            ParseException::__("Missing required property 'pipelines'");
+            throw new ParseException("Missing required property 'pipelines'");
         }
 
         // quick validation: image name
@@ -89,6 +89,9 @@ class File
         return new Image($imageData);
     }
 
+    /**
+     * @return array|int
+     */
     public function getClone()
     {
         return isset($this->array['clone'])
@@ -200,7 +203,7 @@ class File
 
         foreach ($this->getPipelineIds() as $id) {
             if (!$this->isIdValid($id)) {
-                ParseException::__(sprintf("invalid pipeline id '%s'", $id));
+                throw new ParseException(sprintf("invalid pipeline id '%s'", $id));
             }
             $pipelines[$id] = $this->getById($id);
         }
@@ -231,7 +234,7 @@ class File
 
         // bind to instance if yet an array
         if (!is_array($ref[2])) {
-            ParseException::__(sprintf('%s: named pipeline required', $id));
+            throw new ParseException(sprintf('%s: named pipeline required', $id));
         }
         $pipeline = new Pipeline($this, $ref[2]);
         $ref[2] = $pipeline;
@@ -313,7 +316,8 @@ class File
         }
         if (!$count && !isset($array['default'])) {
             $middle = implode(', ', array_slice($sections, 0, -1));
-            ParseException::__("'pipelines' requires at least a default, ${middle} or custom section");
+
+            throw new ParseException("'pipelines' requires at least a default, ${middle} or custom section");
         }
 
         $references = array();
@@ -321,7 +325,7 @@ class File
         $section = 'default';
         if (isset($array[$section])) {
             if (!is_array($array[$section])) {
-                ParseException::__("'${section}' requires a list of steps");
+                throw new ParseException("'${section}' requires a list of steps");
             }
             $references[$section] = array(
                 $section,
@@ -335,7 +339,7 @@ class File
                 continue;
             }
             if (!is_array($refs)) {
-                ParseException::__("'${section}' requires a list");
+                throw new ParseException("'${section}' requires a list");
             }
             foreach ($refs as $pattern => $pipeline) {
                 $references["${section}/${pattern}"] = array(

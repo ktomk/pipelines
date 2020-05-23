@@ -58,7 +58,7 @@ class ImageName
     private function parse($name)
     {
         if (!self::validate($name)) {
-            ParseException::__(sprintf(
+            throw new ParseException(sprintf(
                 "'image' invalid Docker image name: '%s'",
                 $name
             ));

@@ -46,13 +46,13 @@ class StepServices
     private function parseServices($services)
     {
         if (!is_array($services)) {
-            ParseException::__("'services' requires a list of services");
+            throw new ParseException("'services' requires a list of services");
         }
 
         $reservoir = array();
         foreach ($services as $service) {
             if (!is_string($service)) {
-                ParseException::__("'services' service name string expected");
+                throw new ParseException("'services' service name string expected");
             }
 
             '' === ($service = trim($service)) || $reservoir[] = $service;

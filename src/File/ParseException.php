@@ -17,21 +17,14 @@ class ParseException extends InvalidArgumentException
     private $parseMessage;
 
     /**
-     * Abstract method to throw this message
+     * ParseException constructor.
      *
      * @param string $message
-     * @throws ParseException
      */
-    public static function __($message)
+    public function __construct($message = '')
     {
-        $self = new self(
-            sprintf('file parse error: %s', $message),
-            2
-        );
-
-        $self->parseMessage = $message;
-
-        throw $self;
+        $this->parseMessage = $message;
+        parent::__construct(sprintf('file parse error: %s', $message), 2);
     }
 
     /**
