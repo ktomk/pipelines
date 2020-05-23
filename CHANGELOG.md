@@ -4,6 +4,10 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Fixed
+- Change log two release links
+
 ## [0.0.34] - 2020-05-13
 ### Fixed
 - Show and fake run pipelines with a pipe (#5)
@@ -322,4 +326,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.30]: https://github.com/ktomk/pipelines/releases/tag/0.0.30
 [0.0.31]: https://github.com/ktomk/pipelines/releases/tag/0.0.31
 [0.0.32]: https://github.com/ktomk/pipelines/releases/tag/0.0.32
+[0.0.33]: https://github.com/ktomk/pipelines/releases/tag/0.0.33
+[0.0.34]: https://github.com/ktomk/pipelines/releases/tag/0.0.34
 [unreleased]: https://github.com/ktomk/pipelines
