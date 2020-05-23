@@ -36,8 +36,6 @@ class UnpackagerTest extends TestCase
             'name' => Repository::PKG_TEST,
             # 'uri': url/path to .tgz package
             'uri' => $testPackage,
-            # 'basename': path inside the .tgz package of the docker binary
-            'basename' => 'docker-test-stub',
             # 'sha256': hash of the .tgz package file
             'sha256' => hash_file('sha256', $testPackage),
             # 'binary': basename of the extracted binary file

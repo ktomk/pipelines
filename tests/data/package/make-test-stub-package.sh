@@ -43,10 +43,6 @@ name: docker-42.42.1-binsh-test-stub
 #         file relative to the package definition file, "relative" URI)
 uri: ../../tests/data/package/docker-test-stub.tgz
 
-# 'basename': currently unused, was used earlier before 'name' to create the
-#             local binary file basename
-basename: docker-test-stub
-
 # 'sha256': hash of the .tgz package file
 sha256: ${tar_hash}
 
