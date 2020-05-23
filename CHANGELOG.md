@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Updated Readme for instructions
 ### Fixed
+- Add Apache-2.0 license text (in doc)
 - Markdown documentation file typos, wording and structure
 - Docker name tag syntax (in doc)
 - Change log two release links

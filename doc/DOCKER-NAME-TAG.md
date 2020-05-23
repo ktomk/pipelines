@@ -89,4 +89,6 @@ characters.
 ## References
 
 * Source: <https://docs.docker.com/engine/reference/commandline/tag/>
-* License: `Apache-2.0` <https://github.com/docker/docker.github.io/blob/master/LICENSE>
+* Original Copyright: Code and documentation copyright 2017 Docker, inc,
+    released under the Apache 2.0 license.
+* License: `Apache-2.0`; [LICENSE-2.0.txt](LICENSE-2.0.txt)
