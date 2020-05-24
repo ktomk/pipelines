@@ -69,6 +69,7 @@ class App implements Runnable
      * @param array $arguments including the utility name in the first argument
      *
      * @throws InvalidArgumentException
+     *
      * @return int 0-255
      */
     public function main(array $arguments)
@@ -94,6 +95,7 @@ class App implements Runnable
      * @throws ArgsException
      * @throws StatusException
      * @throws \UnexpectedValueException
+     *
      * @return int
      */
     public function run()
@@ -159,6 +161,7 @@ class App implements Runnable
 
     /**
      * @throws StatusException
+     *
      * @return string
      */
     private function getWorkingDirectory()
@@ -177,6 +180,7 @@ class App implements Runnable
      * @throws InvalidArgumentException
      * @throws StatusException
      * @throws ArgsException
+     *
      * @return string basename for bitbucket-pipelines.yml
      */
     private function parseBasename()
@@ -195,6 +199,7 @@ class App implements Runnable
      * @throws InvalidArgumentException
      * @throws ArgsException
      * @throws StatusException
+     *
      * @return string deploy mode ('copy', 'mount')
      */
     private function parseDeployMode()
@@ -220,6 +225,7 @@ class App implements Runnable
      *
      * @throws InvalidArgumentException
      * @throws ArgsException
+     *
      * @return Env
      */
     private function parseEnv(array $inherit, $reference, $workingDir)
@@ -250,6 +256,7 @@ class App implements Runnable
 
     /**
      * @throws InvalidArgumentException
+     *
      * @return Exec
      */
     private function parseExec()
@@ -276,6 +283,7 @@ class App implements Runnable
      * @throws InvalidArgumentException
      * @throws StatusException
      * @throws ArgsException
+     *
      * @return string file
      */
     private function parseFile($basename, &$workingDir)
@@ -292,7 +300,7 @@ class App implements Runnable
             }
         }
 
-        if (!strlen($file)) {
+        if (empty($file)) {
             StatusException::status(1, 'file can not be empty');
         }
 
@@ -306,6 +314,7 @@ class App implements Runnable
      * @throws InvalidArgumentException
      * @throws ArgsException
      * @throws StatusException
+     *
      * @return string path
      */
     private function parsePath($basename, &$workingDir)
@@ -342,6 +351,7 @@ class App implements Runnable
     /**
      * @throws InvalidArgumentException
      * @throws ArgsException
+     *
      * @return Reference
      */
     private function parseReference()
@@ -355,6 +365,8 @@ class App implements Runnable
      * give error about unknown option, show usage and exit status of 1
      *
      * @throws ArgsException
+     *
+     * @return void
      */
     private function parseRemainingOptions()
     {
@@ -369,6 +381,7 @@ class App implements Runnable
 
     /**
      * @throws InvalidArgumentException
+     *
      * @return Streams
      */
     private function parseStreams()
@@ -388,6 +401,7 @@ class App implements Runnable
      * @throws InvalidArgumentException
      * @throws StatusException
      * @throws ArgsException
+     *
      * @return string current working directory
      */
     private function parseWorkingDir()
@@ -407,6 +421,8 @@ class App implements Runnable
      * @param string $directory
      *
      * @throws StatusException
+     *
+     * @return void
      */
     private function changeWorkingDir($directory)
     {
@@ -427,16 +443,20 @@ class App implements Runnable
      * Obtain pipeline to run from file while handling error output
      *
      * @param File $pipelines
-     * @param $pipelineId
+     * @param string $pipelineId
      * @param FileOptions $fileOptions
+     * @param RunOpts $runOpts
      *
      * @throws ParseException
      * @throws StatusException
+     *
      * @return Pipeline on success
      */
     private function getRunPipeline(File $pipelines, $pipelineId, FileOptions $fileOptions, RunOpts $runOpts)
     {
         $this->verbose(sprintf("info: running pipeline '%s'", $pipelineId));
+
+        $pipeline = null;
 
         try {
             $pipeline = $pipelines->getById($pipelineId);
@@ -460,6 +480,11 @@ class App implements Runnable
         return $pipeline;
     }
 
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
     private function error($message)
     {
         $this->streams->err(
@@ -467,6 +492,11 @@ class App implements Runnable
         );
     }
 
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
     private function info($message)
     {
         $this->streams->out(
@@ -474,6 +504,11 @@ class App implements Runnable
         );
     }
 
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
     private function verbose($message)
     {
         if ($this->verbose) {
@@ -485,7 +520,7 @@ class App implements Runnable
      * Map diverse parameters to run flags
      *
      * @param KeepOptions $keep
-     * @param $deployMode
+     * @param string $deployMode
      *
      * @return Flags
      */

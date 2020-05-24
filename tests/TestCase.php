@@ -82,6 +82,7 @@ class TestCase extends PhpunitTestCase
      *
      * assertStringContainsString was added in Phpunit 8 to lighten up usage
      * of assertContains power-factory
+     *
      * @param mixed $needle
      * @param mixed $haystack
      * @param mixed $message
@@ -278,6 +279,7 @@ class TestCase extends PhpunitTestCase
      * @param string $originalClassName
      *
      * @throws Exception
+     *
      * @return MockObject
      *
      */
@@ -303,6 +305,7 @@ class TestCase extends PhpunitTestCase
      * @param array  $configuration
      *
      * @throws Exception
+     *
      * @return MockObject
      *
      */
@@ -328,6 +331,7 @@ class TestCase extends PhpunitTestCase
      * @param string[] $methods
      *
      * @throws
+     *
      * @return MockObject
      *
      */

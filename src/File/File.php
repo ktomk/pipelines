@@ -39,15 +39,16 @@ class File
     private static $sections = array('branches', 'tags', 'bookmarks', 'pull-requests', 'custom');
 
     /**
-     * @param $path
+     * @param string $path
      *
      * @throws ParseException
+     *
      * @return File
      */
     public static function createFromFile($path)
     {
         $result = Yaml::file($path);
-        if (!$result) {
+        if (null === $result) {
             throw new ParseException(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
         }
 
@@ -78,6 +79,7 @@ class File
 
     /**
      * @throws ParseException
+     *
      * @return Image
      */
     public function getImage()
@@ -101,6 +103,7 @@ class File
 
     /**
      * @throws InvalidArgumentException
+     *
      * @return null|Pipeline
      */
     public function getDefault()
@@ -131,6 +134,7 @@ class File
      *
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
+     *
      * @return null|string id if found, null otherwise
      */
     public function searchIdByReference(Reference $reference)
@@ -153,6 +157,7 @@ class File
      * @throws ParseException
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
+     *
      * @return null|Pipeline
      */
     public function searchReference(Reference $reference)
@@ -170,11 +175,12 @@ class File
      * no default pipeline.
      *
      * @param string $type of pipeline, can be branches, tags or bookmarks
-     * @param string $reference
+     * @param null|string $reference
      *
      * @throws ParseException
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
+     *
      * @return null|Pipeline
      */
     public function searchTypeReference($type, $reference)
@@ -195,6 +201,7 @@ class File
     /**
      * @throws InvalidArgumentException
      * @throws ParseException
+     *
      * @return array|Pipeline[]
      */
     public function getPipelines()
@@ -213,8 +220,10 @@ class File
 
     /**
      * @param string $id
+     *
      * @throws InvalidArgumentException
      * @throws ParseException
+     *
      * @return null|Pipeline
      */
     public function getById($id)
@@ -242,6 +251,13 @@ class File
         return $pipeline;
     }
 
+    /**
+     * get id of a pipeline
+     *
+     * @param Pipeline $pipeline
+     *
+     * @return null|string
+     */
     public function getIdFrom(Pipeline $pipeline)
     {
         foreach ($this->pipelines as $id => $reference) {
@@ -253,16 +269,23 @@ class File
         return null;
     }
 
+    /**
+     * @param string $id
+     *
+     * @return bool
+     */
     private function isIdValid($id)
     {
         return (bool)preg_match('~^(default|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~', $id);
     }
 
     /**
-     * @param $type
-     * @param $reference
+     * @param null|string $type
+     * @param null|string $reference
+     *
      * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
+     *
      * @return null|string
      */
     private function searchIdByTypeReference($type, $reference)
@@ -299,9 +322,12 @@ class File
     }
 
     /**
+     * Index all pipelines as references array map
+     *
      * @param array $array
      *
      * @throws ParseException
+     *
      * @return array
      */
     private function parsePipelineReferences(array &$array)
@@ -322,6 +348,7 @@ class File
 
         $references = array();
 
+        // default pipeline
         $section = 'default';
         if (isset($array[$section])) {
             if (!is_array($array[$section])) {
@@ -334,17 +361,18 @@ class File
             );
         }
 
+        // section pipelines
         foreach ($array as $section => $refs) {
             if (!in_array($section, $sections, true)) {
-                continue;
+                continue; // not a section for references
             }
             if (!is_array($refs)) {
                 throw new ParseException("'${section}' requires a list");
             }
             foreach ($refs as $pattern => $pipeline) {
                 $references["${section}/${pattern}"] = array(
-                    $section,
-                    $pattern,
+                    (string)$section,
+                    (string)$pattern,
                     &$array[$section][$pattern],
                 );
             }
@@ -354,14 +382,18 @@ class File
     }
 
     /**
-     * @param $type
+     * @param null|string $type
+     *
      * @throws InvalidArgumentException
+     *
+     * @return void
+     * @psalm-assert string $type
      */
     private function validateType($type)
     {
         $scopes = array_slice(self::$sections, 0, 4);
         if (!in_array($type, $scopes, true)) {
-            throw new InvalidArgumentException(sprintf("Invalid type '%s'", $type));
+            throw new InvalidArgumentException(sprintf('Invalid type %s', var_export($type, true)));
         }
     }
 }

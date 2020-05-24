@@ -15,6 +15,7 @@ class LibTmp
      * Create temporary file w/ contents
      *
      * @param string $buffer
+     *
      * @return string path of temporary file
      */
     public static function tmpFilePut($buffer)
@@ -28,7 +29,7 @@ class LibTmp
     /**
      * Create handle and path of a temporary file (which gets cleaned up)
      *
-     * @return array(handle, string)
+     * @return array
      */
     public static function tmpFile()
     {
@@ -47,6 +48,7 @@ class LibTmp
      * Create temporary directory (which does not get cleaned up)
      *
      * @param string $prefix [optional]
+     *
      * @return string path
      */
     public static function tmpDir($prefix = '')

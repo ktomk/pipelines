@@ -107,6 +107,7 @@ class Runner
      * @param Pipeline $pipeline
      *
      * @throws \RuntimeException
+     *
      * @return int status (as in exit status, 0 OK, !0 NOK)
      */
     public function run(Pipeline $pipeline)
@@ -137,7 +138,7 @@ class Runner
     }
 
     /**
-     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
+     * @param Step $step
      *
      * @return int status (as in exit status, 0 OK, !0 NOK)
      */

@@ -25,6 +25,7 @@ class ExecTester extends Exec
 
     /**
      * @param TestCase $testCase
+     *
      * @return ExecTester
      */
     public static function create(TestCase $testCase)
@@ -74,6 +75,7 @@ class ExecTester extends Exec
      * @param string $command
      * @param callable|int|string $context (optional)
      * @param string $message (optional)
+     *
      * @return $this
      */
     public function expect($method, $command, $context = 0, $message = null)
@@ -88,8 +90,10 @@ class ExecTester extends Exec
      * @param array $arguments
      * @param null $out
      * @param null $err
+     *
      * @throws \PHPUnit\Framework\AssertionFailedError
      * @throws UnexpectedValueException
+     *
      * @return $this|int
      */
     public function capture($command, array $arguments, &$out = null, &$err = null)
@@ -102,8 +106,10 @@ class ExecTester extends Exec
     /**
      * @param string $command
      * @param array $arguments
+     *
      * @throws \PHPUnit\Framework\AssertionFailedError
      * @throws UnexpectedValueException
+     *
      * @return int|mixed
      */
     public function pass($command, array $arguments)
@@ -115,6 +121,7 @@ class ExecTester extends Exec
 
     /**
      * @param bool $active
+     *
      * @throws \BadMethodCallException
      */
     public function setActive($active)
@@ -170,8 +177,10 @@ class ExecTester extends Exec
      * @param array $arguments
      * @param null $out
      * @param null $err
+     *
      * @throws UnexpectedValueException
      * @throws \PHPUnit\Framework\AssertionFailedError
+     *
      * @return int|mixed
      */
     private function dealInvokeExpectation($method, $command, array $arguments, &$out = null, &$err = null)

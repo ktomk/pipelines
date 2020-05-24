@@ -11,6 +11,12 @@ namespace PHPSTORM_META {
 
     // pattern example. `@` is replaced by argument literal value.
 
+    override(\PHPUnit\Framework\TestCase::createConfiguredMock(0),
+        map([
+            '' => '@|\PHPUnit\Framework\MockObject\MockObject',
+        ])
+    );
+
     override(\PHPUnit\Framework\TestCase::createMock(0),
         map([
             '' => '@|\PHPUnit\Framework\MockObject\MockObject',

@@ -20,6 +20,7 @@ class RunnerTestCase extends TestCase
 {
     /**
      * @var string fixture of command for deploy mode copy
+     *
      * @see setUp for initialization
      */
     protected $deploy_copy_cmd;

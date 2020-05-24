@@ -21,13 +21,15 @@ class Args extends ArgsArgs
     /**
      * @var string $utility name
      */
-    private $utility;
+    private $utility = '';
 
     /**
      * create from $argv
      *
      * @param array $argv
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
      * @return Args
      */
     public static function create(array $argv)
@@ -53,7 +55,9 @@ class Args extends ArgsArgs
      * are all w/o option argument. e.g. check for -v/--verbose.
      *
      * @param string|string[] $option
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
      * @return bool
      */
     public function hasOption($option)
@@ -89,8 +93,10 @@ class Args extends ArgsArgs
      * @param string|string[] $option
      * @param null|bool|string $default [optional]
      * @param bool $required [optional]
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws ArgsException
+     *
      * @return null|bool|string
      */
     public function getOptionArgument($option, $default = null, $required = false)
@@ -131,8 +137,10 @@ class Args extends ArgsArgs
      * @param string|string[] $option
      * @param string $default
      * @param bool $required [optional]
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      * @throws ArgsException
+     *
      * @return string
      */
     public function getStringOptionArgument($option, $default, $required = false)

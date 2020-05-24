@@ -6,6 +6,12 @@ namespace Ktomk\Pipelines;
 
 class Lib
 {
+    /**
+     * @param mixed $d
+     * @param mixed $v
+     *
+     * @return mixed
+     */
     public static function r(&$v, $d)
     {
         if (isset($v)) {
@@ -18,6 +24,7 @@ class Lib
     /**
      * @param mixed $v variable reference
      * @param mixed $d [optional]  default value (null)
+     *
      * @return void
      */
     public static function v(&$v, $d = null)
@@ -61,6 +68,7 @@ class Lib
     /**
      * @param string $command
      * @param array|string[] $arguments
+     *
      * @return string
      */
     public static function cmd($command, array $arguments)
@@ -81,6 +89,7 @@ class Lib
      * a utility argument in shell
      *
      * @param string $argument
+     *
      * @return string
      */
     public static function quoteArg($argument)
@@ -104,15 +113,17 @@ class Lib
     /**
      * Turn multi-line string into an array of lines.
      *
-     * Handles no newline at the end of buffer
+     * Handles (no) newline at the end of buffer
      *
      * @param string $buffer
+     *
      * @return array|string[]
      */
     public static function lines($buffer)
     {
         $lines = explode("\n", $buffer);
-        if ($c = count($lines) and '' === $lines[$c - 1]) {
+        $c = count($lines);
+        if ($c && '' === $lines[$c - 1]) {
             array_pop($lines);
         }
 
@@ -121,6 +132,8 @@ class Lib
 
     /**
      * merge n parameters, if a scalar, turned into array, otherwise must be an array
+     *
+     * @return array
      */
     public static function merge()
     {
@@ -141,8 +154,9 @@ class Lib
      * Chunk an array of strings based on maximum string length per chunk
      *
      * @param array|string[] $array
-     * @param $maxLength
+     * @param int $maxLength
      * @param int $overHeadPerEntry
+     *
      * @return array|array[]
      */
     public static function arrayChunkByStringLength(array $array, $maxLength, $overHeadPerEntry = 0)
@@ -185,6 +199,7 @@ class Lib
      * variables only.
      *
      * @param array $server
+     *
      * @return array|string[]
      */
     public static function env(array $server)

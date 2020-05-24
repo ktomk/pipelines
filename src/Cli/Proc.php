@@ -10,6 +10,9 @@ use RuntimeException;
  */
 class Proc
 {
+    /**
+     * @var string
+     */
     private $command;
 
     /**
@@ -17,15 +20,24 @@ class Proc
      */
     private $status;
 
+    /**
+     * @var null|string[]
+     */
     private $buffers;
 
+    /**
+     * Proc constructor.
+     *
+     * @param string $command
+     */
     public function __construct($command)
     {
         $this->command = $command;
     }
 
     /**
-     * @throws \RuntimeException
+     * @throws RuntimeException
+     *
      * @return int
      */
     public function run()
@@ -74,18 +86,26 @@ class Proc
         return $this->status;
     }
 
+    /**
+     * @return string
+     */
     public function getStandardOutput()
     {
-        return $this->buffers ? $this->buffers['stdout'] : null;
+        return $this->buffers ? $this->buffers['stdout'] : '';
     }
 
+    /**
+     * @return string
+     */
     public function getStandardError()
     {
-        return $this->buffers ? $this->buffers['stderr'] : null;
+        return $this->buffers ? $this->buffers['stderr'] : '';
     }
 
     /**
      * @param null|int $status
+     *
+     * @return void
      */
     public function setStatus($status)
     {

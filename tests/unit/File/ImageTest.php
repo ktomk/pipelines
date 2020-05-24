@@ -125,6 +125,7 @@ class ImageTest extends TestCase
 
     /**
      * @dataProvider provideImageArrays
+     *
      * @param array $array
      * @param $expected
      */

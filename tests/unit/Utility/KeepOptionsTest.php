@@ -23,7 +23,9 @@ class KeepOptionsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param KeepOptions $keep
+     *
      * @throws StatusException
      */
     public function testRun(KeepOptions $keep)
@@ -34,6 +36,7 @@ class KeepOptionsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param KeepOptions $keep
      */
     public function testHasErrorKeep(KeepOptions $keep)
@@ -83,6 +86,7 @@ class KeepOptionsTest extends TestCase
 
     /**
      * @dataProvider provideParseArgs
+     *
      * @throws StatusException
      */
     public function testParse(array $argv, array $expected)

@@ -16,15 +16,16 @@ class Iterator extends Args implements PhpIterator
     /**
      * @var int
      */
-    private $index;
+    private $index = 0;
 
     /**
      * @var array
      */
-    private $indexes;
+    private $indexes = array();
 
     /**
      * Iterator constructor.
+     *
      * @param Args $args
      */
     public function __construct(Args $args)
@@ -48,7 +49,7 @@ class Iterator extends Args implements PhpIterator
     /**
      * Return the current element
      *
-     * @return string
+     * @return null|string
      */
     public function current()
     {
@@ -74,7 +75,7 @@ class Iterator extends Args implements PhpIterator
     /**
      * Return the key of the current option
      *
-     * @return int index, zero based
+     * @return null|int index, zero based, null if no such index/key
      */
     public function key()
     {
@@ -104,6 +105,7 @@ class Iterator extends Args implements PhpIterator
 
     /**
      * @param int $index
+     *
      * @return null|string argument string or null if not found
      */
     private function getByIndex($index)

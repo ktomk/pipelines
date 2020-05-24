@@ -24,6 +24,7 @@ class PropertiesTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param Properties $properties
      */
     public function testCountableOnCreation(Properties $properties)
@@ -33,6 +34,7 @@ class PropertiesTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param Properties $properties
      */
     public function testHasOnCreation(Properties $properties)
@@ -42,6 +44,7 @@ class PropertiesTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param Properties $properties
      */
     public function testToArrayOnCreation(Properties $properties)

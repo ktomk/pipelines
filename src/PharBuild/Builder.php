@@ -61,6 +61,7 @@ class Builder
 
     /**
      * @param string $fphar phar file name
+     *
      * @return Builder
      */
     public static function create($fphar)
@@ -84,7 +85,9 @@ class Builder
 
     /**
      * @param string $file
+     *
      * @throws \RuntimeException
+     *
      * @return $this
      */
     public function stubfile($file)
@@ -104,6 +107,7 @@ class Builder
      * set traversal limit for double-dot glob '**'
      *
      * @param int $limit 0 to 16, 0 makes '**' effectively act like '*' for path segments
+     *
      * @return $this
      */
     public function limit($limit)
@@ -124,7 +128,9 @@ class Builder
      * @param callable $callback [optional] to apply on each file found
      * @param string $directory [optional] where to add from
      * @param string $alias [optional] prefix local names
+     *
      * @throws \RuntimeException
+     *
      * @return $this|Builder
      */
     public function add($pattern, $callback = null, $directory = null, $alias = null)
@@ -165,6 +171,7 @@ class Builder
      * it immune to later content changes.
      *
      * @throws \RuntimeException
+     *
      * @return \Closure
      */
     public function snapShot()
@@ -214,6 +221,7 @@ class Builder
      * for removing a shebang line.
      *
      * @throws \RuntimeException
+     *
      * @return \Closure
      */
     public function dropFirstLine()
@@ -237,6 +245,7 @@ class Builder
      *
      * @param string $that
      * @param string $with
+     *
      * @return \Closure
      */
     public function replace($that, $with)
@@ -254,9 +263,11 @@ class Builder
      * a quick smoke test
      *
      * @param string $params [options]
+     *
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
      * @throws \BadMethodCallException
+     *
      * @return $this
      */
     public function build($params = null)
@@ -337,7 +348,9 @@ class Builder
      * useful for reproducible builds
      *
      * @param DateTime|int|string $timestamp Date string or DateTime or unix timestamp to use
+     *
      * @throws \RuntimeException
+     *
      * @return $this
      */
     public function timestamps($timestamp = null)
@@ -358,9 +371,12 @@ class Builder
 
     /**
      * output information about built phar file
+     *
      * @throws \RuntimeException
      * @throws \UnexpectedValueException
      * @throws \BadMethodCallException
+     *
+     * @return self
      */
     public function info()
     {
@@ -377,7 +393,7 @@ class Builder
         printf("SHA-1....: %s\n", strtoupper(sha1_file($filename)));
         printf("SHA-256..: %s\n", strtoupper(hash_file('sha256', $filename)));
 
-        $pinfo = new \Phar($filename);
+        $pinfo = new Phar($filename);
         printf("file.....: %s\n", $pinfo->getVersion());
         printf("api......: %s\n", $pinfo::apiVersion());
         printf("extension: %s\n", phpversion('phar'));
@@ -395,7 +411,9 @@ class Builder
      * remove from collected files based on pattern
      *
      * @param $pattern
+     *
      * @throws \RuntimeException
+     *
      * @return $this
      */
     public function remove($pattern)
@@ -429,7 +447,9 @@ class Builder
      *
      * @param string $command
      * @param string $return [by-ref] last line of the output (w/o newline/white space at end)
+     *
      * @throws \RuntimeException
+     *
      * @return $this
      */
     public function exec($command, &$return = null)
@@ -449,8 +469,11 @@ class Builder
      *
      * @param string $command
      * @param string $return [by-ref]  last line of the output (w/o newline/white space at end)
+     *
      * @throws \RuntimeException
+     *
      * @return $this
+     *
      * @see Builder::exec()
      *
      */
@@ -463,7 +486,7 @@ class Builder
             escapeshellcmd(Lib::phpBinary()),
             is_file($utility) ? $utility : exec(sprintf('which %s', escapeshellarg($utility)), $blank, $status)
         );
-        if (null !== $status && 0 !== $status) {
+        if (isset($status) && 0 !== $status) {
             $this->err(sprintf(
                 '%s: unable to resolve "%s", verify the file exists and it is an actual php utility',
                 'php command error',
@@ -484,6 +507,11 @@ class Builder
         return $this->errors;
     }
 
+    /**
+     * @param string $fphar
+     *
+     * @return void
+     */
     private function _ctor($fphar)
     {
         $this->files = array();
@@ -499,14 +527,17 @@ class Builder
      * @param callable $callback [optional] callback to apply on each file found
      * @param string $directory [optional]
      * @param string $alias [optional]
+     *
      * @throws \RuntimeException
+     *
+     * @return void
      */
     private function _add($pattern, $callback = null, $directory = null, $alias = null)
     {
         /** @var string $pwd [optional] previous working directory */
         $pwd = null;
 
-        if (strlen($directory)) {
+        if (!empty($directory)) {
             // TODO handle errors
             $pwd = getcwd();
             chdir($directory);
@@ -539,18 +570,22 @@ class Builder
             $this->files[$localName] = $descriptor;
         }
 
-        if (strlen($directory)) {
+        if (!empty($directory)) {
             // TODO handle errors
             chdir($pwd);
         }
     }
 
     /**
+     * glob with brace
+     *
      * @see Builder::_glob()
      *
-     * @param $glob
-     * @param $flags
+     * @param string $glob
+     * @param int $flags
+     *
      * @throws \RuntimeException
+     *
      * @return array|false
      */
     private function _glob_brace($glob, $flags)
@@ -581,10 +616,13 @@ class Builder
     }
 
     /**
-     * globbing with double dot (**) support
-     * @param $pattern
+     * glob with double dot (**) support
+     *
+     * @param string $pattern
+     *
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
+     *
      * @return array
      */
     private function _glob($pattern)
@@ -620,8 +658,10 @@ class Builder
      * build chunks from files (sorted by local name)
      *
      * @param array $files
+     *
      * @throws \UnexpectedValueException
      * @throws \RuntimeException
+     *
      * @return array
      */
     private function _bchunks(array $files)
@@ -667,7 +707,9 @@ class Builder
      * create temporary file
      *
      * @param string $suffix [optional]
+     *
      * @throws \RuntimeException
+     *
      * @return bool|string
      */
     private function _tempname($suffix = null)
@@ -693,7 +735,10 @@ class Builder
 
     /**
      * @param string $message [optional]
+     *
      * @throws \RuntimeException
+     *
+     * @return void
      */
     private function err($message = null)
     {
@@ -709,6 +754,7 @@ class Builder
 
     /**
      * @throws \RuntimeException
+     *
      * @return resource handle of the system's standard error stream
      */
     private function errHandleFromEnvironment()
@@ -748,7 +794,9 @@ class Builder
     /**
      * @param Phar $phar
      * @param array $files
+     *
      * @throws \RuntimeException
+     *
      * @return int number of files (successfully) added to the phar file
      */
     private function _bfiles(Phar $phar, array $files)

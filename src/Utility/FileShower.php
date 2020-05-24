@@ -31,6 +31,7 @@ class FileShower
 
     /**
      * FileInfo constructor.
+     *
      * @param callable $output
      * @param File $file
      */
@@ -42,6 +43,7 @@ class FileShower
 
     /**
      * @throws InvalidArgumentException
+     *
      * @return int
      */
     public function showImages()
@@ -51,7 +53,8 @@ class FileShower
         /**
          * step iterator
          *
-         * @param \Ktomk\Pipelines\File\File $file
+         * @param File $file
+         *
          * @return array|Step[]
          */
         $iterator = function (File $file) {
@@ -78,6 +81,9 @@ class FileShower
         return 0;
     }
 
+    /**
+     * @return int
+     */
     public function showPipelineIds()
     {
         $file = $this->file;
@@ -127,6 +133,11 @@ class FileShower
         return $errors ? 1 : 0;
     }
 
+    /**
+     * @param array $table
+     *
+     * @return void
+     */
     private function textTable(array $table)
     {
         $sizes = $this->textTableGetSizes($table);
@@ -137,6 +148,11 @@ class FileShower
         }
     }
 
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
     private function info($message)
     {
         call_user_func($this->output, $message);
@@ -170,6 +186,7 @@ class FileShower
      * get max sizes for each column in array table
      *
      * @param array $table
+     *
      * @return array|int[] sizes
      */
     private function textTableGetSizes(array $table)
@@ -191,6 +208,7 @@ class FileShower
     /**
      * @param array|string[] $row
      * @param array|int[] $sizes
+     *
      * @return string
      */
     private function textTableGetRow(array $row, array $sizes)

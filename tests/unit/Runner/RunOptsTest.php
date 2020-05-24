@@ -23,6 +23,7 @@ class RunOptsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param RunOpts $opts
      */
     public function testPrefix(RunOpts $opts)
@@ -34,6 +35,7 @@ class RunOptsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param RunOpts $opts
      */
     public function testOptions(RunOpts $opts)
@@ -50,6 +52,7 @@ class RunOptsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param RunOpts $opts
      */
     public function testBinaryPackage(RunOpts $opts)
@@ -61,6 +64,7 @@ class RunOptsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param RunOpts $opts
      */
     public function testSteps(RunOpts $opts)
@@ -72,6 +76,7 @@ class RunOptsTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param RunOpts $opts
      */
     public function testNoManual(RunOpts $opts)

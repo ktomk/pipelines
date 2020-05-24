@@ -112,6 +112,11 @@ class Flags
         return (bool)($this->memory & self::FLAG_SOCKET);
     }
 
+    /**
+     * @param int $flag
+     *
+     * @return bool
+     */
     public function flgHas($flag)
     {
         return (bool)($this->memory & $flag);

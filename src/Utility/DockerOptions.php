@@ -48,6 +48,14 @@ class DockerOptions
      */
     private $ps;
 
+    /**
+     * @param Args $args
+     * @param Exec $exec
+     * @param string $prefix
+     * @param Streams $streams
+     *
+     * @return DockerOptions
+     */
     public static function bind(Args $args, Exec $exec, $prefix, Streams $streams)
     {
         return new self($args, $exec, $prefix, $streams, new ProcessManager($exec));
@@ -81,6 +89,8 @@ class DockerOptions
      * @throws InvalidArgumentException
      * @throws RuntimeException
      * @throws StatusException
+     *
+     * @return void
      */
     public function run()
     {
@@ -90,7 +100,10 @@ class DockerOptions
     /**
      * @param Args $args
      * @param string $prefix
+     *
      * @throws StatusException
+     *
+     * @return void
      */
     private function parse(Args $args, $prefix)
     {
@@ -119,6 +132,11 @@ class DockerOptions
         }
     }
 
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
     private function info($message)
     {
         $this->streams->out(
@@ -143,9 +161,10 @@ class DockerOptions
     }
 
     /**
-     * @param $flag
-     * @param $count
-     * @param $prefix
+     * @param int $count
+     * @param bool $flag
+     * @param string $prefix
+     *
      * @return null|array
      */
     private function runGetIds(&$count, $flag, $prefix)
@@ -164,6 +183,7 @@ class DockerOptions
      * @param int $count
      * @param bool $hasKill
      * @param string $prefix
+     *
      * @return int
      */
     private function runKill($status, &$count, $hasKill, $prefix)
@@ -190,6 +210,7 @@ class DockerOptions
      * @param int $count
      * @param bool $hasClean
      * @param array $ids
+     *
      * @return int
      */
     private function runClean($status, &$count, $hasClean, array $ids = null)

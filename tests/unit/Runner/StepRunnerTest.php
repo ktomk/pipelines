@@ -569,6 +569,7 @@ class StepRunnerTest extends RunnerTestCase
      * @param int $flags [optional] to override default flags
      * @param null|array|string $outErr [optional]
      * @param array $inherit [optional] inherit from environment
+     *
      * @return StepRunner
      */
     private function createTestStepRunner(Exec $exec, $flags = null, $outErr = null, array $inherit = array())

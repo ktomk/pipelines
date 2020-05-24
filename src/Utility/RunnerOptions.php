@@ -12,7 +12,6 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\RunOpts;
-use Prophecy\Exception\Prediction\AggregateException;
 
 /**
  * aggregated args parser for RunOpts / runner options
@@ -59,6 +58,8 @@ class RunnerOptions
      * that ship w/ pipelines
      *
      * @param Streams $streams
+     *
+     * @return void
      */
     public static function listPackages(Streams $streams)
     {
@@ -81,6 +82,7 @@ class RunnerOptions
     /**
      * @throws ArgsException
      * @throws StatusException
+     *
      * @return RunOpts
      */
     public function run()
@@ -99,6 +101,8 @@ class RunnerOptions
      *
      * @throws ArgsException
      * @throws StatusException
+     *
+     * @return void
      */
     public function parse(Args $args, RunOpts $runOpts)
     {
@@ -115,7 +119,9 @@ class RunnerOptions
 
     /**
      * @param Args $args
+     *
      * @throws ArgsException
+     *
      * @return string
      */
     private function parseDockerClient(Args $args)
@@ -142,6 +148,8 @@ class RunnerOptions
      * @param Args $args
      *
      * @throws StatusException
+     *
+     * @return void
      */
     private function parseDockerClientListPackages(Args $args)
     {
@@ -156,7 +164,9 @@ class RunnerOptions
 
     /**
      * @param Args $args
+     *
      * @throws ArgsException
+     *
      * @return string
      */
     private function parsePrefix(Args $args)

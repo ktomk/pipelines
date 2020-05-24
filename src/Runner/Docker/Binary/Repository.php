@@ -136,6 +136,7 @@ class Repository implements PackageInterface
      * @param string $packageName
      *
      * @throws \InvalidArgumentException
+     *
      * @return Repository
      */
     public function resolve($packageName)
@@ -165,6 +166,7 @@ class Repository implements PackageInterface
      * @param string $containerId
      *
      * @throws \InvalidArgumentException
+     *
      * @return array array(int $status, string $message) docker client binary version (docker --version) or error
      */
     public function inject($containerId)
@@ -180,6 +182,8 @@ class Repository implements PackageInterface
      *
      * @param string $name
      * @param string $containerId
+     *
+     * @return void
      */
     public function injectPackage($name, $containerId)
     {
@@ -217,6 +221,7 @@ class Repository implements PackageInterface
 
     /**
      * @inheritDoc
+     *
      * @throws \InvalidArgumentException
      */
     public function asPackageArray()

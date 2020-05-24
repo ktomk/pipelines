@@ -37,6 +37,7 @@ class DestructibleStringTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param DestructibleString $tempDir
      */
     public function testDestruction(DestructibleString $tempDir)

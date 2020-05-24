@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
-use Ktomk\Pipelines\Cli\Streams;
 
 /**
  * aggregated args parser for --error-keep, --keep and --no-keep argument
@@ -32,6 +31,7 @@ class KeepOptions
 
     /**
      * @param Args $args
+     *
      * @return KeepOptions
      */
     public static function bind(Args $args)
@@ -49,6 +49,7 @@ class KeepOptions
 
     /**
      * @throws StatusException w/ conflicting arguments
+     *
      * @return KeepOptions
      */
     public function run()
@@ -63,8 +64,10 @@ class KeepOptions
      * Parse keep arguments
      *
      * @param Args $args
+     *
      * @throws \InvalidArgumentException
      * @throws StatusException
+     *
      * @return array|int
      */
     public function parse(Args $args)

@@ -29,6 +29,7 @@ class StatusExceptionTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param StatusException $exception
      */
     public function testThrowable(StatusException $exception)

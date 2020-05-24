@@ -26,12 +26,13 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @var array|Step[] steps of the pipeline
+     *
      * @see parseSteps
      */
     private $steps = array();
 
     /**
-     * @var callable
+     * @var null|callable
      */
     private $getIteratorFunctor;
 
@@ -40,18 +41,14 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * Gracefully handles null for steps.
      *
-     * @param $steps
+     * @param null|Steps $steps
      *
      * @return StepsIterator
      */
-    public static function fullIter($steps)
+    public static function fullIter(Steps $steps = null)
     {
         if (null === $steps) {
             return new StepsIterator(new \ArrayIterator(array()));
-        }
-
-        if (!$steps instanceof Steps) {
-            throw new \InvalidArgumentException('Invalid steps argument');
         }
 
         $iter = $steps->getIterator();
@@ -96,9 +93,11 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     }
 
     /**
-     * @param $functor
-     *
      * @see getIterator
+     *
+     * @param null|callable $functor
+     *
+     * @return void
      */
     public function setGetIteratorFunctor($functor)
     {
@@ -109,6 +108,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      * Specify data which should be serialized to JSON
      *
      * @return array
+     *
      * @since 5.4.0
      */
     public function jsonSerialize()
@@ -125,6 +125,11 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /* @see \ArrayAccess */
 
+    /**
+     * @param $offset
+     *
+     * @return bool
+     */
     public function offsetExists($offset)
     {
         return isset($this->steps[$offset]);
@@ -175,6 +180,11 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
         );
     }
 
+    /**
+     * @param array $definition
+     *
+     * @return void
+     */
     private function parseSteps(array $definition)
     {
         $this->array = array();
@@ -216,7 +226,9 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @param array $node
-     * @param $name
+     * @param string $name
+     *
+     * @return void
      */
     private function parseNode(array $node, $name)
     {
@@ -241,6 +253,8 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /**
      * @param $node
+     *
+     * @return void
      */
     private function parallel(array $node)
     {

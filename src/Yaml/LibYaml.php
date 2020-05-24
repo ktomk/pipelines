@@ -15,6 +15,7 @@ class LibYaml implements ParserInterface
 
     /**
      * @param string $path
+     *
      * @return null|array
      */
     public function parseFile($path)
@@ -33,6 +34,7 @@ class LibYaml implements ParserInterface
 
     /**
      * @param string $buffer
+     *
      * @return null|array
      */
     public function parseBuffer($buffer)

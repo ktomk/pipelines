@@ -13,12 +13,14 @@ interface ParserInterface
 
     /**
      * @param string $path
+     *
      * @return null|array
      */
     public function parseFile($path);
 
     /**
      * @param string $buffer
+     *
      * @return null|array
      */
     public function parseBuffer($buffer);

@@ -60,7 +60,8 @@ class Step
     }
 
     /**
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
+     *
      * @return null|Artifacts
      */
     public function getArtifacts()
@@ -71,7 +72,8 @@ class Step
     }
 
     /**
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
+     *
      * @return Image
      */
     public function getImage()
@@ -177,19 +179,21 @@ class Step
     }
 
     /**
-     *
+     * validate step trigger (none, manual, automatic)
      *
      * @param array $array
-     * @param bool $isPrallelStep
+     * @param bool $isParallelStep
+     *
+     * @return void
      */
-    private function validateTrigger(array $array, $isPrallelStep)
+    private function validateTrigger(array $array, $isParallelStep)
     {
         if (!array_key_exists('trigger', $array)) {
             return;
         }
 
         $trigger = $array['trigger'];
-        if ($isPrallelStep) {
+        if ($isParallelStep) {
             throw new ParseException("Unexpected property 'trigger' in parallel step");
         }
 
@@ -203,7 +207,9 @@ class Step
      *
      * @param array $step
      *
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
+     *
+     * @return void
      */
     private function parseScript(array $step)
     {
@@ -213,6 +219,11 @@ class Step
         $this->parseNamedScript('script', $step);
     }
 
+    /**
+     * @param array $step
+     *
+     * @return void
+     */
     private function parseAfterScript(array $step)
     {
         if (isset($step['after-script'])) {
@@ -221,8 +232,10 @@ class Step
     }
 
     /**
+     * @param string $name
      * @param $script
-     * @param mixed $name
+     *
+     * @return void
      */
     private function parseNamedScript($name, array $script)
     {
@@ -235,6 +248,13 @@ class Step
         }
     }
 
+    /**
+     * @param string $name
+     * @param int $index
+     * @param null|array|bool|float|int|string $line
+     *
+     * @return void
+     */
     private function parseNamedScriptLine($name, $index, $line)
     {
         $standard = is_scalar($line) || null === $line;

@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\File;
 
-use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\Pipeline\Steps;
 use Ktomk\Pipelines\Value\StepExpression;
 
@@ -26,7 +25,7 @@ class Pipeline
      * @param File $file
      * @param array $definition
      *
-     * @throws \Ktomk\Pipelines\File\ParseException
+     * @throws ParseException
      */
     public function __construct(File $file, array $definition)
     {
@@ -59,6 +58,8 @@ class Pipeline
 
     /**
      * @param string $expression [optional]
+     *
+     * @return void
      */
     public function setStepsExpression($expression = null)
     {
@@ -76,7 +77,7 @@ class Pipeline
     }
 
     /**
-     * @return Step[]|Steps
+     * @return Steps
      */
     public function getSteps()
     {
@@ -87,6 +88,7 @@ class Pipeline
      * Specify data which should be serialized to JSON
      *
      * @return array
+     *
      * @since 5.4.0
      */
     public function jsonSerialize()

@@ -70,6 +70,7 @@ class BuilderTest extends TestCase
 
     /**
      * php 5.3 crashes with this test (exit status 255)
+     *
      * @requires PHP 5.4.0
      */
     public function testDropFirstLineCallbackFileReadError()

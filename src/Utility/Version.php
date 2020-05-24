@@ -21,6 +21,10 @@ class Version
      * @var string
      */
     private $placeholder;
+
+    /**
+     * @var string
+     */
     private $version;
 
     /**
@@ -134,7 +138,7 @@ class Version
             $buffer = 'null';
         }
 
-        return (array)json_decode($buffer);
+        return (array)json_decode($buffer, false);
     }
 
     /**

@@ -42,16 +42,17 @@ class Env
      *
      * @return Env
      */
-    public static function create(array $inherit = array())
+    public static function create(array $inherit = null)
     {
         $env = new self();
-        $env->initDefaultVars($inherit);
+        $env->initDefaultVars((array)$inherit);
 
         return $env;
     }
 
     /**
      * @param array $vars
+     *
      * @return array w/ a string variable definition (name=value) per value
      */
     public static function createVarDefinitions(array $vars)
@@ -91,6 +92,8 @@ class Env
      * As the runner mimics some values, defaults are available
      *
      * @param array $inherit Environment variables to inherit from
+     *
+     * @return void
      */
     public function initDefaultVars(array $inherit)
     {
@@ -133,6 +136,8 @@ class Env
      * if not yet set.
      *
      * @param Reference $ref
+     *
+     * @return void
      */
     public function addReference(Reference $ref)
     {
@@ -163,6 +168,8 @@ class Env
      *
      * @param string $name
      * @param string $value
+     *
+     * @return void
      */
     public function addVar($name, $value)
     {
@@ -171,6 +178,11 @@ class Env
         }
     }
 
+    /**
+     * @param Reference $reference
+     *
+     * @return bool
+     */
     public function addPrReference(Reference $reference)
     {
         if ('pr' !== $reference->getType()) {
@@ -191,6 +203,8 @@ class Env
 
     /**
      * @param string $name of container
+     *
+     * @return void
      */
     public function setContainerName($name)
     {
@@ -233,6 +247,8 @@ class Env
      * initial pipeline. will be taken over into each sub-pipeline.
      *
      * @param string $path absolute path to the project directory (deploy source path)
+     *
+     * @return void
      */
     public function setPipelinesProjectPath($path)
     {
@@ -247,19 +263,17 @@ class Env
      */
     public function getArgs($option)
     {
-        $args = Lib::merge(
+        return Lib::merge(
             $this->collected,
             self::createArgVarDefinitions($option, $this->vars)
         );
-
-        return $args;
     }
 
     /**
      * get a variables' value from the inherited
      * environment or null if not set
      *
-     * @param $name
+     * @param string $name
      *
      * @return null|string
      */
@@ -295,6 +309,8 @@ class Env
      *
      * @throws \InvalidArgumentException
      * @throws \Ktomk\Pipelines\Cli\ArgsException
+     *
+     * @return void
      */
     public function collect(Args $args, $option)
     {
@@ -309,6 +325,8 @@ class Env
      * @param array $paths
      *
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     public function collectFiles(array $paths)
     {
@@ -334,11 +352,13 @@ class Env
     }
 
     /**
-     * set am environment variable only if not yet set and in the first
+     * set an environment variable only if not yet set and in the first
      * pipeline.
      *
      * @param string $name
      * @param string $value
+     *
+     * @return void
      */
     private function setFirstPipelineVariable($name, $value)
     {

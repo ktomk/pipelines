@@ -47,8 +47,11 @@ class ImageLogin
      * Establish login for image
      *
      * @param Image $image
+     *
      * @throws \InvalidArgumentException
      * @throws \RuntimeException
+     *
+     * @return void
      */
     public function byImage(Image $image)
     {
@@ -79,6 +82,7 @@ class ImageLogin
      * useful to prevent overwriting local auth
      *
      * @param string $authUri URI to check authorization again
+     *
      * @return bool
      */
     public function dockerLoginHasAuth($authUri = 'https://index.docker.io/v1/')

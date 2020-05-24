@@ -29,6 +29,8 @@ class Collector extends Args
      *
      * @throws \InvalidArgumentException
      * @throws \Ktomk\Pipelines\Cli\ArgsException
+     *
+     * @return void
      */
     public function collect($option)
     {

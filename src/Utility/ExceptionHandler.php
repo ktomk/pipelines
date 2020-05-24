@@ -27,6 +27,7 @@ class ExceptionHandler
 
     /**
      * ExceptionHandler constructor.
+     *
      * @param Streams $streams
      * @param Help $help
      * @param bool $showStacktrace
@@ -40,6 +41,7 @@ class ExceptionHandler
 
     /**
      * @param Runnable $runnable
+     *
      * @return mixed|void
      */
     public function handle(Runnable $runnable)
@@ -55,6 +57,7 @@ class ExceptionHandler
 
     /**
      * @param Exception $e
+     *
      * @return int
      */
     private function handleException(Exception $e)
@@ -80,6 +83,8 @@ class ExceptionHandler
      *
      * @param int $status
      * @param string $message
+     *
+     * @return void
      */
     private function showError($status, $message)
     {
@@ -92,6 +97,8 @@ class ExceptionHandler
      * Some exceptions can show usage
      *
      * @param Exception $e
+     *
+     * @return void
      */
     private function showUsage(Exception $e)
     {
@@ -104,6 +111,8 @@ class ExceptionHandler
      * Show a stacktrace for debugging purposes (`--debug`` flag)
      *
      * @param Exception $e
+     *
+     * @return void
      */
     private function showStacktrace(Exception $e)
     {
@@ -134,6 +143,11 @@ class ExceptionHandler
         );
     }
 
+    /**
+     * @param Exception $e
+     *
+     * @return void
+     */
     private function debugException(Exception $e)
     {
         for (; $e; $e = $e->getPrevious()) {
@@ -149,6 +163,11 @@ class ExceptionHandler
         $this->error('--------');
     }
 
+    /**
+     * @param string $message
+     *
+     * @return void
+     */
     private function error($message)
     {
         $this->streams->err(

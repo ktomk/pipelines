@@ -16,6 +16,9 @@ class Docker
      */
     private $exec;
 
+    /**
+     * @var string
+     */
     private $name = 'docker';
 
     /**
@@ -39,6 +42,7 @@ class Docker
 
     /**
      * @throws \RuntimeException
+     *
      * @return bool
      */
     public function hasCommand()
@@ -54,7 +58,8 @@ class Docker
     /**
      * @throws \RuntimeException
      * @throws UnexpectedValueException
-     * @return string
+     *
+     * @return null|string
      */
     public function getVersion()
     {

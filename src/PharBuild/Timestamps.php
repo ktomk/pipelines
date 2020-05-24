@@ -48,8 +48,11 @@ class Timestamps
      * The PHAR signature can then be produced in a reproducible manner.
      *
      * @param int|\DateTime|string|bool $timestamp Date string or DateTime or unix timestamp to use
+     *
      * @throws \LogicException
      * @throws \RuntimeException
+     *
+     * @return void
      */
     public function updateTimestamps($timestamp = null)
     {
@@ -160,6 +163,9 @@ class Timestamps
         return (bool) file_put_contents($path, $this->contents);
     }
 
+    /**
+     * @param int $bytes
+     */
     private function readUint($pos, $bytes)
     {
         $res = /** @scrutinizer ignore-call */ unpack('V', substr($this->contents, $pos, $bytes));

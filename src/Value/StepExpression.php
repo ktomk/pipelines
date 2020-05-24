@@ -50,12 +50,12 @@ class StepExpression
     /**
      * NOTE: this static function needs to be public for PHP backwards compat
      *
-     * @param $segment
-     * @param $count
+     * @param string $segment
+     * @param int $count
      *
      * @return array|int[]
-     * @see resolveSegmentFunctor
      *
+     * @see resolveSegmentFunctor
      */
     public static function resolveSegmentCount($segment, $count)
     {
@@ -123,6 +123,7 @@ class StepExpression
 
     /**
      * @param Steps $steps
+     *
      * @return array|Steps[]
      */
     public function resolveSteps(Steps $steps)
@@ -137,7 +138,7 @@ class StepExpression
     }
 
     /**
-     * @param $buffer
+     * @param string $buffer
      *
      * @return array|string[]
      */

@@ -14,6 +14,7 @@ use Ktomk\Pipelines\TestCase;
  * Class BinaryUnpackagerTest
  *
  * @coversNothing
+ *
  * @see \Ktomk\Pipelines\Runner\Docker\Binary\UnPackager
  */
 class UnpackagerTest extends TestCase

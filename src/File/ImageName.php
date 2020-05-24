@@ -21,6 +21,7 @@ class ImageName
      * @see doc/DOCKER-NAME-TAG.md
      *
      * @param string $name of docker image
+     *
      * @return bool
      */
     public static function validate($name)
@@ -39,7 +40,8 @@ class ImageName
 
     /**
      * @param string $name
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      */
     public function __construct($name)
     {
@@ -53,7 +55,10 @@ class ImageName
 
     /**
      * @param string $name
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
+     *
+     * @return void
      */
     private function parse($name)
     {

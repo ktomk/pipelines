@@ -31,6 +31,7 @@ class LibFsTest extends TestCase
 
     /**
      * @dataProvider provideAbsolutePaths
+     *
      * @param string $path
      * @param bool $expected
      */
@@ -51,6 +52,7 @@ class LibFsTest extends TestCase
     }
     /**
      * @dataProvider provideBasenamePaths
+     *
      * @param string $path
      * @param bool $expected
      */
@@ -135,6 +137,7 @@ class LibFsTest extends TestCase
 
     /**
      * @dataProvider providePaths
+     *
      * @param string $path
      * @param string $expected
      */
@@ -169,6 +172,7 @@ class LibFsTest extends TestCase
 
     /**
      * @dataProvider providePathSegments
+     *
      * @param string $path
      * @param string $expected
      */

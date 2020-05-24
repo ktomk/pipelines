@@ -31,7 +31,8 @@ class PackageYamlFileReader implements PackageInterface
 
     /**
      * @throws \InvalidArgumentException
-     * @return array
+     *
+     * @return null|array
      */
     public function asPackageArray()
     {
@@ -52,6 +53,8 @@ class PackageYamlFileReader implements PackageInterface
      * resolve local path URI relative to document location
      *
      * @param null|string $uri
+     *
+     * @return void
      */
     private function resolveUri(&$uri)
     {

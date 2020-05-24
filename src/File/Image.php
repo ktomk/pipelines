@@ -27,7 +27,10 @@ class Image
      * if an 'image' entry is set, validate it is a string or a section.
      *
      * @param array $array
+     *
      * @throws ParseException if the image name is invalid
+     *
+     * @return void
      */
     public static function validate(array $array)
     {
@@ -62,7 +65,8 @@ class Image
      * Image constructor.
      *
      * @param array|string $image
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
      */
     public function __construct($image)
     {
@@ -105,24 +109,34 @@ class Image
 
     /**
      * @param array|string $image
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
+     *
+     * @return void
      */
     private function parse($image)
     {
-        if (is_string($image)) {
-            $this->parseString($image);
-        } elseif (is_array($image)) {
-            $this->parseArray($image);
-        } else {
+        if (!(is_string($image) || is_array($image))) {
             throw new ParseException(
                 "'image' expects either 'a string' or 'a section'"
             );
         }
+
+        if (is_string($image)) {
+            $this->parseString($image);
+
+            return;
+        }
+
+        $this->parseArray($image);
     }
 
     /**
      * @param string $name
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
+     *
+     * @return void
      */
     private function parseString($name)
     {
@@ -137,7 +151,10 @@ class Image
 
     /**
      * @param array $image
-     * @throws \Ktomk\Pipelines\File\ParseException
+     *
+     * @throws ParseException
+     *
+     * @return void
      */
     private function parseArray(array $image)
     {

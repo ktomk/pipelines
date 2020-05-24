@@ -37,6 +37,7 @@ class Sf2YamlTest extends TestCase
 
     /**
      * @depends testCreation
+     *
      * @param Sf2Yaml $parser
      * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::parseFile
      */
@@ -55,6 +56,7 @@ class Sf2YamlTest extends TestCase
      * tested for.
      *
      * @depends testCreation
+     *
      * @param Sf2Yaml $parser
      * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::parseBuffer
      */

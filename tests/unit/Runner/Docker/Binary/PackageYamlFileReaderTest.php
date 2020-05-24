@@ -40,6 +40,7 @@ class PackageYamlFileReaderTest extends TestCase
 
     /**
      * @dataProvider provideTestPackages
+     *
      * @param string $file
      */
     public function testReadingTestPackages($file)

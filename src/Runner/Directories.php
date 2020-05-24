@@ -53,8 +53,10 @@ class Directories
      * @param array|string[] $env
      * @param string $projectDirectory project directory
      * @param string $utility [optional] name, defaults to "pipelines"
-     * @see Directories::getBaseDirectory
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
+     *@see Directories::getBaseDirectory
      */
     public function __construct(array $env, $projectDirectory, $utility = null)
     {
@@ -129,6 +131,7 @@ class Directories
      *
      * @param string $type name XDG_DATA_HOME / XDG_CACHE_HOME / XDG_CONFIG_HOME
      * @param null|string $suffix
+     *
      * @return string
      */
     public function getBaseDirectory($type, $suffix = null)
@@ -154,13 +157,15 @@ class Directories
 
     /**
      * @param string $xdgName
+     *
+     * @return void
      */
     private function validateBaseDirectory($xdgName)
     {
         $paths = self::$baseDirectory;
 
         if (!isset($paths[$xdgName])) {
-            throw new \InvalidArgumentException(sprintf(
+            throw new InvalidArgumentException(sprintf(
                 'Not a base directory: %s. Known base directories are: "%s"',
                 var_export($xdgName, true),
                 implode('", "', array_keys($paths))

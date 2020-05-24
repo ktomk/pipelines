@@ -16,6 +16,7 @@ class OptionIterator extends IteratorIterator
 
     /**
      * Iterator constructor.
+     *
      * @param Args $args
      */
     public function __construct(Args $args)
@@ -25,6 +26,9 @@ class OptionIterator extends IteratorIterator
         $this->rewind();
     }
 
+    /**
+     * @return bool
+     */
     public function hasArgument()
     {
         $next = $this->iterator->getNext();
@@ -42,21 +46,25 @@ class OptionIterator extends IteratorIterator
 
     /**
      * @throws ArgsException
+     *
      * @return string
      */
     public function getArgument()
     {
         if (!$this->hasArgument()) {
             ArgsException::__(
-                sprintf('option %s requires an argument', $this->current())
+                sprintf('option %s requires an argument', (string)$this->current())
             );
         }
 
-        return $this->iterator->getNext();
+        return (string)$this->iterator->getNext();
     }
 
     /* Iterator */
 
+    /**
+     * @return null|string
+     */
     public function current()
     {
         return $this->iterator->current();
@@ -98,6 +106,8 @@ class OptionIterator extends IteratorIterator
 
     /**
      * Forward the iterator to the current option
+     *
+     * @return void
      */
     private function forwardToOption()
     {

@@ -16,6 +16,7 @@ class LibFs
     /**
      * @param string $path
      * @param string $mode [optional]
+     *
      * @return bool
      */
     public static function canFopen($path, $mode = null)
@@ -41,6 +42,7 @@ class LibFs
      * @param string $basename
      * @param string $directory [optional] directory to operate from, defaults
      *               to "." (relative path of present working directory)
+     *
      * @return null|string
      */
     public static function fileLookUp($basename, $directory = null)
@@ -67,6 +69,7 @@ class LibFs
      * check if path is absolute
      *
      * @param string $path
+     *
      * @return bool
      */
     public static function isAbsolutePath($path)
@@ -83,6 +86,7 @@ class LibFs
      * check if path is basename
      *
      * @param string $path
+     *
      * @return bool
      */
     public static function isBasename($path)
@@ -100,9 +104,11 @@ class LibFs
 
     /**
      * see 2.2 Standards permit the exclusion of bad filenames / POSIX.1-2008
+     *
      * @link https://dwheeler.com/essays/fixing-unix-linux-filenames.html
      *
      * @param string $filename
+     *
      * @return bool
      */
     public static function isPortableFilename($filename)
@@ -120,6 +126,7 @@ class LibFs
 
     /**
      * @param string $path
+     *
      * @return bool
      */
     public static function isReadableFile($path)
@@ -133,6 +140,7 @@ class LibFs
 
     /**
      * @param string $path
+     *
      * @return bool
      */
     public static function isStreamUri($path)
@@ -150,6 +158,7 @@ class LibFs
      *
      * @param string $path
      * @param int $mode [optional]
+     *
      * @return string
      */
     public static function mkDir($path, $mode = 0777)
@@ -175,6 +184,7 @@ class LibFs
      * mind.
      *
      * @param string $path
+     *
      * @return string
      */
     public static function normalizePath($path)
@@ -201,6 +211,7 @@ class LibFs
      * This is not realpath, not resolving any links.
      *
      * @param string $path
+     *
      * @return string
      */
     public static function normalizePathSegments($path)
@@ -262,6 +273,7 @@ class LibFs
      *
      * @param string $old
      * @param string $new
+     *
      * @return string new file-name
      */
     public static function rename($old, $new)
@@ -275,6 +287,7 @@ class LibFs
 
     /**
      * @param string $file
+     *
      * @return string
      */
     public static function rm($file)
@@ -288,6 +301,10 @@ class LibFs
 
     /**
      * @param string $dir
+     *
+     * @throws UnexpectedValueException
+     *
+     * @return void
      */
     public static function rmDir($dir)
     {
@@ -326,6 +343,8 @@ class LibFs
      *
      * @param string $target
      * @param string $link
+     *
+     * @return void
      */
     public static function symlink($target, $link)
     {
@@ -335,6 +354,8 @@ class LibFs
 
     /**
      * @param string $link
+     *
+     * @return void
      */
     public static function unlink($link)
     {

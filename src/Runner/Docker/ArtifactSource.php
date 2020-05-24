@@ -31,6 +31,7 @@ class ArtifactSource
 
     /**
      * ArtifactSource constructor.
+     *
      * @param Exec $exec
      * @param string $id container id
      * @param string $dir in-container build directory ($BITBUCKET_CLONE_DIR)
@@ -44,6 +45,7 @@ class ArtifactSource
 
     /**
      * @throws \RuntimeException
+     *
      * @return array|string[]
      */
     public function getAllFiles()
@@ -57,11 +59,18 @@ class ArtifactSource
 
     /**
      * @param string $pattern
+     *
      * @throws \RuntimeException
+     *
      * @return array
      */
     public function findByPattern($pattern)
     {
+        /**
+         * @param $subject
+         *
+         * @return bool
+         */
         $matcher = function ($subject) use ($pattern) {
             return Glob::match($pattern, $subject);
         };
@@ -85,6 +94,7 @@ class ArtifactSource
      * get an array of paths obtained via docker exec & find
      *
      * @throws \RuntimeException
+     *
      * @return array
      */
     private function getFindPaths()
@@ -101,6 +111,7 @@ class ArtifactSource
 
     /**
      * @throws \RuntimeException
+     *
      * @return string
      */
     private function getFindBuffer()

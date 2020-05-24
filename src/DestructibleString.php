@@ -28,6 +28,7 @@ class DestructibleString
      * @see LibFs::rmDir
      *
      * @param string $string
+     *
      * @return DestructibleString
      */
     public static function rmDir($string)
@@ -38,6 +39,12 @@ class DestructibleString
         );
     }
 
+    /**
+     * DestructibleString constructor.
+     *
+     * @param string $string
+     * @param callable $callback
+     */
     public function __construct($string, $callback)
     {
         $this->string = $string;

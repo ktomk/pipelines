@@ -14,6 +14,9 @@ class Reference
 
     private $type;
 
+    /**
+     * @var string
+     */
     private $value;
 
     private static $map = array(
@@ -25,7 +28,9 @@ class Reference
 
     /**
      * @param null|string $string [optional] use null for a null reference
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
      * @return Reference
      */
     public static function create($string = null)
@@ -37,6 +42,7 @@ class Reference
      * Validates if a string is a valid (non-null) reference
      *
      * @param $string
+     *
      * @return bool
      */
     public static function valid($string)
@@ -50,7 +56,8 @@ class Reference
      * Reference constructor
      *
      * @param null|string $string [optional] use null for a null reference
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct($string = null)
     {
@@ -83,7 +90,10 @@ class Reference
 
     /**
      * @param null|string $string
+     *
      * @throws InvalidArgumentException
+     *
+     * @return void
      */
     private function parse($string)
     {

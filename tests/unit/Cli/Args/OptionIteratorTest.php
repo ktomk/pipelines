@@ -83,6 +83,7 @@ class OptionIteratorTest extends TestCase
 
     /**
      * @dataProvider provideSingleOptionArgs
+     *
      * @param array $array
      */
     public function testValid(array $array)
@@ -114,6 +115,7 @@ class OptionIteratorTest extends TestCase
 
     /**
      * @dataProvider provideSingleOptionArguments()
+     *
      * @param array $array
      * @param mixed $hasArg
      */

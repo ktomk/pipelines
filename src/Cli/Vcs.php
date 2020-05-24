@@ -23,6 +23,7 @@ class Vcs
 
     /**
      * @throws \RuntimeException
+     *
      * @return null|string
      */
     public function getTopLevelDirectory()

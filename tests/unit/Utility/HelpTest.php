@@ -10,6 +10,7 @@ use Ktomk\Pipelines\TestCase;
 
 /**
  * Class HelpTest
+ *
  * @covers \Ktomk\Pipelines\Utility\Help
  */
 class HelpTest extends TestCase
@@ -91,6 +92,7 @@ class HelpTest extends TestCase
 
     /**
      * @param Help $help
+     *
      * @throws StatusException
      * @depends testCreation
      */

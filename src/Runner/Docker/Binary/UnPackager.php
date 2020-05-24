@@ -56,6 +56,7 @@ class UnPackager
      *
      * @param Exec $exec
      * @param Directories $directories
+     *
      * @return UnPackager
      */
     public static function fromDirectories(Exec $exec, Directories $directories)
@@ -84,6 +85,7 @@ class UnPackager
      * Get binary path from local store.
      *
      * @param array $package
+     *
      * @return string
      */
     public function getLocalBinary(array $package)
@@ -107,6 +109,7 @@ class UnPackager
 
     /**
      * @param array $package
+     *
      * @return array
      */
     public function preparePackage(array $package)
@@ -133,6 +136,8 @@ class UnPackager
      * @param string $tgz path to tar-gz (.tgz) file
      * @param string $path path in package to extract from
      * @param string $dest path to extract to
+     *
+     * @return void
      */
     public function extractFromTgzFile($tgz, $path, $dest)
     {
@@ -159,6 +164,8 @@ class UnPackager
      * @param string $file
      * @param string $hash sha256 hash of the file
      * @param string $message [optional] additional error message information
+     *
+     * @return void
      */
     public function verifyFileHash($file, $hash, $message = '')
     {
@@ -173,7 +180,7 @@ class UnPackager
                 $hash,
                 $file
             );
-            strlen($message) && $buffer .= ' ' . $message;
+            '' !== $message && $buffer .= ' ' . $message;
 
             throw new \UnexpectedValueException($buffer);
         }
@@ -181,6 +188,8 @@ class UnPackager
 
     /**
      * @param array $package
+     *
+     * @return void
      */
     private function download(array $package)
     {
@@ -201,6 +210,11 @@ class UnPackager
         LibFs::Rename($base, $pkgLocalIn);
     }
 
+    /**
+     * @param array $package
+     *
+     * @return void
+     */
     private function extract(array $package)
     {
         $binLocal = $package['prep']['bin_local'];

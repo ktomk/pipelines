@@ -25,6 +25,14 @@ class StepServices
      */
     private $services;
 
+    /**
+     * StepServices constructor.
+     *
+     * @param Step $step
+     * @param null|array|mixed $services
+     *
+     * @return void
+     */
     public function __construct(Step $step, $services)
     {
         // quick validation: script
@@ -36,6 +44,7 @@ class StepServices
 
     /**
      * @param string $service
+     *
      * @return bool
      */
     public function has($service)
@@ -43,6 +52,13 @@ class StepServices
         return isset($this->services[$service]);
     }
 
+    /**
+     * parse services
+     *
+     * @param null|array|mixed $services
+     *
+     * @return string[]
+     */
     private function parseServices($services)
     {
         if (!is_array($services)) {

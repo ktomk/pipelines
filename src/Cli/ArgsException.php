@@ -14,6 +14,7 @@ class ArgsException extends \Exception
      *
      * @param string $message
      * @param int $code
+     *
      * @throws ArgsException
      */
     public static function __($message, $code = 1)

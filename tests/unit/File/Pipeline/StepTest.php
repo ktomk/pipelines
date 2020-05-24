@@ -179,7 +179,6 @@ class StepTest extends TestCase
 
     /**
      * @param null|array $array [optional]
-     *
      * @param int $index [optional]
      *
      * @return Step

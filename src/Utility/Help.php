@@ -17,6 +17,7 @@ class Help
 
     /**
      * Help constructor.
+     *
      * @param Streams $streams
      */
     public function __construct(Streams $streams)
@@ -24,6 +25,9 @@ class Help
         $this->streams = $streams;
     }
 
+    /**
+     * @return int
+     */
     public function showVersion()
     {
         $version = Version::resolve(App::VERSION);
@@ -34,6 +38,9 @@ class Help
         return 0;
     }
 
+    /**
+     * @return void
+     */
     public function showUsage()
     {
         $this->streams->out(
@@ -57,6 +64,9 @@ EOD
         );
     }
 
+    /**
+     * @return int
+     */
     public function showHelp()
     {
         $this->showUsage();
@@ -182,8 +192,11 @@ EOD
 
     /**
      * @param Args $args
+     *
      * @throws InvalidArgumentException
      * @throws StatusException
+     *
+     * @return void
      */
     public function run(Args $args)
     {

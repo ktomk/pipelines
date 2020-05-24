@@ -23,6 +23,8 @@ class Properties implements Countable
      * import properties from an array
      *
      * @param array $array
+     *
+     * @return void
      */
     public function importPropertiesArray(array $array)
     {
@@ -38,7 +40,9 @@ class Properties implements Countable
      *                    1. array of strings
      *                    2. array of two arrays of string, first is for
      *                       required, second for optional entries
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
      * @return array export product
      */
     public function export(array $keys)
@@ -63,6 +67,7 @@ class Properties implements Countable
      *
      * @param array $keys
      * @param array $export [optional] array to extend
+     *
      * @return array w/ exported properties
      */
     public function exportPropertiesByName(array $keys, array $export = array())
@@ -80,6 +85,7 @@ class Properties implements Countable
      * has all named entities
      *
      * @param array|string $keys ...
+     *
      * @return bool
      */
     public function has($keys)
@@ -104,6 +110,7 @@ class Properties implements Countable
      *
      * @param array $array to import from
      * @param array $keys named entries to import
+     *
      * @return array passed in array with the imported entries removed
      */
     public function import(array $array, array $keys)
@@ -130,7 +137,9 @@ class Properties implements Countable
 
     /**
      * Count elements of an object
+     *
      * @link http://php.net/manual/en/countable.count.php
+     *
      * @return int The custom count as an integer.
      */
     public function count()
@@ -142,7 +151,10 @@ class Properties implements Countable
      * obtain a list of keys that are not available in properties
      *
      * @param array $keys
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     private function missingKeys(array $keys)
     {

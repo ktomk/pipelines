@@ -50,6 +50,7 @@ class OptionFilterIteratorTest extends TestCase
 
     /**
      * @dataProvider provideInvalidOptions
+     *
      * @param string $option (invalid one)
      */
     public function testInvalidOptions($option)

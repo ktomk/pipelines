@@ -53,6 +53,8 @@ class ErrorCatcher
 
     /**
      * start catching session (is auto-started on create)
+     *
+     * @return void
      */
     private function start()
     {

@@ -28,6 +28,7 @@ class ProcTest extends TestCase
     public function testSetStatus()
     {
         $proc = new Proc(':');
+        $this->assertNull($proc->getStatus());
         $proc->setStatus(0);
         $this->assertSame(0, $proc->getStatus());
     }
@@ -35,8 +36,8 @@ class ProcTest extends TestCase
     public function testGetBuffer()
     {
         $proc = new Proc(':');
-        $this->assertNull($proc->getStandardOutput());
-        $this->assertNull($proc->getStandardError());
+        $this->assertSame('', $proc->getStandardOutput());
+        $this->assertSame('', $proc->getStandardError());
         $proc->run();
         $this->assertSame('', $proc->getStandardOutput());
         $this->assertSame('', $proc->getStandardError());
@@ -44,6 +45,7 @@ class ProcTest extends TestCase
 
     /**
      * PHP_BINARY available since 5.4.0
+     *
      * @requires PHP 5.4.0
      */
     public function testRun()

@@ -110,6 +110,7 @@ class GlobTest extends TestCase
 
     /**
      * @dataProvider provideMatchPatternLevel1
+     *
      * @param mixed $pattern
      * @param mixed $subject
      * @param mixed $expected
@@ -121,6 +122,7 @@ class GlobTest extends TestCase
 
     /**
      * @dataProvider provideMatchPatternLevel2
+     *
      * @param mixed $pattern
      * @param mixed $subject
      * @param mixed $expected
@@ -132,6 +134,7 @@ class GlobTest extends TestCase
 
     /**
      * @dataProvider provideMatchPatternLevel3
+     *
      * @param mixed $pattern
      * @param mixed $subject
      * @param mixed $expected

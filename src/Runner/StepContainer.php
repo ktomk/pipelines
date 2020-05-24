@@ -38,6 +38,7 @@ class StepContainer
 
     /**
      * @param Step $step
+     * @param null|Exec $exec
      *
      * @return StepContainer
      */
@@ -167,6 +168,8 @@ class StepContainer
     /**
      * @param bool $kill
      * @param bool $remove
+     *
+     * @return void
      */
     public function killAndRemove($kill, $remove)
     {

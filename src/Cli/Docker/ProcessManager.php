@@ -66,7 +66,7 @@ class ProcessManager
     public function findContainerIdByName($name)
     {
         $ids = $this->findAllContainerIdsByName($name);
-        if (null === $ids || !(is_array($ids) && 1 === count($ids))) {
+        if (null === $ids || 1 !== count($ids)) {
             return null;
         }
 
@@ -107,6 +107,8 @@ class ProcessManager
 
     /**
      * @param string $name
+     *
+     * @return void
      */
     public function zapContainersByName($name)
     {
@@ -119,6 +121,8 @@ class ProcessManager
 
     /**
      * @param string|string[] $idOrIds
+     *
+     * @return void
      */
     public function zap($idOrIds)
     {

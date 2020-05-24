@@ -19,13 +19,9 @@ class Streams
     private $handles;
 
     /**
-     * private marker that instance should close handles on dtor
-     * @var bool
-     */
-    private $closeOnDestruct;
-
-    /**
      * Create streams from environment (standard streams)
+     *
+     * @return Streams
      */
     public static function create()
     {
@@ -36,10 +32,7 @@ class Streams
         $out = $care ? constant('STDOUT') : 'php://stdout';
         $err = $care ? constant('STDERR') : 'php://stderr';
 
-        $streams = new self($in, $out, $err);
-        $streams->closeOnDestruct = $care;
-
-        return $streams;
+        return new self($in, $out, $err);
     }
 
     /**
@@ -71,17 +64,30 @@ class Streams
         }
     }
 
+    /**
+     * @param string $string
+     */
     public function __invoke($string)
     {
         $this->out(sprintf("%s\n", $string));
     }
 
+    /**
+     * @param string $string
+     *
+     * @return void
+     */
     public function out($string)
     {
         $handle = $this->handles[1][0];
         is_resource($handle) && fwrite($handle, $string);
     }
 
+    /**
+     * @param string $string
+     *
+     * @return void
+     */
     public function err($string)
     {
         $handle = $this->handles[2][0];
@@ -91,6 +97,8 @@ class Streams
     /**
      * @param Streams $streams
      * @param int $handle
+     *
+     * @return void
      */
     public function copyHandle(Streams $streams, $handle)
     {
@@ -107,7 +115,10 @@ class Streams
 
     /**
      * @param null|resource|string $context
+     *
      * @throws \RuntimeException
+     *
+     * @return void
      */
     private function addHandle($context)
     {

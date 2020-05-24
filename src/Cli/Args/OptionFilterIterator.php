@@ -11,6 +11,7 @@ use InvalidArgumentException;
  * Filter decorator of OptionIterator
  *
  * @method string getArgument()
+ *
  * @see \Ktomk\Pipelines\Cli\Args\OptionIterator::getArgument
  */
 class OptionFilterIterator extends FilterIterator
@@ -22,9 +23,11 @@ class OptionFilterIterator extends FilterIterator
 
     /**
      * OptionFilterIterator constructor.
+     *
      * @param Args $args
-     * @param $options
-     * @throws \InvalidArgumentException
+     * @param string|string[] $options
+     *
+     * @throws InvalidArgumentException
      */
     public function __construct(Args $args, $options)
     {
@@ -63,14 +66,17 @@ class OptionFilterIterator extends FilterIterator
      */
     public function accept()
     {
-        $current = parent::current();
+        $current = $this->current();
 
         return in_array($current, $this->options, true);
     }
 
     /**
      * @param array|string[] $options
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     private function initOptions(array $options)
     {
@@ -90,7 +96,9 @@ class OptionFilterIterator extends FilterIterator
      * non-fitting.
      *
      * @param string $option
+     *
      * @throws InvalidArgumentException
+     *
      * @return string
      */
     private function compareOption($option)

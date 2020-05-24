@@ -46,8 +46,10 @@ class EnvResolver
      *
      * @param array|string $stringOrArray
      *
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
+     *
      * @return array|string
+     *
      * @see resolveString
      */
     public function __invoke($stringOrArray)
@@ -63,7 +65,9 @@ class EnvResolver
     /**
      * @param Args $args
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     public function addArguments(Args $args)
     {
@@ -82,7 +86,10 @@ class EnvResolver
      * add a file (--env-file option)
      *
      * @param string $file path to file
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     public function addFile($file)
     {
@@ -100,7 +107,9 @@ class EnvResolver
      * add a file but only if it exists (similar to --env-file option)
      *
      * @param string $file path to (potentially existing) file
-     * @throws \InvalidArgumentException
+     *
+     * @throws InvalidArgumentException
+     *
      * @return bool file was added
      */
     public function addFileIfExists($file)
@@ -117,7 +126,9 @@ class EnvResolver
     /**
      * @param array $lines
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     public function addLines(array $lines)
     {
@@ -132,7 +143,9 @@ class EnvResolver
      *
      * @param string $definition variable definition, either name only or w/ equal sign
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
+     *
+     * @return void
      */
     public function addDefinition($definition)
     {
@@ -176,9 +189,10 @@ class EnvResolver
      * zero-length string if the variable is undefined in the resolver
      * context.
      *
-     * @param $string
+     * @param string $string
      *
-     * @throws \UnexpectedValueException
+     * @throws UnexpectedValueException
+     *
      * @return string
      */
     public function resolveString($string)

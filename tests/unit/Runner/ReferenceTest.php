@@ -37,6 +37,7 @@ class ReferenceTest extends TestCase
 
     /**
      * @dataProvider provideRefs
+     *
      * @param string $string
      * @param bool $valid
      */

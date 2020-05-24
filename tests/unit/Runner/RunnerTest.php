@@ -83,6 +83,7 @@ class RunnerTest extends RunnerTestCase
 
     /**
      * @dataProvider provideRunStatuses
+     *
      * @param int $status
      */
     public function testRunPipeline($status)

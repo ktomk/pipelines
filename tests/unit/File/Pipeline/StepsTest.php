@@ -217,13 +217,6 @@ class StepsTest extends TestCase
     {
         $this->assertNotNull(Steps::fullIter(null));
 
-        try {
-            Steps::fullIter(array());
-            $this->fail('An expected exception has not been thrown');
-        } catch (\InvalidArgumentException $ex) {
-            $this->addToAssertionCount(1);
-        }
-
         $steps = $this->createConfiguredMock('Ktomk\Pipelines\File\Pipeline\Steps', array(
             'getIterator' => $this->createMock('Ktomk\Pipelines\File\Pipeline\StepsIterator')
         ));

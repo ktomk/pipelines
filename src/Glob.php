@@ -34,7 +34,9 @@ class Glob
      *
      * @param string $pattern
      * @param string $subject
-     * @throws \UnexpectedValueException
+     *
+     * @throws UnexpectedValueException
+     *
      * @return bool
      */
     public static function match($pattern, $subject) {
@@ -53,7 +55,9 @@ class Glob
      * expand brace "{}" in pattern
      *
      * @param string $pattern
-     * @throws \UnexpectedValueException
+     *
+     * @throws UnexpectedValueException
+     *
      * @return array of all patterns w/o braces, no duplicates
      */
     public static function expandBrace($pattern)
@@ -90,8 +94,10 @@ class Glob
     /**
      * @param string $subject
      * @param array $matches
+     *
      * @throws UnexpectedValueException
-     * @return false|int
+     *
+     * @return int
      */
     private static function expandBraceInnerMatch($subject, &$matches)
     {
@@ -135,6 +141,16 @@ class Glob
         return 0;
     }
 
+    /**
+     * map pattern
+     *
+     * via translation map to preserve glob and standard characters for pcre
+     * pattern
+     *
+     * @param string $pattern
+     *
+     * @return string
+     */
     private static function map($pattern)
     {
         return strtr($pattern, self::$map);

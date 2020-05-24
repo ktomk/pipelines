@@ -32,6 +32,7 @@ class FileOptions
      * @param Args $args
      * @param Streams $streams
      * @param File $file
+     *
      * @return FileOptions
      */
     public static function bind(Args $args, Streams $streams, File $file)
@@ -41,6 +42,7 @@ class FileOptions
 
     /**
      * FileOptions constructor.
+     *
      * @param Args $args
      * @param callable $output
      * @param File $file
@@ -57,6 +59,7 @@ class FileOptions
      *
      * @throws InvalidArgumentException
      * @throws StatusException
+     *
      * @return $this
      */
     public function run()
@@ -80,6 +83,7 @@ class FileOptions
 
     /**
      * @param $pipelines
+     *
      * @return int
      */
     public function showPipelines(File $pipelines)
@@ -89,6 +93,7 @@ class FileOptions
 
     /**
      * @param null|File $file [optional]
+     *
      * @return FileShower
      */
     private function shower(File $file = null)

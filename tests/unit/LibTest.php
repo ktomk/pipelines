@@ -71,6 +71,7 @@ class LibTest extends TestCase
 
     /**
      * @dataProvider provideQuoteArgs
+     *
      * @param mixed $argument
      * @param mixed $expected
      */

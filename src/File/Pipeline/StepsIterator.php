@@ -17,12 +17,12 @@ class StepsIterator implements \Iterator
     private $inner;
 
     /**
-     * @var int
+     * @var null|int
      */
     private $index;
 
     /**
-     * @var Step
+     * @var null|Step
      */
     private $current;
 
@@ -59,7 +59,7 @@ class StepsIterator implements \Iterator
      */
     public function getStepIndex()
     {
-        return $this->current->getIndex();
+        return isset($this->current) ? $this->current->getIndex() : null;
     }
 
     /**
@@ -115,6 +115,8 @@ class StepsIterator implements \Iterator
 
     /**
      * @param bool $noManual
+     *
+     * @return void
      */
     public function setNoManual($noManual)
     {

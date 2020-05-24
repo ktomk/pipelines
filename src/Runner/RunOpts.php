@@ -67,6 +67,8 @@ class RunOpts
 
     /**
      * @param string $prefix
+     *
+     * @return void
      */
     public function setPrefix($prefix)
     {
@@ -101,6 +103,8 @@ class RunOpts
 
     /**
      * @param string $binaryPackage
+     *
+     * @return void
      */
     public function setBinaryPackage($binaryPackage)
     {
@@ -125,6 +129,8 @@ class RunOpts
 
     /**
      * @param null|string $steps
+     *
+     * @return void
      */
     public function setSteps($steps)
     {
@@ -141,6 +147,8 @@ class RunOpts
 
     /**
      * @param bool $noManual
+     *
+     * @return void
      */
     public function setNoManual($noManual)
     {

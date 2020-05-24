@@ -69,6 +69,7 @@ class ArgsTest extends TestCase
 
     /**
      * @dataProvider provideFirstRemainingOptions
+     *
      * @param array $arguments
      * @param string $expected first remaining option
      */

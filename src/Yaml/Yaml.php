@@ -9,8 +9,10 @@ use Ktomk\Pipelines\LibFs;
 class Yaml
 {
     /**
-     * @param $path
+     * @param string $path
+     *
      * @throws \InvalidArgumentException
+     *
      * @return null|array on error
      */
     public static function file($path)
@@ -26,6 +28,7 @@ class Yaml
 
     /**
      * @param string $buffer
+     *
      * @return null|array
      */
     public static function buffer($buffer)

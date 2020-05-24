@@ -87,7 +87,7 @@ class StepRunner
     }
 
     /**
-     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
+     * @param Step $step
      *
      * @return null|int exist status of step script or null if the run operation failed
      */
@@ -166,6 +166,8 @@ class StepRunner
      * @param string $dir to put artifacts in (project directory)
      *
      * @throws \RuntimeException
+     *
+     * @return void
      */
     private function captureStepArtifacts(Step $step, $copy, $id, $dir)
     {
@@ -196,13 +198,17 @@ class StepRunner
     }
 
     /**
+     * capture artifact pattern
+     *
+     * @see Runner::captureStepArtifacts()
+     *
      * @param ArtifactSource $source
      * @param string $pattern
      * @param string $dir
      *
      * @throws \RuntimeException
-     * @see Runner::captureStepArtifacts()
      *
+     * @return void
      */
     private function captureArtifactPattern(ArtifactSource $source, $pattern, $dir)
     {
@@ -243,6 +249,7 @@ class StepRunner
      * @param string $dir directory to copy contents into container
      *
      * @throws \RuntimeException
+     *
      * @return null|int null if all clear, integer for exit status
      */
     private function deployCopy($copy, $id, $dir)
@@ -290,6 +297,8 @@ class StepRunner
      *
      * @throws \RuntimeException
      * @throws \InvalidArgumentException
+     *
+     * @return void
      */
     private function imageLogin(Image $image)
     {
@@ -301,7 +310,7 @@ class StepRunner
      * @param StepContainer $container
      * @param string $dir
      * @param bool $copy
-     * @param \Ktomk\Pipelines\File\Pipeline\Step $step
+     * @param Step $step
      *
      * @return array array(string|null $id, int $status)
      */
@@ -349,6 +358,11 @@ class StepRunner
         return array($id, $status);
     }
 
+    /**
+     * @param Step $step
+     *
+     * @return string[]
+     */
     private function obtainDockerClientMount(Step $step)
     {
         # 'docker.client.path'
@@ -463,6 +477,8 @@ class StepRunner
     /**
      * @param StepContainer $container
      * @param int $status
+     *
+     * @return void
      */
     private function shutdownStepContainer(StepContainer $container, $status)
     {
