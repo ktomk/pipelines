@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Changed
 - Updated Readme for instructions
 ### Fixed
+- Shell test runner run on invalid test-case/driver
 - Type-handling in code and dead/superfluous code
 - Remove static calls to throw a parse exception
 - After-script ignored all script errors, fix is to exit on first error
