@@ -82,15 +82,15 @@ class KeepOptions
         $noKeep = $args->hasOption('no-keep');
 
         if ($keep && $noKeep) {
-            StatusException::status(1, '--keep and --no-keep are exclusive');
+            throw new StatusException('--keep and --no-keep are exclusive', 1);
         }
 
         if ($keep && $errorKeep) {
-            StatusException::status(1, '--keep and --error-keep are exclusive');
+            throw new StatusException('--keep and --error-keep are exclusive', 1);
         }
 
         if ($noKeep && $errorKeep) {
-            StatusException::status(1, '--error-keep and --no-keep are exclusive');
+            throw new StatusException('--error-keep and --no-keep are exclusive', 1);
         }
 
         return array($errorKeep, $keep && !$noKeep);

@@ -202,12 +202,12 @@ EOD
     {
         # quickly handle version
         if ($args->hasOption('version')) {
-            StatusException::status($this->showVersion());
+            throw new StatusException('', $this->showVersion());
         }
 
         # quickly handle help
         if ($args->hasOption(array('h', 'help'))) {
-            StatusException::status($this->showHelp());
+            throw new StatusException('', $this->showHelp());
         }
     }
 }

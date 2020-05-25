@@ -4,6 +4,10 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Fixed
+- Remove static calls to throw a status exception
+
 ## [0.0.35] - 2020-05-24
 ### Changed
 - Updated Readme for instructions

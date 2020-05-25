@@ -79,13 +79,14 @@ class StatusExceptionTest extends TestCase
     }
 
     /**
+     * This is less a test but more a demonstration
      */
-    public function testStatus()
+    public function testStatusThrowUsage()
     {
         $this->expectException('Ktomk\Pipelines\Utility\StatusException');
         $this->expectExceptionMessage('Foo Le Bar');
         $this->expectExceptionCode(22);
 
-        StatusException::status(22, 'Foo Le Bar');
+        throw new StatusException('Foo Le Bar', 22);
     }
 }

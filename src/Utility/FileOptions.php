@@ -67,15 +67,15 @@ class FileOptions
         $args = $this->args;
 
         if ($args->hasOption('images')) {
-            StatusException::status($this->shower()->showImages());
+            throw new StatusException('', $this->shower()->showImages());
         }
 
         if ($args->hasOption('show')) {
-            StatusException::status($this->shower()->showPipelines());
+            throw new StatusException('', $this->shower()->showPipelines());
         }
 
         if ($args->hasOption('list')) {
-            StatusException::status($this->shower()->showPipelineIds());
+            throw new StatusException('', $this->shower()->showPipelineIds());
         }
 
         return $this;

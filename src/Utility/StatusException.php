@@ -12,19 +12,6 @@ use Exception;
 class StatusException extends Exception
 {
     /**
-     * @param int $code
-     * @param string $message
-     *
-     * @throws StatusException
-     *
-     * @return void
-     */
-    public static function status($code = 0, $message = '')
-    {
-        throw new self($message, $code);
-    }
-
-    /**
      * StatusException constructor.
      *
      * @param string $message

@@ -128,7 +128,7 @@ class DockerOptions
         $status = $this->runClean($status, $count, $hasClean, $ids);
 
         if ($count) {
-            StatusException::status($status);
+            throw new StatusException('', $status);
         }
     }
 

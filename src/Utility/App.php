@@ -169,7 +169,7 @@ class App implements Runnable
         $workingDir = \getcwd();
         if (false === $workingDir) {
             // @codeCoverageIgnoreStart
-            StatusException::status(1, 'fatal: obtain working directory');
+            throw new StatusException('fatal: obtain working directory', 1);
             // @codeCoverageIgnoreEnd
         }
 
@@ -189,7 +189,7 @@ class App implements Runnable
 
         $basename = $args->getStringOptionArgument('basename', self::BBPL_BASENAME);
         if (!LibFs::isBasename($basename)) {
-            StatusException::status(1, sprintf("not a basename: '%s'", $basename));
+            throw new StatusException(sprintf("not a basename: '%s'", $basename), 1);
         }
 
         return $basename;
@@ -209,9 +209,9 @@ class App implements Runnable
         $deployMode = $args->getStringOptionArgument('deploy', 'copy');
 
         if (!in_array($deployMode, array('mount', 'copy'), true)) {
-            StatusException::status(
-                1,
-                sprintf("unknown deploy mode '%s'\n", $deployMode)
+            throw new StatusException(
+                sprintf("unknown deploy mode '%s'\n", $deployMode),
+                1
             );
         }
 
@@ -301,7 +301,7 @@ class App implements Runnable
         }
 
         if (empty($file)) {
-            StatusException::status(1, 'file can not be empty');
+            throw new StatusException('file can not be empty', 1);
         }
 
         return $file;
@@ -340,7 +340,7 @@ class App implements Runnable
             : $workingDir . '/' . $file;
 
         if (!LibFs::isReadableFile($file)) {
-            StatusException::status(1, sprintf('not a readable file: %s', $file));
+            throw new StatusException(sprintf('not a readable file: %s', $file), 1);
         }
 
         $this->verbose(sprintf("info: pipelines file is '%s'", $path));
@@ -426,16 +426,12 @@ class App implements Runnable
      */
     private function changeWorkingDir($directory)
     {
-        $this->verbose(
-            sprintf('info: changing working directory to %s', $directory)
-        );
+        $message = sprintf('changing working directory to %s', $directory);
+        $this->verbose(sprintf('info: %s', $message));
 
         $result = chdir($directory);
         if (false === $result) {
-            StatusException::status(
-                2,
-                sprintf('fatal: change working directory to %s', $directory)
-            );
+            throw new StatusException(sprintf('fatal: %s', $message), 2);
         }
     }
 
@@ -468,11 +464,12 @@ class App implements Runnable
             $this->error(sprintf("pipelines: pipeline '%s' unavailable", $pipelineId));
             $this->info('Pipelines are:');
             $fileOptions->showPipelines($pipelines);
-            StatusException::status(1);
+
+            throw new StatusException('', 1);
         }
 
         if (!$pipeline) {
-            StatusException::status(1, 'no pipeline to run!');
+            throw new StatusException('no pipeline to run!', 1);
         }
 
         $pipeline->setStepsExpression($runOpts->getSteps());
