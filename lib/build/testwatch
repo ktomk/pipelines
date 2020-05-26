@@ -2,7 +2,7 @@
 #
 # run phpunit tests in watch w/ colors and desktop notification on failure
 #
-# usage: ./lib/testwatch.sh
+# usage: ./lib/build/testwatch
 #
 set -euo pipefail
 IFS=$'\n\t'

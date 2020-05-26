@@ -2,7 +2,7 @@
 #
 # tag and publish the release
 #
-# usage: ./lib/tag.sh
+# usage: ./lib/build/tag
 #
 set -euo pipefail
 IFS=$'\n\t'
