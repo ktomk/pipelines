@@ -50,10 +50,11 @@ information about the pipelines is available via `--show`. Both
 
 Run the pipeline as if a tag/branch or bookmark has been pushed
 with `--trigger <ref>` where `<ref>` is `tag:<name>`,
-`branch:<name>`, `bookmark:<name>` or `pr:<branch-name>[:<destination>]`
-. If there is no tag, branch, bookmark or pull-request pipeline with
-that name, the name is compared against the patterns of the
-referenced type and if found, that pipeline is run.
+`branch:<name>`, `bookmark:<name>` or
+`pr:<branch-name>[:<destination-branch>]`. If there is no tag,
+branch, bookmark or pull-request pipeline with that name, the
+name is compared against the patterns of the referenced type and
+if found, that pipeline is run.
 
 Otherwise the default pipeline is run, if there is no default
 pipeline, no pipeline at all is run and the command exits with

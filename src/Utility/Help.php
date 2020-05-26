@@ -99,7 +99,7 @@ Pipeline runner options
                           directory
     --trigger <ref>       build trigger, <ref> can be of either
                           tag:<name>, branch:<name>, bookmark:<name> or
-                          pr:<branch-name>
+                          pr:<branch-name>[:<destination-branch>]
                           determines the pipeline to run
     --pipeline <id>       run pipeline with <id>, use --list for a list of
                           all pipeline ids available.
