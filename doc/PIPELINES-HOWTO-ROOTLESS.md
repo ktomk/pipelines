@@ -80,7 +80,7 @@ This How-To describes how to install docker rootless on Ubuntu 18.04 LTS
     $ pipelines --deploy mount
     ```
 
-    If the installation of Docker rootless is incomplete, you well see the
+    If the installation of Docker rootless is incomplete, you will see the
     pipelines utility to complain about setting up the container providing
     more info that docker has issues connecting to the Docker daemon like so:
 
@@ -93,17 +93,17 @@ This How-To describes how to install docker rootless on Ubuntu 18.04 LTS
     > exit status: 125
     > ```
 
-   This means either the `DOCKER_HOST` environment parameter is either missing
-   or not pointing to the correct socket *or* the Daemon is not running. The
+   This means either the `DOCKER_HOST` environment parameter is missing or
+   not pointing to the correct socket *or* the Daemon is not running. The
    address of the Docker daemon in the error message is useful to review to
-   learn about the connection issues.
+   learn about the connection issue.
 
 ## How To Progress
 
 Switching the Docker daemon to rootless needs Docker to pull images again as
 they are stored in the users home folder (e.g. `~/.local/share/docker`). See
-[**Ready for Offline** in Read Me](../README.md) on how to pull pipeline images
-in batches.
+[**Ready for Offline** in Read Me](../README.md#ready-for-offline) on how to
+pull pipeline images in batches.
 
 To switch back from rootless to system:
 

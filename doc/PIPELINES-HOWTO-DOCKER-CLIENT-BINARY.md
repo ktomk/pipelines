@@ -11,14 +11,14 @@ These packages are meta-data information on how to obtain a static
 binary of the Docker client and allow to use a static Docker client
 binary in a reproducible manner.
 
-Static Docker client binaries are useful for pipelines as they can be
+Static Docker client binaries are useful for `pipelines` as they can be
 mounted into nearly any Linux container without further installation
 requirements (next to provide connectivity to the Docker daemon).
 
 This document is about how-to obtain the static docker client binary and
-all the meta-data to make use and also on how to create such packages as
-next to existing packages or for improving pipelines with new package
-definitions.
+all the meta-data to make use of it and also on how to create such
+packages next to existing packages or for improving pipelines with new
+package definitions.
 
 Be it a local `.yml` package file, a package that ships with the
 pipelines utility or a custom build static docker client binary.
@@ -60,7 +60,7 @@ This list does not highlight the default one, so here a short
 description about each of these:
 
 * `docker-17.12.0-ce-linux-static-x86_64`: this version was in use when
-  using the [`docker-client-install.sh`] script inside a pipeline.
+  using the [`docker-client-install.sh`][dci1] script inside a pipeline.
 * `docker-18.09.1-linux-static-x86_64`: this version was found in use
   by the Atlassian Bitbucket Cloud Pipelines Plugin:
   ```bash
@@ -79,7 +79,7 @@ description about each of these:
   this is the only package that works offline out of the box and is
   only available after `composer install` has been run.
 
-[`docker-client-install.sh`]: ../lib/pipelines/docker-client-install.sh
+[dci1]: ../lib/pipelines/docker-client-install.sh
 [docker/cli#1019]: https://github.com/docker/cli/pull/1019
 
 ## Create Docker Client Static Binary Packages for Pipelines

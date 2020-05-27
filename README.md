@@ -29,13 +29,7 @@ Memory and time limits are ignored. Press <kbd>ctrl</kbd> +
 <kbd>c</kbd> to quit.
 
 The Bitbucket limit of 100 (previously 10) steps per pipeline
-is ignored. Use `--steps <steps>` to specify which step(s) to
-execute in which order.
-
-If the next pipeline step has a manual trigger, pipelines stops
-the execution and outputs a short message on standard error
-giving info about the fact. Manual triggers can be ignored with
-the `--no-manual` option.
+is ignored.
 
 Exit status is from last pipeline script command, if a command
 fails the following script commands and steps are not executed.
@@ -47,6 +41,14 @@ To execute a different pipeline use the `--pipeline <id>` option
 where `<id>` is one of the list by the `--list` option. Even more
 information about the pipelines is available via `--show`. Both
 `--list` and `--show` output and exit.
+
+Use `--steps <steps>` to specify which step(s) to execute (also in
+which order).
+
+If the next pipeline step has a manual trigger, pipelines stops
+the execution and outputs a short message on standard error
+giving info about the fact. Manual triggers can be ignored with
+the `--no-manual` option.
 
 Run the pipeline as if a tag/branch or bookmark has been pushed
 with `--trigger <ref>` where `<ref>` is `tag:<name>`,
@@ -69,8 +71,8 @@ or `--file <path>` option and/or set the working directory
 `--working-dir <path>` in which the file is looked for unless
 an absolute path is set by `--file <path>`.
 
-By default it operates on the current working tree which is
-copied into the container to isolate running the pipeline from
+By default `pipelines` operates on the current working tree which
+is copied into the container to isolate running the pipeline from
 the working directory (implicit `--deploy copy`).
 
 Alternatively the working directory can be mounted into the
@@ -100,7 +102,7 @@ Or just run for a more shy clean-up:
 to kill and remove all pipeline containers (w/o showing a list)
 first. "zap" is pipelines "make clean" equivalent for `--keep`.
 
-Validate your bitbucket-pipelines.yml file with `--show` which
+Validate your `bitbucket-pipelines.yml` file with `--show` which
 highlights errors found.
 
 Inspect your pipeline with `--dry-run` which will process the
@@ -117,7 +119,7 @@ for your pipeline by name or file with `-e`, `--env` and
 Environment variables are also loaded from dot env files named
 `.env.dist` and `.env` and processed in that order before the
 environment options. Use of `--no-dot-env-files` prevents such
-automatic loading, `--no-dot-env-dot-dist` for the .env.dist
+automatic loading, `--no-dot-env-dot-dist` for the `.env.dist`
 file only.
 
 More information on pipelines environment variables in the
@@ -155,6 +157,7 @@ integration work fostering your agility and vendor independence.
 Features include:
 
 #### Dev Mode
+
 Pipeline from your working tree like never before. Pretend to be
 on any branch, tag or bookmark (`--trigger`) even in a different
 repository or none at all.
@@ -178,8 +181,9 @@ of a pipeline with `--keep` and with the said `--error-keep` on
 error only.
 
 Continue on a (failed) step with the `--steps <steps>` argument,
-the `<steps>` option can be any step number or sequence, separate
-multiple with comma, you can even repeat steps or reverse order.
+the `<steps>` option can be any step number or sequence (`1-3`),
+separate multiple with comma (`3-,1-2`), you can even repeat steps
+or reverse order (`4,3,2,1`).
 
 For example, if the second step failed, to continue use
 `--steps 2-` to re-run the second and all following steps.

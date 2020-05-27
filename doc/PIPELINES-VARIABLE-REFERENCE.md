@@ -1,9 +1,9 @@
 # Pipelines Environment Variable Usage
 
 Environment variables (sometimes also called environment
-parameters) are a first grade citizen of the pipelines utility.
+parameters) are a first grade citizen of the `pipelines` utility.
 
-The pipelines utility has support for Bitbucket Cloud Pipelines
+The `pipelines` utility has support for Bitbucket Cloud Pipelines
 Plugin environment variables. This document describes along the
 [list of default variables][BBPL-ENV] \[BBPL-ENV] the level of
 support and provides useful information for setting and using
@@ -11,10 +11,10 @@ these variables.
 
 This document is a lengthier review of all variables at the time
 of writing and provides additional information next to the short
-introduction in the [read me](../README.md), both for limitations
-of the pipelines utility to this regard (and therefore feature
-planning) *and* usage guidelines for "dot env" environment files
-in project scope in a suggested (and best-intend compatible)
+introduction in the [read me](../README.md#environment), both for
+limitations of the `pipelines` utility to this regard (and therefore
+feature planning) *and* usage guidelines for "dot env" environment
+files in project scope in a suggested (and best-intend compatible)
 fashion (façon).
 
 ## Default Variables
