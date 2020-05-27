@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- Help section w/ help message from src in readme
 ### Fixed
 - Help message on trigger destination branch name
 - Remove static calls to throw a status exception
