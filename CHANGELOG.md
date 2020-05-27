@@ -4,11 +4,11 @@ All notable changes to Pipelines will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.36] - 2020-05-28
 ### Added
 - Help section w/ help message from src in readme
 ### Fixed
-- Pipeline variables from command line arguments
+- Pipeline default variables command line arguments parsing
 - Help message on trigger destination branch name
 - Remove static calls to throw a status exception
 
@@ -348,4 +348,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.33]: https://github.com/ktomk/pipelines/releases/tag/0.0.33
 [0.0.34]: https://github.com/ktomk/pipelines/releases/tag/0.0.34
 [0.0.35]: https://github.com/ktomk/pipelines/releases/tag/0.0.35
+[0.0.36]: https://github.com/ktomk/pipelines/releases/tag/0.0.36
 [unreleased]: https://github.com/ktomk/pipelines
