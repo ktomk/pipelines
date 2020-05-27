@@ -7,16 +7,42 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+# check that changelog file is tracked
+>/dev/null git ls-files --error-unmatch CHANGELOG.md
+
 # ## [0.0.13] - 2018-03-20
 
 CHANGELOG="$(
   grep -m 1 -e '^## \[' CHANGELOG.md \
-  | sed -e 's/^## \[\([0-9.]*\)\].*$/\1/'
+  | sed -n -e 's/^## \[\([0-9.]*\)\].*$/\1/p'
 )"
 
 TAG="${1-${CHANGELOG}}"
 
-echo "${TAG}"
+echo "tag and publish: ${TAG}"
+
+# check not unreleased (not digits and dots, no semver checker here)
+if [[ "${TAG}" = "" ]]; then
+  >&2 echo "fatal: not a version tag '${TAG}' - [unreleased] ?"
+  exit 1
+fi
+
+# check it is linked (links are at the bottom of the CHANGELOG.md)
+# [0.0.35]: https://github.com/ktomk/pipelines/releases/tag/0.0.35
+if ! grep -qP '^\Q['"${TAG}"']\E: https://' CHANGELOG.md; then
+  >&2 echo "fatal: no link for version tag '${TAG}'"
+  >&2 echo "       [${TAG}]: https://github.com/ktomk/pipelines/releases/tag/${TAG}"
+  sed -i -e '$i'"[${TAG}]: https://github.com/ktomk/pipelines/releases/tag/${TAG}" CHANGELOG.md
+  exit 1
+fi
+
+# check that changelog file is not changed (committed)
+if ! git diff --exit-code CHANGELOG.md; then
+  >&2 echo "fatal: CHANGELOG.md has uncommitted changes"
+  exit 1
+fi
+
+# run of the mill
 
 git tag -a "${TAG}" -m "${TAG}"
 
