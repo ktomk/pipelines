@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Args\ArgsTester;
 use Ktomk\Pipelines\TestCase;
 
@@ -26,11 +27,18 @@ class EnvTest extends TestCase
         $this->assertNotNull($env->getArgs('-e'));
     }
 
+    public function testStaticCreationEx()
+    {
+        $env = Env::createEx();
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Env', $env);
+        $this->assertNotNull($env->getArgs('-e'));
+    }
+
     public function testDefaultEnvsEmptyUnlessInitialized()
     {
         $env = new Env();
         $array = $env->getArgs('-e');
-        $this->assertIsArray($array);
+        self::assertIsArray($array);
         $this->assertCount(0, $array);
 
         $env->initDefaultVars(array());
@@ -41,14 +49,14 @@ class EnvTest extends TestCase
     public function testDefaultValue()
     {
         $slug = 'pipelines';
-        $env = Env::create(array('BITBUCKET_REPO_SLUG' => $slug));
+        $env = Env::createEx(array('BITBUCKET_REPO_SLUG' => $slug));
         $this->assertSame($slug, $env->getValue('BITBUCKET_REPO_SLUG'));
     }
 
     public function testUserInheritance()
     {
         $user = 'adele';
-        $env = Env::create(array('USER' => $user));
+        $env = Env::createEx(array('USER' => $user));
         $this->assertNull($env->getValue('USER'));
         $this->assertSame($user, $env->getValue('BITBUCKET_REPO_OWNER'));
     }
@@ -63,7 +71,7 @@ class EnvTest extends TestCase
 
     public function testGetOptionArgs()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $args = $env->getArgs('-e');
         $this->assertIsArray($args);
         while ($args) {
@@ -91,7 +99,7 @@ class EnvTest extends TestCase
 
     public function testAddRefType()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $default = count($env->getArgs('-e'));
 
         $env->addReference(Reference::create());
@@ -103,7 +111,7 @@ class EnvTest extends TestCase
 
     public function testPullRequestAddsBranchName()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $default = count($env->getArgs('-e'));
 
         $env->addReference(Reference::create());
@@ -118,7 +126,7 @@ class EnvTest extends TestCase
 
     public function testAddRefTypeIfSet()
     {
-        $env = Env::create(array('BITBUCKET_TAG' => 'inherit'));
+        $env = Env::createEx(array('BITBUCKET_TAG' => 'inherit'));
         $default = count($env->getArgs('-e'));
 
         $env->addReference(Reference::create('tag:testing'));
@@ -130,7 +138,7 @@ class EnvTest extends TestCase
 
     public function testSetContainerName()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $count = count($env->getArgs('-e'));
 
         $env->setContainerName('blue-seldom');
@@ -150,7 +158,7 @@ class EnvTest extends TestCase
         $inherit = array(
             'PIPELINES_CONTAINER_NAME' => 'cloud-sea',
         );
-        $env = Env::create($inherit);
+        $env = Env::createEx($inherit);
         $env->setContainerName('dream-blue');
         $args = $env->getArgs('-e');
         $this->assertContains('PIPELINES_PARENT_CONTAINER_NAME=cloud-sea', $args);
@@ -166,7 +174,7 @@ class EnvTest extends TestCase
             'DOCKER_HOST' => 'unix:///var/run/docker.sock',
             'DOCKER_TMP' => false,
         );
-        $env = Env::create($inherit);
+        $env = Env::createEx($inherit);
         $actual = $env->getInheritValue('DOCKER_HOST');
         $this->assertSame('unix:///var/run/docker.sock', $actual);
         $actual = $env->getInheritValue('DOCKER_TMP');
@@ -177,7 +185,7 @@ class EnvTest extends TestCase
 
     public function testGetValue()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $actual = $env->getValue('BITBUCKET_BUILD_NUMBER');
         $this->assertSame('0', $actual);
         $actual = $env->getValue('BITBUCKET_BRANCH');
@@ -186,7 +194,7 @@ class EnvTest extends TestCase
 
     public function testSetPipelinesId()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $this->assertNull($env->getValue('PIPELINES_ID'));
         $this->assertNull($env->getValue('PIPELINES_IDS'));
 
@@ -205,7 +213,7 @@ class EnvTest extends TestCase
 
     public function testPipelinesProjectPath()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $env->setPipelinesProjectPath('/my-path');
         $this->assertNull($env->getValue('PIPELINES_PROJECT_PATH'), 'needs ID/s configuration');
 
@@ -220,7 +228,7 @@ class EnvTest extends TestCase
     public function testInheritPipelinesId()
     {
         $inherit = array('PIPELINES_ID', 'custom/the-other-day');
-        $env = Env::create($inherit);
+        $env = Env::createEx($inherit);
         $this->assertNull($env->getValue('PIPELINES_ID'));
     }
 
@@ -229,7 +237,7 @@ class EnvTest extends TestCase
      */
     public function testCollect()
     {
-        $env = Env::create();
+        $env = Env::createEx();
         $env->collect(new ArgsTester(), array());
         $expected = array (
             0 => 'e',
@@ -249,7 +257,7 @@ class EnvTest extends TestCase
 
     public function testCollectFiles1()
     {
-        $env = Env::create(array('DOCKER_ID_USER' => 'electra'));
+        $env = Env::createEx(array('DOCKER_ID_USER' => 'electra'));
         $env->collectFiles(array(
             __DIR__ . '/../../data/env/.env.dist',
             '/abc/xyz/nada-kar-la-da',
@@ -263,7 +271,7 @@ class EnvTest extends TestCase
 
     public function testCollectFiles2()
     {
-        $env = Env::create(array('DOCKER_ID_USER' => 'electra'));
+        $env = Env::createEx(array('DOCKER_ID_USER' => 'electra'));
         $env->collectFiles(array(
             '/abc/xyz/nada-kar-la-da',
             __DIR__ . '/../../data/env/.env.dist',
@@ -314,5 +322,40 @@ class EnvTest extends TestCase
             ->willReturn('foo');
 
         $env->addReference($reference);
+    }
+
+    /**
+     * @covers \Ktomk\Pipelines\Runner\EnvResolver::getVariables
+     *
+     * @return void
+     */
+    public function testGetVariablesEmptyArrayOnInit()
+    {
+        $env = new Env();
+        $this->assertSame(array(), $env->getVariables());
+    }
+
+    /**
+     * @throws \Ktomk\Pipelines\Cli\ArgsException
+     *
+     * @return void
+     */
+    public function testInheritanceResolution()
+    {
+        $inherit = array();
+        $args = new Args(array('', '-e', 'BITBUCKET_REPO_SLUG=bar'));
+
+        // empty on create (new behaviour)
+        $env = Env::create($inherit);
+        $this->assertNull($env->getValue('BITBUCKET_REPO_SLUG'));
+
+        // init default vars initializes default
+        $env->initDefaultVars($env->getVariables() + $inherit);
+        $this->assertSame('local-has-no-slug', $env->getValue('BITBUCKET_REPO_SLUG'));
+
+        // collecting args works still
+        $env->collect($args, array('e', 'env', 'env-file'));
+        $env->initDefaultVars($env->getVariables() + $inherit);
+        $this->assertSame('bar', $env->getValue('BITBUCKET_REPO_SLUG'));
     }
 }

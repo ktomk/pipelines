@@ -183,6 +183,14 @@ class EnvResolver
     }
 
     /**
+     * @return array
+     */
+    public function getVariables()
+    {
+        return $this->variables;
+    }
+
+    /**
      * replace variable with its content if it is a portable, Shell and
      * Utilities variable name (see POSIX).
      *

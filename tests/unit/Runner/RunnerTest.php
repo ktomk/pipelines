@@ -43,7 +43,7 @@ class RunnerTest extends RunnerTestCase
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
             new Flags,
-            Env::create(),
+            Env::createEx(),
             new Streams(null, null, 'php://output')
         );
         $status = $runner->run($pipeline);
@@ -95,7 +95,7 @@ class RunnerTest extends RunnerTestCase
                 $this->createMock('Ktomk\Pipelines\Runner\Directories'),
                 ExecTester::create($this),
                 new Flags(),
-                Env::create(),
+                Env::createEx(),
                 Streams::create()
             ))
             ->setMethods(array('runStep'))
@@ -118,7 +118,7 @@ class RunnerTest extends RunnerTestCase
                 $this->createMock('Ktomk\Pipelines\Runner\Directories'),
                 $exec,
                 new Flags(),
-                Env::create(),
+                Env::createEx(),
                 new Streams()
             ))
             ->setMethods(null)
@@ -140,7 +140,7 @@ class RunnerTest extends RunnerTestCase
                 $this->createMock('Ktomk\Pipelines\Runner\Directories'),
                 $exec,
                 new Flags(),
-                Env::create(),
+                Env::createEx(),
                 new Streams(null, 'php://output', 'php://output')
             ))
             ->setMethods(null)

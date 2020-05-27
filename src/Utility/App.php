@@ -235,7 +235,6 @@ class App implements Runnable
         Lib::v($inherit['BITBUCKET_REPO_SLUG'], basename($workingDir));
 
         $env = Env::create($inherit);
-        $env->addReference($reference);
 
         $noDotEnvFiles = $args->hasOption('no-dot-env-files');
         $noDotEnvDotDist = $args->hasOption('no-dot-env-dot-dist');
@@ -250,6 +249,10 @@ class App implements Runnable
         }
 
         $env->collect($args, array('e', 'env', 'env-file'));
+        $resolved = $env->getVariables();
+
+        $env->initDefaultVars($resolved + $inherit);
+        $env->addReference($reference);
 
         return $env;
     }

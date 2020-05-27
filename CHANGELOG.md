@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Help section w/ help message from src in readme
 ### Fixed
+- Pipeline variables from command line arguments
 - Help message on trigger destination branch name
 - Remove static calls to throw a status exception
 

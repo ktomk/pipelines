@@ -38,11 +38,26 @@ class Env
     private $resolver;
 
     /**
+     * create with no default initialization
+     *
      * @param null|array $inherit
      *
      * @return Env
      */
     public static function create(array $inherit = null)
+    {
+        $env = new self();
+        $env->initInherit((array)$inherit);
+
+        return $env;
+    }
+
+    /**
+     * @param null|array $inherit
+     *
+     * @return Env
+     */
+    public static function createEx(array $inherit = null)
     {
         $env = new self();
         $env->initDefaultVars((array)$inherit);
@@ -97,7 +112,7 @@ class Env
      */
     public function initDefaultVars(array $inherit)
     {
-        $this->inherit = array_filter($inherit, 'is_string');
+        $this->initInherit($inherit);
 
         $inheritable = array(
             'BITBUCKET_BOOKMARK' => null,
@@ -349,6 +364,26 @@ class Env
         }
 
         return $this->resolver;
+    }
+
+    /**
+     * get all variables collected so far
+     *
+     * @return array
+     */
+    public function getVariables()
+    {
+        return (array)$this->getResolver()->getVariables();
+    }
+
+    /**
+     * @param array $inherit
+     *
+     * @return void
+     */
+    private function initInherit(array $inherit)
+    {
+        $this->inherit = array_filter($inherit, 'is_string');
     }
 
     /**

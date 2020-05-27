@@ -340,7 +340,7 @@ class StepRunnerTest extends RunnerTestCase
                 $testDirectories,
                 $exec,
                 new Flags(),
-                Env::create(),
+                Env::createEx(),
                 new Streams(),
             ))
             ->setMethods(array('getDockerBinaryRepository'))
@@ -403,7 +403,7 @@ class StepRunnerTest extends RunnerTestCase
                 $testDirectories,
                 $exec,
                 new Flags(),
-                Env::create(),
+                Env::createEx(),
                 new Streams(),
             ))
             ->setMethods(null)
@@ -600,7 +600,7 @@ class StepRunnerTest extends RunnerTestCase
             new Directories($_SERVER, $testProject),
             $exec,
             new Flags($flags),
-            Env::create($inherit),
+            Env::createEx($inherit),
             new Streams(null, $out, $err)
         );
     }
