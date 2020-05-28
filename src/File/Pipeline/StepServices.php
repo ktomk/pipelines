@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines\File\Pipeline;
 
+use Ktomk\Pipelines\File\Definitions\Service;
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
 
 /**
@@ -22,6 +24,7 @@ class StepServices
 
     /**
      * @var array
+     * @psalm-var array<string, int>
      */
     private $services;
 
@@ -50,6 +53,36 @@ class StepServices
     public function has($service)
     {
         return isset($this->services[$service]);
+    }
+
+    /**
+     * get definitions of all step services
+     *
+     * get all service definitions of the step services, docker is not
+     * of interest here as only looking for standard services, might
+     * be subject to change.
+     *
+     * @return Service[]
+     */
+    public function getDefinitions()
+    {
+        if (null === $file = $this->getFile()) {
+            return array();
+        }
+
+        $standard = $this->services;
+        unset($standard['docker']);
+        $standard = array_keys($standard);
+
+        return $file->getDefinitions()->getServices()->getByNames($standard);
+    }
+
+    /**
+     * @return null|File
+     */
+    public function getFile()
+    {
+        return $this->step->getFile();
     }
 
     /**

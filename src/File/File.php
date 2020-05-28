@@ -140,6 +140,17 @@ class File
     }
 
     /**
+     * @return Definitions
+     */
+    public function getDefinitions()
+    {
+        return new Definitions(
+            isset($this->array['definitions'])
+                ? $this->array['definitions'] : array()
+        );
+    }
+
+    /**
      * @param array $array
      *
      * @return Pipelines

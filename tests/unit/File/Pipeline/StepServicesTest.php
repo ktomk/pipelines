@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\File\Pipeline;
 
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -46,5 +47,35 @@ class StepServicesTest extends TestCase
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), array('docker'));
         $this->assertTrue($services->has('docker'));
         $this->assertFalse($services->has('mysql'));
+    }
+
+    public function testGetDefinitions()
+    {
+        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $services = new StepServices($step, array('redis', 'docker', 'mysql'));
+        $this->assertSame(array(), $services->getDefinitions());
+    }
+
+    public function testGetDefinitionsWithFileAndDefinitions()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../../data/yml/service-definitions.yml');
+        $services = $file->getPipelines()->getDefault()->getSteps()->offsetGet(0)->getServices();
+        $actual = $services->getDefinitions();
+        $this->assertCount(1, $actual);
+        $this->assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Definitions\Service', $actual);
+    }
+
+    /**
+     * test (more and more) standard becoming getFile() for the file document object
+     */
+    public function testGetFile()
+    {
+        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $services = new StepServices($step, array());
+        $this->assertNull($services->getFile());
+
+        $step->method('getFile')->willReturn($this->createMock('Ktomk\Pipelines\File\File'));
+        $services = new StepServices($step, array());
+        $this->assertInstanceOf('Ktomk\Pipelines\File\File', $services->getFile());
     }
 }

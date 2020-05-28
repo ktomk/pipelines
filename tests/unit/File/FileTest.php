@@ -212,6 +212,7 @@ class FileTest extends TestCase
     }
 
     /**
+     * @return void
      */
     public function testInvalidImageName()
     {
@@ -222,5 +223,17 @@ class FileTest extends TestCase
             'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
             'pipelines' => array('default' => array()),
         ));
+    }
+
+    /**
+     * definitions is always available typed
+     *
+     * @depends testCreateFromDefaultFile
+     *
+     * @param File $file
+     */
+    public function testGetDefinitions(File $file)
+    {
+        $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions', $file->getDefinitions());
     }
 }
