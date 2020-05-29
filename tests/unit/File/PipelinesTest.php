@@ -110,6 +110,8 @@ class PipelinesTest extends TestCase
      * when it once hast been acquired.
      *
      * @throws ReflectionException
+     *
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
      */
     public function testFlyweightPatternWithPatternSection()
     {
@@ -156,6 +158,9 @@ class PipelinesTest extends TestCase
         $this->assertSame('custom/unit-tests', $ids[12]);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
+     */
     public function testSearchReference()
     {
         $pipelines = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')->getPipelines();
@@ -167,6 +172,9 @@ class PipelinesTest extends TestCase
         $this->asPlFiStName('*/feature', $pipeline);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
+     */
     public function testDefaultAsFallBack()
     {
         $withDefault = array(
@@ -196,6 +204,9 @@ class PipelinesTest extends TestCase
         $this->asPlFiStName('default', $pipeline);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
+     */
     public function testNoDefaultAsFallBack()
     {
         $withoutDefault = array(
@@ -225,6 +236,7 @@ class PipelinesTest extends TestCase
     }
 
     /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
      */
     public function testSearchReferenceInvalidScopeException()
     {
@@ -236,6 +248,7 @@ class PipelinesTest extends TestCase
     }
 
     /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
      */
     public function testParseErrorOnGetById()
     {
@@ -252,6 +265,9 @@ class PipelinesTest extends TestCase
         $file->getById('custom/0');
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
+     */
     public function testGetIdOfPipeline()
     {
         $file = new File(array('pipelines' => array('default' => array(
@@ -267,6 +283,8 @@ class PipelinesTest extends TestCase
     /**
      * An non-associated pipeline in a pipelines object can't be obtained
      * an id from
+     *
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
      */
     public function testGetIdOfNonFilePipelineReturnsNull()
     {
@@ -280,6 +298,7 @@ class PipelinesTest extends TestCase
     }
 
     /**
+     * @covers \Ktomk\Pipelines\File\PipelinesReferences
      */
     public function testInvalidReferenceName()
     {

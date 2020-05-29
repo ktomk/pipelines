@@ -8,8 +8,9 @@ use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers  \Ktomk\Pipelines\File\Pipelines::searchReference()
- * @covers  \Ktomk\Pipelines\File\Pipelines::searchTypeReference()
+ * @covers \Ktomk\Pipelines\File\Pipelines::searchReference()
+ * @covers \Ktomk\Pipelines\File\Pipelines::searchTypeReference()
+ * @covers \Ktomk\Pipelines\File\PipelinesReferences
  */
 class ReferenceSearchTest extends TestCase
 {

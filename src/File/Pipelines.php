@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\File;
 
 use InvalidArgumentException;
-use Ktomk\Pipelines\Glob;
 use Ktomk\Pipelines\Runner\Reference;
 
 /**
@@ -18,17 +17,17 @@ class Pipelines
     /**
      * @var array
      */
-    private $array;
+    protected $array;
 
     /**
      * @var null|File
      */
-    private $file;
+    protected $file;
 
     /**
      * @var array
      */
-    private $pipelines;
+    protected $references;
 
     /**
      * Pipelines constructor.
@@ -40,17 +39,20 @@ class Pipelines
     {
         $this->file = $file;
 
-        $this->pipelines = $this->parsePipelineReferences($array);
+        $this->references = $this->parsePipelineReferences($array);
 
         $this->array = $array;
     }
 
     /**
+     * @throws InvalidArgumentException
+     * @throws ParseException
+     *
      * @return null|Pipeline
      */
     public function getDefault()
     {
-        return $this->getById('default');
+        return PipelinesReferences::byId($this, 'default');
     }
 
     /**
@@ -60,13 +62,7 @@ class Pipelines
      */
     public function getIdDefault()
     {
-        $id = 'default';
-
-        if (!isset($this->pipelines[$id])) {
-            return null;
-        }
-
-        return $id;
+        return PipelinesReferences::idDefault($this);
     }
 
     /**
@@ -74,7 +70,7 @@ class Pipelines
      */
     public function getPipelineIds()
     {
-        return array_keys($this->pipelines);
+        return array_keys($this->references);
     }
 
     /**
@@ -87,27 +83,7 @@ class Pipelines
      */
     public function getById($id)
     {
-        if (!ReferenceTypes::isValidId($id)) {
-            throw new InvalidArgumentException(sprintf("Invalid id '%s'", $id));
-        }
-
-        if (!isset($this->pipelines[$id])) {
-            return null;
-        }
-
-        $ref = $this->pipelines[$id];
-        if ($ref[2] instanceof Pipeline) {
-            return $ref[2];
-        }
-
-        // bind to instance if yet an array
-        if (!is_array($ref[2])) {
-            throw new ParseException(sprintf('%s: named pipeline required', $id));
-        }
-        $pipeline = new Pipeline($this->file, $ref[2]);
-        $ref[2] = $pipeline;
-
-        return $pipeline;
+        return PipelinesReferences::byId($this, $id);
     }
 
     /**
@@ -119,13 +95,7 @@ class Pipelines
      */
     public function getId(Pipeline $pipeline)
     {
-        foreach ($this->pipelines as $id => $reference) {
-            if ($pipeline === $reference[2]) {
-                return $id;
-            }
-        }
-
-        return null;
+        return PipelinesReferences::id($this, $pipeline);
     }
 
     /**
@@ -133,9 +103,8 @@ class Pipelines
      *
      * @param Reference $reference
      *
-     * @throws ParseException
-     * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
+     * @throws ParseException
      *
      * @return null|Pipeline
      */
@@ -156,9 +125,8 @@ class Pipelines
      * @param string $type of pipeline, can be branches, tags or bookmarks
      * @param null|string $reference
      *
-     * @throws ParseException
-     * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
+     * @throws ParseException
      *
      * @return null|Pipeline
      */
@@ -174,7 +142,6 @@ class Pipelines
      *
      * @param Reference $reference
      *
-     * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
      *
      * @return null|string id if found, null otherwise
@@ -340,70 +307,12 @@ class Pipelines
      * @param null|string $type
      * @param null|string $reference
      *
-     * @throws \UnexpectedValueException
      * @throws InvalidArgumentException
      *
      * @return null|string
      */
     private function searchIdByTypeReference($type, $reference)
     {
-        if (!ReferenceTypes::isPatternSection($type)) {
-            throw new InvalidArgumentException(sprintf('Invalid type %s', var_export($type, true)));
-        }
-
-        list($resolve, $result) = $this->searchIdNonPatternMatch($type, $reference);
-        if ($resolve) {
-            return  $result;
-        }
-
-        list($resolve, $result) = $this->searchIdPattern($type, $reference);
-
-        # fall-back to default pipeline on no match
-        return $resolve ? $result : $this->getIdDefault();
-    }
-
-    /**
-     * @param null|string $section
-     * @param $reference
-     *
-     * @return array
-     */
-    private function searchIdNonPatternMatch($section, $reference)
-    {
-        # section is n/a, fall back to default pipeline
-        if (!isset($this->array[$section])) {
-            return array(true, $this->getIdDefault());
-        }
-
-        # check for direct (non-pattern) match
-        if (isset($this->array[$section][$reference])) {
-            return array(true, "${section}/${reference}");
-        }
-
-        return array(false, null);
-    }
-
-    /**
-     * get entry with largest pattern to match
-     *
-     * @param string $section
-     * @param string $reference
-     *
-     * @return array
-     */
-    private function searchIdPattern($section, $reference)
-    {
-        $patterns = array_keys($this->array[$section]);
-
-        $match = '';
-        foreach ($patterns as $pattern) {
-            $pattern = (string)$pattern;
-            $result = Glob::match($pattern, $reference);
-            if ($result && (strlen($pattern) > strlen($match))) {
-                $match = $pattern;
-            }
-        }
-
-        return array('' !== $match, "${section}/${match}");
+        return PipelinesReferences::idByTypeReference($this, $type, $reference);
     }
 }
