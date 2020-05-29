@@ -34,11 +34,6 @@ class File
     private $pipelines;
 
     /**
-     * @var array
-     */
-    private static $sections = array('branches', 'tags', 'bookmarks', 'pull-requests', 'custom');
-
-    /**
      * @param string $path
      *
      * @throws ParseException
@@ -209,7 +204,7 @@ class File
         $pipelines = array();
 
         foreach ($this->getPipelineIds() as $id) {
-            if (!$this->isIdValid($id)) {
+            if (!ReferenceTypes::isValidId($id)) {
                 throw new ParseException(sprintf("invalid pipeline id '%s'", $id));
             }
             $pipelines[$id] = $this->getById($id);
@@ -228,7 +223,7 @@ class File
      */
     public function getById($id)
     {
-        if (!$this->isIdValid($id)) {
+        if (!ReferenceTypes::isValidId($id)) {
             throw new InvalidArgumentException(sprintf("Invalid id '%s'", $id));
         }
 
@@ -270,16 +265,6 @@ class File
     }
 
     /**
-     * @param string $id
-     *
-     * @return bool
-     */
-    private function isIdValid($id)
-    {
-        return (bool)preg_match('~^(default|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~', $id);
-    }
-
-    /**
      * @param null|string $type
      * @param null|string $reference
      *
@@ -290,7 +275,9 @@ class File
      */
     private function searchIdByTypeReference($type, $reference)
     {
-        $this->validateType($type);
+        if (!ReferenceTypes::isPatternSection($type)) {
+            throw new InvalidArgumentException(sprintf('Invalid type %s', var_export($type, true)));
+        }
 
         if (!isset($this->array['pipelines'][$type])) {
             return $this->getIdDefault();
@@ -333,7 +320,7 @@ class File
     private function parsePipelineReferences(array &$array)
     {
         // quick validation: pipeline sections
-        $sections = self::$sections;
+        $sections = ReferenceTypes::getSections();
         $count = 0;
         foreach ($sections as $section) {
             if (isset($array[$section])) {
@@ -379,21 +366,5 @@ class File
         }
 
         return $references;
-    }
-
-    /**
-     * @param null|string $type
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return void
-     * @psalm-assert string $type
-     */
-    private function validateType($type)
-    {
-        $scopes = array_slice(self::$sections, 0, 4);
-        if (!in_array($type, $scopes, true)) {
-            throw new InvalidArgumentException(sprintf('Invalid type %s', var_export($type, true)));
-        }
     }
 }
