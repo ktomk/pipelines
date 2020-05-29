@@ -59,7 +59,7 @@ class FileShower
          */
         $iterator = function (File $file) {
             $return = array();
-            foreach ($file->getPipelines() as $id => $pipeline) {
+            foreach ($file->getPipelines()->getPipelines() as $id => $pipeline) {
                 foreach (Steps::fullIter($pipeline->getSteps()) as $index => $step) {
                     $return["${id}:/step/${index}"] = $step;
                 }
@@ -86,9 +86,9 @@ class FileShower
      */
     public function showPipelineIds()
     {
-        $file = $this->file;
+        $pipelines = $this->file->getPipelines();
 
-        foreach ($file->getPipelineIds() as $id) {
+        foreach ($pipelines->getPipelineIds() as $id) {
             $this->info($id);
         }
 
@@ -100,7 +100,7 @@ class FileShower
      */
     public function showPipelines()
     {
-        $pipelines = $this->file;
+        $pipelines = $this->file->getPipelines();
 
         $errors = 0;
         $table = array(array('PIPELINE ID', 'IMAGES', 'STEPS'));

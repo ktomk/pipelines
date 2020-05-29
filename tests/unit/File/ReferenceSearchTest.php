@@ -8,25 +8,25 @@ use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
 
 /**
- * @covers  \Ktomk\Pipelines\File\File::searchReference()
- * @covers  \Ktomk\Pipelines\File\File::searchTypeReference()
+ * @covers  \Ktomk\Pipelines\File\Pipelines::searchReference()
+ * @covers  \Ktomk\Pipelines\File\Pipelines::searchTypeReference()
  */
 class ReferenceSearchTest extends TestCase
 {
     /**
-     * @var File
+     * @var Pipelines
      */
-    private $file;
+    private $pipelines;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
+        $this->pipelines = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')->getPipelines();
     }
 
     public function searchReference($ref = null)
     {
-        return $this->file->searchReference(
+        return $this->pipelines->searchReference(
             Reference::create($ref)
         );
     }
@@ -73,7 +73,7 @@ class ReferenceSearchTest extends TestCase
 
     private function assertDefault(Pipeline $pipeline)
     {
-        $default = $this->file->getDefault();
+        $default = $this->pipelines->getDefault();
         $this->assertSame($default, $pipeline, 'is default pipeline');
     }
 }

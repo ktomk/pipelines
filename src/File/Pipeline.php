@@ -47,13 +47,13 @@ class Pipeline
     }
 
     /**
-     * get id of pipeline within the corresponding file object
+     * get id of pipeline within the corresponding pipelines object
      *
      * @return null|string id, can be null in fake/test conditions
      */
     public function getId()
     {
-        return $this->file->getIdFrom($this);
+        return $this->file->getPipelines()->getId($this);
     }
 
     /**

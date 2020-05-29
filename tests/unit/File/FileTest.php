@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\File;
 
-use InvalidArgumentException;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
 use ReflectionException;
@@ -89,15 +88,13 @@ class FileTest extends TestCase
     }
 
     /**
+     * @depends testCreateFromDefaultFile
+     *
      * @param File $file
-     * @depends testCreateFromFileWithInvalidId
      */
-    public function testGetPipelinesWithInvalidIdParseError(File $file)
+    public function testSearchIdByReference(File $file)
     {
-        $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('file parse error: invalid pipeline id \'');
-
-        $file->getPipelines();
+        $this->assertSame('default', $file->searchIdByReference(Reference::create()));
     }
 
     /**
@@ -199,15 +196,6 @@ class FileTest extends TestCase
         );
     }
 
-    public function testGetPipelineIds()
-    {
-        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
-        $ids = $file->getPipelineIds();
-        $this->assertIsArray($ids);
-        $this->assertArrayHasKey(12, $ids);
-        $this->assertSame('custom/unit-tests', $ids[12]);
-    }
-
     /**
      * @depends testCreateFromDefaultFile
      *
@@ -216,217 +204,11 @@ class FileTest extends TestCase
     public function testGetPipelines(File $file)
     {
         $actual = $file->getPipelines();
-        $this->assertGreaterThan(1, count($actual));
-        $this->assertContainsOnlyInstancesOf(
-            'Ktomk\Pipelines\File\Pipeline',
+
+        $this->assertInstanceOf(
+            'Ktomk\Pipelines\File\Pipelines',
             $actual
         );
-    }
-
-    public function testGetReference()
-    {
-        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
-
-        $pipeline = $file->getById('branches/master');
-        $this->assertNotNull($pipeline);
-
-        # test instance count
-        $default = $file->getById('default');
-        $this->assertSame($default, $file->getDefault());
-    }
-
-    /**
-     * test that in the internal file array, the pipelines
-     * data gets referenced to the concrete pipeline object
-     * when it once hast been acquired.
-     *
-     * @throws ReflectionException
-     */
-    public function testFlyweightPatternWithPatternSection()
-    {
-        $withBranch = array(
-            'pipelines' => array(
-                'branches' => array(
-                    'master' => array(array('step' => array(
-                        'name' => 'master branch',
-                        'script' => array('1st line'),
-                    )))
-                ),
-            ),
-        );
-        $file = new File($withBranch);
-
-        $pipeline = $file->searchTypeReference('branches', 'master');
-        $this->asPlFiStName('master branch', $pipeline);
-
-        $refl = new ReflectionObject($file);
-        $prop = $refl->getProperty('array');
-        $prop->setAccessible(true);
-        $array = $prop->getValue($file);
-        $actual = $array['pipelines']['branches']['master'];
-        $this->assertSame($pipeline, $actual);
-    }
-
-    /**
-     */
-    public function testInvalidReferenceName()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid id \'branch/master\'');
-
-        File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')
-            ->getById('branch/master'); # must be branch_es_
-    }
-
-    /**
-     */
-    public function testNoSectionException()
-    {
-        $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('section');
-
-        new File(array('pipelines' => array()));
-    }
-
-    /**
-     */
-    public function testNoListInSectionException()
-    {
-        $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('\'default\' requires a list of steps');
-
-        new File(array('pipelines' => array('default' => 1)));
-    }
-
-    /**
-     */
-    public function testNoListInBranchesSectionException()
-    {
-        $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('\'branches\' requires a list');
-
-        new File(array('pipelines' => array('branches' => 1)));
-    }
-
-    public function testSearchReference()
-    {
-        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
-
-        $pipeline = $file->searchTypeReference('branches', 'master');
-        $this->asPlFiStName('master duplicate', $pipeline, 'direct match');
-
-        $pipeline = $file->searchTypeReference('branches', 'my/feature');
-        $this->asPlFiStName('*/feature', $pipeline);
-    }
-
-    public function testDefaultAsFallBack()
-    {
-        $withDefault = array(
-            'pipelines' => array(
-                'default' => array(
-                    array('step' => array(
-                        'name' => 'default',
-                        'script' => array('1st line'),
-                    )),
-                ),
-                'branches' => array(
-                    'master' => array(array('step' => array(
-                        'name' => 'master branch',
-                        'script' => array('1st line'),
-                    )))
-                ),
-            ),
-        );
-        $file = new File($withDefault);
-
-        $reference = Reference::create('bookmark:xy');
-        $pipeline = $file->searchReference($reference);
-        $this->asPlFiStName('default', $pipeline);
-
-        $pipeline = $file->searchTypeReference('bookmarks', 'xy');
-        $this->asPlFiStName('default', $pipeline);
-
-        $pipeline = $file->searchTypeReference('branches', 'feature/xy');
-        $this->asPlFiStName('default', $pipeline);
-    }
-
-    public function testNoDefaultAsFallBack()
-    {
-        $withoutDefault = array(
-            'pipelines' => array(
-                'branches' => array(
-                    'master' => array(array('step' => array(
-                        'name' => 'master branch',
-                        'script' => array('1st line'),
-                    )))
-                ),
-            ),
-        );
-        $file = new File($withoutDefault);
-
-        $this->assertNull($file->getIdDefault());
-        $this->assertNull($file->getDefault());
-
-        $reference = Reference::create();
-        $pipeline = $file->searchReference($reference);
-        $this->assertNull($pipeline);
-
-        $reference = Reference::create();
-        $pipeline = $file->searchIdByReference($reference);
-        $this->assertNull($pipeline);
-
-        $reference = Reference::create('bookmark:xy');
-        $pipeline = $file->searchIdByReference($reference);
-        $this->assertNull($pipeline);
-    }
-
-    /**
-     */
-    public function testSearchReferenceInvalidScopeException()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid type \'invalid\'');
-
-        $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
-        $file->searchTypeReference('invalid', '');
-    }
-
-    /**
-     */
-    public function testParseErrorOnGetById()
-    {
-        $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('custom/0: named pipeline required');
-
-        $file = new File(array(
-            'pipelines' => array(
-                'custom' => array(
-                    'void',
-                ),
-            ),
-        ));
-        $file->getById('custom/0');
-    }
-
-    public function testGetIdFrom()
-    {
-        $file = new File(array('pipelines' => array('default' => array(
-            array('step' => array('script' => array(':')))
-        ))));
-        $pipeline = $file->getById('default');
-        $this->assertNotNull($pipeline);
-        $actual = $file->getIdFrom($pipeline);
-        $this->assertSame('default', $actual);
-    }
-
-    public function testGetIdFromNonFilePipeline()
-    {
-        $file = new File(array('pipelines' => array('default' => array(
-            array('step' => array('script' => array(':')))
-        ))));
-
-        $pipeline = new Pipeline($file, array(array('step' => array('script' => array(':')))));
-        $this->assertNull($file->getIdFrom($pipeline));
     }
 
     /**
@@ -440,19 +222,5 @@ class FileTest extends TestCase
             'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
             'pipelines' => array('default' => array()),
         ));
-    }
-
-    /**
-     * assertPipelineFirstStepName
-     *
-     * @param string $expected
-     * @param Pipeline $pipeline
-     * @param string $message [optional]
-     */
-    private function asPlFiStName($expected, Pipeline $pipeline, $message = '')
-    {
-        $steps = $pipeline->getSteps();
-        $first = $steps[0];
-        $this->assertSame($expected, $first->getName(), $message);
     }
 }
