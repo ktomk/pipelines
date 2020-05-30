@@ -200,8 +200,6 @@ class StepRunner
     /**
      * capture artifact pattern
      *
-     * @see Runner::captureStepArtifacts()
-     *
      * @param ArtifactSource $source
      * @param string $pattern
      * @param string $dir
@@ -209,6 +207,9 @@ class StepRunner
      * @throws \RuntimeException
      *
      * @return void
+     *
+     * @see Runner::captureStepArtifacts()
+     *
      */
     private function captureArtifactPattern(ArtifactSource $source, $pattern, $dir)
     {

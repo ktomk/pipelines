@@ -13,7 +13,7 @@ unit() {
   local capture
   local result
 
-  capture="$(php -dphar.readonly=0 -f vendor/bin/phpunit -- --color=always)"
+  capture="$(php -dphar.readonly=0 -f vendor/bin/phpunit -- --color=always --stop-on-error --stop-on-failure)"
   result=$?
 
   local testwatch
@@ -41,4 +41,4 @@ unit() {
 
 export -f unit
 
-watch -c -x bash -c unit
+watch -n 0 -c -x bash -c unit

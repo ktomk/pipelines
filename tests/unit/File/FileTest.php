@@ -443,28 +443,6 @@ class FileTest extends TestCase
     }
 
     /**
-     */
-    public function testValidateImageSectionInvalidName()
-    {
-        $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('\'image\' invalid Docker image name: \'/\'');
-
-        $image = array(
-            'image' => array('name' => '/'),
-        );
-        Image::validate($image);
-    }
-
-    public function testValidateImageSectionValidName()
-    {
-        $image = array(
-            'image' => array('name' => 'php/5.6:latest'),
-        );
-        Image::validate($image);
-        $this->addToAssertionCount(1);
-    }
-
-    /**
      * assertPipelineFirstStepName
      *
      * @param string $expected

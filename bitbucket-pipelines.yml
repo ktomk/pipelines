@@ -116,7 +116,7 @@ pipelines:
     private/docker-hub:
       - step:
           image:
-            name: vicampotk/private
+            name: ktomk/private:busybox
             username: $DOCKER_ID_USER
             password: $DOCKER_ID_PASSWORD
             email: $DOCKER_ID_EMAIL

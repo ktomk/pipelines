@@ -44,11 +44,11 @@ class EnvResolver
     /**
      * resolve a string or an array of strings
      *
-     * @param array|string $stringOrArray
+     * @param string|string[] $stringOrArray
      *
      * @throws UnexpectedValueException
      *
-     * @return array|string
+     * @return string|string[]
      *
      * @see resolveString
      */

@@ -18,6 +18,7 @@ class ImageTest extends TestCase
     }
 
     /**
+     * @return void
      */
     public function testCreateFromInvalidName()
     {
@@ -139,5 +140,31 @@ class ImageTest extends TestCase
             $thrown = true;
         }
         $this->assertSame($expected, $thrown);
+    }
+
+    /**
+     * @return void
+     */
+    public function testValidateImageSectionInvalidName()
+    {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('\'image\' invalid Docker image name: \'/\'');
+
+        $image = array(
+            'image' => array('name' => '/'),
+        );
+        Image::validate($image);
+    }
+
+    /**
+     * @return void
+     */
+    public function testValidateImageSectionValidName()
+    {
+        $image = array(
+            'image' => array('name' => 'php/5.6:latest'),
+        );
+        Image::validate($image);
+        $this->addToAssertionCount(1);
     }
 }

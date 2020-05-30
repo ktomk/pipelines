@@ -33,7 +33,7 @@ class Env
     private $inherit = array();
 
     /**
-     * @var null|EnvResolver
+     * @var EnvResolver
      */
     private $resolver;
 

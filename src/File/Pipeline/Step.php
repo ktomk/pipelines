@@ -179,6 +179,14 @@ class Step
     }
 
     /**
+     * @return \Ktomk\Pipelines\File\File
+     */
+    public function getFile()
+    {
+        return $this->pipeline->getFile();
+    }
+
+    /**
      * validate step trigger (none, manual, automatic)
      *
      * @param array $array

@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Runner\Docker;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Image;
+use Ktomk\Pipelines\Runner\EnvResolver;
 
 /**
  * ImageLogin - docker login authentication provider for private images
@@ -19,6 +20,8 @@ class ImageLogin
 
     /**
      * @var callable
+     *
+     * @see EnvResolver::__invoke
      */
     private $resolver;
 

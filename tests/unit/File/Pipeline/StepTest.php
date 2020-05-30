@@ -137,6 +137,14 @@ class StepTest extends TestCase
         $this->assertSame(array(), $this->createStep()->getEnv());
     }
 
+    public function testGetFile()
+    {
+        $this->assertInstanceOf(
+            'Ktomk\Pipelines\File\File',
+            $this->createStep()->getFile()
+        );
+    }
+
     public function testGetIndex()
     {
         $index = $this->createStep()->getIndex();
