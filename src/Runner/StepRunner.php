@@ -8,6 +8,7 @@ use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
+use Ktomk\Pipelines\File\Definitions\Service;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
@@ -142,6 +143,8 @@ class StepRunner
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
         $this->shutdownStepContainer($container, $status);
+
+        $this->shutdownServices($step, $status);
 
         return $status;
     }
@@ -320,11 +323,6 @@ class StepRunner
         $env = $this->env;
         $streams = $this->streams;
 
-        $image = $step->getImage();
-
-        # process docker login if image demands so, but continue on failure
-        $this->imageLogin($image);
-
         $mountDockerSock = $this->obtainDockerSocketMount();
 
         $mountDockerClient = $this->obtainDockerClientMount($step);
@@ -334,8 +332,15 @@ class StepRunner
             return $mountWorkingDirectory;
         }
 
+        $network = $this->obtainServicesNetwork($step);
+
+        # process docker login if image demands so, but continue on failure
+        $image = $step->getImage();
+        $this->imageLogin($image);
+
         list($status, $out, $err) = $container->run(
             array(
+                $network,
                 '-i', '--name', $container->getName(),
                 $env->getArgs('-e'),
                 $env::createArgVarDefinitions('-e', $step->getEnv()),
@@ -498,5 +503,84 @@ class StepRunner
             $this->flags,
             $message
         );
+    }
+
+    /**
+     * @param Step $step
+     *
+     * @return array docker run options for network (needed if there are services)
+     *
+     * @see StepRunner::runNewContainer()
+     */
+    private function obtainServicesNetwork(Step $step)
+    {
+        $services = (array)$step->getServices()->getDefinitions();
+
+        $network = array();
+
+        foreach ($services as $name => $service) {
+            $network = array('--network', 'host');
+            $image = $service->getImage();
+            $this->imageLogin($image);
+
+            $containerName = $this->serviceName($service);
+
+            $resolver = $this->env->getResolver();
+            $variables = $resolver($service->getVariables());
+
+            $args = array(
+                $network, '--name',
+                $containerName,
+                '--detach',
+                Env::createArgVarDefinitions('-e', $variables),
+                $image->getName(),
+            );
+
+            $this->exec->capture('docker', Lib::merge('run', $args), $out, $err);
+        }
+
+        return $network;
+    }
+
+    /**
+     * @param Step $step
+     * @param int $status
+     *
+     * @return void
+     *
+     * @see StepRunner::obtainServicesNetwork
+     * @see StepRunner::shutdownStepContainer
+     */
+    private function shutdownServices(Step $step, $status)
+    {
+        $services = (array)$step->getServices()->getDefinitions();
+
+        foreach ($services as $name => $service) {
+            $name = $this->serviceName($service);
+
+            StepContainer::execShutdownContainer(
+                $this->exec,
+                $this->streams,
+                "/${name}",
+                $status,
+                $this->flags,
+                sprintf('keeping service container %s', $name)
+            );
+        }
+    }
+
+    /**
+     * @param Service $service
+     *
+     * @return string
+     */
+    private function serviceName(Service $service)
+    {
+        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $service->getName());
+        $project = $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName();
+        $prefix = $this->runOpts->getPrefix();
+        $containerName = $prefix . '-service-' . implode('.', array($nameSlug, $project));
+
+        return $containerName;
     }
 }

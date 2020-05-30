@@ -726,6 +726,7 @@ to use the development version for `pipelines`.
     - [X] step.trigger (`--steps` / `--no-manual` options)
     - [ ] clone (*git-deployment* feature)
     - [ ] definitions (incremental support)
+        - [X] services (*services* feature)
     - [ ] max-time (never needed this)
     - [ ] size (likely neglected for local run, limited support for
       [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))

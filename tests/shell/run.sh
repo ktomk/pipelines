@@ -39,4 +39,5 @@ if [[ "$#" -gt 1 ]]; then
   exit 1
 fi
 
+./test-services.sh 1 2
 ./test-pip.sh

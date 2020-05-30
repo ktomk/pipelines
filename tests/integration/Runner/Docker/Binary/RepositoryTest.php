@@ -108,9 +108,14 @@ class RepositoryTest extends TestCase
         $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $file = $this->createMock('Ktomk\Pipelines\File\File');
         $image = $this->createMock('Ktomk\Pipelines\File\Image');
+        $definitions = $this->createMock('Ktomk\Pipelines\File\Definitions');
+        $services = $this->createMock('Ktomk\Pipelines\File\Definitions\Services');
+        $definitions->method('getServices')->willReturn($services);
+
         $image->method('getProperties')->willReturn(array());
         $file->method('getImage')->willReturn($image);
         $pipeline->method('getFile')->willReturn($file);
+        $file->method('getDefinitions')->willReturn($definitions);
 
         $array = array(
             'script' => array(':'),

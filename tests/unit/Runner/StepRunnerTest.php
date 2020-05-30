@@ -561,6 +561,30 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(0, $status);
     }
 
+    /**
+     * @see StepRunner::obtainServicesNetwork()
+     * @see StepRunner::shutdownServices()
+     */
+    public function testServicesObtainNetworkAndShutdown()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 0, 'run services')
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm')
+            ->expect('capture', 'docker', 0, 'service docker kill')
+            ->expect('capture', 'docker', 0, 'service docker rm');
+
+        $step = $this->createTestStepFromFixture('service-definitions.yml');
+        $runner = $this->createTestStepRunner($exec, Flags::FLAGS, array('php://output', 'php://output'));
+
+        $this->expectOutputRegex('~effective-image: redis$~m');
+        $this->assertSame(0, $runner->runStep($step));
+    }
+
     private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')
     {
         $expectedRegex = sprintf(
