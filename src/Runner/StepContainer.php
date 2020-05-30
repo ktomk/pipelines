@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 
@@ -64,6 +65,75 @@ class StepContainer
     }
 
     /**
+     * kill and remove static implementation
+     *
+     * @param Exec $exec
+     * @param string|string[] $idOrIds container id(s) or name(s)
+     * @param bool $kill
+     * @param bool $remove
+     *
+     * @return void
+     */
+    public static function execKillAndRemove(Exec $exec, $idOrIds, $kill, $remove)
+    {
+        if ($kill) {
+            Docker::create($exec)->getProcessManager()->kill($idOrIds);
+        }
+
+        if ($remove) {
+            Docker::create($exec)->getProcessManager()->remove($idOrIds);
+        }
+    }
+
+    /**
+     * @param Exec $exec
+     * @param array $args
+     *
+     * @return array array(int $status, string $out, string $err, string|null $id)
+     */
+    public static function execRun(Exec $exec, array $args)
+    {
+        $status = $exec->capture('docker', Lib::merge('run', $args), $out, $err);
+
+        $id = null;
+        if (0 === $status) {
+            $id = rtrim($out) ?: null;
+        }
+
+        return array($status, $out, $err, $id);
+    }
+
+    /**
+     * @param Exec $exec
+     * @param Streams $streams
+     * @param string|string[] $idOrIds
+     * @param int $status
+     * @param Flags $flags
+     * @param string $message
+     * @param string $id
+     *
+     * @return void
+     *
+     * @see StepRunner::shutdownStepContainer
+     */
+    public static function execShutdownContainer(Exec $exec, Streams $streams, $idOrIds, $status, Flags $flags, $message)
+    {
+        # keep container on error
+        if (0 !== $status && $flags->keepOnError()) {
+            $streams->err(sprintf("error, %s\n", $message));
+
+            return;
+        }
+
+        # keep or kill/remove container
+        self::execKillAndRemove($exec, $idOrIds, $flags->killContainer(), $flags->removeContainer());
+
+        if ($flags->keep()) {
+            $streams->out(sprintf("%s\n", $message));
+        }
+    }
+
+    /**
      * StepContainer constructor.
      *
      * @param Step $step
@@ -105,11 +175,11 @@ class StepContainer
         return $this->name = $prefix . '-' . implode(
             '.',
             array(
-                $step->getIndex() + 1,
-                $nameSlug,
-                trim($idContainerSlug, '-'),
-                $project,
-            )
+                    $step->getIndex() + 1,
+                    $nameSlug,
+                    trim($idContainerSlug, '-'),
+                    $project,
+                )
         );
     }
 
@@ -175,13 +245,7 @@ class StepContainer
     {
         $id = $this->getDisplayId();
 
-        if ($kill) {
-            Docker::create($this->exec)->getProcessManager()->kill($id);
-        }
-
-        if ($remove) {
-            Docker::create($this->exec)->getProcessManager()->remove($id);
-        }
+        self::execKillAndRemove($this->exec, $id, $kill, $remove);
     }
 
     /**
@@ -191,12 +255,9 @@ class StepContainer
      */
     public function run(array $args)
     {
-        $status = $this->exec->capture('docker', Lib::merge('run', $args), $out, $err);
+        $execRun = self::execRun($this->exec, $args);
+        $this->id = array_pop($execRun);
 
-        if (0 === $status) {
-            $this->id = rtrim($out) ?: null;
-        }
-
-        return array($status, $out, $err);
+        return $execRun;
     }
 }

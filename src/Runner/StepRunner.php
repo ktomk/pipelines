@@ -483,27 +483,20 @@ class StepRunner
      */
     private function shutdownStepContainer(StepContainer $container, $status)
     {
-        $flags = $this->flags;
         $id = $container->getDisplayId();
 
-        # keep container on error
-        if (0 !== $status && $flags->keepOnError()) {
-            $this->streams->err(sprintf(
-                "error, keeping container id %s\n",
-                substr($id, 0, 12)
-            ));
+        $message = sprintf(
+            'keeping container id %s',
+            (string)substr($id, 0, 12)
+        );
 
-            return;
-        }
-
-        # keep or kill/remove container
-        $container->killAndRemove($flags->killContainer(), $flags->removeContainer());
-
-        if ($flags->keep()) {
-            $this->streams->out(sprintf(
-                "keeping container id %s\n",
-                substr($id, 0, 12)
-            ));
-        }
+        StepContainer::execShutdownContainer(
+            $this->exec,
+            $this->streams,
+            $id,
+            $status,
+            $this->flags,
+            $message
+        );
     }
 }

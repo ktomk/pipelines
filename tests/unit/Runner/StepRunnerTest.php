@@ -35,6 +35,9 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertNotSame(0, $actual);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     */
     public function testRunning()
     {
         /** @var Exec|MockObject $exec */
@@ -113,6 +116,9 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(1, $status);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     */
     public function testKeepContainerOnErrorWithNonExistentContainer()
     {
         $exec = new ExecTester($this);
@@ -125,6 +131,9 @@ class StepRunnerTest extends RunnerTestCase
         $this->keepContainerOnErrorExecTest($exec);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     */
     public function testKeepContainerOnErrorWithExistingContainer()
     {
         $containerId = 'face42face42';
@@ -160,6 +169,9 @@ class StepRunnerTest extends RunnerTestCase
         $this->assertSame(0, $status);
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     */
     public function testKeepExistingContainer()
     {
         $exec = new ExecTester($this);
