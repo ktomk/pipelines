@@ -1,6 +1,9 @@
 # Build Dir
-/*/
+/*
+!/.gitignore
 
-# pipelines Phar build
-/pipelines.phar
-/pipelines.phar.asc
+# ignore all subdirectories by default
+#
+# those are made more explicit with their own
+# .gitignores clear-sighted committed
+/*/
