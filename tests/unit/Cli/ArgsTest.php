@@ -44,6 +44,18 @@ class ArgsTest extends TestCase
         $this->assertFalse($args->hasOption('operand'));
     }
 
+    public function testMapOption()
+    {
+        $args = Args::create(array('cmd', '--verbose', '-v', '--', '--operand'));
+        $actual = $args->mapOption(
+            array('verbose' => null),
+            function ($option, $parameter) {
+                return $option;
+            }
+        );
+        $this->assertSame(array('verbose' => array(0 => true, 1 => 'verbose',)), $actual);
+    }
+
     public function testOptionConsumption()
     {
         $args = new Args(array('--verbose'));

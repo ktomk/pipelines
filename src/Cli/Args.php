@@ -73,6 +73,31 @@ class Args extends ArgsArgs
     }
 
     /**
+     * map options on array keyed with options to parameters
+     *
+     * both provided to callback, options as first, parameter as
+     * second parameter.
+     *
+     * @param array $map
+     * @param callable $callback
+     *
+     * @return array results
+     */
+    public function mapOption(array $map, $callback)
+    {
+        $results = array();
+        foreach ($map as $option => $parameter) {
+            $result = array(false, null);
+            if ($this->hasOption($option)) {
+                $result = array(true, call_user_func($callback, $option, $parameter));
+            }
+            $results[$option] = $result;
+        }
+
+        return $results;
+    }
+
+    /**
      * @return null|string
      */
     public function getFirstRemainingOption()
