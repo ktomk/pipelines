@@ -74,5 +74,15 @@ class ServicesTest extends TestCase
         $this->expectExceptionMessage('file parse error: Invalid service definition name: 0');
         new Services(array('foo'));
     }
+
+    /**
+     * @return void
+     */
+    public function testParseInvalidService()
+    {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('file parse error: Invalid service definition "foo"');
+        new Services(array('foo' => null));
+    }
 }
 

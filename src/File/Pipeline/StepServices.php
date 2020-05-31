@@ -70,11 +70,18 @@ class StepServices
             return array();
         }
 
+        return $file->getDefinitions()->getServices()->getByNames($this->getServiceNames());
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function getServiceNames()
+    {
         $standard = $this->services;
         unset($standard['docker']);
-        $standard = array_keys($standard);
 
-        return $file->getDefinitions()->getServices()->getByNames($standard);
+        return array_keys($standard);
     }
 
     /**

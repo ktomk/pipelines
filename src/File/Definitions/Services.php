@@ -79,6 +79,9 @@ class Services implements Countable
             if (!is_string($name)) {
                 throw new ParseException(sprintf('Invalid service definition name: %s', var_export($name, true)));
             }
+            if (!is_array($service)) {
+                throw new ParseException(sprintf('Invalid service definition "%s"', $name));
+            }
             $this->services[$name] = $this->parseNamedService($name, $service);
         }
     }

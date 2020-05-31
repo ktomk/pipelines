@@ -78,4 +78,18 @@ class StepServicesTest extends TestCase
         $services = new StepServices($step, array());
         $this->assertInstanceOf('Ktomk\Pipelines\File\File', $services->getFile());
     }
+
+    /**
+     * @return void
+     */
+    public function testGetServiceNames()
+    {
+        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $services = new StepServices($step, array());
+
+        $this->assertSame(array(), $services->getServiceNames());
+
+        $services = new StepServices($step, array('docker', 'foo', 'bar', 'baz'));
+        $this->assertSame(array('foo', 'bar', 'baz'), $services->getServiceNames());
+    }
 }
