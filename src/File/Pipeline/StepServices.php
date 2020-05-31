@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\File\Pipeline;
 
 use Ktomk\Pipelines\File\Definitions\Service;
+use Ktomk\Pipelines\File\Dom\FileNode;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
 
@@ -15,7 +16,7 @@ use Ktomk\Pipelines\File\ParseException;
  *
  * @package Ktomk\Pipelines\File\File
  */
-class StepServices
+class StepServices implements FileNode
 {
     /**
      * @var Step

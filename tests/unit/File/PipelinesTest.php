@@ -93,15 +93,13 @@ class PipelinesTest extends TestCase
     /**
      * @return void
      */
-    public function testGetFile()
+    public function testGetFileUnassociated()
     {
         $pipelines = new Pipelines($this->getMinimalArray(), $mock = $this->createMock('Ktomk\Pipelines\File\File'));
         $this->assertSame($mock, $pipelines->getFile());
 
-        $this->expectException('BadMethodCallException');
-        $this->expectExceptionMessage('Unassociated node');
         $pipelines = new Pipelines($this->getMinimalArray());
-        $pipelines->getFile();
+        $this->assertNull($pipelines->getFile());
     }
 
     /**

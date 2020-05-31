@@ -12,7 +12,7 @@ use Ktomk\Pipelines\Runner\Reference;
  *
  * @package Ktomk\Pipelines\File
  */
-class Pipelines
+class Pipelines implements Dom\FileNode
 {
     /**
      * @var array
@@ -167,7 +167,7 @@ class Pipelines
             return $this->file;
         }
 
-        throw new \BadMethodCallException('Unassociated node');
+        return null;
     }
 
     /**

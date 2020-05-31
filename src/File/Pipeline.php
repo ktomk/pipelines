@@ -4,11 +4,12 @@
 
 namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\File\Dom\FileNode;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\Pipeline\Steps;
 use Ktomk\Pipelines\Value\StepExpression;
 
-class Pipeline
+class Pipeline implements FileNode
 {
     /**
      * @var File

@@ -5,11 +5,12 @@
 namespace Ktomk\Pipelines\File\Pipeline;
 
 use Ktomk\Pipelines\File\Artifacts;
+use Ktomk\Pipelines\File\Dom\FileNode;
 use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline;
 
-class Step
+class Step implements FileNode
 {
     /**
      * @var array
