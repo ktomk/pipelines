@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\File\Definitions;
 
+use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -51,5 +52,32 @@ class ServiceTest extends TestCase
         $array['variables'] = array('FOO' => '$BAR', 'BAR' => 'BAZ');
         $service = new Service($name, $array);
         $this->assertSame(array('FOO' => '$BAR', 'BAR' => 'BAZ'), $service->getVariables());
+    }
+
+    public function testVariablesParseError()
+    {
+        $name = 'foo';
+
+        $array = array(
+            'image' => 'busybox',
+            'variables' => null,
+        );
+        $this->assertNew($name, $array, 'variables must be a list of strings');
+
+        $array['variables'] = array('VAR' => true);
+        $this->assertNew($name, $array, 'variable VAR should be a string (it is currently defined as a boolean)');
+
+        $array['variables'] = array('VAR' => null);
+        $this->assertNew($name, $array, 'variable VAR should be a string value (it is currently null or empty)');
+    }
+
+    private function assertNew($name, $array, $message)
+    {
+        try {
+            new Service($name, $array);
+            $this->fail('an expected exception has not been thrown');
+        } catch (ParseException $e) {
+            $this->assertSame($message, $e->getParseMessage());
+        }
     }
 }

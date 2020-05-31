@@ -176,6 +176,6 @@ definitions:
       image: mysql:5.7
       variables:
         MYSQL_DATABASE: pipelines
-        MYSQL_RANDOM_ROOT_PASSWORD: yes
+        MYSQL_RANDOM_ROOT_PASSWORD: 1
         MYSQL_USER: $MYSQL_USER
         MYSQL_PASSWORD: $MYSQL_PASSWORD

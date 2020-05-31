@@ -93,7 +93,20 @@ class Service
             return;
         }
 
-        $variables = (array)$array['variables'];
+        $variables = $array['variables'];
+        if (!is_array($variables)) {
+            throw new ParseException('variables must be a list of strings');
+        }
+
+        foreach ($variables as $name => $value) {
+            if (null === $value) {
+                throw new ParseException("variable ${name} should be a string value (it is currently null or empty)");
+            }
+            if (is_bool($value)) {
+                throw new ParseException("variable ${name} should be a string (it is currently defined as a boolean)");
+            }
+        }
+
         $variables = array_map('strval', $variables);
         $this->variables = $variables;
     }

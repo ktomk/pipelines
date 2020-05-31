@@ -1,12 +1,19 @@
 # Change Log
-All notable changes to Pipelines will be documented in this file.
+All notable changes to Pipelines will be
+documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Changed
+- Improve parse error reporting of variables in
+  service definitions
+
 ## [0.0.37] - 2020-05-30
 ### Added
-- Pipeline services other than docker (redis, mysql, ...)
+- Pipeline services other than docker (redis,
+  mysql, ...)
 ### Fixed
 - Comment formatting in `.env.dist` (minor)
 
