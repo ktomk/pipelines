@@ -165,7 +165,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     /* @see \IteratorAggregate */
 
     /**
-     * @return StepsIterator
+     * @return Step[]|StepsIterator
      */
     public function getIterator()
     {

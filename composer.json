@@ -1,6 +1,7 @@
 {
   "name": "ktomk/pipelines",
   "description": "bitbucket pipelines runner",
+  "homepage": "https://ktomk.github.io/pipelines/",
   "minimum-stability": "stable",
   "license": "AGPL-3.0-or-later",
   "authors": [
@@ -10,7 +11,8 @@
     }
   ],
   "support": {
-    "issues": "https://github.com/ktomk/pipelines/issues"
+    "issues": "https://github.com/ktomk/pipelines/issues",
+    "source": "https://github.com/ktomk/pipelines"
   },
   "bin": ["bin/pipelines"],
   "autoload": {

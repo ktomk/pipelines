@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\Pipeline\Steps;
 use Ktomk\Pipelines\Value\StepExpression;
 
@@ -77,7 +78,7 @@ class Pipeline
     }
 
     /**
-     * @return Steps
+     * @return Step[]|Steps
      */
     public function getSteps()
     {

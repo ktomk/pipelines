@@ -119,7 +119,7 @@ class Args extends ArgsArgs
                 ArgsException::__(sprintf(
                     'option %s is not optional',
                     $options->/** @scrutinizer ignore-call */
-                        getOptionDescription()
+                    getOptionDescription()
                 ));
             }
 
