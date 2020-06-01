@@ -382,12 +382,25 @@ locally only, build all containers before going offline if
 they need to. Pipelines always prefers locally stored
 containers.
 
+#### Services? Check!
+
+The local pipeline runner runs all the service containers on
+your host. This is similar to [use services and databases in
+Bitbucket Pipelines][BBPL-SRV] \[BBPL-SRV].
+
+Even before any pipeline step makes use of a service,
+a service definition can already be tested with the `--service`
+option turning setting up services in pipelines into a new
+experience.
+
+  * Further reading: [*Working with Pipeline
+    Services*](doc/PIPELINES-SERVICES.md)
+
 #### Default Image
 
 The pipelines command uses the default image like Bitbucket
 Pipelines does ("`atlassian/default-image`"). Get started out
-of the box, but keep in mind it has roughly 3 GB (previously
-2 GB) uncompressed.
+of the box, but keep in mind it has roughly 1.4 GB.
 
 #### Pipelines inside Pipeline
 
@@ -715,6 +728,7 @@ to use the development version for `pipelines`.
 - [x] Stop at manual steps (`--no-manual` to override)
 - [x] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
+- [x] Run pipeline services
 - [ ] Option to not mount docker.sock
 - [ ] Run pipelines as current user (`--deploy mount` should
       not enforce the container default user \[often "root"]
@@ -759,6 +773,7 @@ to use the development version for `pipelines`.
 * \[BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 * \[BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 * \[BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+* \[BBPL-SRV]: https://confluence.atlassian.com/bitbucket/use-services-and-databases-in-bitbucket-pipelines-874786688.html
 * \[COMPOSER]: https://getcomposer.org/
 * \[DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
 * \[PHARIO]: https://phar.io/
@@ -768,6 +783,7 @@ to use the development version for `pipelines`.
 [BBPL-ENV]: https://confluence.atlassian.com/bitbucket/environment-variables-794502608.html
 [BBPL-LOCAL-RUN]: https://confluence.atlassian.com/bitbucket/debug-your-pipelines-locally-with-docker-838273569.html
 [BBPL-DCK]: https://confluence.atlassian.com/bitbucket/run-docker-commands-in-bitbucket-pipelines-879254331.html
+[BBPL-SRV]: https://confluence.atlassian.com/bitbucket/use-services-and-databases-in-bitbucket-pipelines-874786688.html
 [COMPOSER]: https://getcomposer.org/
 [DCK-RN]: https://docs.docker.com/engine/reference/commandline/run/
 [PHARIO]: https://phar.io/
