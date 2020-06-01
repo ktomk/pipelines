@@ -8,6 +8,9 @@ use Ktomk\Pipelines\ErrorCatcher;
 
 class LibYaml implements ParserInterface
 {
+    /**
+     * @return bool
+     */
     public static function isAvailable()
     {
         return extension_loaded('yaml') && function_exists('yaml_parse_file') && function_exists('yaml_parse');
@@ -20,16 +23,7 @@ class LibYaml implements ParserInterface
      */
     public function parseFile($path)
     {
-        $error = ErrorCatcher::create();
-
-        $result = yaml_parse_file($path, 0);
-
-        $result = $error->end() ? null : $result;
-
-        return !is_array($result)
-            ? null
-            # ext-yaml parser does aliases, remove any potential ones
-            : json_decode(json_encode($result), true);
+        return $this->parseBuffer(@file_get_contents($path));
     }
 
     /**
@@ -39,8 +33,13 @@ class LibYaml implements ParserInterface
      */
     public function parseBuffer($buffer)
     {
+        $error = ErrorCatcher::create();
         $result = yaml_parse($buffer, 0);
+        $result = $error->end() ? null : $result;
 
-        return !is_array($result) ? null : $result;
+        return !is_array($result)
+            ? null
+            # ext-yaml parser does aliases, remove any potential ones
+            : json_decode(json_encode($result), true);
     }
 }
