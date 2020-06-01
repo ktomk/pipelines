@@ -1,0 +1,49 @@
+# this file is part of pipelines
+#
+# fixture file for service definitions
+
+pipelines:
+  default:
+    - step:
+        image: redis
+        script:
+          - redis-cli -h localhost ping
+        services:
+          - redis
+  branches:
+    master:
+      - step:
+          image: mysql:5.7
+          script:
+            - mysql --version
+            - T=10; while [ $T -gt 0 ]; do printf '%d ... ' $T; T=$(( $T - 1 )); sleep 1; done; echo "connecting:" # give mysql a bit of time to boot up
+            - >
+              mysql -h 127.0.0.1 -u test_user -ptest_user_password -D pipelines -vvv -e '
+                SHOW DATABASES;
+                SELECT VERSION();
+                SHOW VARIABLES LIKE "%version%";
+              '
+          services:
+            - mysql
+  custom:
+    broken:
+      - step:
+          script:
+            - ':'
+          services:
+            - mysql
+            - redis
+            - flux-comp
+definitions:
+  services:
+    redis:
+      image: redis:3.2
+      memory: 512
+    mysql:
+      image: mysql:5.7
+      variables:
+        MYSQL_DATABASE: pipelines
+        MYSQL_RANDOM_ROOT_PASSWORD: yes
+        MYSQL_USER: test_user
+        MYSQL_PASSWORD: $MYSQL_PASSWORD
+    borken:

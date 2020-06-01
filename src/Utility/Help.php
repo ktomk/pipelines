@@ -56,6 +56,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [(--step | --steps) <steps>] [--no-manual]
                  [--trigger <ref>]
        pipelines [<options>] --list | --show | --images
+                 | --show-pipelines | --show-services
        pipelines [<options>] --docker-client-pkgs
        pipelines [<options>] [--docker-list] [--docker-kill]
                  [--docker-clean] [--docker-zap]
@@ -157,6 +158,11 @@ File information options
     --list                list pipeline <id>s in file and exit
     --show                show information about pipelines in file and
                           exit
+    --show-pipelines      same as --show but with old --show output
+                          format without services and images / steps are
+                          summarized - one line for each pipeline
+    --show-services       show all defined services in use by pipeline
+                          step and exit
 
 Docker container maintenance options
       usage might leave containers on the system. either by interrupting

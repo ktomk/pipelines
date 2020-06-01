@@ -1,0 +1,27 @@
+# this file is part of pipelines
+#
+# fixture file for service definitions
+
+pipelines:
+  default:
+    - step:
+        name: undefined service
+        script:
+          - ':'
+        services:
+          - mysql
+          - redis
+          - flux-comp
+
+definitions:
+  services:
+    redis:
+      image: redis:3.2
+      memory: 512
+    mysql:
+      image: mysql:5.7
+      variables:
+        MYSQL_DATABASE: pipelines
+        MYSQL_RANDOM_ROOT_PASSWORD: yes
+        MYSQL_USER: test_user
+        MYSQL_PASSWORD: $MYSQL_PASSWORD

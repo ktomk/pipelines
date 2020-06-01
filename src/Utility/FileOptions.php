@@ -8,8 +8,9 @@ use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\Utility\Show\FileShower;
 
-class FileOptions
+class FileOptions implements Runnable
 {
     /**
      * @var Args
@@ -64,19 +65,26 @@ class FileOptions
      */
     public function run()
     {
-        $args = $this->args;
+        $shower = $this->shower();
 
-        if ($args->hasOption('images')) {
-            throw new StatusException('', $this->shower()->showImages());
-        }
-
-        if ($args->hasOption('show')) {
-            throw new StatusException('', $this->shower()->showPipelines());
-        }
-
-        if ($args->hasOption('list')) {
-            throw new StatusException('', $this->shower()->showPipelineIds());
-        }
+        $this->args->mapOption(
+            array(
+                'images' => 'showImages', /** @see FileShower::showImages() */
+                'show' => 'showFile', /** @see FileShower::showFile() */
+                'show-pipelines' => 'showPipelines', /** @see FileShower::showPipelines() */
+                'show-services' => 'showServices', /** @see FileShower::showServices() */
+                'list' => 'showPipelineIds', /** @see FileShower::showPipelineIds() */
+            ),
+            /**
+             * @param string $option
+             * @param string $method
+             *
+             * @throws StatusException
+             */
+            function ($option, $method) use ($shower) {
+                throw new StatusException('', $shower->{$method}());
+            }
+        );
 
         return $this;
     }

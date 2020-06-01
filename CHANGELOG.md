@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- `--show` each step and step services
+- `--images` shows service images
+- `--show-pipelines` for old `--show` format/ behaviour
+- `--show-services` to show services in use of pipeline steps
+
 ### Changed
 - Improve parse error reporting of variables in
   service definitions
