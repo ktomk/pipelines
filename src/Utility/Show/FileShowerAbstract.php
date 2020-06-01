@@ -155,6 +155,6 @@ class FileShowerAbstract
             $line .= str_repeat(' ', $sizes[$index] - $len);
         }
 
-        return $line;
+        return rtrim($line);
     }
 }

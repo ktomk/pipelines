@@ -70,6 +70,8 @@ class RunnerOptions
     }
 
     /**
+     * RunnerOptions constructor,
+     *
      * @param Args $args
      * @param Streams $streams
      */
