@@ -9,17 +9,30 @@ use Ktomk\Pipelines\LibFs;
 class Yaml
 {
     /**
-     * @param string $path
+     * @var array of Yaml parser classes
+     *
+     * @see ParserInterface
+     * @see Yaml::parser()
+     */
+    public static $classes = array();
+
+    /**
+     * @param string $file
      *
      * @throws \InvalidArgumentException
      *
      * @return null|array on error
      */
-    public static function file($path)
+    public static function file($file)
     {
-        if (!LibFs::isReadableFile($path)) {
+        $path = '-' === $file ? 'php://stdin' : $file;
+
+        /* @link https://bugs.php.net/bug.php?id=53465 */
+        $path = preg_replace('(^/(?:proc/self|dev)/(fd/\d+))', 'php://\1', $path);
+
+        if (!LibFs::isReadableStream($path)) {
             throw new \InvalidArgumentException(
-                sprintf("not a readable file: '%s'", $path)
+                sprintf("not a readable file: '%s'", $file)
             );
         }
 
@@ -41,7 +54,7 @@ class Yaml
      */
     private static function parser()
     {
-        $classes = array(
+        $classes = self::$classes ?: array(
             'Ktomk\Pipelines\Yaml\LibYaml',
             'Ktomk\Pipelines\Yaml\Sf2Yaml',
         );
@@ -55,8 +68,6 @@ class Yaml
             }
         }
 
-        // @codeCoverageIgnoreStart
         throw new \BadMethodCallException(sprintf('No YAML parser available'));
-        // @codeCoverageIgnoreEnd
     }
 }

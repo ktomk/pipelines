@@ -342,6 +342,13 @@ class App implements Runnable
             ? $file
             : $workingDir . '/' . $file;
 
+        // support stdin and process substitution for pipelines file
+        if ($file !== LibFs::mapStream($file)) {
+            $this->verbose(sprintf('info: reading pipelines from %s', '-' === $file ? 'stdin' : $file));
+
+            return $file;
+        }
+
         if (!LibFs::isReadableFile($file)) {
             throw new StatusException(sprintf('not a readable file: %s', $file), 1);
         }

@@ -171,7 +171,7 @@ Pipeline runner options
                                  fastest, no isolation
     --file <path>         path to the pipelines file, overrides looking up
                           the <basename> file from the current working
-                          directory
+                          directory, use '-' to read from stdin
     --trigger <ref>       build trigger, <ref> can be of either
                           tag:<name>, branch:<name>, bookmark:<name> or
                           pr:<branch-name>[:<destination-branch>]

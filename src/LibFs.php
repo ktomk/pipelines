@@ -139,6 +139,51 @@ class LibFs
     }
 
     /**
+     * similar to a readable file, a readable path allows stream-urls
+     * as well, e.g. php://stdin or php://fd/0 but only for local
+     * streams.
+     *
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isReadableStream($path)
+    {
+        if (self::isReadableFile($path)) {
+            return true;
+        }
+
+        if (!is_string($path)) {
+            return false;
+        }
+
+        return self::canFopen($path, 'rb');
+    }
+
+    /**
+     * map a file path to a stream path (if applicable)
+     *
+     * @param string $file
+     * @param null|string $dashRepresent
+     *
+     * @return string
+     */
+    public static function mapStream($file, $dashRepresent = 'php://stdin')
+    {
+        if (self::isStreamUri($file)) {
+            return $file;
+        }
+
+        $path = $file;
+        (null !== $dashRepresent) && ('-' === $file) && $path = $dashRepresent;
+
+        /* @link https://bugs.php.net/bug.php?id=53465 */
+        $path = preg_replace('(^/(?:proc/self|dev)/(fd/\d+))', 'php://\1', $path);
+
+        return stream_is_local($path) ? $path : $file;
+    }
+
+    /**
      * @param string $path
      *
      * @return bool

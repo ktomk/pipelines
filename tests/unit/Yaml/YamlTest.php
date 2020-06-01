@@ -11,6 +11,12 @@ use Ktomk\Pipelines\TestCase;
  */
 class YamlTest extends TestCase
 {
+    protected function tearDown()
+    {
+        Yaml::$classes = array();
+        parent::tearDown();
+    }
+
     public function testFileParsing()
     {
         $path = __DIR__ . '/../../../bitbucket-pipelines.yml';
@@ -46,5 +52,15 @@ class YamlTest extends TestCase
 
         $this->assertArrayHasKey('first', $array);
         $this->assertNull($array['first']);
+    }
+
+    public function testNoParserAvailable()
+    {
+        Yaml::$classes = array('');
+
+        $this->expectException('BadMethodCallException');
+        $this->expectExceptionMessage('No YAML parser available');
+
+        Yaml::buffer('---');
     }
 }

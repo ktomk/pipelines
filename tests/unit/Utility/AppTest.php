@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Yaml\Yaml;
 
 /**
  * @covers \Ktomk\Pipelines\Utility\App
@@ -90,6 +91,21 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--file', $file));
         $this->assertSame(1, $actual);
+    }
+
+    /**
+     * passing '-' as file for stdin is fine, but parsing won't work as it waits for input
+     */
+    public function testFileIsStdinSpecialFile()
+    {
+        Yaml::$classes = array('');
+
+        $this->expectOutputRegex(sprintf('{^info: reading pipelines from stdin\npipelines: fatal: No YAML parser available$}m'));
+        $app = new App(new Streams(null, 'php://output', 'php://output'));
+        $actual = $app->main(array('cmd', '--verbose', '--file', '-'));
+        $this->assertSame(2, $actual);
+
+        Yaml::$classes = array();
     }
 
     public function testBasenameLookupWorkingDirectoryChange()
