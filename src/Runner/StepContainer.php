@@ -134,6 +134,77 @@ class StepContainer
     }
 
     /**
+     * generate step container name
+     *
+     * example: pipelines-1.pipeline-features-and-introspection.default.app
+     *              ^    `^`                  ^                `    ^  ` ^
+     *              |     |                   |                     |    |
+     *              | step number        step name           pipeline id |
+     *           prefix                                                project
+     *
+     * @param string $prefix
+     * @param Step $step
+     * @param string $project
+     *
+     * @return string
+     *
+     * @see StepContainer::generateName()
+     */
+    public static function generateStepName($prefix, Step $step, $project)
+    {
+        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '-', $step->getPipeline()->getId());
+        if ('' === $idContainerSlug) {
+            $idContainerSlug = 'null';
+        }
+        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $step->getName());
+        if ('' === $nameSlug) {
+            $nameSlug = 'no-name';
+        }
+
+        $stepNumber = $step->getIndex() + 1;
+
+        return $prefix . '-' . implode(
+            '.',
+            array(
+                    $stepNumber,
+                    $nameSlug,
+                    trim($idContainerSlug, '-'),
+                    $project,
+                )
+        );
+    }
+
+    /**
+     * generate service container name
+     *
+     * exmaple: pipelines-service-redis.pipelines
+     *              ^    `   ^   `  ^  `   ^
+     *              |        |      |      |
+     *              |    "service"  |   project
+     *           prefix       service name
+     *
+     * @param string $prefix
+     * @param string $serviceName
+     * @param string $project
+     *
+     * @return string
+     *
+     * @see StepRunner::obtainServicesNetwork()
+     */
+    public static function generateServiceName($prefix, $serviceName, $project)
+    {
+        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $serviceName);
+
+        return $prefix . '-service-' . implode(
+            '.',
+            array(
+                    $nameSlug,
+                    $project,
+                )
+        );
+    }
+
+    /**
      * StepContainer constructor.
      *
      * @param Step $step
@@ -148,12 +219,6 @@ class StepContainer
     /**
      * generate step container name
      *
-     * example: pipelines-1.pipeline-features-and-introspection.default.app
-     *              ^    `^`                  ^                `    ^  ` ^
-     *              |     |                   |                     |    |
-     *              | step number        step name           pipeline id |
-     *           prefix                                                project
-     *
      * @param string $prefix for the name (normally "pipelines")
      * @param string $project name
      *
@@ -161,26 +226,7 @@ class StepContainer
      */
     public function generateName($prefix, $project)
     {
-        $step = $this->step;
-
-        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '-', $step->getPipeline()->getId());
-        if ('' === $idContainerSlug) {
-            $idContainerSlug = 'null';
-        }
-        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $step->getName());
-        if ('' === $nameSlug) {
-            $nameSlug = 'no-name';
-        }
-
-        return $this->name = $prefix . '-' . implode(
-            '.',
-            array(
-                    $step->getIndex() + 1,
-                    $nameSlug,
-                    trim($idContainerSlug, '-'),
-                    $project,
-                )
-        );
+        return $this->name = self::generateStepName($prefix, $this->step, $project);
     }
 
     /**

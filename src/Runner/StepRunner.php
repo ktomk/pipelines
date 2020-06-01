@@ -105,7 +105,7 @@ class StepRunner
 
         $name = $container->generateName(
             $this->runOpts->getPrefix(),
-            $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName()
+            $this->getProject()
         );
         $env->setContainerName($name);
 
@@ -523,7 +523,11 @@ class StepRunner
             $image = $service->getImage();
             $this->imageLogin($image);
 
-            $containerName = $this->serviceName($service);
+            $containerName = StepContainer::generateServiceName(
+                $this->runOpts->getPrefix(),
+                $service->getName(),
+                $this->getProject()
+            );
 
             $resolver = $this->env->getResolver();
             $variables = $resolver($service->getVariables());
@@ -556,7 +560,11 @@ class StepRunner
         $services = (array)$step->getServices()->getDefinitions();
 
         foreach ($services as $name => $service) {
-            $name = $this->serviceName($service);
+            $name = StepContainer::generateServiceName(
+                $this->runOpts->getPrefix(),
+                $service->getName(),
+                $this->getProject()
+            );
 
             StepContainer::execShutdownContainer(
                 $this->exec,
@@ -570,17 +578,12 @@ class StepRunner
     }
 
     /**
-     * @param Service $service
+     * get project name
      *
      * @return string
      */
-    private function serviceName(Service $service)
+    private function getProject()
     {
-        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $service->getName());
-        $project = $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName();
-        $prefix = $this->runOpts->getPrefix();
-        $containerName = $prefix . '-service-' . implode('.', array($nameSlug, $project));
-
-        return $containerName;
+        return $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName();
     }
 }

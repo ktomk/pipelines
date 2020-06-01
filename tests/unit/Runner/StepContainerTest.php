@@ -27,6 +27,7 @@ class StepContainerTest extends TestCase
 
         return $container;
     }
+
     public function testCreateName()
     {
         $expected = 'pipelines-1.no-name.null.test-project';
@@ -135,6 +136,13 @@ class StepContainerTest extends TestCase
         $this->assertCount(3, $actual);
         $this->assertNull($container->getId());
         $this->assertSame('*dry-run*', $container->getDisplayId());
+    }
+
+    public function testGenerateServiceName()
+    {
+        $expected = 'prefix-service-redis.app';
+        $actual = StepContainer::generateServiceName('prefix', 'redis', 'app');
+        $this->assertSame($expected, $actual);
     }
 
     /**
