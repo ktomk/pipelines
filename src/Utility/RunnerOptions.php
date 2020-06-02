@@ -139,7 +139,8 @@ class RunnerOptions
                 $message = "--docker-client needs a valid package name, file or docker client binary path; '${binaryClient}' given";
                 $message .= "\n  docker client binary packages shipping w/ pipelines:";
                 $message .= "\n    - " . implode("\n    - ", $repository->listPackages());
-                ArgsException::__($message);
+
+                throw new ArgsException($message);
             }
         }
 
@@ -175,7 +176,7 @@ class RunnerOptions
     {
         $prefix = $args->getStringOptionArgument('prefix', App::UTILITY_NAME);
         if (!preg_match('~^[a-z]{3,}$~', $prefix)) {
-            ArgsException::__(sprintf("invalid prefix: '%s'", $prefix));
+            throw new ArgsException(sprintf("invalid prefix: '%s'", $prefix));
         }
 
         return $prefix;

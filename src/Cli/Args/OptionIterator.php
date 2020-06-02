@@ -52,7 +52,7 @@ class OptionIterator extends IteratorIterator
     public function getArgument()
     {
         if (!$this->hasArgument()) {
-            ArgsException::__(
+            throw new ArgsException(
                 sprintf('option %s requires an argument', (string)$this->current())
             );
         }

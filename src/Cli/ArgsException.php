@@ -10,15 +10,14 @@ namespace Ktomk\Pipelines\Cli;
 class ArgsException extends \Exception
 {
     /**
-     * Abstract method to throw this exception
+     * ArgsException constructor.
      *
      * @param string $message
      * @param int $code
-     *
-     * @throws ArgsException
+     * @param null|\Exception $previous
      */
-    public static function __($message, $code = 1)
+    public function __construct($message, $code = 1, \Exception $previous = null)
     {
-        throw new self($message, $code);
+        parent::__construct($message, $code, $previous);
     }
 }

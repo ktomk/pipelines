@@ -395,7 +395,7 @@ class App implements Runnable
         $option = $this->arguments->getFirstRemainingOption();
 
         if ($option) {
-            ArgsException::__(
+            throw new ArgsException(
                 sprintf('unknown option: %s', $option)
             );
         }

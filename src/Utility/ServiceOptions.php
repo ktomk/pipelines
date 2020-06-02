@@ -118,7 +118,7 @@ class ServiceOptions implements Runnable
 
         $service = $this->file->getDefinitions()->getServices()->getByName($nameOfService);
         if (null === $service) {
-            ArgsException::__(sprintf('undefined service: %s', $nameOfService), 1);
+            throw new ArgsException(sprintf('undefined service: %s', $nameOfService), 1);
         }
 
         $this->streams->out(sprintf("starting service %s ...\n", $nameOfService));

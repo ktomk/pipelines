@@ -18,6 +18,6 @@ class ArgsExceptionTest extends TestCase
         $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
         $this->expectExceptionMessage('test');
 
-        ArgsException::__('test');
+        throw new ArgsException('test');
     }
 }
