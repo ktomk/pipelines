@@ -21,6 +21,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class StepRunnerTest extends RunnerTestCase
 {
+    /**
+     * @covers \Ktomk\Pipelines\Runner\Docker\ImageLogin::loginImage
+     */
     public function testFailOnContainerCreation()
     {
         $exec = new ExecTester($this);

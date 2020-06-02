@@ -31,6 +31,20 @@ class ImageLogin
     private $path;
 
     /**
+     * @param Exec $exec
+     * @param callable $resolver
+     * @param null|string $path use null for default path to ~/.docker/config.json (common)
+     * @param Image $image
+     *
+     * @return void
+     */
+    public static function loginImage(Exec $exec, $resolver, $path, Image $image)
+    {
+        $login = new ImageLogin($exec, $resolver, $path);
+        $login->byImage($image);
+    }
+
+    /**
      * DockerLogin constructor.
      *
      * @param Exec $exec

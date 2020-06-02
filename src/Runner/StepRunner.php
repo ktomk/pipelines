@@ -297,20 +297,6 @@ class StepRunner
     }
 
     /**
-     * @param Image $image
-     *
-     * @throws \RuntimeException
-     * @throws \InvalidArgumentException
-     *
-     * @return void
-     */
-    private function imageLogin(Image $image)
-    {
-        $login = new ImageLogin($this->exec, $this->env->getResolver());
-        $login->byImage($image);
-    }
-
-    /**
      * @param StepContainer $container
      * @param string $dir
      * @param bool $copy
@@ -336,7 +322,7 @@ class StepRunner
 
         # process docker login if image demands so, but continue on failure
         $image = $step->getImage();
-        $this->imageLogin($image);
+        ImageLogin::loginImage($this->exec, $this->env->getResolver(), null, $image);
 
         list($status, $out, $err) = $container->run(
             array(
@@ -521,7 +507,7 @@ class StepRunner
         foreach ($services as $name => $service) {
             $network = array('--network', 'host');
             $image = $service->getImage();
-            $this->imageLogin($image);
+            ImageLogin::loginImage($this->exec, $this->env->getResolver(), null, $image);
 
             $containerName = StepContainer::generateServiceName(
                 $this->runOpts->getPrefix(),
