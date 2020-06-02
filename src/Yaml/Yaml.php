@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Yaml;
 
-use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsStream;
 
 class Yaml
 {
@@ -30,7 +30,7 @@ class Yaml
         /* @link https://bugs.php.net/bug.php?id=53465 */
         $path = preg_replace('(^/(?:proc/self|dev)/(fd/\d+))', 'php://\1', $path);
 
-        if (!LibFs::isReadableStream($path)) {
+        if (!LibFsStream::isReadable($path)) {
             throw new \InvalidArgumentException(
                 sprintf("not a readable file: '%s'", $file)
             );

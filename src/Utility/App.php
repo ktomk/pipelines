@@ -14,6 +14,7 @@ use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsStream;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\Flags;
@@ -353,7 +354,7 @@ class App implements Runnable
             : $workingDir . '/' . $file;
 
         // support stdin and process substitution for pipelines file
-        if ($file !== LibFs::mapStream($file)) {
+        if ($file !== LibFsStream::mapFile($file)) {
             $this->verbose(sprintf('info: reading pipelines from %s', '-' === $file ? 'stdin' : $file));
 
             return $file;

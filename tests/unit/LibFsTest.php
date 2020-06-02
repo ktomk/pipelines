@@ -318,16 +318,6 @@ class LibFsTest extends TestCase
         $this->assertNull($actual);
     }
 
-    public function testIsStreamUri()
-    {
-        $this->assertTrue(LibFs::isStreamUri('data://text/plain,'));
-    }
-
-    public function testIsStreamUriOnPath()
-    {
-        $this->assertFalse(LibFs::isStreamUri(__FILE__));
-    }
-
     public function testCanFopen()
     {
         $this->assertTrue(LibFs::canFopen(__FILE__, 'rb'));
@@ -346,26 +336,5 @@ class LibFsTest extends TestCase
     public function testIsReadableFileOnDirectory()
     {
         $this->assertFalse(LibFs::isReadableFile(__DIR__));
-    }
-
-    public function testIsReadableStream()
-    {
-        $this->assertTrue(LibFs::isReadableStream(__FILE__), 'standard file');
-        $this->assertTrue(LibFs::isReadableStream('php://stdin'), 'php stream: php://stdin');
-
-        $this->assertFalse(LibFs::isReadableStream(null), 'non-string so that resources seem filtered');
-        $this->assertFalse(LibFs::isReadableStream('http:'), 'php stream: http:');
-        $this->assertFalse(LibFs::isReadableStream('http://'), 'php stream: http://');
-        $this->assertFalse(LibFs::isReadableStream('http://ktomk.github.io/'), 'php stream: http://...');
-    }
-
-    public function testMapStream()
-    {
-        $this->assertSame(__FILE__, LibFs::mapStream(__FILE__));
-        $this->assertSame('php://stdin', LibFs::mapStream('-'));
-        $this->assertSame('php://stdin', LibFs::mapStream('-', 'php://stdin'));
-        $this->assertNotSame('php://stdin', LibFs::mapStream('-', null));
-        $this->assertSame('php://stdin', LibFs::mapStream('php://stdin', null));
-        $this->assertSame('php://fd/11', LibFs::mapStream('/proc/self/fd/11'));
     }
 }
