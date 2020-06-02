@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.39] - 2020-06-02
 ### Added
 - Service documentation
 - `--service <service>` run `<service>` attached  for trouble  shooting a
@@ -380,4 +380,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.36]: https://github.com/ktomk/pipelines/releases/tag/0.0.36
 [0.0.37]: https://github.com/ktomk/pipelines/releases/tag/0.0.37
 [0.0.38]: https://github.com/ktomk/pipelines/releases/tag/0.0.38
+[0.0.39]: https://github.com/ktomk/pipelines/releases/tag/0.0.39
 [unreleased]: https://github.com/ktomk/pipelines
