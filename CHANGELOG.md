@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
    service configuration or watch logs while the service is running
 - `--file` accepts the special file-name `-` to read pipelines from standard
   input
+### Fixed
+- Parsing empty step
 
 ## [0.0.38] - 2020-06-01
 ### Added

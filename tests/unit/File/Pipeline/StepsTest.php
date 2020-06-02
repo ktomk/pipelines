@@ -224,6 +224,15 @@ class StepsTest extends TestCase
         $this->assertNotNull(Steps::fullIter($steps));
     }
 
+    public function testTestParseEmptyStep()
+    {
+        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid-pipeline-step.yml');
+
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('file parse error: step requires a script');
+        $file->getDefault();
+    }
+
     private function assertParseException(Pipeline $pipeline, array $array, $expected)
     {
         try {

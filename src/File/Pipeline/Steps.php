@@ -235,6 +235,9 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
         $this->array[] = $node;
         switch ($name) {
             case 'step':
+                if (empty($node[$name])) {
+                    throw new ParseException('step requires a script');
+                }
                 $this->steps[] = $this->parseStep(count($this->steps), $node[$name]);
 
                 break;

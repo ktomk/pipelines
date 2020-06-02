@@ -1,0 +1,10 @@
+# this file is part of pipelines
+#
+# fixture bitbucket-pipelines.yml w/ invalid step (step requires a script)
+clone:
+  depth: 1
+
+pipelines:
+  default:
+    - step:
+      name: indent broken, leads to step being null
