@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner\Docker\Binary;
 
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\Yaml\Yaml;
 
 /**
@@ -26,7 +27,7 @@ class PackageYamlFileReader implements PackageInterface
      */
     public function __construct($file)
     {
-        $this->file = LibFs::normalizePath($file);
+        $this->file = LibFsPath::normalize($file);
     }
 
     /**
@@ -68,13 +69,13 @@ class PackageYamlFileReader implements PackageInterface
             return;
         }
 
-        if (LibFs::isAbsolutePath($uri)) {
+        if (LibFsPath::isAbsolute($uri)) {
             return;
         }
 
         // TODO(tk): maybe this whole part as it's resolving?
         $baseDir = dirname($this->file);
         $buffer = $baseDir . '/' . $uri;
-        $uri = LibFs::normalizePath($buffer);
+        $uri = LibFsPath::normalize($buffer);
     }
 }

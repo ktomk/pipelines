@@ -4,8 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
-use Ktomk\Pipelines\Lib;
-use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -20,7 +19,7 @@ class DirectoriesTest extends TestCase
      */
     public static function getTestProject()
     {
-        return LibFs::normalizePathSegments(__DIR__ . '/../../..');
+        return LibFsPath::normalizeSegments(__DIR__ . '/../../..');
     }
 
     public function testCreation()
@@ -70,7 +69,7 @@ class DirectoriesTest extends TestCase
      */
     public function testProjectWorkingDirectory()
     {
-        $project = LibFs::normalizePathSegments(__DIR__ . '/../..');
+        $project = LibFsPath::normalizeSegments(__DIR__ . '/../..');
         $directories = new Directories($_SERVER, $project);
         $this->assertSame(
             $project,

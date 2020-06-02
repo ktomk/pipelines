@@ -14,6 +14,7 @@ use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibFsStream;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
@@ -199,7 +200,7 @@ class App implements Runnable
         $args = $this->arguments;
 
         $basename = $args->getStringOptionArgument('basename', self::BBPL_BASENAME);
-        if (!LibFs::isBasename($basename)) {
+        if (!LibFsPath::isBasename($basename)) {
             throw new StatusException(sprintf("not a basename: '%s'", $basename), 1);
         }
 
@@ -349,7 +350,7 @@ class App implements Runnable
         }
 
         /** @var string $path full path as bitbucket-pipelines.yml to process */
-        $path = LibFs::isAbsolutePath($file)
+        $path = LibFsPath::isAbsolute($file)
             ? $file
             : $workingDir . '/' . $file;
 

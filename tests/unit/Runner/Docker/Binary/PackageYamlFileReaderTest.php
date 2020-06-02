@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner\Docker\Binary;
 
-use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -16,7 +16,7 @@ class PackageYamlFileReaderTest extends TestCase
 {
     public function testReadingAndResolvingOfTestPackage()
     {
-        $testPackage = LibFs::normalizePathSegments(
+        $testPackage = LibFsPath::normalizeSegments(
             __DIR__ . '/../../../../../lib/package/docker-42.42.1-binsh-test-stub.yml'
         );
 

@@ -8,6 +8,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DirectoriesTest;
@@ -29,7 +30,7 @@ class UnpackagerTest extends TestCase
      */
     public static function getTestPackage()
     {
-        $testPackage = LibFs::normalizePathSegments(__DIR__ . '/../../../../data/package/docker-test-stub.tgz');
+        $testPackage = LibFsPath::normalizeSegments(__DIR__ . '/../../../../data/package/docker-test-stub.tgz');
 
         return array(
             # 'name': name of the docker client represented by this package, used for binary name

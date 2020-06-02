@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner\Docker\Binary;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\Runner\Directories;
 
 /**
@@ -114,7 +115,7 @@ class Repository implements PackageInterface
     {
         $list = array();
 
-        $packageDir = LibFs::normalizePath(__DIR__ . '/../../../../lib/package');
+        $packageDir = LibFsPath::normalize(__DIR__ . '/../../../../lib/package');
 
         $regex = new \RegexIterator(
             new \FilesystemIterator($packageDir),

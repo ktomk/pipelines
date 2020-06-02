@@ -10,6 +10,7 @@ use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DirectoriesTest;
@@ -50,7 +51,7 @@ class RepositoryTest extends TestCase
         // currently using project local directory to keep artifacts on local build, but
         // there should be the local test-package with the stub which works completely
         // offline.
-        $homeDir = LibFs::normalizePathSegments(__DIR__ . '/../../../../../build/store/home');
+        $homeDir = LibFsPath::normalizeSegments(__DIR__ . '/../../../../../build/store/home');
         LibFs::mkDir($homeDir);
 
         $exec = new Exec();
@@ -89,7 +90,7 @@ class RepositoryTest extends TestCase
     {
         $prefix = 'pipelines-integration-test';
 
-        $homeDir = LibFs::normalizePathSegments(__DIR__ . '/../../../../../build/store/home');
+        $homeDir = LibFsPath::normalizeSegments(__DIR__ . '/../../../../../build/store/home');
         $project = LibTmp::tmpDir('pipelines-test-suite.');
         $this->cleaners[] = DestructibleString::rmDir($project);
         $directories = new Directories(array('HOME' => $homeDir), $project);

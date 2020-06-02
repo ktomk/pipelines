@@ -11,6 +11,7 @@ use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
@@ -401,7 +402,7 @@ class StepRunner
 
         $dockerHost = $this->env->getInheritValue('DOCKER_HOST');
         if (null !== $dockerHost && 0 === strpos($dockerHost, 'unix://')) {
-            $hostPathDockerSocket = LibFs::normalizePath(substr($dockerHost, 7));
+            $hostPathDockerSocket = LibFsPath::normalize(substr($dockerHost, 7));
         }
 
         $pathDockerSock = $defaultSocketPath;

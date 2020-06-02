@@ -10,59 +10,6 @@ namespace Ktomk\Pipelines;
 class LibFsTest extends TestCase
 {
     /**
-     * Cleanup after test (regardless if succeeded or failed)
-     *
-     * @var array
-     */
-    private $cleaners = array();
-
-    public function provideAbsolutePaths() {
-        return array(
-            array('foo.txt', false),
-            array('', false),
-            array('/', true),
-            array('//', false),
-            array('///', true),
-            array('/foo.txt', true),
-            array('bar/foo.txt', false),
-            array('/bar/foo.txt', true),
-        );
-    }
-
-    /**
-     * @dataProvider provideAbsolutePaths
-     *
-     * @param string $path
-     * @param bool $expected
-     */
-    public function testIsAbsolutePath($path, $expected)
-    {
-        $actual = LibFs::isAbsolutePath($path);
-        $this->assertSame($expected, $actual, "path '${path}' is (not) absolute");
-    }
-
-    public function provideBasenamePaths() {
-        return array(
-            array('foo.txt', true),
-            array('', false),
-            array('/', false),
-            array('/foo.txt', false),
-            array('bar/foo.txt', false),
-        );
-    }
-    /**
-     * @dataProvider provideBasenamePaths
-     *
-     * @param string $path
-     * @param bool $expected
-     */
-    public function testIsBasename($path, $expected)
-    {
-        $actual = LibFs::isBasename($path);
-        $this->assertSame($expected, $actual, 'path is (not) basename');
-    }
-
-    /**
      * @return array
      */
     public function providePortableFilenames()
@@ -124,63 +71,6 @@ class LibFsTest extends TestCase
         $this->assertDirectoryNotExists($baseDir);
     }
 
-    public function providePaths()
-    {
-        return array(
-            array('/foo/../bar', '/bar'), # counter-check for normalizePathSegments
-            array('file://foo/../bar', 'file://bar'),
-            array('file:///foo/../bar', 'file:///bar'),
-            array('phar://foo/../bar', 'phar://bar'),
-            array('phar:///foo/../bar', 'phar:///bar'),
-        );
-    }
-
-    /**
-     * @dataProvider providePaths
-     *
-     * @param string $path
-     * @param string $expected
-     */
-    public function testNormalizePath($path, $expected)
-    {
-        $this->assertSame($expected, LibFs::normalizePath($path));
-    }
-
-    /**
-     * @return array
-     */
-    public function providePathSegments()
-    {
-        return array(
-            array('', ''),
-            array('/', '/'),
-            array('/.', '/'),
-            array('.', ''),
-            array('./', ''),
-            array('..', '..'),
-            array('../', '..'),
-            array('make/it/', 'make/it'),
-            array('/foo/bar/../baz', '/foo/baz'),
-            array(
-                '/home/dulcinea/workspace/pipelines/tests/integration/Runner/../../../build/store/home',
-                '/home/dulcinea/workspace/pipelines/build/store/home'
-            ),
-            array('////prefix////./ftw/////./////./', '////prefix/ftw'),
-            array('./././../././../make/it/../../fake/././it', '../../fake/it'),
-        );
-    }
-
-    /**
-     * @dataProvider providePathSegments
-     *
-     * @param string $path
-     * @param string $expected
-     */
-    public function testNormalizePathSegments($path, $expected)
-    {
-        $this->assertSame($expected, LibFs::normalizePathSegments($path));
-    }
-
     public function testRename()
     {
         $baseDir = sys_get_temp_dir() . '/pipelines-fs-tests';
@@ -226,7 +116,7 @@ class LibFsTest extends TestCase
         file_put_contents($subDir . '/test', 'DATA');
         $this->assertFileExists($subDir . '/test');
 
-        $dir = LibFs::normalizePathSegments($subDir . '/..');
+        $dir = LibFsPath::normalizeSegments($subDir . '/..');
         $this->assertDirectoryExists($dir);
         LibFs::rmDir($dir);
         $this->assertDirectoryNotExists($dir);
