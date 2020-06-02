@@ -7,8 +7,10 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\File\Definitions\Service;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
  * Class StepContainer
@@ -202,6 +204,70 @@ class StepContainer
                     $project,
                 )
         );
+    }
+
+    /**
+     * @param Exec $exec
+     * @param Service $service
+     * @param callable $resolver
+     * @param string $prefix
+     * @param string $project
+     *
+     * @return array
+     */
+    public static function execRunServiceContainer(Exec $exec, Service $service, $resolver, $prefix, $project)
+    {
+        $network = array('--network', 'host');
+        $image = $service->getImage();
+        ImageLogin::loginImage($exec, $resolver, null, $image);
+
+        $containerName = self::generateServiceName($prefix, $service->getName(), $project);
+
+        $variables = $resolver($service->getVariables());
+
+        $args = array(
+            $network, '--name',
+            $containerName,
+            '--detach',
+            Env::createArgVarDefinitions('-e', $variables),
+            $image->getName(),
+        );
+
+        $status = $exec->capture('docker', Lib::merge('run', $args), $out, $err);
+
+        return array($status, $network);
+    }
+
+    /**
+     * @param Exec $exec
+     * @param Service $service
+     * @param callable $resolver
+     * @param string $prefix
+     * @param string $project
+     *
+     * @return array
+     */
+    public static function execRunServiceContainerAttached(Exec $exec, Service $service, $resolver, $prefix, $project)
+    {
+        $network = array('--network', 'host');
+        $image = $service->getImage();
+        ImageLogin::loginImage($exec, $resolver, null, $image);
+
+        $containerName = self::generateServiceName($prefix, $service->getName(), $project);
+
+        $variables = $resolver($service->getVariables());
+
+        $args = array(
+            $network, '--name',
+            $containerName,
+            '--rm',
+            Env::createArgVarDefinitions('-e', $variables),
+            $image->getName(),
+        );
+
+        $status = $exec->pass('docker', Lib::merge('run', $args));
+
+        return array($status, $network);
     }
 
     /**

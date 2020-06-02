@@ -99,6 +99,27 @@ class TestCase extends PhpunitTestCase
     }
 
     /**
+     * assertContains() with string haystacks >>> assertStringContainsString
+     *
+     * assertStringContainsString was added in Phpunit 8 to lighten up usage
+     * of assertContains power-factory
+     *
+     * @param mixed $needle
+     * @param mixed $haystack
+     * @param mixed $message
+     */
+    public static function assertStringNotContainsString($needle, $haystack, $message = '')
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::assertStringNotContainsString($needle, $haystack, $message);
+
+            return;
+        }
+
+        self::assertNotContains($needle, $haystack, $message);
+    }
+
+    /**
      * Backwards compatible assertions (as far as in use)
      *
      * @param string $name

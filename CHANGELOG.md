@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- `--service <service>` run `<service>` attached  for trouble  shooting a
+   service configuration or watch logs while the service is running.
 - `--file` accepts `-` to read pipelines from standard input
 
 ## [0.0.38] - 2020-06-01

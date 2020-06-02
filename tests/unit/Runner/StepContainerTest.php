@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\ExecTester;
-use Ktomk\Pipelines\TestCase;
 
 /**
  * Class StepContainerTest
@@ -13,7 +12,7 @@ use Ktomk\Pipelines\TestCase;
  * @package Ktomk\Pipelines\Runner
  * @covers \Ktomk\Pipelines\Runner\StepContainer
  */
-class StepContainerTest extends TestCase
+class StepContainerTest extends RunnerTestCase
 {
     public function testCreation()
     {
@@ -143,6 +142,35 @@ class StepContainerTest extends TestCase
         $expected = 'prefix-service-redis.app';
         $actual = StepContainer::generateServiceName('prefix', 'redis', 'app');
         $this->assertSame($expected, $actual);
+    }
+
+    public function testExecRunServiceContainerAttached()
+    {
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('pass', 'docker', 0, 'docker run service');
+
+        $step = $this->createTestStepFromFixture('service-definitions.yml');
+        list($first) = $step->getServices()->getServiceNames();
+        $service = $step->getFile()->getDefinitions()->getServices()->getByName($first);
+
+        $actual = StepContainer::execRunServiceContainerAttached(
+            $exec,
+            $service,
+            function ($a) {
+                return $a;
+            },
+            'prefix',
+            'project'
+        );
+        $expected = array(0, array('--network', 'host'));
+        $this->assertSame($expected, $actual);
+
+        $messages = $exec->getDebugMessages();
+        $this->assertCount(1, $messages);
+        self::assertStringContainsString(' --rm ', $messages[0]);
+        self::assertStringNotContainsString(' --detached ', $messages[0]);
+        self::assertStringNotContainsString(' -d ', $messages[0]);
     }
 
     /**

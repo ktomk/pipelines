@@ -55,6 +55,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--deploy mount | copy ] [--pipeline <id>]
                  [(--step | --steps) <steps>] [--no-manual]
                  [--trigger <ref>]
+       pipelines [<options>] --service <service>
        pipelines [<options>] --list | --show | --images
                  | --show-pipelines | --show-services
        pipelines [<options>] --docker-client-pkgs
@@ -119,6 +120,11 @@ Pipeline runner options
     --no-run              do not run the pipeline
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
+
+Service runner options
+    --service <service>   run <service> attached to the current shell and
+                          waits until the service exits, exit status is
+                          exit status of the docker run service container
 
 Environment control options
     -e, --env <variable>  pass or set an environment <variable> for the

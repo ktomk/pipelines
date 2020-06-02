@@ -8,8 +8,6 @@ use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
-use Ktomk\Pipelines\File\Definitions\Service;
-use Ktomk\Pipelines\File\Image;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
@@ -505,28 +503,13 @@ class StepRunner
         $network = array();
 
         foreach ($services as $name => $service) {
-            $network = array('--network', 'host');
-            $image = $service->getImage();
-            ImageLogin::loginImage($this->exec, $this->env->getResolver(), null, $image);
-
-            $containerName = StepContainer::generateServiceName(
+            list(, $network) = StepContainer::execRunServiceContainer(
+                $this->exec,
+                $service,
+                $this->env->getResolver(),
                 $this->runOpts->getPrefix(),
-                $service->getName(),
                 $this->getProject()
             );
-
-            $resolver = $this->env->getResolver();
-            $variables = $resolver($service->getVariables());
-
-            $args = array(
-                $network, '--name',
-                $containerName,
-                '--detach',
-                Env::createArgVarDefinitions('-e', $variables),
-                $image->getName(),
-            );
-
-            $this->exec->capture('docker', Lib::merge('run', $args), $out, $err);
         }
 
         return $network;

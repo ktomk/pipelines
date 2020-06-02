@@ -133,6 +133,18 @@ class App implements Runnable
 
         $env = $this->parseEnv(Lib::env($_SERVER), $reference, $workingDir);
 
+        $directories = new Directories(Lib::env($_SERVER), $workingDir);
+
+        ServiceOptions::bind(
+            $args,
+            $this->streams,
+            $pipelines,
+            $exec,
+            $env,
+            $runOpts,
+            $directories
+        )->run();
+
         $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';
 
         $pipelineId = $args->getOptionArgument('pipeline', $pipelineId);
@@ -144,8 +156,6 @@ class App implements Runnable
         $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions, $runOpts);
 
         $flags = $this->getRunFlags($keep, $deployMode);
-
-        $directories = new Directories(Lib::env($_SERVER), $workingDir);
 
         $runner = Runner::createEx($runOpts, $directories, $exec, $flags, $env, $streams);
 
