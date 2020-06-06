@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Parsing a pipe in after-script
 - Parsing a pipeline with variables keyword
 
 ## [0.0.39] - 2020-06-02

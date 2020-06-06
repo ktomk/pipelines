@@ -1,0 +1,20 @@
+clone:
+  depth: 1
+image: ktomk/pipelines:busybox
+
+pipelines:
+  default:
+    - step:
+        name: Happy
+        script:
+          - echo "fine"
+        after-script:
+          - 'echo "BITBUCKET_EXIT_CODE: ${BITBUCKET_EXIT_CODE}"'
+          - pipe: atlassian/rsync-deploy:0.4.2
+            variables:
+              USER: 'ec2-user'
+              SERVER: '${SERVER_HOST}'
+              REMOTE_PATH: '/home/ec2-user/app'
+              LOCAL_PATH: '$PWD'
+              EXTRA_ARGS: '--exclude=".git*"'
+          - echo "still fine"

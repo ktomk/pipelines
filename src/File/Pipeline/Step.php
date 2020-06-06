@@ -269,7 +269,7 @@ class Step implements FileNode
         $standard = is_scalar($line) || null === $line;
         $pipe = is_array($line) && isset($line['pipe']) && is_string($line['pipe']);
 
-        if (!($standard || ('script' === $name && $pipe))) {
+        if (!($standard || $pipe)) {
             throw new ParseException(sprintf(
                 "'%s' requires a list of commands, step #%d is not a command",
                 $name,

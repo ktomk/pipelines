@@ -79,4 +79,21 @@ after-script non-zero exit status: 1
         $actual = $runner->runStepScript($step, $streams, $exec, '*test-run*');
         $this->assertSame(0, $actual);
     }
+
+    public function testRunStepScriptWithAfterScriptPipe()
+    {
+        $runner = new StepScriptRunner();
+
+        $step = $this->createTestStepFromFixture('after-script-pipe.yml', 1, 'default');
+        $exec = new ExecTester($this);
+        $streams = new Streams(null, 'php://output', 'php://output');
+
+        $this->expectOutputString('After script:' . "\n");
+
+        $exec->expect('pass', '~^<<\'SCRIPT\' ~', 0, 'script');
+        $exec->expect('pass', '~^<<\'SCRIPT\' ~', 0, 'after-script');
+
+        $actual = $runner->runStepScript($step, $streams, $exec, '*test-run*');
+        $this->assertSame(0, $actual);
+    }
 }
