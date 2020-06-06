@@ -11,7 +11,7 @@ namespace PHPSTORM_META {
 
     registerArgumentsSet(
         'option_names',
-        'docker.socket.path'
+        'docker.client.path', 'docker.socket.path'
     );
 
     expectedArguments(

@@ -59,8 +59,6 @@ class Yaml
             'Ktomk\Pipelines\Yaml\Sf2Yaml',
         );
 
-        $class = null;
-
         foreach ($classes as $class) {
             if (is_subclass_of($class, 'Ktomk\Pipelines\Yaml\ParserInterface')
                 && $class::isAvailable()) {

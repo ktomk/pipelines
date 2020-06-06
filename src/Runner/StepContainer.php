@@ -179,7 +179,7 @@ class StepContainer
     /**
      * generate service container name
      *
-     * exmaple: pipelines-service-redis.pipelines
+     * example: pipelines-service-redis.pipelines
      *              ^    `   ^   `  ^  `   ^
      *              |        |      |      |
      *              |    "service"  |   project
