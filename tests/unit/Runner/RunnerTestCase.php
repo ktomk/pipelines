@@ -9,6 +9,7 @@ use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\TestCase;
 use Ktomk\Pipelines\Yaml\Yaml;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -113,6 +114,6 @@ class RunnerTestCase extends TestCase
         $project = LibTmp::tmpDir('pipelines-test-suite.');
         $this->cleaners[] = DestructibleString::rmDir($project);
 
-        return $this->testProject = $project;
+        return $this->testProject = new Project($project);
     }
 }

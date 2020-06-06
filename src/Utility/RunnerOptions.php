@@ -9,6 +9,7 @@ use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\RunOpts;
@@ -49,7 +50,7 @@ class RunnerOptions
     {
         return Repository::create(
             new Exec(),
-            new Directories(Lib::env($_SERVER), 'fake')
+            new Directories(Lib::env($_SERVER), new Project('fake'))
         );
     }
 

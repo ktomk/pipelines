@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\LibFsPath;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -15,16 +16,16 @@ use Ktomk\Pipelines\TestCase;
 class DirectoriesTest extends TestCase
 {
     /**
-     * @return string project directory path (this project) as test project
+     * @return Project project directory path (this project) as test project
      */
     public static function getTestProject()
     {
-        return LibFsPath::normalizeSegments(__DIR__ . '/../../..');
+        return new Project(LibFsPath::normalizeSegments(__DIR__ . '/../../..'));
     }
 
     public function testCreation()
     {
-        $project = realpath(__DIR__ . '/../../..');
+        $project = new Project(realpath(__DIR__ . '/../../..'));
         $directories = new Directories($_SERVER, $project);
         $this->assertInstanceOf(
             'Ktomk\Pipelines\Runner\Directories',
@@ -32,31 +33,24 @@ class DirectoriesTest extends TestCase
         );
     }
 
-    public function testCreationWithMissingDirectory()
-    {
-        $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid project directory: ');
-        new Directories(array('HOME' => '/home/dulcinea'), '');
-    }
-
     public function testCreationWithMissingHome()
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('$HOME unset or empty');
-        new Directories(array('HOME' => ''), __DIR__);
+        new Directories(array('HOME' => ''), new Project(__DIR__));
     }
 
     public function testCreationWithNonPortableUtilityName()
     {
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('Not a portable utility name: "-f"');
-        new Directories(array('HOME' => '/greta-garbo'), __DIR__, '-f');
+        new Directories(array('HOME' => '/greta-garbo'), new Project(__DIR__), '-f');
     }
 
     public function testName()
     {
         $project = realpath(__DIR__ . '/../..');
-        $directories = new Directories($_SERVER, $project);
+        $directories = new Directories($_SERVER, new Project($project));
         $this->assertSame(
             'tests',
             $directories->getName()
@@ -70,7 +64,7 @@ class DirectoriesTest extends TestCase
     public function testProjectWorkingDirectory()
     {
         $project = LibFsPath::normalizeSegments(__DIR__ . '/../..');
-        $directories = new Directories($_SERVER, $project);
+        $directories = new Directories($_SERVER, new Project($project));
         $this->assertSame(
             $project,
             $directories->getProjectDirectory()

@@ -10,6 +10,7 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DirectoriesTest;
 use Ktomk\Pipelines\TestCase;
@@ -57,7 +58,7 @@ class UnpackagerTest extends TestCase
 
     public function testCreation()
     {
-        $directories = new Directories(Lib::env($_SERVER), '/dev/null');
+        $directories = new Directories(Lib::env($_SERVER), new Project('/dev/null'));
         $packageDirectory = $directories->getBaseDirectory('XDG_CACHE_HOME', 'package-docker');
         $binariesDirectory = $directories->getBaseDirectory('XDG_DATA_HOME', 'static-docker');
 
@@ -74,7 +75,7 @@ class UnpackagerTest extends TestCase
      */
     public function testCreationFromDirectories()
     {
-        $directories = new Directories(Lib::env($_SERVER), '/dev/null');
+        $directories = new Directories(Lib::env($_SERVER), new Project('/dev/null'));
         $unPackager = UnPackager::fromDirectories(new ExecTester($this), $directories);
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\UnPackager', $unPackager);
     }
@@ -184,7 +185,7 @@ class UnpackagerTest extends TestCase
     public function testExtractFromTgzFile()
     {
         $tester = new ExecTester($this);
-        $directories = new Directories(array('HOME' => '/alf-was-here'), ':');
+        $directories = new Directories(array('HOME' => '/alf-was-here'), new Project(':'));
         $unpacker = UnPackager::fromDirectories($tester, $directories);
 
         $pkg = self::getTestPackage();
@@ -213,7 +214,7 @@ class UnpackagerTest extends TestCase
      */
     public function testVerifyFileHash()
     {
-        $directories = new Directories(array('HOME' => '/home/ysl'), ':');
+        $directories = new Directories(array('HOME' => '/home/ysl'), new Project(':'));
         $packageDirectory = $directories->getBaseDirectory('XDG_CACHE_HOME', 'package-docker');
         $binariesDirectory = $directories->getBaseDirectory('XDG_DATA_HOME', 'static-docker');
 

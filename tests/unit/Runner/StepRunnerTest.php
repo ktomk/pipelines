@@ -10,6 +10,7 @@ use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\Binary\UnPackager;
 use Ktomk\Pipelines\Utility\OptionsMock;
@@ -216,7 +217,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->setActive(false);
 
         $step = $this->createTestStep();
-        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $this->setTestProject(new Project('/app')); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
         $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array('PIPELINES_PARENT_CONTAINER_NAME' => 'foo'));
 
         $this->expectOutputString("pipelines: fatal: can not detect /app mount point. preventing new container.\n");
@@ -230,7 +231,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->setActive(false);
 
         $step = $this->createTestStep();
-        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $this->setTestProject(new Project('/app')); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
         $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array());
 
         $this->expectOutputString('');
@@ -244,7 +245,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->setActive(false);
 
         $step = $this->createTestStep();
-        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $this->setTestProject(new Project('/app')); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
         $inherit = array(
             'PIPELINES_PARENT_CONTAINER_NAME' => 'foo',
             'PIPELINES_PIP_CONTAINER_NAME' => 'foo',
@@ -282,7 +283,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->setActive(false);
 
         $step = $this->createTestStep();
-        $this->setTestProject('/app'); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
+        $this->setTestProject(new Project('/app')); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
         $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), $inherit);
 
         $this->expectOutputString('');
@@ -308,7 +309,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $buffer = json_encode(array(array(
             'HostConfig' => array(
-                'Binds' => array('/dev/null:' . $this->getTestProject() . '/var/run/docker.sock'),
+                'Binds' => array('/dev/null:' . $this->getTestProject()->getPath() . '/var/run/docker.sock'),
             ),
         )));
         $exec->expect('capture', 'docker', $buffer, 'obtain socket bind');
@@ -436,7 +437,7 @@ class StepRunnerTest extends RunnerTestCase
 
     public function testArtifacts()
     {
-        $tmpProjectDir = $this->getTestProject();
+        $tmpProjectDir = $this->getTestProject()->getPath();
 
         $exec = new ExecTester($this);
         $exec
@@ -481,7 +482,7 @@ class StepRunnerTest extends RunnerTestCase
 
     public function testArtifactsFailure()
     {
-        $tmpProjectDir = $this->getTestProject();
+        $tmpProjectDir = $this->getTestProject()->getPath();
 
         $exec = new ExecTester($this);
         $exec
@@ -515,7 +516,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $runner = new StepRunner(
             RunOpts::create('foo', Repository::PKG_TEST),
-            new Directories($_SERVER, 'foo'),
+            new Directories($_SERVER, new Project('foo')),
             $exec,
             new Flags(),
             new Env(),
@@ -617,7 +618,7 @@ class StepRunnerTest extends RunnerTestCase
     {
         list($out, $err) = ((array)$outErr) + array(null, null);
 
-        $testProject = $this->getTestProject();
+        $testProject = $this->getTestProject()->getPath();
 
         $options = OptionsMock::create();
 
@@ -639,7 +640,7 @@ class StepRunnerTest extends RunnerTestCase
 
         return new StepRunner(
             $runOpts,
-            new Directories($_SERVER, $testProject),
+            new Directories($_SERVER, new Project($testProject)),
             $exec,
             new Flags($flags),
             Env::createEx($inherit),

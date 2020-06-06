@@ -12,6 +12,7 @@ use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DirectoriesTest;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
@@ -71,7 +72,7 @@ class RepositoryTest extends TestCase
     {
         $homeDir = DestructibleString::rmDir(LibTmp::tmpDir('pipelines-test-home.'));
 
-        $directories = new Directories(array('HOME' => (string)$homeDir), 'bar');
+        $directories = new Directories(array('HOME' => (string)$homeDir), new Project('bar'));
         $repository = Repository::create(new Exec(), $directories);
         $repository->resolve(Repository::PKG_TEST);
         $actual = $repository->inject('42-bin-sh');
@@ -93,7 +94,7 @@ class RepositoryTest extends TestCase
         $homeDir = LibFsPath::normalizeSegments(__DIR__ . '/../../../../../build/store/home');
         $project = LibTmp::tmpDir('pipelines-test-suite.');
         $this->cleaners[] = DestructibleString::rmDir($project);
-        $directories = new Directories(array('HOME' => $homeDir), $project);
+        $directories = new Directories(array('HOME' => $homeDir), new Project($project));
         $exec = new ExecTester($this);
         $env = new Env();
         $streams = new Streams(null, 'php://output');

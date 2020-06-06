@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Runner\Docker\Binary;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\TestCase;
 
@@ -18,7 +19,7 @@ class RepositoryTest extends TestCase
 {
     public function testCreation()
     {
-        $repo = Repository::create(new Exec(), new Directories(array('HOME' => '/foo'), 'bar'));
+        $repo = Repository::create(new Exec(), new Directories(array('HOME' => '/foo'), new Project('bar')));
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $repo);
     }
 

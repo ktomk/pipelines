@@ -16,6 +16,7 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibFsStream;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\Flags;
@@ -116,12 +117,15 @@ class App implements Runnable
 
         $path = $this->parsePath($basename, $workingDir);
 
+        $project = new Project($workingDir);
+
         // TODO: obtain project dir information etc. from VCS
         // $vcs = new Vcs();
 
         $runOpts = RunnerOptions::bind($args, $this->streams)->run();
+        $project->setPrefix($runOpts->getPrefix());
 
-        DockerOptions::bind($args, $exec, $runOpts->getPrefix(), $this->streams)->run();
+        DockerOptions::bind($args, $exec, $project->getPrefix(), $this->streams)->run();
 
         $noRun = $args->hasOption('no-run');
 
@@ -133,9 +137,9 @@ class App implements Runnable
 
         $reference = $this->parseReference();
 
-        $env = $this->parseEnv(Lib::env($_SERVER), $reference, $workingDir);
+        $env = $this->parseEnv(Lib::env($_SERVER), $reference, $project->getPath());
 
-        $directories = new Directories(Lib::env($_SERVER), $workingDir);
+        $directories = new Directories(Lib::env($_SERVER), $project);
 
         ServiceOptions::bind(
             $args,

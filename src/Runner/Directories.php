@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Runner;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Utility\App;
 
 /**
@@ -29,12 +30,12 @@ class Directories
     private $env;
 
     /**
-     * @var string
+     * @var Project
      */
-    private $projectDirectory;
+    private $project;
 
     /**
-     * @var string name of the utility to have directories for
+     * @var string name of the utility to have directories for (XDG)
      */
     private $utility;
 
@@ -51,21 +52,17 @@ class Directories
      * Directories ctor
      *
      * @param array|string[] $env
-     * @param string $projectDirectory project directory
+     * @param Project $project project
      * @param string $utility [optional] name, defaults to "pipelines"
      *
      * @throws InvalidArgumentException
      *
      *@see Directories::getBaseDirectory
      */
-    public function __construct(array $env, $projectDirectory, $utility = null)
+    public function __construct(array $env, Project $project, $utility = null)
     {
         if (!isset($env['HOME']) || '' === $env['HOME']) {
             throw new InvalidArgumentException('$HOME unset or empty');
-        }
-
-        if (!basename($projectDirectory)) {
-            throw new InvalidArgumentException(sprintf('Invalid project directory: "%s"', $projectDirectory));
         }
 
         null === $utility && $utility = App::UTILITY_NAME;
@@ -74,7 +71,7 @@ class Directories
         }
 
         $this->env = $env;
-        $this->projectDirectory = $projectDirectory;
+        $this->project = $project;
         $this->utility = $utility;
     }
 
@@ -85,7 +82,7 @@ class Directories
      */
     public function getName()
     {
-        return basename($this->projectDirectory);
+        return (string)$this->project;
     }
 
     /**
@@ -98,7 +95,7 @@ class Directories
      */
     public function getProjectDirectory()
     {
-        return $this->projectDirectory;
+        return $this->project->getPath();
     }
 
     /**
