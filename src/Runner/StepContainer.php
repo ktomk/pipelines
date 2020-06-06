@@ -146,13 +146,13 @@ class StepContainer
      *
      * @param string $prefix
      * @param Step $step
-     * @param string $project
+     * @param string $projectName
      *
      * @return string
      *
      * @see StepContainer::generateName()
      */
-    public static function generateStepName($prefix, Step $step, $project)
+    public static function generateStepName($prefix, Step $step, $projectName)
     {
         $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '-', $step->getPipeline()->getId());
         if ('' === $idContainerSlug) {
@@ -171,7 +171,7 @@ class StepContainer
                     $stepNumber,
                     $nameSlug,
                     trim($idContainerSlug, '-'),
-                    $project,
+                    $projectName,
                 )
         );
     }

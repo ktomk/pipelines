@@ -88,7 +88,7 @@ class RepositoryTest extends TestCase
      */
     public function testRunnerWithDeploy()
     {
-        $prefix = 'pipelines-integration-test';
+        $prefix = 'pipelinesintegrationtest';
 
         $homeDir = LibFsPath::normalizeSegments(__DIR__ . '/../../../../../build/store/home');
         $project = LibTmp::tmpDir('pipelines-test-suite.');
@@ -130,7 +130,7 @@ class RepositoryTest extends TestCase
         $exec->expect('capture', 'docker', 'kill');
         $exec->expect('capture', 'docker', 'rm');
 
-        $this->expectOutputRegex('~\Qpipelines-integration-test-2.no-name.null.pipelines-test-suite\E~');
+        $this->expectOutputRegex('~\Qpipelinesintegrationtest-2.no-name.null.pipelines-test-suite\E~');
         $actual = $runner->runStep($step);
         $this->assertSame(0, $actual);
     }

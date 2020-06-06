@@ -352,7 +352,7 @@ class StepRunnerTest extends RunnerTestCase
         /** @var MockObject|StepRunner $mockRunner */
         $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
             ->setConstructorArgs(array(
-                RunOpts::create('pipelines-unit-test'),
+                RunOpts::create('pipelinesunittest'),
                 $testDirectories,
                 $exec,
                 new Flags(),
@@ -415,7 +415,7 @@ class StepRunnerTest extends RunnerTestCase
         /** @var MockObject|StepRunner $mockRunner */
         $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
             ->setConstructorArgs(array(
-                RunOpts::create('pipelines-unit-test', 'wrong-package'),
+                RunOpts::create('pipelinesunittest', 'wrong-package'),
                 $testDirectories,
                 $exec,
                 new Flags(),
@@ -635,7 +635,7 @@ class StepRunnerTest extends RunnerTestCase
         }
 
         $options->define('docker.socket.path', $value);
-        $runOpts = new RunOpts('pipelines-unit-test', $options);
+        $runOpts = new RunOpts('pipelinesunittest', $options);
 
         return new StepRunner(
             $runOpts,

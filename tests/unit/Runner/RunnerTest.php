@@ -39,7 +39,7 @@ class RunnerTest extends RunnerTestCase
         $exec->setActive(false);
         $this->expectOutputRegex('~pipelines: pipeline with no step to execute~');
         $runner = new Runner(
-            RunOpts::create('pipelines-unit-test'),
+            RunOpts::create('pipelinesunittest'),
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
             new Flags,
@@ -60,7 +60,7 @@ class RunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('~^pipelines: .* pipeline inside pipelines recursion detected~');
         $runner = new Runner(
-            RunOpts::create('pipelines-unit-test'),
+            RunOpts::create('pipelinesunittest'),
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
             new Flags(),

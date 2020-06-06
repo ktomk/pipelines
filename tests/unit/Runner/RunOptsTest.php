@@ -15,7 +15,7 @@ class RunOptsTest extends TestCase
 {
     public function testCreation()
     {
-        $opts = RunOpts::create('', '');
+        $opts = RunOpts::create('prefix', '');
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\RunOpts', $opts);
 
         return $opts;

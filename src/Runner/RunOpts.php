@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Utility\Options;
+use Ktomk\Pipelines\Value\Prefix;
 
 /**
  * Runner options parameter object
@@ -63,7 +64,7 @@ class RunOpts
      */
     public function __construct($prefix = null, Options $options = null, $binaryPackage = null)
     {
-        $this->prefix = $prefix;
+        $this->prefix = null === $prefix ? $prefix : Prefix::verify($prefix);
         $this->options = $options;
         $this->binaryPackage = $binaryPackage;
     }
