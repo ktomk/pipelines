@@ -53,6 +53,19 @@ class PipelineTest extends TestCase
         } catch (ParseException $e) {
             $this->addToAssertionCount(1);
         }
+
+        # no parse error
+        new Pipeline($file, array(
+            array('step' => array('script' => array(''))),
+        ));
+        $this->addToAssertionCount(1);
+
+        # variables keyword does not throw
+        new Pipeline($file, array(
+            array('variables' => array()),
+            array('step' => array('script' => array(''))),
+        ));
+        $this->addToAssertionCount(1);
     }
 
     public function testGetSteps()

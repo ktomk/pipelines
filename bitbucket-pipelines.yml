@@ -166,6 +166,14 @@ pipelines:
               '
           services:
             - mysql
+    deploy: # https://bitbucket.org/blog/adding-human-interaction-back-into-automated-builds
+      - variables:
+          - name: ENVIRONMENT
+      - step:
+          image: ktomk/pipelines:busybox
+          script:
+            - echo "Deploying to $ENVIRONMENT"
+              # ... rest of deployment script
 
 definitions:
   services:

@@ -37,7 +37,7 @@ class Pipeline implements FileNode
         }
 
         $this->file = $file;
-        $this->steps = new Steps($this, $definition);
+        $this->parsePipeline($definition);
     }
 
     /**
@@ -96,5 +96,40 @@ class Pipeline implements FileNode
     public function jsonSerialize()
     {
         return $this->steps->jsonSerialize();
+    }
+
+    private function parsePipeline(array $array)
+    {
+        $this->steps = new Steps(
+            $this,
+            $this->filterMapList($array, array('step', 'parallel'))
+        );
+    }
+
+    /**
+     * filter a list (in indexed array) af maps (string indexed array)
+     * with a single entry only
+     *
+     * @param array|array[] $mapList
+     * @param array|string[] $keys
+     *
+     * @return array
+     */
+    private function filterMapList(array $mapList, array $keys)
+    {
+        $result = array();
+        foreach ($mapList as $map) {
+            if (!is_array($map) || 1 === !count($map)) {
+                continue;
+            }
+            $key = key($map);
+            if (!in_array($key, $keys, true)) {
+                continue;
+            }
+            $value = current($map);
+            $result[] = array($key => $value);
+        }
+
+        return $result;
     }
 }
