@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Fixed
+- Tmp cleanup in tests
 - Parsing a pipe in after-script
 - Parsing a pipeline with variables keyword
 

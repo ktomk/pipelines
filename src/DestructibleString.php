@@ -39,6 +39,14 @@ class DestructibleString
         );
     }
 
+    public static function rm($string)
+    {
+        return new self(
+            $string,
+            'Ktomk\Pipelines\LibFs::rm'
+        );
+    }
+
     /**
      * DestructibleString constructor.
      *

@@ -35,6 +35,16 @@ class DestructibleStringTest extends TestCase
         $this->assertDirectoryNotExists((string)$dir);
     }
 
+    public function testRm()
+    {
+        list($handle, $tmpFile) = LibTmp::tmpFile();
+        $file = DestructibleString::rm($tmpFile);
+        $this->assertFileExists((string)$file);
+        $file->__destruct();
+        $this->assertFileNotExists((string)$file);
+        unset($handle);
+    }
+
     /**
      * @depends testCreation
      *

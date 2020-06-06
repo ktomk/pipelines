@@ -29,7 +29,7 @@ class RunnerTestCase extends TestCase
     /**
      * @var array
      */
-    private $cleaners = array();
+    protected $cleaners = array();
 
     /**
      * @var null|string

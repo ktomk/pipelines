@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
@@ -630,6 +631,7 @@ class StepRunnerTest extends RunnerTestCase
             touch($value);
         } else {
             $value = LibTmp::tmpFilePut('');
+            $this->cleaners[] = DestructibleString::rm($value);
         }
 
         $options->define('docker.socket.path', $value);
