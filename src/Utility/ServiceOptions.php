@@ -9,10 +9,10 @@ use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\Runner\Containers;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\RunOpts;
-use Ktomk\Pipelines\Runner\StepContainer;
 
 /**
  * Class ServiceOptions
@@ -123,7 +123,7 @@ class ServiceOptions implements Runnable
 
         $this->streams->out(sprintf("starting service %s ...\n", $nameOfService));
 
-        list($status) = StepContainer::execRunServiceContainerAttached(
+        list($status) = Containers::execRunServiceContainerAttached(
             $this->exec,
             $service,
             $this->env->getResolver(),

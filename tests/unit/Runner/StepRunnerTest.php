@@ -569,7 +569,6 @@ class StepRunnerTest extends RunnerTestCase
     /**
      * @see StepRunner::obtainServicesNetwork()
      * @see StepRunner::shutdownServices()
-     * @covers \Ktomk\Pipelines\Runner\StepContainer::execRunServiceContainer
      */
     public function testServicesObtainNetworkAndShutdown()
     {

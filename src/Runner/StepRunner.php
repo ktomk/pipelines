@@ -480,7 +480,7 @@ class StepRunner
             (string)substr($id, 0, 12)
         );
 
-        StepContainer::execShutdownContainer(
+        Containers::execShutdownContainer(
             $this->exec,
             $this->streams,
             $id,
@@ -504,7 +504,7 @@ class StepRunner
         $network = array();
 
         foreach ($services as $name => $service) {
-            list(, $network) = StepContainer::execRunServiceContainer(
+            list(, $network) = Containers::execRunServiceContainer(
                 $this->exec,
                 $service,
                 $this->env->getResolver(),
@@ -536,7 +536,7 @@ class StepRunner
                 $this->getProject()
             );
 
-            StepContainer::execShutdownContainer(
+            Containers::execShutdownContainer(
                 $this->exec,
                 $this->streams,
                 "/${name}",

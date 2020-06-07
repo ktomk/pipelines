@@ -136,7 +136,7 @@ class StepContainerTest extends RunnerTestCase
         list($first) = $step->getServices()->getServiceNames();
         $service = $step->getFile()->getDefinitions()->getServices()->getByName($first);
 
-        $actual = StepContainer::execRunServiceContainerAttached(
+        $actual = Containers::execRunServiceContainerAttached(
             $exec,
             $service,
             function ($a) {

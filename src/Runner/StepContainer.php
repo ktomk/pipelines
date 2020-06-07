@@ -6,12 +6,8 @@ namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\File\Definitions\Service;
 use Ktomk\Pipelines\File\Pipeline\Step;
-use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\Runner\Containers\NameBuilder;
-use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
  * Class StepContainer
@@ -53,139 +49,6 @@ class StepContainer
         }
 
         return new self($step, $exec);
-    }
-
-    /**
-     * kill and remove static implementation
-     *
-     * @param Exec $exec
-     * @param string|string[] $idOrIds container id(s) or name(s)
-     * @param bool $kill
-     * @param bool $remove
-     *
-     * @return void
-     */
-    public static function execKillAndRemove(Exec $exec, $idOrIds, $kill, $remove)
-    {
-        if ($kill) {
-            Docker::create($exec)->getProcessManager()->kill($idOrIds);
-        }
-
-        if ($remove) {
-            Docker::create($exec)->getProcessManager()->remove($idOrIds);
-        }
-    }
-
-    /**
-     * @param Exec $exec
-     * @param array $args
-     *
-     * @return array array(int $status, string $out, string $err, string|null $id)
-     */
-    public static function execRun(Exec $exec, array $args)
-    {
-        $status = $exec->capture('docker', Lib::merge('run', $args), $out, $err);
-
-        $id = null;
-        if (0 === $status) {
-            $id = rtrim($out) ?: null;
-        }
-
-        return array($status, $out, $err, $id);
-    }
-
-    /**
-     * @param Exec $exec
-     * @param Streams $streams
-     * @param string|string[] $idOrIds
-     * @param int $status
-     * @param Flags $flags
-     * @param string $message
-     * @param string $id
-     *
-     * @return void
-     *
-     * @see StepRunner::shutdownStepContainer
-     */
-    public static function execShutdownContainer(Exec $exec, Streams $streams, $idOrIds, $status, Flags $flags, $message)
-    {
-        # keep container on error
-        if (0 !== $status && $flags->keepOnError()) {
-            $streams->err(sprintf("error, %s\n", $message));
-
-            return;
-        }
-
-        # keep or kill/remove container
-        self::execKillAndRemove($exec, $idOrIds, $flags->killContainer(), $flags->removeContainer());
-
-        if ($flags->keep()) {
-            $streams->out(sprintf("%s\n", $message));
-        }
-    }
-
-    /**
-     * @param Exec $exec
-     * @param Service $service
-     * @param callable $resolver
-     * @param string $prefix
-     * @param string $project
-     *
-     * @return array
-     */
-    public static function execRunServiceContainer(Exec $exec, Service $service, $resolver, $prefix, $project)
-    {
-        $network = array('--network', 'host');
-        $image = $service->getImage();
-        ImageLogin::loginImage($exec, $resolver, null, $image);
-
-        $containerName = NameBuilder::serviceContainerName($prefix, $service->getName(), $project);
-
-        $variables = $resolver($service->getVariables());
-
-        $args = array(
-            $network, '--name',
-            $containerName,
-            '--detach',
-            Env::createArgVarDefinitions('-e', $variables),
-            $image->getName(),
-        );
-
-        $status = $exec->capture('docker', Lib::merge('run', $args), $out, $err);
-
-        return array($status, $network);
-    }
-
-    /**
-     * @param Exec $exec
-     * @param Service $service
-     * @param callable $resolver
-     * @param string $prefix
-     * @param string $project
-     *
-     * @return array
-     */
-    public static function execRunServiceContainerAttached(Exec $exec, Service $service, $resolver, $prefix, $project)
-    {
-        $network = array('--network', 'host');
-        $image = $service->getImage();
-        ImageLogin::loginImage($exec, $resolver, null, $image);
-
-        $containerName = NameBuilder::serviceContainerName($prefix, $service->getName(), $project);
-
-        $variables = $resolver($service->getVariables());
-
-        $args = array(
-            $network, '--name',
-            $containerName,
-            '--rm',
-            Env::createArgVarDefinitions('-e', $variables),
-            $image->getName(),
-        );
-
-        $status = $exec->pass('docker', Lib::merge('run', $args));
-
-        return array($status, $network);
     }
 
     /**
@@ -275,7 +138,7 @@ class StepContainer
     {
         $id = $this->getDisplayId();
 
-        self::execKillAndRemove($this->exec, $id, $kill, $remove);
+        Containers::execKillAndRemove($this->exec, $id, $kill, $remove);
     }
 
     /**
@@ -285,7 +148,7 @@ class StepContainer
      */
     public function run(array $args)
     {
-        $execRun = self::execRun($this->exec, $args);
+        $execRun = Containers::execRun($this->exec, $args);
         $this->id = array_pop($execRun);
 
         return $execRun;
