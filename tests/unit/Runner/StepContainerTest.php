@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 
 /**
@@ -18,36 +19,22 @@ class StepContainerTest extends RunnerTestCase
     {
         $step = $this->getStepMock();
 
-        $container = new StepContainer($step, new ExecTester($this));
+        $container = new StepContainer('test-step-container', $step, new Exec());
         $this->assertNotNull($container);
-
-        $container = StepContainer::create($step);
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepContainer', $container);
-
-        return $container;
-    }
-
-    public function testGenerateName()
-    {
-        $container = new StepContainer($this->getStepMock(), new ExecTester($this));
-        $expected = 'pipelines-1.no-name.null.test-project';
-        $actual = $container->generateName('pipelines', 'test-project');
-        $this->assertSame($expected, $actual);
     }
 
     public function testGetName()
     {
-        $container = new StepContainer($this->getStepMock(), new ExecTester($this));
-        $this->assertNull($container->getName(), 'no name generated yet');
-        $container->generateName('pipelines', 'test-project');
         $expected = 'pipelines-1.no-name.null.test-project';
+        $container = new StepContainer($expected, $this->getStepMock(), new ExecTester($this));
         $actual = $container->getName();
         $this->assertSame($expected, $actual);
     }
 
     public function testKeepOrKillThrowsException()
     {
-        $container = new StepContainer($this->getStepMock(), new ExecTester($this));
+        $container = new StepContainer(null, $this->getStepMock(), new ExecTester($this));
 
         $this->expectException('BadMethodCallException');
         $this->expectExceptionMessage('Container has no name yet');
@@ -57,8 +44,8 @@ class StepContainerTest extends RunnerTestCase
     public function testKeepOrKill()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer($this->getStepMock(), $exec);
-        $container->generateName('pipelines', 'test-project');
+        $name = 'pipelines-1.no-name.null.test-project';
+        $container = new StepContainer($name, $this->getStepMock(), $exec);
 
         $exec->expect('capture', 'docker');
         $this->assertNull($container->keepOrKill(false));
@@ -72,7 +59,7 @@ class StepContainerTest extends RunnerTestCase
     public function testKillAndRemoveThrowsNot()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer($this->getStepMock(), $exec);
+        $container = new StepContainer('test-step-container', $this->getStepMock(), $exec);
 
         $container->killAndRemove(false, false);
         $this->addToAssertionCount(1);
@@ -85,8 +72,8 @@ class StepContainerTest extends RunnerTestCase
     public function testKillAndRemove()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer($this->getStepMock(), $exec);
-        $container->generateName('pipelines', 'test-project');
+        $name = 'pipelines-1.no-name.null.test-project';
+        $container = new StepContainer($name, $this->getStepMock(), $exec);
 
         $exec->expect('capture', 'docker', '1234567', 'fake container id');
         $container->keepOrKill(true);
@@ -99,9 +86,8 @@ class StepContainerTest extends RunnerTestCase
     public function testRun()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer($this->getStepMock(), $exec);
+        $container = new StepContainer('test-step-container', $this->getStepMock(), $exec);
         $this->assertNull($container->getId(), 'precondition');
-        # $container->generateName('pipelines', 'test-project');
 
         $exec->expect('capture', 'docker', '1234567', 'run');
         $actual = $container->run(array());
@@ -114,9 +100,8 @@ class StepContainerTest extends RunnerTestCase
     public function testRunDryRun()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer($this->getStepMock(), $exec);
+        $container = new StepContainer('test-step-container', $this->getStepMock(), $exec);
         $this->assertNull($container->getId(), 'precondition');
-        # $container->generateName('pipelines', 'test-project');
 
         $exec->expect('capture', 'docker', '', 'run');
         $actual = $container->run(array());

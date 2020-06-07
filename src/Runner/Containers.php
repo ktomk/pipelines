@@ -172,7 +172,7 @@ class Containers
         }
 
         # keep or kill/remove container
-        Containers::execKillAndRemove($exec, $idOrIds, $flags->killContainer(), $flags->removeContainer());
+        self::execKillAndRemove($exec, $idOrIds, $flags->killContainer(), $flags->removeContainer());
 
         if ($flags->keep()) {
             $streams->out(sprintf("%s\n", $message));
@@ -183,10 +183,24 @@ class Containers
      * StepContainers constructor.
      *
      * @param Step $step
+     * @param Exec $exec
      */
     public function __construct(Step $step, Exec $exec)
     {
         $this->step = $step;
         $this->exec = $exec;
+    }
+
+    /**
+     * @param string $projectName
+     * @param string $prefix
+     *
+     * @return StepContainer
+     */
+    public function createStepContainer($prefix, $projectName)
+    {
+        $name = NameBuilder::stepContainerNameByStep($this->step, $prefix, $projectName);
+
+        return new StepContainer($name, $this->step, $this->exec);
     }
 }

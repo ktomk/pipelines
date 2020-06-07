@@ -94,4 +94,18 @@ class ContainersTest extends RunnerTestCase
         self::assertIsArray($actual(true, '--rm'));
         self::assertIsArray($actual(false, '--detach'));
     }
+
+    public function testCreateStepContainer()
+    {
+        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $step->method('getPipeline')->willReturn(
+            $this->createMock('Ktomk\Pipelines\File\Pipeline')
+        );
+
+        $stepContainers = new Containers($step, $exec);
+
+        $stepContainer = $stepContainers->createStepContainer('prefix', 'project');
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepContainer', $stepContainer);
+    }
 }

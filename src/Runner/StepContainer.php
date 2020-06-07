@@ -7,7 +7,6 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Pipeline\Step;
-use Ktomk\Pipelines\Runner\Containers\NameBuilder;
 
 /**
  * Class StepContainer
@@ -37,43 +36,17 @@ class StepContainer
     private $exec;
 
     /**
-     * @param Step $step
-     * @param null|Exec $exec
-     *
-     * @return StepContainer
-     */
-    public static function create(Step $step, Exec $exec = null)
-    {
-        if (null === $exec) {
-            $exec = new Exec();
-        }
-
-        return new self($step, $exec);
-    }
-
-    /**
      * StepContainer constructor.
      *
+     * @param string $name
      * @param Step $step
      * @param Exec $exec
      */
-    public function __construct(Step $step, Exec $exec)
+    public function __construct($name, Step $step, Exec $exec)
     {
+        $this->name = $name;
         $this->step = $step;
         $this->exec = $exec;
-    }
-
-    /**
-     * generate step container name
-     *
-     * @param string $prefix for the name (normally "pipelines")
-     * @param string $projectName name
-     *
-     * @return string
-     */
-    public function generateName($prefix, $projectName)
-    {
-        return $this->name = NameBuilder::stepContainerNameByStep($this->step, $prefix, $projectName);
     }
 
     /**

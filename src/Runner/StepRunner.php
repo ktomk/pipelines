@@ -99,15 +99,13 @@ class StepRunner
         $exec = $this->exec;
         $streams = $this->streams;
 
+        $containers = new Containers($step, $exec);
+
         $env->setPipelinesProjectPath($dir);
 
-        $container = StepContainer::create($step, $exec);
+        $container = $containers->createStepContainer($this->runOpts->getPrefix(), $this->getProject());
 
-        $name = $container->generateName(
-            $this->runOpts->getPrefix(),
-            $this->getProject()
-        );
-        $env->setContainerName($name);
+        $env->setContainerName($container->getName());
 
         $image = $step->getImage();
 
@@ -117,7 +115,7 @@ class StepRunner
             $step->getIndex() + 1,
             $step->getName() ? '"' . $step->getName() . '"' : '(unnamed)',
             $image->getName(),
-            $name
+            $container->getName()
         ));
 
         $id = $container->keepOrKill($this->flags->reuseContainer());
@@ -138,7 +136,7 @@ class StepRunner
             return $result;
         }
 
-        $status = StepScriptRunner::createRunStepScript($step, $streams, $exec, $name);
+        $status = StepScriptRunner::createRunStepScript($step, $streams, $exec, $container->getName());
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
