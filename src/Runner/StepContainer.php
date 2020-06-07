@@ -10,6 +10,7 @@ use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\Definitions\Service;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\Runner\Containers\NameBuilder;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
@@ -52,18 +53,6 @@ class StepContainer
         }
 
         return new self($step, $exec);
-    }
-
-    /**
-     * @param Step $step
-     * @param string $prefix
-     * @param string $project name
-     *
-     * @return string
-     */
-    public static function createName(Step $step, $prefix, $project)
-    {
-        return self::create($step)->generateName($prefix, $project);
     }
 
     /**
@@ -136,77 +125,6 @@ class StepContainer
     }
 
     /**
-     * generate step container name
-     *
-     * example: pipelines-1.pipeline-features-and-introspection.default.app
-     *              ^    `^`                  ^                `    ^  ` ^
-     *              |     |                   |                     |    |
-     *              | step number        step name           pipeline id |
-     *           prefix                                                project
-     *
-     * @param string $prefix
-     * @param Step $step
-     * @param string $projectName
-     *
-     * @return string
-     *
-     * @see StepContainer::generateName()
-     */
-    public static function generateStepName($prefix, Step $step, $projectName)
-    {
-        $idContainerSlug = preg_replace('([^a-zA-Z0-9_.-]+)', '-', $step->getPipeline()->getId());
-        if ('' === $idContainerSlug) {
-            $idContainerSlug = 'null';
-        }
-        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $step->getName());
-        if ('' === $nameSlug) {
-            $nameSlug = 'no-name';
-        }
-
-        $stepNumber = $step->getIndex() + 1;
-
-        return $prefix . '-' . implode(
-            '.',
-            array(
-                    $stepNumber,
-                    $nameSlug,
-                    trim($idContainerSlug, '-'),
-                    $projectName,
-                )
-        );
-    }
-
-    /**
-     * generate service container name
-     *
-     * example: pipelines-service-redis.pipelines
-     *              ^    `   ^   `  ^  `   ^
-     *              |        |      |      |
-     *              |    "service"  |   project
-     *           prefix       service name
-     *
-     * @param string $prefix
-     * @param string $serviceName
-     * @param string $project
-     *
-     * @return string
-     *
-     * @see StepRunner::obtainServicesNetwork()
-     */
-    public static function generateServiceName($prefix, $serviceName, $project)
-    {
-        $nameSlug = preg_replace(array('( )', '([^a-zA-Z0-9_.-]+)'), array('-', ''), $serviceName);
-
-        return $prefix . '-service-' . implode(
-            '.',
-            array(
-                    $nameSlug,
-                    $project,
-                )
-        );
-    }
-
-    /**
      * @param Exec $exec
      * @param Service $service
      * @param callable $resolver
@@ -221,7 +139,7 @@ class StepContainer
         $image = $service->getImage();
         ImageLogin::loginImage($exec, $resolver, null, $image);
 
-        $containerName = self::generateServiceName($prefix, $service->getName(), $project);
+        $containerName = NameBuilder::serviceContainerName($prefix, $service->getName(), $project);
 
         $variables = $resolver($service->getVariables());
 
@@ -253,7 +171,7 @@ class StepContainer
         $image = $service->getImage();
         ImageLogin::loginImage($exec, $resolver, null, $image);
 
-        $containerName = self::generateServiceName($prefix, $service->getName(), $project);
+        $containerName = NameBuilder::serviceContainerName($prefix, $service->getName(), $project);
 
         $variables = $resolver($service->getVariables());
 
@@ -286,13 +204,13 @@ class StepContainer
      * generate step container name
      *
      * @param string $prefix for the name (normally "pipelines")
-     * @param string $project name
+     * @param string $projectName name
      *
      * @return string
      */
-    public function generateName($prefix, $project)
+    public function generateName($prefix, $projectName)
     {
-        return $this->name = self::generateStepName($prefix, $this->step, $project);
+        return $this->name = NameBuilder::stepContainerNameByStep($this->step, $prefix, $projectName);
     }
 
     /**

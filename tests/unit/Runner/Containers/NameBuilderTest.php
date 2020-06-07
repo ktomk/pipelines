@@ -56,4 +56,29 @@ class NameBuilderTest extends TestCase
         $actual = NameBuilder::slugify($string, $replacement, 'fall-back');
         $this->assertSame($expected, $actual);
     }
+
+    public function testServiceContainerName()
+    {
+        $actual = NameBuilder::serviceContainerName(null, null, null);
+        $this->assertSame('service-unnamed', $actual);
+    }
+
+    public function testStepContainerName()
+    {
+        $actual = NameBuilder::stepContainerName(null, null, null, 'null', null);
+        $this->assertSame('null-1.no-name.null', $actual);
+
+        $expected = 'prefix.service-redis.app';
+        $actual = NameBuilder::serviceContainerName('prefix', 'redis', 'app');
+        $this->assertSame($expected, $actual);
+    }
+
+    public function testStepContainerNameByStep()
+    {
+        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
+        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $step->method('getPipeline')->willReturn($pipeline);
+
+        $this->assertSame('null-1.no-name.null', NameBuilder::stepContainerNameByStep($step, 'null', null));
+    }
 }

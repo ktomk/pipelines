@@ -4,7 +4,8 @@
 
 namespace Ktomk\Pipelines\Runner\Containers;
 
-use Ktomk\Pipelines\Project;
+use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\Value\Prefix;
 use UnexpectedValueException;
 
 /**
@@ -14,16 +15,6 @@ use UnexpectedValueException;
  */
 abstract class NameBuilder
 {
-    /**
-     * @var Project
-     */
-    private $project;
-
-    /**
-     * @var string
-     */
-    private $role;
-
     /**
      * @param string $string
      * @param string $replacement [optional] defaults to dash "-"
@@ -62,5 +53,94 @@ abstract class NameBuilder
         $buffer = preg_replace('(^[_.-]+$)', '', $buffer);
 
         return '' === (string)$buffer ? (string)$fallBack : (string)$buffer;
+    }
+
+    /**
+     * service container name
+     *
+     * example: pipelines.service-redis.pipelines
+     *              ^    `   ^   `  ^  `   ^
+     *              |        |      |      |
+     *              |    "service"  |   project
+     *           prefix       service name
+     *
+     * @param string $prefix
+     * @param string $serviceName
+     * @param string $projectName
+     *
+     * @return string
+     */
+    public static function serviceContainerName($prefix, $serviceName, $projectName)
+    {
+        return self::slugify(
+            sprintf(
+                '%s.service-%s',
+                $prefix,
+                implode(
+                    '.',
+                    array(
+                        self::slugify($serviceName, '-', 'unnamed'),
+                        $projectName,
+                    )
+                )
+            )
+        );
+    }
+
+    /**
+     * step container name
+     *
+     * example: pipelines-1.pipeline-features-and-introspection.default.app
+     *              ^    `^`                  ^                `    ^  ` ^
+     *              |     |                   |                     |    |
+     *              | step number        step name           pipeline id |
+     *           prefix                                                project
+     *
+     * @param string $pipelineId
+     * @param string $stepName
+     * @param int $stepNumber (step numbers start at one)
+     * @param string $prefix
+     * @param string $projectName
+     *
+     * @return string
+     */
+    public static function stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $projectName)
+    {
+        return self::slugify(
+            sprintf(
+                '%s-%s',
+                Prefix::verify($prefix),
+                implode(
+                    '.',
+                    array(
+                        (string)(int)max(1, $stepNumber),
+                        self::slugify($stepName, '-', 'no-name'),
+                        self::slugify($pipelineId, '-', 'null'),
+                        $projectName,
+                    )
+                )
+            ),
+            ''
+        );
+    }
+
+    /**
+     * generate step container name
+     *
+     * @param string $prefix
+     * @param Step $step
+     * @param string $projectName
+     *
+     * @return string
+     *
+     * @see StepContainer::generateName()
+     */
+    public static function stepContainerNameByStep(Step $step, $prefix, $projectName)
+    {
+        $pipelineId = $step->getPipeline()->getId();
+        $stepName = $step->getName();
+        $stepNumber = $step->getIndex() + 1;
+
+        return self::stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $projectName);
     }
 }

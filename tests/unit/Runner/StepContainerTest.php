@@ -27,17 +27,6 @@ class StepContainerTest extends RunnerTestCase
         return $container;
     }
 
-    public function testCreateName()
-    {
-        $expected = 'pipelines-1.no-name.null.test-project';
-        $actual = StepContainer::createName(
-            $this->getStepMock(),
-            'pipelines',
-            'test-project'
-        );
-        $this->assertSame($expected, $actual);
-    }
-
     public function testGenerateName()
     {
         $container = new StepContainer($this->getStepMock(), new ExecTester($this));
@@ -135,13 +124,6 @@ class StepContainerTest extends RunnerTestCase
         $this->assertCount(3, $actual);
         $this->assertNull($container->getId());
         $this->assertSame('*dry-run*', $container->getDisplayId());
-    }
-
-    public function testGenerateServiceName()
-    {
-        $expected = 'prefix-service-redis.app';
-        $actual = StepContainer::generateServiceName('prefix', 'redis', 'app');
-        $this->assertSame($expected, $actual);
     }
 
     public function testExecRunServiceContainerAttached()

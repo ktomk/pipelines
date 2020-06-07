@@ -13,6 +13,7 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Runner\Containers\NameBuilder;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
@@ -529,7 +530,7 @@ class StepRunner
         $services = (array)$step->getServices()->getDefinitions();
 
         foreach ($services as $name => $service) {
-            $name = StepContainer::generateServiceName(
+            $name = NameBuilder::serviceContainerName(
                 $this->runOpts->getPrefix(),
                 $service->getName(),
                 $this->getProject()
