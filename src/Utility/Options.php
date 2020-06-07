@@ -21,6 +21,7 @@ class Options
     {
         $definition = array(
             'docker.socket.path' => array('/var/run/docker.sock'),
+            'docker.client.path' => array('/usr/bin/docker'),
         );
 
         return new self($definition);

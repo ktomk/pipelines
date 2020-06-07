@@ -356,12 +356,11 @@ class StepRunner
      */
     private function obtainDockerClientMount(Step $step)
     {
-        # 'docker.client.path'
-        $path = '/usr/bin/docker';
-
         if (!$step->getServices()->has('docker')) {
             return array();
         }
+
+        $path = $this->runOpts->getOption('docker.client.path');
 
         // prefer pip mount over package
         $hostPath = $this->pipHostConfigBind($path);
