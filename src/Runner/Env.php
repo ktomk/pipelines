@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\Collector;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFsPath;
 
 /**
  * Pipeline environment collaborator
@@ -267,7 +268,10 @@ class Env
      */
     public function setPipelinesProjectPath($path)
     {
-        // TODO $path must be absolute
+        if (!LibFsPath::isAbsolute($path)) {
+            throw new \InvalidArgumentException(sprintf('not an absolute path: "%s"', $path));
+        }
+
         $this->setFirstPipelineVariable('PIPELINES_PROJECT_PATH', $path);
     }
 

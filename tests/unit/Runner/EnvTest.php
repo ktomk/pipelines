@@ -211,7 +211,7 @@ class EnvTest extends TestCase
         $this->assertRegExp('~^([a-z0-9]+) \1$~', $actual, 'list of hashes');
     }
 
-    public function testPipelinesProjectPath()
+    public function testSetPipelinesProjectPath()
     {
         $env = Env::createEx();
         $env->setPipelinesProjectPath('/my-path');
@@ -223,6 +223,15 @@ class EnvTest extends TestCase
 
         $env->setPipelinesProjectPath('/my-path/too');
         $this->assertSame('/my-path', $env->getValue('PIPELINES_PROJECT_PATH'), 'can not overwrite');
+    }
+
+    public function testSetPipelinesProjectPathThrowsOnRelativePath()
+    {
+        $env = Env::createEx();
+
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('not an absolute path: "./my-path"');
+        $env->setPipelinesProjectPath('./my-path');
     }
 
     public function testInheritPipelinesId()

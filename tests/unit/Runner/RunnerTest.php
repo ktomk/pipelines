@@ -112,10 +112,12 @@ class RunnerTest extends RunnerTestCase
         $exec->setActive(false);
 
         /** @var MockObject|Runner $runner */
+        $directories = $this->createMock('Ktomk\Pipelines\Runner\Directories');
+        $directories->method('getProjectDirectory')->willReturn('/my-app');
         $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
             ->setConstructorArgs(array(
                 RunOpts::create('foo'),
-                $this->createMock('Ktomk\Pipelines\Runner\Directories'),
+                $directories,
                 $exec,
                 new Flags(),
                 Env::createEx(),
@@ -133,11 +135,14 @@ class RunnerTest extends RunnerTestCase
         $exec = new Exec();
         $exec->setActive(false);
 
+        $directories = $this->createMock('Ktomk\Pipelines\Runner\Directories');
+        $directories->method('getProjectDirectory')->willReturn('/my-app');
+
         /** @var MockObject|Runner $runner */
         $runner = $this->getMockBuilder('Ktomk\Pipelines\Runner\Runner')
             ->setConstructorArgs(array(
                 RunOpts::create('foo'),
-                $this->createMock('Ktomk\Pipelines\Runner\Directories'),
+                $directories,
                 $exec,
                 new Flags(),
                 Env::createEx(),
