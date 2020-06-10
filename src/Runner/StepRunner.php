@@ -24,36 +24,6 @@ use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 class StepRunner
 {
     /**
-     * @var RunOpts
-     */
-    private $runOpts;
-
-    /**
-     * @var Directories
-     */
-    private $directories;
-
-    /**
-     * @var Exec
-     */
-    private $exec;
-
-    /**
-     * @var Flags
-     */
-    private $flags;
-
-    /**
-     * @var Env
-     */
-    private $env;
-
-    /**
-     * @var Streams
-     */
-    private $streams;
-
-    /**
      * list of temporary directory destructible markers
      *
      * @var array
@@ -61,30 +31,18 @@ class StepRunner
     private $temporaryDirectories = array();
 
     /**
+     * @var Runner
+     */
+    private $runner;
+
+    /**
      * DockerSession constructor.
      *
-     * @param RunOpts $runOpts
-     * @param Directories $directories source repository root directory based directories object
-     * @param Exec $exec
-     * @param Flags $flags
-     * @param Env $env
-     * @param Streams $streams
+     * @param Runner $runner
      */
-    public function __construct(
-        RunOpts $runOpts,
-        Directories $directories,
-        Exec $exec,
-        Flags $flags,
-        Env $env,
-        Streams $streams
-    )
+    public function __construct(Runner $runner)
     {
-        $this->runOpts = $runOpts;
-        $this->directories = $directories;
-        $this->exec = $exec;
-        $this->flags = $flags;
-        $this->env = $env;
-        $this->streams = $streams;
+        $this->runner = $runner;
     }
 
     /**
@@ -94,16 +52,16 @@ class StepRunner
      */
     public function runStep(Step $step)
     {
-        $dir = $this->directories->getProjectDirectory();
-        $env = $this->env;
-        $exec = $this->exec;
-        $streams = $this->streams;
+        $dir = $this->runner->getDirectories()->getProjectDirectory();
+        $env = $this->runner->getEnv();
+        $exec = $this->runner->getExec();
+        $streams = $this->runner->getStreams();
 
         $containers = new Containers($step, $exec);
 
         $env->setPipelinesProjectPath($dir);
 
-        $container = $containers->createStepContainer($this->runOpts->getPrefix(), $this->getProject());
+        $container = $containers->createStepContainer($this->runner->getRunOpts()->getPrefix(), $this->getProject());
 
         $env->setContainerName($container->getName());
 
@@ -118,9 +76,9 @@ class StepRunner
             $container->getName()
         ));
 
-        $id = $container->keepOrKill($this->flags->reuseContainer());
+        $id = $container->keepOrKill($this->runner->getFlags()->reuseContainer());
 
-        $deployCopy = $this->flags->deployCopy();
+        $deployCopy = $this->runner->getFlags()->deployCopy();
 
         if (null === $id) {
             list($id, $status) = $this->runNewContainer($container, $dir, $deployCopy, $step);
@@ -154,8 +112,8 @@ class StepRunner
      */
     public function getDockerBinaryRepository()
     {
-        $repo = Repository::create($this->exec, $this->directories);
-        $repo->resolve($this->runOpts->getBinaryPackage());
+        $repo = Repository::create($this->runner->getExec(), $this->runner->getDirectories());
+        $repo->resolve($this->runner->getRunOpts()->getBinaryPackage());
 
         return $repo;
     }
@@ -183,8 +141,8 @@ class StepRunner
             return;
         }
 
-        $exec = $this->exec;
-        $streams = $this->streams;
+        $exec = $this->runner->getExec();
+        $streams = $this->runner->getStreams();
 
         $streams->out("\x1D+++ copying artifacts from container...\n");
 
@@ -214,8 +172,8 @@ class StepRunner
      */
     private function captureArtifactPattern(ArtifactSource $source, $pattern, $dir)
     {
-        $exec = $this->exec;
-        $streams = $this->streams;
+        $exec = $this->runner->getExec();
+        $streams = $this->runner->getStreams();
 
         $id = $source->getId();
         $paths = $source->findByPattern($pattern);
@@ -260,8 +218,8 @@ class StepRunner
             return null;
         }
 
-        $streams = $this->streams;
-        $exec = $this->exec;
+        $streams = $this->runner->getStreams();
+        $exec = $this->runner->getExec();
 
         $streams->out("\x1D+++ copying files into container...\n");
 
@@ -304,8 +262,8 @@ class StepRunner
      */
     private function runNewContainer(StepContainer $container, $dir, $copy, Step $step)
     {
-        $env = $this->env;
-        $streams = $this->streams;
+        $env = $this->runner->getEnv();
+        $streams = $this->runner->getStreams();
 
         $mountDockerSock = $this->obtainDockerSocketMount();
 
@@ -320,7 +278,7 @@ class StepRunner
 
         # process docker login if image demands so, but continue on failure
         $image = $step->getImage();
-        ImageLogin::loginImage($this->exec, $this->env->getResolver(), null, $image);
+        ImageLogin::loginImage($this->runner->getExec(), $this->runner->getEnv()->getResolver(), null, $image);
 
         list($status, $out, $err) = $container->run(
             array(
@@ -359,7 +317,7 @@ class StepRunner
             return array();
         }
 
-        $path = $this->runOpts->getOption('docker.client.path');
+        $path = $this->runner->getRunOpts()->getOption('docker.client.path');
 
         // prefer pip mount over package
         $hostPath = $this->pipHostConfigBind($path);
@@ -383,11 +341,11 @@ class StepRunner
         $args = array();
 
         // FIXME give more controlling options, this is serious /!\
-        if (!$this->flags->useDockerSocket()) {
+        if (!$this->runner->getFlags()->useDockerSocket()) {
             return $args;
         }
 
-        $defaultSocketPath = $this->runOpts->getOption('docker.socket.path');
+        $defaultSocketPath = $this->runner->getRunOpts()->getOption('docker.socket.path');
         $hostPathDockerSocket = $defaultSocketPath;
 
         // pipelines inside pipelines
@@ -398,7 +356,7 @@ class StepRunner
             );
         }
 
-        $dockerHost = $this->env->getInheritValue('DOCKER_HOST');
+        $dockerHost = $this->runner->getEnv()->getInheritValue('DOCKER_HOST');
         if (null !== $dockerHost && 0 === strpos($dockerHost, 'unix://')) {
             $hostPathDockerSocket = LibFsPath::normalize(substr($dockerHost, 7));
         }
@@ -427,14 +385,14 @@ class StepRunner
             return array();
         }
 
-        $parentName = $this->env->getValue('PIPELINES_PARENT_CONTAINER_NAME');
+        $parentName = $this->runner->getEnv()->getValue('PIPELINES_PARENT_CONTAINER_NAME');
         $hostDeviceDir = $this->pipHostConfigBind($dir);
         $checkMount = $mountDockerSock && null !== $parentName;
         $deviceDir = $hostDeviceDir ?: $dir;
         if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
-            $deviceDir = $this->env->getValue('PIPELINES_PROJECT_PATH');
+            $deviceDir = $this->runner->getEnv()->getValue('PIPELINES_PROJECT_PATH');
             if ($deviceDir === $dir || null === $deviceDir) {
-                $this->streams->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
+                $this->runner->getStreams()->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
 
                 return array(null, 1);
             }
@@ -456,11 +414,11 @@ class StepRunner
     private function pipHostConfigBind($mountPoint)
     {
         // if there is a parent name, this is level 2+
-        if (null === $pipName = $this->env->getValue('PIPELINES_PIP_CONTAINER_NAME')) {
+        if (null === $pipName = $this->runner->getEnv()->getValue('PIPELINES_PIP_CONTAINER_NAME')) {
             return null;
         }
 
-        return Docker::create($this->exec)->hostConfigBind($pipName, $mountPoint);
+        return Docker::create($this->runner->getExec())->hostConfigBind($pipName, $mountPoint);
     }
 
     /**
@@ -479,11 +437,11 @@ class StepRunner
         );
 
         Containers::execShutdownContainer(
-            $this->exec,
-            $this->streams,
+            $this->runner->getExec(),
+            $this->runner->getStreams(),
             $id,
             $status,
-            $this->flags,
+            $this->runner->getFlags(),
             $message
         );
     }
@@ -503,10 +461,10 @@ class StepRunner
 
         foreach ($services as $name => $service) {
             list(, $network) = Containers::execRunServiceContainer(
-                $this->exec,
+                $this->runner->getExec(),
                 $service,
-                $this->env->getResolver(),
-                $this->runOpts->getPrefix(),
+                $this->runner->getEnv()->getResolver(),
+                $this->runner->getRunOpts()->getPrefix(),
                 $this->getProject()
             );
         }
@@ -529,17 +487,17 @@ class StepRunner
 
         foreach ($services as $name => $service) {
             $name = NameBuilder::serviceContainerName(
-                $this->runOpts->getPrefix(),
+                $this->runner->getRunOpts()->getPrefix(),
                 $service->getName(),
                 $this->getProject()
             );
 
             Containers::execShutdownContainer(
-                $this->exec,
-                $this->streams,
+                $this->runner->getExec(),
+                $this->runner->getStreams(),
                 "/${name}",
                 $status,
-                $this->flags,
+                $this->runner->getFlags(),
                 sprintf('keeping service container %s', $name)
             );
         }
@@ -552,6 +510,6 @@ class StepRunner
      */
     private function getProject()
     {
-        return $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName();
+        return $this->runner->getEnv()->getValue('BITBUCKET_REPO_SLUG') ?: $this->runner->getDirectories()->getName();
     }
 }

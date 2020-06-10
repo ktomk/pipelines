@@ -33,14 +33,15 @@ class Runner
     private $exec;
 
     /**
+     * @var Env
+     */
+    private $env;
+
+    /**
      * @var Flags
      */
     private $flags;
 
-    /**
-     * @var Env
-     */
-    private $env;
     /**
      * @var Streams
      */
@@ -144,16 +145,57 @@ class Runner
      */
     public function runStep(Step $step)
     {
-        $stepRunner = new StepRunner(
-            $this->runOpts,
-            $this->directories,
-            $this->exec,
-            $this->flags,
-            $this->env,
-            $this->streams
-        );
+        $stepRunner = new StepRunner($this);
 
         return $stepRunner->runStep($step);
+    }
+
+    /**
+     * @return RunOpts
+     */
+    public function getRunOpts()
+    {
+        return $this->runOpts;
+    }
+
+    /**
+     * @return Directories
+     */
+    public function getDirectories()
+    {
+        return $this->directories;
+    }
+
+    /**
+     * @return Exec
+     */
+    public function getExec()
+    {
+        return $this->exec;
+    }
+
+    /**
+     * @return Env
+     */
+    public function getEnv()
+    {
+        return $this->env;
+    }
+
+    /**
+     * @return Flags
+     */
+    public function getFlags()
+    {
+        return $this->flags;
+    }
+
+    /**
+     * @return Streams
+     */
+    public function getStreams()
+    {
+        return $this->streams;
     }
 
     /**

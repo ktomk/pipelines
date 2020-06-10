@@ -23,6 +23,14 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class StepRunnerTest extends RunnerTestCase
 {
+    public function testCreation()
+    {
+        $stepRunner = new StepRunner(
+            $this->createMock('Ktomk\Pipelines\Runner\Runner')
+        );
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepRunner', $stepRunner);
+    }
+
     /**
      * @covers \Ktomk\Pipelines\Runner\Docker\ImageLogin::loginImage
      */
@@ -350,9 +358,19 @@ class StepRunnerTest extends RunnerTestCase
         ;
         $testRepository->method('getPackageLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
 
+        $runner = new Runner(
+            RunOpts::create('pipelinesunittest'),
+            $testDirectories,
+            $exec,
+            new Flags(),
+            Env::createEx(),
+            new Streams()
+        );
+
         /** @var MockObject|StepRunner $mockRunner */
         $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
             ->setConstructorArgs(array(
+                $runner,
                 RunOpts::create('pipelinesunittest'),
                 $testDirectories,
                 $exec,
@@ -413,16 +431,18 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 1, 'no id for name of potential re-use');
         $testDirectories = new Directories($_SERVER, $this->getTestProject());
 
+        $runner = new Runner(
+            RunOpts::create('pipelinesunittest', 'wrong-package'),
+            $testDirectories,
+            $exec,
+            new Flags(),
+            Env::createEx(),
+            new Streams()
+        );
+
         /** @var MockObject|StepRunner $mockRunner */
         $mockRunner = $this->getMockBuilder('Ktomk\Pipelines\Runner\StepRunner')
-            ->setConstructorArgs(array(
-                RunOpts::create('pipelinesunittest', 'wrong-package'),
-                $testDirectories,
-                $exec,
-                new Flags(),
-                Env::createEx(),
-                new Streams(),
-            ))
+            ->setConstructorArgs(array($runner))
             ->setMethods(null)
             ->getMock();
 
@@ -514,7 +534,8 @@ class StepRunnerTest extends RunnerTestCase
     public function testGetDockerBinaryRepository()
     {
         $exec = new ExecTester($this);
-        $runner = new StepRunner(
+
+        $runner = new Runner(
             RunOpts::create('foo', Repository::PKG_TEST),
             new Directories($_SERVER, new Project('foo')),
             $exec,
@@ -522,7 +543,9 @@ class StepRunnerTest extends RunnerTestCase
             new Env(),
             new Streams()
         );
-        $actual = $runner->getDockerBinaryRepository();
+
+        $stepRunner = new StepRunner($runner);
+        $actual = $stepRunner->getDockerBinaryRepository();
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $actual);
     }
 
@@ -635,15 +658,15 @@ class StepRunnerTest extends RunnerTestCase
         }
 
         $options->define('docker.socket.path', $value);
+
         $runOpts = new RunOpts('pipelinesunittest', $options);
+        $directories = new Directories($_SERVER, new Project($testProject));
+        $flagsObject = new Flags($flags);
+        $env = Env::createEx($inherit);
+        $streams = new Streams(null, $out, $err);
 
         return new StepRunner(
-            $runOpts,
-            new Directories($_SERVER, new Project($testProject)),
-            $exec,
-            new Flags($flags),
-            Env::createEx($inherit),
-            new Streams(null, $out, $err)
+            new Runner($runOpts, $directories, $exec, $flagsObject, $env, $streams)
         );
     }
 }
