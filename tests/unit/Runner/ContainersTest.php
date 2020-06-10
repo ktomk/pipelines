@@ -18,9 +18,9 @@ class ContainersTest extends RunnerTestCase
     public function testCreation()
     {
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
-        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
 
-        $stepContainers = new Containers($step, $exec);
+        $stepContainers = new Containers($runner, $exec);
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers', $stepContainers);
     }
 
@@ -97,15 +97,21 @@ class ContainersTest extends RunnerTestCase
 
     public function testCreateStepContainer()
     {
-        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn(
+            $this->createMock('Ktomk\Pipelines\Cli\Exec')
+        );
+        $runner->method('getPrefix')->willReturn('prefix');
+        $runner->method('getProject')->willReturn('project');
+
         $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
         $step->method('getPipeline')->willReturn(
             $this->createMock('Ktomk\Pipelines\File\Pipeline')
         );
 
-        $stepContainers = new Containers($step, $exec);
+        $stepContainers = new Containers($runner);
 
-        $stepContainer = $stepContainers->createStepContainer('prefix', 'project');
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepContainer', $stepContainer);
+        $stepContainer = $stepContainers->createStepContainer($step);
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepContainer', $stepContainer);
     }
 }

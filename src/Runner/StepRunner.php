@@ -12,6 +12,7 @@ use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Containers\NameBuilder;
+use Ktomk\Pipelines\Runner\Containers\StepContainer;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
@@ -52,14 +53,13 @@ class StepRunner
     {
         $dir = $this->runner->getDirectories()->getProjectDirectory();
         $env = $this->runner->getEnv();
-        $exec = $this->runner->getExec();
         $streams = $this->runner->getStreams();
 
-        $containers = new Containers($step, $exec);
+        $containers = new Containers($this->runner);
 
         $env->setPipelinesProjectPath($dir);
 
-        $container = $containers->createStepContainer($this->runner->getRunOpts()->getPrefix(), $this->getProject());
+        $container = $containers->createStepContainer($step);
 
         $env->setContainerName($container->getName());
 
@@ -74,7 +74,7 @@ class StepRunner
             $container->getName()
         ));
 
-        $id = $container->keepOrKill($this->runner->getFlags()->reuseContainer());
+        $id = $container->keepOrKill();
 
         $deployCopy = $this->runner->getFlags()->deployCopy();
 
@@ -96,7 +96,7 @@ class StepRunner
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
-        $this->shutdownStepContainer($container, $status);
+        $container->shutdown($status);
 
         $this->shutdownServices($step, $status);
 
@@ -420,31 +420,6 @@ class StepRunner
     }
 
     /**
-     * @param StepContainer $container
-     * @param int $status
-     *
-     * @return void
-     */
-    private function shutdownStepContainer(StepContainer $container, $status)
-    {
-        $id = $container->getDisplayId();
-
-        $message = sprintf(
-            'keeping container id %s',
-            (string)substr($id, 0, 12)
-        );
-
-        Containers::execShutdownContainer(
-            $this->runner->getExec(),
-            $this->runner->getStreams(),
-            $id,
-            $status,
-            $this->runner->getFlags(),
-            $message
-        );
-    }
-
-    /**
      * @param Step $step
      *
      * @return array docker run options for network (needed if there are services)
@@ -463,7 +438,7 @@ class StepRunner
                 $service,
                 $this->runner->getEnv()->getResolver(),
                 $this->runner->getRunOpts()->getPrefix(),
-                $this->getProject()
+                $this->runner->getProject()
             );
         }
 
@@ -487,7 +462,7 @@ class StepRunner
             $name = NameBuilder::serviceContainerName(
                 $this->runner->getRunOpts()->getPrefix(),
                 $service->getName(),
-                $this->getProject()
+                $this->runner->getProject()
             );
 
             Containers::execShutdownContainer(
@@ -499,15 +474,5 @@ class StepRunner
                 sprintf('keeping service container %s', $name)
             );
         }
-    }
-
-    /**
-     * get project name
-     *
-     * @return string
-     */
-    private function getProject()
-    {
-        return $this->runner->getEnv()->getValue('BITBUCKET_REPO_SLUG') ?: $this->runner->getDirectories()->getName();
     }
 }

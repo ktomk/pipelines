@@ -199,6 +199,33 @@ class Runner
     }
 
     /**
+     * Project name (basename) in runner context (as used in running pipelines)
+     *
+     * @return string
+     */
+    public function getProject()
+    {
+        return $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName();
+    }
+
+    /**
+     * Get Prefix
+     *
+     * The prefix is used when creating containers for the container name and
+     * acts as name-spacing for pipelines resources (like containers).
+     *
+     * The default prefix is "pipelines", see --prefix option.
+     *
+     * @see Prefix::verify()
+     *
+     * @return string
+     */
+    public function getPrefix()
+    {
+        return $this->runOpts->getPrefix();
+    }
+
+    /**
      * @param Pipeline\StepsIterator $steps
      *
      * @return array(int, Pipeline\StepsIterator)

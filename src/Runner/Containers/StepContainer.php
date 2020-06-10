@@ -2,11 +2,12 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Runner;
+namespace Ktomk\Pipelines\Runner\Containers;
 
 use Ktomk\Pipelines\Cli\Docker;
-use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\Runner\Containers;
+use Ktomk\Pipelines\Runner\Runner;
 
 /**
  * Class StepContainer
@@ -31,22 +32,22 @@ class StepContainer
     private $step;
 
     /**
-     * @var Exec
+     * @var Runner
      */
-    private $exec;
+    private $runner;
 
     /**
      * StepContainer constructor.
      *
      * @param string $name
      * @param Step $step
-     * @param Exec $exec
+     * @param Runner $runner
      */
-    public function __construct($name, Step $step, Exec $exec)
+    public function __construct($name, Step $step, Runner $runner)
     {
         $this->name = $name;
         $this->step = $step;
-        $this->exec = $exec;
+        $this->runner = $runner;
     }
 
     /**
@@ -79,18 +80,20 @@ class StepContainer
     }
 
     /**
-     * @param bool $keep a container on true, kill on false (if it exists)
+     * @param null|bool $keep a container on true, kill on false (if it exists)
      *
      * @return null|string
      */
-    public function keepOrKill($keep)
+    public function keepOrKill($keep = null)
     {
+        $keep = null === $keep ? $this->runner->getFlags()->reuseContainer() : $keep;
+
         $name = $this->name;
         if (null === $name) {
             throw new \BadMethodCallException('Container has no name yet');
         }
 
-        $processManager = Docker::create($this->exec)->getProcessManager();
+        $processManager = Docker::create($this->runner->getExec())->getProcessManager();
 
         if (false === $keep) {
             $processManager->zapContainersByName($name);
@@ -111,7 +114,7 @@ class StepContainer
     {
         $id = $this->getDisplayId();
 
-        Containers::execKillAndRemove($this->exec, $id, $kill, $remove);
+        Containers::execKillAndRemove($this->runner->getExec(), $id, $kill, $remove);
     }
 
     /**
@@ -121,9 +124,33 @@ class StepContainer
      */
     public function run(array $args)
     {
-        $execRun = Containers::execRun($this->exec, $args);
+        $execRun = Containers::execRun($this->runner->getExec(), $args);
         $this->id = array_pop($execRun);
 
         return $execRun;
+    }
+
+    /**
+     * @param int $status
+     *
+     * @return void
+     */
+    public function shutdown($status)
+    {
+        $id = $this->getDisplayId();
+
+        $message = sprintf(
+            'keeping container id %s',
+            (string)substr($id, 0, 12)
+        );
+
+        Containers::execShutdownContainer(
+            $this->runner->getExec(),
+            $this->runner->getStreams(),
+            $id,
+            $status,
+            $this->runner->getFlags(),
+            $message
+        );
     }
 }

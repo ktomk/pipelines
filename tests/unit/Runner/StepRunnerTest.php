@@ -49,7 +49,7 @@ class StepRunnerTest extends RunnerTestCase
     }
 
     /**
-     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer
      */
     public function testRunning()
     {
@@ -130,7 +130,7 @@ class StepRunnerTest extends RunnerTestCase
     }
 
     /**
-     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer
      */
     public function testKeepContainerOnErrorWithNonExistentContainer()
     {
@@ -145,7 +145,7 @@ class StepRunnerTest extends RunnerTestCase
     }
 
     /**
-     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer
      */
     public function testKeepContainerOnErrorWithExistingContainer()
     {
@@ -183,7 +183,7 @@ class StepRunnerTest extends RunnerTestCase
     }
 
     /**
-     * @covers \Ktomk\Pipelines\Runner\StepContainer
+     * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer
      */
     public function testKeepExistingContainer()
     {

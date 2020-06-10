@@ -11,6 +11,7 @@ use Ktomk\Pipelines\File\Definitions\Service;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\Runner\Containers\NameBuilder;
+use Ktomk\Pipelines\Runner\Containers\StepContainer;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
@@ -27,14 +28,9 @@ use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 class Containers
 {
     /**
-     * @var Step
+     * @var Runner
      */
-    private $step;
-
-    /**
-     * @var Exec
-     */
-    private $exec;
+    private $runner;
 
     /**
      * kill and remove static implementation
@@ -182,25 +178,25 @@ class Containers
     /**
      * StepContainers constructor.
      *
-     * @param Step $step
-     * @param Exec $exec
+     * @param Runner $runner
      */
-    public function __construct(Step $step, Exec $exec)
+    public function __construct(Runner $runner)
     {
-        $this->step = $step;
-        $this->exec = $exec;
+        $this->runner = $runner;
     }
 
     /**
-     * @param string $projectName
-     * @param string $prefix
+     * @param Step $step
      *
      * @return StepContainer
      */
-    public function createStepContainer($prefix, $projectName)
+    public function createStepContainer(Step $step)
     {
-        $name = NameBuilder::stepContainerNameByStep($this->step, $prefix, $projectName);
+        $prefix = $this->runner->getPrefix();
+        $projectName = $this->runner->getProject();
 
-        return new StepContainer($name, $this->step, $this->exec);
+        $name = NameBuilder::stepContainerNameByStep($step, $prefix, $projectName);
+
+        return new StepContainer($name, $step, $this->runner);
     }
 }

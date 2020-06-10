@@ -2,16 +2,18 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines\Runner;
+namespace Ktomk\Pipelines\Runner\Containers;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
+use Ktomk\Pipelines\Runner\Containers;
+use Ktomk\Pipelines\Runner\RunnerTestCase;
 
 /**
  * Class StepContainerTest
  *
  * @package Ktomk\Pipelines\Runner
- * @covers \Ktomk\Pipelines\Runner\StepContainer
+ * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer
  */
 class StepContainerTest extends RunnerTestCase
 {
@@ -19,22 +21,32 @@ class StepContainerTest extends RunnerTestCase
     {
         $step = $this->getStepMock();
 
-        $container = new StepContainer('test-step-container', $step, new Exec());
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn(new Exec());
+
+        $container = new StepContainer('test-step-container', $step, $runner);
         $this->assertNotNull($container);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepContainer', $container);
+        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepContainer', $container);
     }
 
     public function testGetName()
     {
         $expected = 'pipelines-1.no-name.null.test-project';
-        $container = new StepContainer($expected, $this->getStepMock(), new ExecTester($this));
+
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn(new ExecTester($this));
+
+        $container = new StepContainer($expected, $this->getStepMock(), $runner);
         $actual = $container->getName();
         $this->assertSame($expected, $actual);
     }
 
     public function testKeepOrKillThrowsException()
     {
-        $container = new StepContainer(null, $this->getStepMock(), new ExecTester($this));
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn(new ExecTester($this));
+
+        $container = new StepContainer(null, $this->getStepMock(), $runner);
 
         $this->expectException('BadMethodCallException');
         $this->expectExceptionMessage('Container has no name yet');
@@ -44,8 +56,11 @@ class StepContainerTest extends RunnerTestCase
     public function testKeepOrKill()
     {
         $exec = new ExecTester($this);
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn($exec);
+
         $name = 'pipelines-1.no-name.null.test-project';
-        $container = new StepContainer($name, $this->getStepMock(), $exec);
+        $container = new StepContainer($name, $this->getStepMock(), $runner);
 
         $exec->expect('capture', 'docker');
         $this->assertNull($container->keepOrKill(false));
@@ -59,7 +74,10 @@ class StepContainerTest extends RunnerTestCase
     public function testKillAndRemoveThrowsNot()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer('test-step-container', $this->getStepMock(), $exec);
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn($exec);
+
+        $container = new StepContainer('test-step-container', $this->getStepMock(), $runner);
 
         $container->killAndRemove(false, false);
         $this->addToAssertionCount(1);
@@ -72,8 +90,11 @@ class StepContainerTest extends RunnerTestCase
     public function testKillAndRemove()
     {
         $exec = new ExecTester($this);
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn($exec);
+
         $name = 'pipelines-1.no-name.null.test-project';
-        $container = new StepContainer($name, $this->getStepMock(), $exec);
+        $container = new StepContainer($name, $this->getStepMock(), $runner);
 
         $exec->expect('capture', 'docker', '1234567', 'fake container id');
         $container->keepOrKill(true);
@@ -86,7 +107,10 @@ class StepContainerTest extends RunnerTestCase
     public function testRun()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer('test-step-container', $this->getStepMock(), $exec);
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn($exec);
+
+        $container = new StepContainer('test-step-container', $this->getStepMock(), $runner);
         $this->assertNull($container->getId(), 'precondition');
 
         $exec->expect('capture', 'docker', '1234567', 'run');
@@ -100,7 +124,9 @@ class StepContainerTest extends RunnerTestCase
     public function testRunDryRun()
     {
         $exec = new ExecTester($this);
-        $container = new StepContainer('test-step-container', $this->getStepMock(), $exec);
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runner->method('getExec')->willReturn($exec);
+        $container = new StepContainer('test-step-container', $this->getStepMock(), $runner);
         $this->assertNull($container->getId(), 'precondition');
 
         $exec->expect('capture', 'docker', '', 'run');
