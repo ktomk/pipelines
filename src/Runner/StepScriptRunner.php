@@ -47,7 +47,7 @@ class StepScriptRunner
      */
     public function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
     {
-        $buffer = "# this /bin/sh script is generated from a pipeline step.\n";
+        $buffer = "# this /bin/sh script is generated from a pipeline script\n";
         $buffer .= "set -e\n";
         $buffer .= $this->generateScript($step->getScript());
 
@@ -62,7 +62,7 @@ class StepScriptRunner
 
         $streams->out("After script:\n");
 
-        $buffer = "# pipelines generated after-script.\n";
+        $buffer = "#  this /bin/sh script is generated from a pipeline after-script\n";
         $buffer .= "set -e\n";
         $buffer .= sprintf("BITBUCKET_EXIT_CODE=%d\n", $status);
         $buffer .= "export BITBUCKET_EXIT_CODE\n";
