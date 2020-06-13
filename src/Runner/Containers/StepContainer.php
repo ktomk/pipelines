@@ -37,6 +37,11 @@ class StepContainer
     private $runner;
 
     /**
+     * @var StepServiceContainers
+     */
+    private $serviceContainers;
+
+    /**
      * StepContainer constructor.
      *
      * @param string $name
@@ -77,6 +82,15 @@ class StepContainer
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @return StepServiceContainers
+     */
+    public function getServiceContainers()
+    {
+        return $this->serviceContainers
+            = $this->serviceContainers ?: new StepServiceContainers($this->step, $this->runner);
     }
 
     /**
@@ -152,5 +166,7 @@ class StepContainer
             $this->runner->getFlags(),
             $message
         );
+
+        $this->getServiceContainers()->shutdown($status);
     }
 }

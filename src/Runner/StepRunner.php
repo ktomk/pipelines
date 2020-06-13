@@ -11,7 +11,6 @@ use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
-use Ktomk\Pipelines\Runner\Containers\NameBuilder;
 use Ktomk\Pipelines\Runner\Containers\StepContainer;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
@@ -97,8 +96,6 @@ class StepRunner
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
         $container->shutdown($status);
-
-        $this->shutdownServices($step, $status);
 
         return $status;
     }
@@ -272,7 +269,7 @@ class StepRunner
             return $mountWorkingDirectory;
         }
 
-        $network = $this->obtainServicesNetwork($step);
+        $network = $container->getServiceContainers()->obtainNetwork();
 
         # process docker login if image demands so, but continue on failure
         $image = $step->getImage();
@@ -417,62 +414,5 @@ class StepRunner
         }
 
         return Docker::create($this->runner->getExec())->hostConfigBind($pipName, $mountPoint);
-    }
-
-    /**
-     * @param Step $step
-     *
-     * @return array docker run options for network (needed if there are services)
-     *
-     * @see StepRunner::runNewContainer()
-     */
-    private function obtainServicesNetwork(Step $step)
-    {
-        $services = (array)$step->getServices()->getDefinitions();
-
-        $network = array();
-
-        foreach ($services as $name => $service) {
-            list(, $network) = Containers::execRunServiceContainer(
-                $this->runner->getExec(),
-                $service,
-                $this->runner->getEnv()->getResolver(),
-                $this->runner->getRunOpts()->getPrefix(),
-                $this->runner->getProject()
-            );
-        }
-
-        return $network;
-    }
-
-    /**
-     * @param Step $step
-     * @param int $status
-     *
-     * @return void
-     *
-     * @see StepRunner::obtainServicesNetwork
-     * @see StepRunner::shutdownStepContainer
-     */
-    private function shutdownServices(Step $step, $status)
-    {
-        $services = (array)$step->getServices()->getDefinitions();
-
-        foreach ($services as $name => $service) {
-            $name = NameBuilder::serviceContainerName(
-                $this->runner->getRunOpts()->getPrefix(),
-                $service->getName(),
-                $this->runner->getProject()
-            );
-
-            Containers::execShutdownContainer(
-                $this->runner->getExec(),
-                $this->runner->getStreams(),
-                "/${name}",
-                $status,
-                $this->runner->getFlags(),
-                sprintf('keeping service container %s', $name)
-            );
-        }
     }
 }
