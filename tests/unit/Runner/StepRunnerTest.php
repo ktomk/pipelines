@@ -228,7 +228,7 @@ class StepRunnerTest extends RunnerTestCase
         $this->setTestProject(new Project('/app')); # fake test-directory as if being inside a container FIXME(tk): hard encoded /app
         $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), array('PIPELINES_PARENT_CONTAINER_NAME' => 'foo'));
 
-        $this->expectOutputString("pipelines: fatal: can not detect /app mount point. preventing new container.\n");
+        $this->expectOutputString("pipelines: fatal: can not detect /app mount point\npipelines: setting up the container failed\n");
         $status = $runner->runStep($step);
         $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
@@ -260,7 +260,7 @@ class StepRunnerTest extends RunnerTestCase
         );
         $runner = $this->createTestStepRunner($exec, null, array(null, 'php://output'), $inherit);
 
-        $this->expectOutputString("pipelines: fatal: can not detect /app mount point. preventing new container.\n");
+        $this->expectOutputString("pipelines: fatal: can not detect /app mount point\npipelines: setting up the container failed\n");
         $status = $runner->runStep($step);
         $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }

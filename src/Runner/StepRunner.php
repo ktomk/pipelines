@@ -78,8 +78,14 @@ class StepRunner
         $deployCopy = $this->runner->getFlags()->deployCopy();
 
         if (null === $id) {
-            list($id, $status) = $this->runNewContainer($container, $dir, $deployCopy, $step);
+            list($id, $status, $out, $err) = $this->runNewContainer($container, $dir, $deployCopy, $step);
             if (null === $id) {
+                $streams->out("    container-id...: *failure*\n\n");
+                $streams->err("pipelines: setting up the container failed\n");
+                empty($err) || $streams->err("${err}\n");
+                empty($out) || $streams->out("${out}\n");
+                $streams->out(sprintf("exit status: %d\n", $status));
+
                 return $status;
             }
         }
@@ -88,8 +94,12 @@ class StepRunner
 
         # TODO: different deployments, mount (default), mount-ro, copy
         if (null !== $result = $this->deployCopy($deployCopy, $id, $dir)) {
+            $streams->err('pipelines: deploy copy failure\n');
+
             return $result;
         }
+
+        $deployCopy && $streams('');
 
         $status = StepScriptRunner::createRunStepScript($this->runner, $container->getName(), $step);
 
@@ -227,8 +237,6 @@ class StepRunner
         $status = $exec->pass("${cd} && echo 'app' | ${tar} | ${dockerCp}", array());
         LibFs::unlink($tmpDir . '/app');
         if (0 !== $status) {
-            $streams->err('pipelines: deploy copy failure\n');
-
             return $status;
         }
 
@@ -237,12 +245,8 @@ class StepRunner
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/app'));
         $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
         if (0 !== $status) {
-            $streams->err('pipelines: deploy copy failure\n');
-
             return $status;
         }
-
-        $streams('');
 
         return null;
     }
@@ -253,12 +257,11 @@ class StepRunner
      * @param bool $copy
      * @param Step $step
      *
-     * @return array array(string|null $id, int $status)
+     * @return array array(string|null $id, int $status, string $out, string $err)
      */
     private function runNewContainer(StepContainer $container, $dir, $copy, Step $step)
     {
         $env = $this->runner->getEnv();
-        $streams = $this->runner->getStreams();
 
         $mountDockerSock = $this->obtainDockerSocketMount();
 
@@ -266,7 +269,7 @@ class StepRunner
 
         $mountWorkingDirectory = $this->obtainWorkingDirMount($copy, $dir, $mountDockerSock);
         if ($mountWorkingDirectory && is_int($mountWorkingDirectory[1])) {
-            return $mountWorkingDirectory;
+            return $mountWorkingDirectory + array(2 => '', 3 => '');
         }
 
         $network = $container->getServiceContainers()->obtainNetwork();
@@ -287,18 +290,9 @@ class StepRunner
                 '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName(),
             )
         );
-        if (0 !== $status) {
-            $streams->out("    container-id...: *failure*\n\n");
-            $streams->err("pipelines: setting up the container failed\n");
-            $streams->err("${err}\n");
-            $streams->out("${out}\n");
-            $streams->out(sprintf("exit status: %d\n", $status));
+        $id = $status ? null : $container->getDisplayId();
 
-            return array(null, $status);
-        }
-        $id = $container->getDisplayId();
-
-        return array($id, $status);
+        return array($id, $status, $out, $err);
     }
 
     /**
@@ -387,7 +381,7 @@ class StepRunner
         if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
             $deviceDir = $this->runner->getEnv()->getValue('PIPELINES_PROJECT_PATH');
             if ($deviceDir === $dir || null === $deviceDir) {
-                $this->runner->getStreams()->err("pipelines: fatal: can not detect ${dir} mount point. preventing new container.\n");
+                $this->runner->getStreams()->err("pipelines: fatal: can not detect ${dir} mount point\n");
 
                 return array(null, 1);
             }
