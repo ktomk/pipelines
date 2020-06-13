@@ -184,7 +184,7 @@ class FileShower extends FileShowerAbstract
         foreach ($steps as $step) {
             /** @var Step $step */
             $serviceNames = $step->getServices()->getServiceNames();
-            if (!$serviceNames) {
+            if (empty($serviceNames)) {
                 continue;
             }
 

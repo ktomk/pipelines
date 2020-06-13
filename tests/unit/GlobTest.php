@@ -4,9 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\Glob;
-use Ktomk\Pipelines\TestCase;
-
 /**
  * @covers \Ktomk\Pipelines\Glob
  */

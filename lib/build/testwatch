@@ -13,7 +13,12 @@ unit() {
   local capture
   local result
 
-  capture="$(php -dphar.readonly=0 -f vendor/bin/phpunit -- --color=always --stop-on-error --stop-on-failure)"
+  capture="$(
+    (
+      php -dphar.readonly=0 -f vendor/bin/phpunit -- --color=always --coverage-clover build/log/clover.xml --stop-on-error --stop-on-failure;
+      test $? -eq 0 && php -f lib/build/coverage-checker.php -- build/log/clover.xml;
+    )
+  )"
   result=$?
 
   local testwatch

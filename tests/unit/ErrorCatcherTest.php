@@ -4,8 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\TestCase;
-
 /**
  * @covers \Ktomk\Pipelines\ErrorCatcher
  */

@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines;
 
-use Ktomk\Pipelines\TestCase;
 use Ktomk\Pipelines\Yaml\LibYaml;
 use Ktomk\Pipelines\Yaml\YamlTester;
 

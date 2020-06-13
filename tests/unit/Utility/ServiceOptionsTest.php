@@ -8,7 +8,6 @@ use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\File;
-use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\RunOpts;
 use Ktomk\Pipelines\TestCase;

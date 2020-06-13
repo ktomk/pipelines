@@ -4,9 +4,6 @@
 
 namespace Ktomk\Pipelines\Utility;
 
-use phpDocumentor\Reflection\Types\AbstractList;
-use phpDocumentor\Reflection\Types\Parent_;
-
 /**
  * application options store (for unit tests)
  */

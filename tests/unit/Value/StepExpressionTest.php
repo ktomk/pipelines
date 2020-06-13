@@ -4,7 +4,6 @@
 
 namespace Ktomk\Pipelines\Value;
 
-use Ktomk\Pipelines\File\Pipeline\StepsTest;
 use Ktomk\Pipelines\TestCase;
 
 /**

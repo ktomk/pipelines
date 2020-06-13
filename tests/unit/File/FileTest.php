@@ -6,8 +6,6 @@ namespace Ktomk\Pipelines\File;
 
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\TestCase;
-use ReflectionException;
-use ReflectionObject;
 
 /**
  * @covers \Ktomk\Pipelines\File\File

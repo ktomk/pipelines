@@ -6,8 +6,6 @@ namespace Ktomk\Pipelines\Runner\Docker\Binary;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
-use Ktomk\Pipelines\DestructibleString;
-use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\TestCase;
 
