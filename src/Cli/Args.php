@@ -111,6 +111,38 @@ class Args extends ArgsArgs
     }
 
     /**
+     * get option w/ optional argument
+     *
+     * optional by equal sign (--option=argument)
+     *
+     * @param string|string[] $option
+     * @param null|bool|string $default [optional] argument
+     *
+     * @return null|bool|string null when not found, default when found with no argument or the argument
+     */
+    public function getOptionOptionalArgument($option, $default = null)
+    {
+        $result = null;
+
+        $options = new OptionIterator($this);
+        $options->seekOption($option);
+        if (!$options->currentMatchesOption($option)) {
+            return $result;
+        }
+
+        $buffer = $options->current();
+        $equalPos = strpos($buffer, '=');
+        if (false === $equalPos) {
+            $result = $default;
+        } else {
+            $result = (string)substr($buffer, $equalPos + 1);
+        }
+        unset($this->arguments[$options->key()]);
+
+        return $result;
+    }
+
+    /**
      * Get the argument of an option.
      *
      * NOTE: returns only the first option value if multiple options would match

@@ -92,7 +92,7 @@ class OptionIterator extends IteratorIterator
 
         $current = parent::current();
 
-        return  !('--' === $current);
+        return !('--' === $current);
     }
 
     /**
@@ -102,6 +102,37 @@ class OptionIterator extends IteratorIterator
     {
         parent::rewind();
         $this->forwardToOption();
+    }
+
+    /* seeks */
+
+    /**
+     * seek option
+     *
+     * seek single option (technically only long options are supported)
+     * which allows --long-option[=argument] optional arguments.
+     *
+     * @param string|string[] $option
+     */
+    public function seekOption($option)
+    {
+        for (
+            $this->forwardToOption();
+            $this->valid() && !$this->currentMatchesOption($option);
+            $this->forwardToOption()
+        ) {
+            parent::next();
+        }
+    }
+
+    /**
+     * @param string|string[] $option
+     *
+     * @return bool
+     */
+    public function currentMatchesOption($option)
+    {
+        return $this->valid() ? OptionMatcher::create($option)->match($this->current()) : false;
     }
 
     /**

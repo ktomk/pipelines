@@ -133,7 +133,25 @@ class OptionIteratorTest extends TestCase
         }
     }
 
-    private function iter(array $array = array('--foo', 'bar', '-f', 'b', '--', 'parameter'))
+    public function testGetEqualArgument()
+    {
+        $iterator = $this->iter();
+
+        $iterator->seekOption('foo');
+        $this->assertSame(0, $iterator->key());
+        $this->assertSame('--foo', $iterator->current());
+
+        $iterator->rewind();
+        $iterator->seekOption(array('foo-bar', 'foo'));
+        $this->assertSame(0, $iterator->key());
+        $this->assertSame('--foo', $iterator->current());
+
+        $iterator->seekOption('user');
+        $this->assertSame(4, $iterator->key());
+        $this->assertSame('--user=1000:1000', $iterator->current());
+    }
+
+    private function iter(array $array = array('--foo', 'bar', '-f', 'b', '--user=1000:1000', '--', 'parameter'))
     {
         $argv = array_merge(
             array('utility'),

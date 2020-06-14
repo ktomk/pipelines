@@ -94,7 +94,7 @@ class ArgsTest extends TestCase
     /**
      * @throws ArgsException
      */
-    public function testOptionArgument()
+    public function testGetOptionArgument()
     {
         $args = new Args(array('--prefix', 'value'));
         $actual = $args->getOptionArgument('prefix');
@@ -104,7 +104,7 @@ class ArgsTest extends TestCase
     /**
      * @throws ArgsException
      */
-    public function testOptionalOptionArgument()
+    public function testGetOptionArgumentOptionalOption()
     {
         $args = new Args(array('--prefix', 'value'));
         $actual = $args->getOptionArgument('volume', 100);
@@ -113,6 +113,15 @@ class ArgsTest extends TestCase
         $args = new Args(array('--prefix', 'value', '--', 'operand'));
         $actual = $args->getOptionArgument('volume', 100);
         $this->assertSame(100, $actual);
+    }
+
+    public function testGetOptionOptionalArgument()
+    {
+        $args = new Args(array('--foo', '--bar=', '--baz=foo'));
+        $this->assertNull($args->getOptionOptionalArgument('faux', true));
+        $this->assertTrue($args->getOptionOptionalArgument('foo', true));
+        $this->assertSame('', $args->getOptionOptionalArgument('bar', true));
+        $this->assertSame('foo', $args->getOptionOptionalArgument('baz', true));
     }
 
     /**
