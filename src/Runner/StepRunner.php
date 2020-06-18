@@ -287,6 +287,7 @@ class StepRunner
                 $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
                 $mountDockerSock,
                 $mountDockerClient,
+                $container->obtainUserOptions(),
                 '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName(),
             )
         );

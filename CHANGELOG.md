@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- `--user[=<uid>:<gid>]` option to run pipeline/step container as current
+  or specific user (and group) (#6)
 ### Changed
 - Improved container names, service containers names start with
   `pipelines.<service>` instead of `pipelines-<service>`.

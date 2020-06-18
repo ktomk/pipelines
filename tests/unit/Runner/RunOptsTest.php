@@ -85,4 +85,16 @@ class RunOptsTest extends TestCase
         $opts->setNoManual(true);
         self::assertTrue($opts->isNoManual());
     }
+
+    /**
+     * @depends testCreation
+     *
+     * @param RunOpts $opts
+     */
+    public function testUser(RunOpts $opts)
+    {
+        self::assertNull($opts->getUser());
+        $opts->setUser('foo');
+        self::assertSame('foo', $opts->getUser());
+    }
 }

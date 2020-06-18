@@ -25,10 +25,16 @@ class RunnerOptions
      * @var Args
      */
     private $args;
+
     /**
      * @var Streams
      */
     private $streams;
+
+    /**
+     * @var Exec
+     */
+    private $exec;
 
     /**
      * @param Args $args
@@ -75,11 +81,13 @@ class RunnerOptions
      *
      * @param Args $args
      * @param Streams $streams
+     * @param Exec $exec
      */
-    public function __construct(Args $args, Streams $streams)
+    public function __construct(Args $args, Streams $streams, Exec $exec = null)
     {
         $this->args = $args;
         $this->streams = $streams;
+        $this->exec = $exec;
     }
 
     /**
@@ -114,6 +122,7 @@ class RunnerOptions
      */
     public function parse(Args $args, RunOpts $runOpts)
     {
+        // FIXME(tk): \Ktomk\Pipelines\Value\Prefix::verify
         $runOpts->setPrefix($this->parsePrefix($args));
 
         $runOpts->setBinaryPackage($this->parseDockerClient($args));
@@ -123,6 +132,37 @@ class RunnerOptions
         $runOpts->setSteps($args->getOptionArgument(array('step', 'steps')));
 
         $runOpts->setNoManual($args->hasOption('no-manual'));
+
+        $runOpts->setUser($this->parseUser($args));
+    }
+
+    /**
+     * @param Args $args
+     *
+     * @throws ArgsException
+     *
+     * @return null|string
+     */
+    private function parseUser(Args $args)
+    {
+        $result = $args->getOptionOptionalArgument('user', true);
+        if (true !== $result) {
+            return $result;
+        }
+
+        $exec = $this->exec ?: new Exec();
+        $status = $exec->capture('printf "%d:%d" "$(id -u)" "$(id -g)"', array(), $out, $err);
+        if (0 !== $status || '' !== $err) {
+            throw new ArgsException(
+                sprintf(
+                    '--user internal error to resolve id -u / id -g: %d%s',
+                    $status,
+                    $err ? " : ${err}" : ''
+                )
+            );
+        }
+
+        return $out;
     }
 
     /**

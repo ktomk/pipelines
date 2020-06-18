@@ -8,6 +8,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Runner\Containers;
 use Ktomk\Pipelines\Runner\RunnerTestCase;
+use Ktomk\Pipelines\Runner\RunOpts;
 
 /**
  * Class StepContainerTest
@@ -164,6 +165,34 @@ class StepContainerTest extends RunnerTestCase
         self::assertStringContainsString(' --rm ', $messages[0]);
         self::assertStringNotContainsString(' --detached ', $messages[0]);
         self::assertStringNotContainsString(' -d ', $messages[0]);
+    }
+
+    /**
+     * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer::obtainUserOptions
+     */
+    public function testObtainUserOptions()
+    {
+        $step = $this->getStepMock();
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runOpts = new RunOpts();
+        $runner->method('getRunOpts')->willReturn($runOpts);
+
+        $container = new StepContainer('name', $step, $runner);
+
+        $expected = array();
+        $this->assertSame($expected, $container->obtainUserOptions(), 'no user option');
+
+        $runOpts->setUser('1000:1000');
+
+        $expected = array (
+            0 => '--user',
+            1 => '1000:1000',
+            2 => '-v',
+            3 => '/etc/passwd:/etc/passwd:ro',
+            4 => '-v',
+            5 => '/etc/group:/etc/group:ro',
+        );
+        $this->assertSame($expected, $container->obtainUserOptions(), 'user option');
     }
 
     /**

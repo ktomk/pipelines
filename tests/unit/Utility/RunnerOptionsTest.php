@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ArgsException;
+use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\TestCase;
 
@@ -82,5 +83,32 @@ class RunnerOptionsTest extends TestCase
             1
         );
         RunnerOptions::bind($args, $streams)->run();
+    }
+
+    /**
+     * @throws ArgsException
+     * @throws StatusException
+     */
+    public function testUserOptionSet()
+    {
+        $args = Args::create(array('cmd', '--user', '--user')); # two tests
+
+        $streams = new Streams(null, 'php://output', 'php://output');
+
+        $exec = new ExecTester($this);
+        $runnerOptions = new RunnerOptions($args, $streams, $exec);
+
+        $exec->expect('capture', '~^printf ~', 0);
+
+        $runOpts = $runnerOptions->run();
+        self::assertIsString($runOpts->getUser());
+
+        $exec->expect('capture', '~^printf ~', 1);
+
+        $this->expectException('Ktomk\Pipelines\Cli\ArgsException');
+        $this->expectExceptionMessage('--user internal error to resolve id -u / id -g: 1');
+
+        $runOpts = $runnerOptions->run();
+        $runOpts->getUser();
     }
 }

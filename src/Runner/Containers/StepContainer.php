@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Runner\Containers;
 
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\Runner\Containers;
 use Ktomk\Pipelines\Runner\Runner;
 
@@ -168,5 +169,34 @@ class StepContainer
         );
 
         $this->getServiceContainers()->shutdown($status);
+    }
+
+    /** docker run args mapping methods */
+
+    /**
+     * @param null|string $user
+     *
+     * @return array
+     */
+    public function obtainUserOptions()
+    {
+        $user = $this->runner->getRunOpts()->getUser();
+
+        $userOpts = array();
+
+        if (null === $user) {
+            return $userOpts;
+        }
+
+        $userOpts = array('--user', $user);
+
+        if (LibFs::isReadableFile('/etc/passwd') && LibFs::isReadableFile('/etc/group')) {
+            $userOpts[] = '-v';
+            $userOpts[] = '/etc/passwd:/etc/passwd:ro';
+            $userOpts[] = '-v';
+            $userOpts[] = '/etc/group:/etc/group:ro';
+        }
+
+        return $userOpts;
     }
 }

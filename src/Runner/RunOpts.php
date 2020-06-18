@@ -38,6 +38,11 @@ class RunOpts
     private $noManual = false;
 
     /**
+     * @var null|string --user $(id -u):$(id -g)
+     */
+    private $user;
+
+    /**
      * Static factory method
      *
      * @param string $prefix [optional]
@@ -61,12 +66,14 @@ class RunOpts
      * @param string $prefix
      * @param null|Options $options
      * @param string $binaryPackage package name or path to binary (string)
+     * @param null|string $user user option, non-null (string) if set
      */
-    public function __construct($prefix = null, Options $options = null, $binaryPackage = null)
+    public function __construct($prefix = null, Options $options = null, $binaryPackage = null, $user = null)
     {
         $this->prefix = null === $prefix ? $prefix : Prefix::verify($prefix);
         $this->options = $options;
         $this->binaryPackage = $binaryPackage;
+        $this->user = $user;
     }
 
     /**
@@ -157,5 +164,21 @@ class RunOpts
     public function setNoManual($noManual)
     {
         $this->noManual = (bool)$noManual;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param null|string $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 }

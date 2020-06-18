@@ -105,8 +105,10 @@ print_vars "$vars"
 
 >&2 echo "debug: this is on stderr"
 
-echo "directory listing of /app:"
+echo "directory listing of $(pwd):"
 ls | while read -r file; do
        printf "%s " "${file}"
      done
 echo
+
+echo "user/group/s info: $(id -u) ($(id -nu)) / $(id -g) ($(id -gn)) / $(id -G) ($(id -nG))"

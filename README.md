@@ -139,6 +139,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [(-e | --env) <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--docker-client <package>]
+                 [--user[=<name|uid>[:<group|gid>]]]
                  [--deploy mount | copy ] [--pipeline <id>]
                  [(--step | --steps) <steps>] [--no-manual]
                  [--trigger <ref>]
@@ -157,6 +158,7 @@ Generic options
     --dry-run             do not execute commands, e.g. invoke docker or
                           run containers, with --verbose show the commands
                           that would have run w/o --dry-run
+    -c <name>=<value>     pass a configuration parameter to the command
 
 Pipeline runner options
     --basename <basename> set basename for pipelines file, defaults to
@@ -194,6 +196,11 @@ Pipeline runner options
     --no-run              do not run the pipeline
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
+
+Container runner options
+    --user[=<name|uid>[:<group|gid>]]
+                          run pipeline step container as current or given
+                          user/group; overrides default container user
 
 Service runner options
     --service <service>   run <service> attached to the current shell and
@@ -729,14 +736,14 @@ to use the development version for `pipelines`.
 - [x] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
 - [x] Run pipeline services
-- [ ] Option to not mount docker.sock
-- [ ] Run pipelines as current user (`--deploy mount` should
-      not enforce the container default user \[often "root"]
-      for project file operation), however the Docker utility
+- [x] Run pipelines as current user with `--user` (`--deploy mount`
+      should not enforce the container default user \[often "root"]
+      for project file operation any longer), however the Docker utility
       still requires you (the current user) to be root like, so
       technically there is little win (see [Rootless
       Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md) for what works
-      better in this regard already)
+      better in this regard)
+- [ ] Option to not mount docker.sock
 - [ ] More accessible offline preparation (e.g.
       `--docker-pull-images`, `--go-offline`)
 - [ ] Copy local composer cache into container for better

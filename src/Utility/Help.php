@@ -52,6 +52,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [(-e | --env) <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--docker-client <package>]
+                 [--user[=<name|uid>[:<group|gid>]]]
                  [--deploy mount | copy ] [--pipeline <id>]
                  [(--step | --steps) <steps>] [--no-manual]
                  [--trigger <ref>]
@@ -121,6 +122,11 @@ Pipeline runner options
     --no-run              do not run the pipeline
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
+
+Container runner options
+    --user[=<name|uid>[:<group|gid>]]
+                          run pipeline step container as current or given
+                          user/group; overrides default container user
 
 Service runner options
     --service <service>   run <service> attached to the current shell and
