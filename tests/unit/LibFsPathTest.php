@@ -101,6 +101,8 @@ class LibFsPathTest extends TestCase
             array('./', ''),
             array('..', '..'),
             array('../', '..'),
+            array('/./..', '/..'),
+            array('/../..', '/../..'),
             array('make/it/', 'make/it'),
             array('/foo/bar/../baz', '/foo/baz'),
             array(
@@ -121,5 +123,48 @@ class LibFsPathTest extends TestCase
     public function testNormalizeSegments($path, $expected)
     {
         $this->assertSame($expected, LibFsPath::normalizeSegments($path));
+    }
+
+    public function testContainsRelativeSegment()
+    {
+        self::assertTrue(LibFsPath::containsRelativeSegment('/foo/../bar/baz'));
+        self::assertTrue(LibFsPath::containsRelativeSegment('./foo'));
+        self::assertFalse(LibFsPath::containsRelativeSegment('')); # flaw
+        self::assertFalse(LibFsPath::containsRelativeSegment('/foo'));
+    }
+
+    /**
+     *
+     */
+    public function testIsPortable()
+    {
+        self::assertTrue(LibFsPath::isPortable('aaa'));
+        self::assertTrue(LibFsPath::isPortable('/aaa'));
+        self::assertTrue(LibFsPath::isPortable('../aaa'));
+    }
+
+    public function provideGateAblePortableExpectations()
+    {
+        return array(
+            array(null, 'a'),
+            array('/a', '/a'),
+            array('/a/a', '/a/a'),
+            array(null, '/-a/a'),
+            array(null, '/../aa/..'),
+        );
+    }
+
+    /**
+     * @dataProvider provideGateAblePortableExpectations
+     *
+     * @param mixed $expected
+     * @param mixed $path
+     */
+    public function testGatePortableAbsolute($expected, $path)
+    {
+        if (null === $expected) {
+            $this->expectException('InvalidArgumentException');
+        }
+        $this->assertSame($expected, LibFsPath::gateAbsolutePortable($path));
     }
 }

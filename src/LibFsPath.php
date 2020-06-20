@@ -112,6 +112,18 @@ class LibFsPath
     }
 
     /**
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function containsRelativeSegment($path)
+    {
+        $segments = array_flip(explode('/', $path));
+
+        return isset($segments['.']) || isset($segments['..']);
+    }
+
+    /**
      * Normalize a path as/if common in PHP
      *
      * E.g. w/ phar:// in front which means w/ stream wrappers in
@@ -137,5 +149,38 @@ class LibFsPath
         $normalized = self::normalizeSegments($buffer);
 
         return $scheme . $normalized;
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return bool
+     */
+    public static function isPortable($path)
+    {
+        return 1 === Preg::match('(^(?>/?(?!-)[A-Za-z0-9._-]+)+$)', $path);
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return string
+     */
+    public static function gateAbsolutePortable($path)
+    {
+        if (!self::isAbsolute($path)) {
+            throw new \InvalidArgumentException(sprintf('not an absolute path: "%s"', $path));
+        }
+
+        $normalized = self::normalizeSegments($path);
+        if (self::containsRelativeSegment($normalized)) {
+            throw new \InvalidArgumentException(sprintf('not a fully qualified path: "%s"', $path));
+        }
+
+        if (!self::isPortable($path)) {
+            throw new \InvalidArgumentException(sprintf('not a portable path: "%s"', $path));
+        }
+
+        return $normalized;
     }
 }
