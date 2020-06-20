@@ -19,6 +19,7 @@ class LibFsTest extends TestCase
             arraY('-', false),
             arraY('a', true),
             arraY('a-', true),
+            arraY('-a', false),
             arraY('rm -rf', false),
             arraY('rm-rf', true),
             arraY('-rf', false),

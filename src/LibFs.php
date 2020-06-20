@@ -77,14 +77,7 @@ class LibFs
     public static function isPortableFilename($filename)
     {
         # A-Z, a-z, 0-9, <period>, <underscore>, and <hyphen>)
-        $result = preg_match('(^(?!-)[A-Za-z0-9._-]+$)', $filename);
-        if (false === $result) {
-            // @codeCoverageIgnoreStart
-            throw new UnexpectedValueException('preg_match pattern failed');
-            // @codeCoverageIgnoreEnd
-        }
-
-        return 1 === $result;
+        return 1 === Preg::match('(^(?!-)[A-Za-z0-9._-]+$)', $filename);
     }
 
     /**
