@@ -288,6 +288,7 @@ class StepRunner
                 $mountDockerSock,
                 $mountDockerClient,
                 $container->obtainUserOptions(),
+                $container->obtainSshOptions(),
                 '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName(),
             )
         );

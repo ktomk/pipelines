@@ -43,6 +43,11 @@ class RunOpts
     private $user;
 
     /**
+     * @var null|true --ssh-auth
+     */
+    private $ssh;
+
+    /**
      * Static factory method
      *
      * @param string $prefix [optional]
@@ -67,13 +72,15 @@ class RunOpts
      * @param null|Options $options
      * @param string $binaryPackage package name or path to binary (string)
      * @param null|string $user user option, non-null (string) if set
+     * @param null|true $ssh
      */
-    public function __construct($prefix = null, Options $options = null, $binaryPackage = null, $user = null)
+    public function __construct($prefix = null, Options $options = null, $binaryPackage = null, $user = null, $ssh = null)
     {
         $this->prefix = null === $prefix ? $prefix : Prefix::verify($prefix);
         $this->options = $options;
         $this->binaryPackage = $binaryPackage;
         $this->user = $user;
+        $this->ssh = $ssh;
     }
 
     /**
@@ -180,5 +187,21 @@ class RunOpts
     public function setUser($user)
     {
         $this->user = $user;
+    }
+
+    /**
+     * @return null|true
+     */
+    public function getSsh()
+    {
+        return $this->ssh ? true : null;
+    }
+
+    /**
+     * @param null|true $ssh
+     */
+    public function setSsh($ssh)
+    {
+        $this->ssh = $ssh ? true : null;
     }
 }

@@ -51,7 +51,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--[no-|error-]keep] [--no-run]
                  [(-e | --env) <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
-                 [--docker-client <package>]
+                 [--docker-client <package>] [--ssh]
                  [--user[=<name|uid>[:<group|gid>]]]
                  [--deploy mount | copy ] [--pipeline <id>]
                  [(--step | --steps) <steps>] [--no-manual]
@@ -124,6 +124,10 @@ Pipeline runner options
                           names, default is 'pipelines'
 
 Container runner options
+    --ssh                 ssh agent forwarding: if $SSH_AUTH_SOCK is set and
+                          accessible, mount SSH authentication socket read
+                          only and set SSH_AUTH_SOCK in the pipeline step
+                          container to the mount point.
     --user[=<name|uid>[:<group|gid>]]
                           run pipeline step container as current or given
                           user/group; overrides default container user

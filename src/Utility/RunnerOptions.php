@@ -134,6 +134,8 @@ class RunnerOptions
         $runOpts->setNoManual($args->hasOption('no-manual'));
 
         $runOpts->setUser($this->parseUser($args));
+
+        $runOpts->setSsh($args->hasOption('ssh') ?: null);
     }
 
     /**

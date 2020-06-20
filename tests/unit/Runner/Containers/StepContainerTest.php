@@ -6,7 +6,9 @@ namespace Ktomk\Pipelines\Runner\Containers;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
+use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Containers;
+use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\RunnerTestCase;
 use Ktomk\Pipelines\Runner\RunOpts;
 
@@ -193,6 +195,34 @@ class StepContainerTest extends RunnerTestCase
             5 => '/etc/group:/etc/group:ro',
         );
         $this->assertSame($expected, $container->obtainUserOptions(), 'user option');
+    }
+
+    public function testSshOption()
+    {
+        $step = $this->getStepMock();
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runOpts = new RunOpts('foo');
+        $env = new Env();
+        $runner->method('getEnv')->willReturn($env);
+        $runner->method('getRunOpts')->willReturn($runOpts);
+
+        $container = new StepContainer('name', $step, $runner);
+
+        $actual = $container->obtainSshOptions();
+        $this->assertSame(array(), $actual, 'no ssh option');
+
+        $runOpts->setSsh(true);
+        list($handle, $file) = LibTmp::tmpFile();
+        $env->initDefaultVars(array('SSH_AUTH_SOCK' => $file));
+        $actual = $container->obtainSshOptions();
+        $expected = array (
+            0 => '-v',
+            1 => $file . ':/var/run/ssh-auth.sock:ro',
+            2 => '-e',
+            3 => 'SSH_AUTH_SOCK=/var/run/ssh-auth.sock',
+        );
+        $this->assertSame($expected, $actual, 'ssh option');
+        unset($handle);
     }
 
     /**

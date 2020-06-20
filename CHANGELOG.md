@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- `--ssh` option to mount `$SSH_AUTH_SOCK` into the pipeline/step container,
+  SSH agent forwarding (#6)
 - `--user[=<uid>:<gid>]` option to run pipeline/step container as current
   or specific user (and group) (#6)
 ### Changed

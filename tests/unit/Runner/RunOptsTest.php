@@ -97,4 +97,16 @@ class RunOptsTest extends TestCase
         $opts->setUser('foo');
         self::assertSame('foo', $opts->getUser());
     }
+
+    /**
+     * @depends testCreation
+     *
+     * @param RunOpts $opts
+     */
+    public function testSsh(RunOpts $opts)
+    {
+        self::assertNull($opts->getSsh());
+        $opts->setSsh(true);
+        self::assertTrue($opts->getSsh());
+    }
 }

@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner\Containers;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\Runner\Containers;
 use Ktomk\Pipelines\Runner\Runner;
 
@@ -198,5 +199,30 @@ class StepContainer
         }
 
         return $userOpts;
+    }
+
+    public function obtainSshOptions()
+    {
+        $ssh = $this->runner->getRunOpts()->getSsh();
+        $env = $this->runner->getEnv();
+
+        $sshOpts = array();
+        if (
+            null === $ssh
+            || (null === $sshAuthSock = $env->getInheritValue('SSH_AUTH_SOCK'))
+            || '' === trim($sshAuthSock)
+            || !is_writable($sshAuthSock)
+        ) {
+            return $sshOpts;
+        }
+
+        $sshOpts = array(
+            '-v',
+            LibFsPath::gateAbsolutePortable($sshAuthSock) . ':/var/run/ssh-auth.sock:ro',
+            '-e',
+            'SSH_AUTH_SOCK=/var/run/ssh-auth.sock',
+        );
+
+        return $sshOpts;
     }
 }
