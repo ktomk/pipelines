@@ -1,0 +1,85 @@
+<?php
+
+/* this file is part of pipelines */
+
+namespace Ktomk\Pipelines\Utility;
+
+use Ktomk\Pipelines\Cli\Args;
+
+/**
+ * handle configuration related options:
+ *
+ * -c <name>=<value>
+ *
+ * @see Options
+ *
+ * @package Ktomk\Pipelines\Utility\Args
+ */
+class ConfigOptions extends Options implements Runnable
+{
+    /**
+     * @var Args
+     */
+    private $args;
+
+    /**
+     * @var Options
+     */
+    private $options;
+
+    /**
+     * @param Args $args
+     * @param null|Options $options
+     *
+     * @return ConfigOptions
+     */
+    public static function bind(Args $args, Options $options = null)
+    {
+        return new self($args, $options ?: Options::create());
+    }
+
+    /**
+     * @param Args $args
+     */
+    public function __construct(Args $args, Options $options)
+    {
+        $this->args = $args;
+        $this->options = $options;
+
+        parent::__construct(array('internal'));
+    }
+
+    /**
+     * @throws \Ktomk\Pipelines\Cli\ArgsException
+     *
+     * @return Options
+     */
+    public function run()
+    {
+        $this->parse($this->args);
+
+        return $this->options;
+    }
+
+    /**
+     * Parse keep arguments
+     *
+     * @param Args $args
+     *
+     * @throws \Ktomk\Pipelines\Cli\ArgsException
+     *
+     * @return void
+     *
+     */
+    public function parse(Args $args)
+    {
+        $options = $this->options;
+
+        while (null !== $setting = $args->getOptionArgument('c')) {
+            list($name, $value) = explode('=', $setting, 2) + array('undef', null);
+            $default = $options->get($name);
+            $type = null === $default ? 'string' : gettype($default);
+            settype($value, $type) && $options->definition[$name] = array($value);
+        }
+    }
+}

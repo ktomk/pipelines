@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- Add `-c <name>=<value>` option to pass a configuration parameter to the
+  command.
 - Support for `BITBUCKET_STEP_RUN_NUMBER` environment parameter: defaults
   to `1` and set to `1` after first successful step.
 

@@ -40,13 +40,16 @@ class RunOpts
      * Static factory method
      *
      * @param string $prefix [optional]
-     * @param string $binaryPackage package name or path to binary (string)
+     * @param string $binaryPackage [optional] package name or path to binary (string)
+     * @param Options $options [optional]
      *
      * @return RunOpts
      */
-    public static function create($prefix = null, $binaryPackage = null)
+    public static function create($prefix = null, $binaryPackage = null, Options $options = null)
     {
-        return new self($prefix, Options::create(), $binaryPackage);
+        null === $options && $options = Options::create();
+
+        return new self($prefix, $options, $binaryPackage);
     }
 
     /**

@@ -83,6 +83,7 @@ Generic options
     --dry-run             do not execute commands, e.g. invoke docker or
                           run containers, with --verbose show the commands
                           that would have run w/o --dry-run
+    -c <name>=<value>     pass a configuration parameter to the command
 
 Pipeline runner options
     --basename <basename> set basename for pipelines file, defaults to

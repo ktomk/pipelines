@@ -89,7 +89,12 @@ class RunnerOptions
      */
     public function run()
     {
-        $runOpts = RunOpts::create();
+        $runOpts = RunOpts::create(
+            null,
+            null,
+            ConfigOptions::bind($this->args)->run()
+        );
+
         $this->parse($this->args, $runOpts);
 
         return $runOpts;
