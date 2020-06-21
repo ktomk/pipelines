@@ -5,6 +5,11 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Added
+- Support for `BITBUCKET_STEP_RUN_NUMBER` environment parameter: defaults
+  to `1` and set to `1` after first successful step.
+
 ## [0.0.40] - 2020-06-17
 ### Fixed
 - Wording of pipe scripts comments

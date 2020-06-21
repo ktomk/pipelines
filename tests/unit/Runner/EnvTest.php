@@ -43,7 +43,7 @@ class EnvTest extends TestCase
 
         $env->initDefaultVars(array());
         $array = $env->getArgs('-e');
-        $this->assertCount(10, $array);
+        $this->assertCount(12, $array);
     }
 
     public function testDefaultValue()
@@ -258,7 +258,9 @@ class EnvTest extends TestCase
             6 => 'e',
             7 => 'BITBUCKET_REPO_SLUG=local-has-no-slug',
             8 => 'e',
-            9 => 'CI=true',
+            9 => 'BITBUCKET_STEP_RUN_NUMBER=1',
+            10 => 'e',
+            11 => 'CI=true',
         );
         $actual = $env->getArgs('e');
         $this->assertSame($expected, $actual);
@@ -366,5 +368,38 @@ class EnvTest extends TestCase
         $env->collect($args, array('e', 'env', 'env-file'));
         $env->initDefaultVars($env->getVariables() + $inherit);
         $this->assertSame('bar', $env->getValue('BITBUCKET_REPO_SLUG'));
+    }
+
+    public function testResetStepRunNumber()
+    {
+        $inherit = array();
+
+        $env = Env::create($inherit);
+        $this->assertNull($env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $env->initDefaultVars($inherit);
+        $this->assertSame('1', $env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $inherit = array('BITBUCKET_STEP_RUN_NUMBER' => '2');
+
+        $env = Env::create($inherit);
+        $this->assertNull($env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $env->initDefaultVars($inherit);
+        $this->assertSame('2', $env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $env->resetStepRunNumber();
+        $this->assertSame('1', $env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $env->resetStepRunNumber();
+        $this->assertSame('1', $env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $inherit = array();
+
+        $env = Env::create($inherit);
+        $this->assertNull($env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
+
+        $env->resetStepRunNumber();
+        $this->assertSame('1', $env->getValue('BITBUCKET_STEP_RUN_NUMBER'));
     }
 }

@@ -122,6 +122,7 @@ class Env
             'BITBUCKET_COMMIT' => '0000000000000000000000000000000000000000',
             'BITBUCKET_REPO_OWNER' => '' . Lib::r($inherit['USER'], 'nobody'),
             'BITBUCKET_REPO_SLUG' => 'local-has-no-slug',
+            'BITBUCKET_STEP_RUN_NUMBER' => '1',
             'BITBUCKET_TAG' => null,
             'CI' => 'true',
             'PIPELINES_CONTAINER_NAME' => null,
@@ -135,11 +136,7 @@ class Env
             'PIPELINES_ID' => null,
         );
 
-        foreach ($inheritable as $name => $value) {
-            isset($inherit[$name]) ? $inheritable[$name] = $inherit[$name] : null;
-        }
-
-        $var = $invariant + $inheritable;
+        $var = $invariant + array_intersect_key(array_filter($inherit, 'is_string'), $inheritable) + $inheritable;
         ksort($var);
 
         $this->vars = $var;
@@ -254,6 +251,17 @@ class Env
         $this->vars['PIPELINES_IDS'] = implode(' ', $hashes);
 
         return $hasId;
+    }
+
+    /**
+     * $BITBUCKET_STEP_RUN_NUMBER can be inherited from environment and after
+     * the first step did run is being reset to 1
+     *
+     * allows to test it for steps `BITBUCKET_STEP_RUN_NUMBER=2 pipelines --step 1-`
+     */
+    public function resetStepRunNumber()
+    {
+        $this->vars['BITBUCKET_STEP_RUN_NUMBER'] = '1';
     }
 
     /**

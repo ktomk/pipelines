@@ -43,7 +43,7 @@ fashion (façon).
 | `BITBUCKET_REPO_OWNER_UUID`             | -/-; currently unsupported |
 | `BITBUCKET_REPO_SLUG`                   | *all* options; always set to base name of project directory |
 | `BITBUCKET_REPO_UUID`                   | -/-; currently unsupported |
-| `BITBUCKET_STEP_RUN_NUMBER`             | -/-; currently unsupported |
+| `BITBUCKET_STEP_RUN_NUMBER`             | *all* options; defaults to "`1`" and is set to "`1`" _after_ the first run step |
 | `BITBUCKET_STEP_TRIGGERER_UUID`         | -/-; currently unsupported |
 | `BITBUCKET_TAG`                         | `--trigger <ref>` where `<ref>` is `tag:<name>`; Git projects |
 

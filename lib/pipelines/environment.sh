@@ -40,6 +40,10 @@ BITBUCKET_REPO_OWNER	     The name of the account in which the repository \
                            lives.
 BITBUCKET_REPO_SLUG	       The URL-friendly version of a repository name. For \
                            more information, see What is a slug?.
+BITBUCKET_STEP_RUN_NUMBER  By default the number is 1, when a pipeline fails \
+                           it can be re-run only for failed steps, the failed \
+                           step will then have this number increased each \
+                           time.
 BITBUCKET_TAG              The tag of a commit that kicked off the build. This \
                            value is only available on tags.\
                            \

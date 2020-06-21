@@ -168,6 +168,7 @@ class Runner
             if (0 !== $status) {
                 break;
             }
+            $this->env->resetStepRunNumber();
         }
 
         if (!isset($status)) {
