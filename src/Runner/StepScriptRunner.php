@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 
@@ -21,32 +20,54 @@ use Ktomk\Pipelines\Lib;
 class StepScriptRunner
 {
     /**
+     * @var Runner
+     */
+    private $runner;
+
+    /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * Static factory method to create a run step script
      *
-     * @param Step $step
-     * @param Streams $streams
-     * @param Exec $exec
+     * @param Runner $runner
      * @param string $name container name
+     * @param Step $step
      *
      * @return int status of step script, non-zero if a script command failed
      */
-    public static function createRunStepScript(Step $step, Streams $streams, Exec $exec, $name)
+    public static function createRunStepScript(Runner $runner, $name, Step $step)
     {
-        $runner = new self();
+        $self = new self($runner, $name);
 
-        return $runner->runStepScript($step, $streams, $exec, $name);
+        return $self->runStepScript($step);
+    }
+
+    /**
+     * StepScriptRunner constructor.
+     *
+     * @param Runner $runner
+     * @param string $name of container to run script in
+     */
+    public function __construct(Runner $runner, $name)
+    {
+        $this->runner = $runner;
+        $this->name = $name;
     }
 
     /**
      * @param Step $step
-     * @param Streams $streams
-     * @param Exec $exec
-     * @param string $name container name
      *
      * @return int status of step script, non-zero if a script command failed
      */
-    public function runStepScript(Step $step, Streams $streams, Exec $exec, $name)
+    public function runStepScript(Step $step)
     {
+        $streams = $this->runner->getStreams();
+        $exec = $this->runner->getExec();
+        $name = $this->name;
+
         $buffer = "# this /bin/sh script is generated from a pipeline script\n";
         $buffer .= "set -e\n";
         $buffer .= $this->generateScript($step->getScript());

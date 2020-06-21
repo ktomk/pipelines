@@ -5,8 +5,6 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Docker;
-use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
@@ -94,7 +92,7 @@ class StepRunner
             return $result;
         }
 
-        $status = StepScriptRunner::createRunStepScript($step, $streams, $exec, $container->getName());
+        $status = StepScriptRunner::createRunStepScript($this->runner, $container->getName(), $step);
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 
