@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- `script.exit-early` bool configuration parameter to exit early in step
+  scripts on error more strictly. defaults to false.
 - `--ssh` option to mount `$SSH_AUTH_SOCK` into the pipeline/step container,
   SSH agent forwarding (#6)
 - `--user[=<uid>:<gid>]` option to run pipeline/step container as current

@@ -70,7 +70,10 @@ class StepScriptRunner
 
         $buffer = "# this /bin/sh script is generated from a pipeline script\n";
         $buffer .= "set -e\n";
-        $buffer .= $this->generateScript($step->getScript());
+        $buffer .= $this->generateScript(
+            $step->getScript(),
+            (bool)$this->getAfterCommand($this->runner->getRunOpts()->getOption('script.exit-early'))
+        );
 
         $status = $this->execScript($buffer, $exec, $name);
         if (0 !== $status) {
@@ -98,6 +101,16 @@ class StepScriptRunner
     }
 
     /**
+     * @param bool $strict
+     *
+     * @return null|string
+     */
+    private function getAfterCommand($strict)
+    {
+        return $strict ? '( r=$?; if [ $r -ne 0 ]; then exit $r; fi; ) || exit' . "\n" : null;
+    }
+
+    /**
      *
      * @param string $script "\n" terminated script lines
      * @param Exec $exec
@@ -118,10 +131,11 @@ class StepScriptRunner
 
     /**
      * @param array|string[] $script
+     * @param null|mixed $afterCommand
      *
      * @return string
      */
-    private function generateScript(array $script)
+    private function generateScript(array $script, $afterCommand = null)
     {
         $buffer = '';
         foreach ($script as $index => $line) {
@@ -129,6 +143,7 @@ class StepScriptRunner
             $line && $buffer .= 'printf \'\\n\'' . "\n";
             $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
             $buffer .= $command . "\n";
+            null !== $afterCommand && $buffer .= $afterCommand;
         }
 
         return $buffer;

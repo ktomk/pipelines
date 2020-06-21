@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
 
@@ -18,16 +19,16 @@ class StepScriptRunnerTest extends RunnerTestCase
 {
     public function testCreation()
     {
-        $runner = $this->createConfiguredMock('Ktomk\Pipelines\Runner\Runner', array(
-            'getExec' => $this->createMock('Ktomk\Pipelines\Cli\Exec'),
-            'getStreams' => $this->createMock('Ktomk\Pipelines\Cli\Streams'),
-        ));
+        $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
+        $runner = $this->mockRunner($exec);
 
         $scriptRunner = new StepScriptRunner($runner, '*mock-run*');
         $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepScriptRunner', $scriptRunner);
 
         $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
         $step->method('getScript')->willReturn(array());
+
+        $this->expectOutputRegex('~^\Qscript non-zero exit status: 0\E$~'); # null to 0 conversion
         $actual = StepScriptRunner::createRunStepScript($runner, '*mock-run*', $step);
 
         $this->assertNull($actual);
@@ -35,14 +36,7 @@ class StepScriptRunnerTest extends RunnerTestCase
 
     public function testRunStepScript()
     {
-        $exec = new ExecTester($this);
-        $streams = new Streams(null, 'php://output', 'php://output');
-
-        $runner = $this->createConfiguredMock('Ktomk\Pipelines\Runner\Runner', array(
-            'getExec' => $exec,
-            'getStreams' => $streams,
-        ));
-
+        $runner = $this->mockRunner($exec);
         $scriptRunner = new StepScriptRunner($runner, '*test-run*');
 
         $step = $this->createTestStepFromFixture('steps.yml');
@@ -54,14 +48,7 @@ class StepScriptRunnerTest extends RunnerTestCase
 
     public function testRunStepScriptAndAfterScript()
     {
-        $exec = new ExecTester($this);
-        $streams = new Streams(null, 'php://output', 'php://output');
-
-        $runner = $this->createConfiguredMock('Ktomk\Pipelines\Runner\Runner', array(
-            'getExec' => $exec,
-            'getStreams' => $streams,
-        ));
-
+        $runner = $this->mockRunner($exec);
         $scriptRunner = new StepScriptRunner($runner, '*test-run*');
 
         $step = $this->createTestStepFromFixture('after-script.yml');
@@ -80,14 +67,7 @@ after-script non-zero exit status: 1
 
     public function testRunStepScriptWithPipe()
     {
-        $exec = new ExecTester($this);
-        $streams = new Streams(null, 'php://output', 'php://output');
-
-        $runner = $this->createConfiguredMock('Ktomk\Pipelines\Runner\Runner', array(
-            'getExec' => $exec,
-            'getStreams' => $streams,
-        ));
-
+        $runner = $this->mockRunner($exec);
         $scriptRunner = new StepScriptRunner($runner, '*test-run*');
 
         $step = $this->createTestStepFromFixture('pipe.yml', 1, 'branches/develop');
@@ -100,13 +80,7 @@ after-script non-zero exit status: 1
 
     public function testRunStepScriptWithAfterScriptPipe()
     {
-        $exec = new ExecTester($this);
-        $streams = new Streams(null, 'php://output', 'php://output');
-
-        $runner = $this->createConfiguredMock('Ktomk\Pipelines\Runner\Runner', array(
-            'getExec' => $exec,
-            'getStreams' => $streams,
-        ));
+        $runner = $this->mockRunner($exec);
 
         $scriptRunner = new StepScriptRunner($runner, '*test-run*');
 
@@ -119,5 +93,25 @@ after-script non-zero exit status: 1
 
         $actual = $scriptRunner->runStepScript($step);
         $this->assertSame(0, $actual);
+    }
+
+    /**
+     * @param Exec|ExecTester $exec
+     *
+     * @return \PHPUnit\Framework\MockObject\MockObject|Runner
+     */
+    private function mockRunner(Exec &$exec = null)
+    {
+        if (null === $exec) {
+            $exec = new ExecTester($this);
+        }
+
+        $streams = new Streams(null, 'php://output', 'php://output');
+
+        return $this->createConfiguredMock('Ktomk\Pipelines\Runner\Runner', array(
+            'getExec' => $exec,
+            'getStreams' => $streams,
+            'getRunOpts' => RunOpts::create('unittestpipelines'),
+        ));
     }
 }
