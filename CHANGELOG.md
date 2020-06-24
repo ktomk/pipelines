@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.42] - 2020-06-25
 ### Added
 - `script.exit-early` bool configuration parameter to exit early in step
   scripts on error more strictly. defaults to false.
@@ -409,4 +409,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.39]: https://github.com/ktomk/pipelines/releases/tag/0.0.39
 [0.0.40]: https://github.com/ktomk/pipelines/releases/tag/0.0.40
 [0.0.41]: https://github.com/ktomk/pipelines/releases/tag/0.0.41
+[0.0.42]: https://github.com/ktomk/pipelines/releases/tag/0.0.42
 [unreleased]: https://github.com/ktomk/pipelines
