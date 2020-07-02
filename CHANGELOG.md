@@ -5,6 +5,10 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Changed
+- Re-arrange help section for more specific runner options
+
 ## [0.0.42] - 2020-06-25
 ### Added
 - `script.exit-early` bool configuration parameter to exit early in step
@@ -143,7 +147,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
   pipeline can not be manual, and the first step executed with `--steps`
   will never stop even if it has a `trigger: manual`.
 ### Fixed
-- Base unit-test-case missing shim createConfguredMock method
+- Base unit-test-case missing shim createConfiguredMock method
 
 ## [0.0.26] - 2020-03-09
 ### Added
@@ -229,7 +233,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Add `--docker-zap` flag kill and clean all pipeline docker
   containers at once
-- Fallback for readable file check for sytems w/ ACLs where a
+- Fallback for readable file check for systems w/ ACLs where a
   file is not readable by permission but can be read (#1)
 ### Changed
 - Pipeline step specific container names instead of random UUIDs

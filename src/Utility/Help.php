@@ -123,19 +123,17 @@ Pipeline runner options
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
 
-Container runner options
-    --ssh                 ssh agent forwarding: if $SSH_AUTH_SOCK is set and
-                          accessible, mount SSH authentication socket read
-                          only and set SSH_AUTH_SOCK in the pipeline step
-                          container to the mount point.
-    --user[=<name|uid>[:<group|gid>]]
-                          run pipeline step container as current or given
-                          user/group; overrides default container user
-
-Service runner options
-    --service <service>   run <service> attached to the current shell and
-                          waits until the service exits, exit status is
-                          exit status of the docker run service container
+File information options
+    --images              list all images in file, in order of use, w/o
+                          duplicate names and exit
+    --list                list pipeline <id>s in file and exit
+    --show                show information about pipelines in file and
+                          exit
+    --show-pipelines      same as --show but with old --show output
+                          format without services and images / steps are
+                          summarized - one line for each pipeline
+    --show-services       show all defined services in use by pipeline
+                          step and exit
 
 Environment control options
     -e, --env <variable>  pass or set an environment <variable> for the
@@ -160,6 +158,20 @@ Keep options
                           exit status
     --no-keep             do not keep docker containers; default behaviour
 
+Container runner options
+    --ssh                 ssh agent forwarding: if $SSH_AUTH_SOCK is set and
+                          accessible, mount SSH authentication socket read
+                          only and set SSH_AUTH_SOCK in the pipeline step
+                          container to the mount point.
+    --user[=<name|uid>[:<group|gid>]]
+                          run pipeline step container as current or given
+                          user/group; overrides default container user
+
+Service runner options
+    --service <service>   run <service> attached to the current shell and
+                          waits until the service exits, exit status is
+                          exit status of the docker run service container
+
 Docker service options
     --docker-client <package>
                           which docker client binary to use for the
@@ -168,18 +180,6 @@ Docker service options
                           package
     --docker-client-pkgs  list all docker client packages that ship with
                           pipelines and exit
-
-File information options
-    --images              list all images in file, in order of use, w/o
-                          duplicate names and exit
-    --list                list pipeline <id>s in file and exit
-    --show                show information about pipelines in file and
-                          exit
-    --show-pipelines      same as --show but with old --show output
-                          format without services and images / steps are
-                          summarized - one line for each pipeline
-    --show-services       show all defined services in use by pipeline
-                          step and exit
 
 Docker container maintenance options
       usage might leave containers on the system. either by interrupting
