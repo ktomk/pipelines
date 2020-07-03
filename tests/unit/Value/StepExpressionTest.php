@@ -36,7 +36,7 @@ class StepExpressionTest extends TestCase
             array('1,2,3', array('1', '2', '3')),
             array(',,,3', array('3')),
             array(', , , 3', array('3')),
-            array('1 - , 4 - 6 ', array('1-','4-6')),
+            array('1 - , 4 - 6 ', array('1-', '4-6')),
         );
     }
 

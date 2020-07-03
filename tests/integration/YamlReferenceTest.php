@@ -20,7 +20,7 @@ class YamlReferenceTest extends TestCase
         $idAlias = 'branches/feature/*';
         $expected = array(
             $idDefault,
-            $idAlias
+            $idAlias,
         );
         $this->assertSame($expected, $actual, 'alias is loaded');
 

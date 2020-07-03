@@ -27,7 +27,7 @@ class DockerTest extends TestCase
         $exec = new Exec();
         $docker = new Docker($exec);
         $actual = $docker->hasCommand();
-        $this->assertIsBool($actual);
+        self::assertIsBool($actual);
 
         return $actual;
     }
@@ -41,7 +41,7 @@ class DockerTest extends TestCase
         if (null === $version) {
             $this->assertNull($version);
         } else {
-            $this->assertIsString($version);
+            self::assertIsString($version);
         }
     }
 }

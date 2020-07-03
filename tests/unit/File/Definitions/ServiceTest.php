@@ -20,7 +20,7 @@ class ServiceTest extends TestCase
     {
         $name = 'foo';
         $array = array(
-            'image' => 'busybox'
+            'image' => 'busybox',
         );
 
         $service = new Service($name, $array);
@@ -43,7 +43,7 @@ class ServiceTest extends TestCase
     {
         $name = 'foo';
         $array = array(
-            'image' => 'busybox'
+            'image' => 'busybox',
         );
 
         $service = new Service($name, $array);

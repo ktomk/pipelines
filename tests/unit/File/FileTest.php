@@ -105,7 +105,7 @@ class FileTest extends TestCase
         $image = $file->getImage();
         $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
         $imageString = (string)$image;
-        $this->assertIsString($imageString);
+        self::assertIsString($imageString);
         $expectedImage = File::DEFAULT_IMAGE;
         $this->assertSame($expectedImage, $imageString);
     }

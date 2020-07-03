@@ -53,7 +53,7 @@ class ArgsTest extends TestCase
                 return $option;
             }
         );
-        $this->assertSame(array('verbose' => array(0 => true, 1 => 'verbose',)), $actual);
+        $this->assertSame(array('verbose' => array(0 => true, 1 => 'verbose')), $actual);
     }
 
     public function testOptionConsumption()

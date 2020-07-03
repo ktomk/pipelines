@@ -89,7 +89,7 @@ class PipelineTest extends TestCase
     public function testGetPipelineId()
     {
         $file = new File(array('pipelines' => array('default' => array(
-            array('step' => array('script' => array(':')))
+            array('step' => array('script' => array(':'))),
         ))));
         $pipeline = $file->getById('default');
         $actual = $pipeline->getId();
@@ -112,7 +112,7 @@ class PipelineTest extends TestCase
     public function testSetStepsExpression()
     {
         $file = new File(array('pipelines' => array('default' => array(
-            array('step' => array('script' => array(':')))
+            array('step' => array('script' => array(':'))),
         ))));
         $pipeline = $file->getById('default');
 

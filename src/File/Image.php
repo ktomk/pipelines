@@ -103,7 +103,7 @@ class Image
     public function jsonSerialize()
     {
         return array(
-            'name' => (string)$this->getName()
+            'name' => (string)$this->getName(),
         );
     }
 

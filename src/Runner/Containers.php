@@ -152,7 +152,6 @@ class Containers
      * @param int $status
      * @param Flags $flags
      * @param string $message
-     * @param string $id
      *
      * @return void
      *

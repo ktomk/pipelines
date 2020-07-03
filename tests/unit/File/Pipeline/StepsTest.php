@@ -83,7 +83,7 @@ class StepsTest extends TestCase
             $pipeline,
             array(
                 array('step' => array('trigger' => 'automatic', 'script' => array(':'))),
-                array('parallel' => array(array('step' => array('trigger' => 'manual'))))
+                array('parallel' => array(array('step' => array('trigger' => 'manual')))),
             ),
             "Unexpected property 'trigger' in parallel step"
         );
@@ -218,7 +218,7 @@ class StepsTest extends TestCase
         $this->assertNotNull(Steps::fullIter(null));
 
         $steps = $this->createConfiguredMock('Ktomk\Pipelines\File\Pipeline\Steps', array(
-            'getIterator' => $this->createMock('Ktomk\Pipelines\File\Pipeline\StepsIterator')
+            'getIterator' => $this->createMock('Ktomk\Pipelines\File\Pipeline\StepsIterator'),
         ));
 
         $this->assertNotNull(Steps::fullIter($steps));

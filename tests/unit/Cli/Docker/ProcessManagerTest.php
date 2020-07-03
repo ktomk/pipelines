@@ -27,7 +27,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertIsArray($ps->findAllContainerIdsByNamePrefix('pipelines'));
+        self::assertIsArray($ps->findAllContainerIdsByNamePrefix('pipelines'));
     }
 
     /**
@@ -48,7 +48,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertIsArray($ps->findRunningContainerIdsByNamePrefix('pipelines'));
+        self::assertIsArray($ps->findRunningContainerIdsByNamePrefix('pipelines'));
     }
 
     public function testKill()
@@ -57,7 +57,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertIsInt($ps->kill(
+        self::assertIsInt($ps->kill(
             'fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c'
         ));
     }
@@ -68,7 +68,7 @@ class ProcessManagerTest extends TestCase
         $exec->expect('capture', 'docker', 0);
 
         $ps = new ProcessManager($exec);
-        $this->assertIsInt($ps->remove(
+        self::assertIsInt($ps->remove(
             array('fc2ed48d903ddba765dd89a6f82baaed4612c0c23aa2558320aad889dd29d74c')
         ));
     }

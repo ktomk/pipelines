@@ -40,6 +40,7 @@ class ConfigOptions extends Options implements Runnable
 
     /**
      * @param Args $args
+     * @param Options $options
      */
     public function __construct(Args $args, Options $options)
     {

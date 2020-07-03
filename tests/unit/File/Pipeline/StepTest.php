@@ -148,7 +148,7 @@ class StepTest extends TestCase
     public function testGetIndex()
     {
         $index = $this->createStep()->getIndex();
-        $this->assertIsInt($index);
+        self::assertIsInt($index);
         $this->assertGreaterThanOrEqual(0, $index);
     }
 

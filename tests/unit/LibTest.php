@@ -46,7 +46,7 @@ class LibTest extends TestCase
     {
         $actual = Lib::cmd('foo', array('bar', 'baz'));
         $expected = 'foo bar baz';
-        $this->assertIsString($actual);
+        self::assertIsString($actual);
         $this->assertSame($actual, $expected);
     }
 
@@ -95,7 +95,7 @@ class LibTest extends TestCase
 
     public function testMerge()
     {
-        $this->assertSame(array(1,3,4), Lib::merge(1, array(3,4)));
+        $this->assertSame(array(1, 3, 4), Lib::merge(1, array(3, 4)));
     }
 
     public function testMergeEmpty()
@@ -105,7 +105,7 @@ class LibTest extends TestCase
 
     public function testPhpBinary()
     {
-        $this->assertIsString(Lib::phpBinary());
+        self::assertIsString(Lib::phpBinary());
     }
 
     /**

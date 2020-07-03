@@ -57,7 +57,7 @@ class Directories
      *
      * @throws InvalidArgumentException
      *
-     *@see Directories::getBaseDirectory
+     * @see Directories::getBaseDirectory
      */
     public function __construct(array $env, Project $project, $utility = null)
     {

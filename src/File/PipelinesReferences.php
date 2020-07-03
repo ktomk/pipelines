@@ -31,7 +31,7 @@ abstract class PipelinesReferences extends Pipelines
             throw new InvalidArgumentException(sprintf("Invalid id '%s'", $id));
         }
 
-        if (!isset($pipelines->references[$id])) {
+        if (!isset($pipelines->references[$id], $pipelines->file)) {
             return null;
         }
 

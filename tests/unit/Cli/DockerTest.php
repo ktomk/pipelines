@@ -32,7 +32,7 @@ class DockerTest extends TestCase
             $procGood,
             $procGood,
             $procGood,
-            $procGood
+            $procGood,
         );
         $exec->method('capture')->willReturnCallback(
             function ($command, $args, &$out, &$err = null) use ($results) {

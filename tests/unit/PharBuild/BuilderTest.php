@@ -80,7 +80,7 @@ class BuilderTest extends TestCase
         $this->expectOutputString("error reading file: data:no-comma-in-URL\n");
         $builder->errHandle = fopen('php://output', 'wb');
         $callback = $builder->dropFirstLine();
-        $this->assertIsCallable($callback);
+        self::assertIsCallable($callback);
         // violate rfc2397 by intention to provoke read error
         $actual = @call_user_func($callback, 'data:no-comma-in-URL');
         $this->assertNull($actual);
@@ -91,12 +91,12 @@ class BuilderTest extends TestCase
         $this->builder = $builder = Builder::create('fake.phar');
         $this->assertFNE($builder);
         $callback = $builder->replace('abc', '123');
-        $this->assertIsCallable($callback);
+        self::assertIsCallable($callback);
         $result = call_user_func($callback, 'data:,abc');
         $this->assertArrayHasKey(0, $result);
         $this->assertArrayHasKey(1, $result);
         $this->assertSame('str', $result[0]);
-        $this->assertIsString($result[1]);
+        self::assertIsString($result[1]);
         $this->assertSame('123', $result[1]);
     }
 

@@ -72,7 +72,7 @@ class StepScriptRunner
         $buffer .= "set -e\n";
         $buffer .= $this->generateScript(
             $step->getScript(),
-            (bool)$this->getAfterCommand($this->runner->getRunOpts()->getOption('script.exit-early'))
+            $this->getAfterCommand($this->runner->getRunOpts()->getBoolOption('script.exit-early'))
         );
 
         $status = $this->execScript($buffer, $exec, $name);
@@ -101,6 +101,13 @@ class StepScriptRunner
     }
 
     /**
+     * after command
+     *
+     * optional command after each line in a step script to more strictly
+     * check the last step script command exit status.
+     *
+     * for debugging purposes.
+     *
      * @param bool $strict
      *
      * @return null|string
@@ -131,7 +138,7 @@ class StepScriptRunner
 
     /**
      * @param array|string[] $script
-     * @param null|mixed $afterCommand
+     * @param null|string $afterCommand
      *
      * @return string
      */

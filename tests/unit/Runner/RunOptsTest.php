@@ -38,13 +38,19 @@ class RunOptsTest extends TestCase
      *
      * @param RunOpts $opts
      */
-    public function testOptions(RunOpts $opts)
+    public function testGetOptions(RunOpts $opts)
     {
         $this->assertNull($opts->getOption('foo.bar.baz'));
         $this->assertNotNull($opts->getOption('docker.socket.path'));
+
+        $this->assertFalse($opts->getBoolOption('foo.bar.baz'));
+        $this->assertTrue($opts->getBoolOption('docker.socket.path'));
     }
 
-    public function testOptionsWithNull()
+    /**
+     * by default options if n/a return null
+     */
+    public function testGetOptionsWithNull()
     {
         $opts = new RunOpts();
         $this->assertNull($opts->getOption('foo.bar'));

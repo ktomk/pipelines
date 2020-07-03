@@ -23,7 +23,7 @@ class VersionTest extends TestCase
     {
         $version = '@.@.@';
         $actual = Version::resolve($version);
-        $this->assertIsString($actual);
+        self::assertIsString($actual);
     }
 
     public function testResolveSourceVersionBuildVersion()

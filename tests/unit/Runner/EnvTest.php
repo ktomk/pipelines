@@ -73,10 +73,10 @@ class EnvTest extends TestCase
     {
         $env = Env::createEx();
         $args = $env->getArgs('-e');
-        $this->assertIsArray($args);
+        self::assertIsArray($args);
         while ($args) {
             $argument = array_pop($args);
-            $this->assertIsString($argument);
+            self::assertIsString($argument);
             $this->assertGreaterThan(0, strpos($argument, '='), 'must be a variable definition');
             $this->assertGreaterThan(0, count($args));
             $option = array_pop($args);

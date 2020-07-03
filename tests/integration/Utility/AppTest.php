@@ -125,7 +125,7 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $args = array(
             'pipelines-test',
-            '--debug', '--pipeline', 'test/more'
+            '--debug', '--pipeline', 'test/more',
         );
         $status = $app->main($args);
         $this->assertSame(1, $status);
@@ -136,7 +136,7 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, null));
         $args = array(
             'pipelines-test',
-            '--deploy', 'copy', '--dry-run'
+            '--deploy', 'copy', '--dry-run',
         );
         $status = $app->main($args);
         $this->assertSame(0, $status);

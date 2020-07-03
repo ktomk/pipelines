@@ -155,7 +155,7 @@ class DockerOptions
             'docker ps -a',
             array(
                 '--filter',
-                "name=^/${prefix}-"
+                "name=^/${prefix}-",
             )
         );
     }

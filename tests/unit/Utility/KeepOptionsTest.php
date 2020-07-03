@@ -87,6 +87,9 @@ class KeepOptionsTest extends TestCase
     /**
      * @dataProvider provideParseArgs
      *
+     * @param array $argv
+     * @param array $expected
+     *
      * @throws StatusException
      */
     public function testParse(array $argv, array $expected)

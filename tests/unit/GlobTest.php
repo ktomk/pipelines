@@ -73,19 +73,19 @@ class GlobTest extends TestCase
             'escaped comma' => array(array('a,', 'ab'), "a{\\,,b}"),
             'multiple' => array(
                 array('abdh', 'abefh', 'abgh', 'abcdh', 'abcefh', 'abcgh'),
-                'ab{,c}{d,{ef,g}}h'
+                'ab{,c}{d,{ef,g}}h',
             ),
             'src-src/**/*.php-test-1' => array(
                 array('src/*/*.php', 'src/*.php'),
-                'src/{*/,}*.php'
+                'src/{*/,}*.php',
             ),
             'src-src/**/*.php-test-2' => array(
                 array('src/*/*/*.php', 'src/*.php', 'src/*/*.php'),
-                'src/{{*/,}*/,}*.php'
+                'src/{{*/,}*/,}*.php',
             ),
             'src-src/**/*.php-test-2-reverse-bug' => array(
                 array('src/*/*.php', 'src/*.php'),
-                'src/{*/,{*/,}}*.php'
+                'src/{*/,{*/,}}*.php',
             ),
         );
     }

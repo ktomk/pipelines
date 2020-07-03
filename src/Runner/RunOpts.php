@@ -120,6 +120,16 @@ class RunOpts
     }
 
     /**
+     * @param string $name
+     *
+     * @return bool
+     */
+    public function getBoolOption($name)
+    {
+        return (bool)$this->getOption($name);
+    }
+
+    /**
      * @param string $binaryPackage
      *
      * @return void

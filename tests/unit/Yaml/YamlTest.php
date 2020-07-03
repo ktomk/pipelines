@@ -23,7 +23,7 @@ class YamlTest extends TestCase
 
         $struct = Yaml::file($path);
 
-        $this->assertIsArray($struct);
+        self::assertIsArray($struct);
     }
 
     /**

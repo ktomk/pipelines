@@ -15,12 +15,6 @@ namespace PHPSTORM_META {
     );
 
     expectedArguments(
-        \Ktomk\Pipelines\Runner\RunOpts::getOption(),
-        0,
-        argumentsSet('option_names')
-    );
-
-    expectedArguments(
         \Ktomk\Pipelines\Utility\Options::get(),
         0,
         argumentsSet('option_names')
@@ -31,4 +25,11 @@ namespace PHPSTORM_META {
         0,
         argumentsSet('option_names')
     );
+
+    expectedArguments(
+        \Ktomk\Pipelines\Runner\RunOpts::getOption(),
+        0,
+        argumentsSet('option_names')
+    );
+
 }

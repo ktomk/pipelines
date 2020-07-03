@@ -175,8 +175,6 @@ class StepContainer
     /** docker run args mapping methods */
 
     /**
-     * @param null|string $user
-     *
      * @return array
      */
     public function obtainUserOptions()

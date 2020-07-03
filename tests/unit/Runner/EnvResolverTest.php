@@ -32,7 +32,7 @@ class EnvResolverTest extends TestCase
         $args = new Args(array(
             '-env', 'OVERRIDE=red', '-e', 'OVERRIDE=green',
             '--env-file', 'tests/data/env/test.env', '-e', 'UID',
-            '-e', 'MOCHA'
+            '-e', 'MOCHA',
         ));
         $resolver->addArguments($args);
         $this->assertSame('annabelle', $resolver->getValue('USER'));
@@ -150,7 +150,7 @@ class EnvResolverTest extends TestCase
             'g' => 'TOP',
         );
 
-        $this->assertIsCallable($resolver);
+        self::assertIsCallable($resolver);
 
         # string mode
         $actual = array_map($resolver, $input);

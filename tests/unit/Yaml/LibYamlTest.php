@@ -39,7 +39,7 @@ class LibYamlTest extends TestCase
 
         $struct = $this->createParser()->parseFile($path);
 
-        $this->assertIsArray($struct);
+        self::assertIsArray($struct);
     }
 
     /**

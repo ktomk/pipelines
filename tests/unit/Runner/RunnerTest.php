@@ -96,7 +96,7 @@ class RunnerTest extends RunnerTestCase
                 ExecTester::create($this),
                 new Flags(),
                 Env::createEx(),
-                Streams::create()
+                Streams::create(),
             ))
             ->setMethods(array('runStep'))
             ->getMock();
@@ -121,7 +121,7 @@ class RunnerTest extends RunnerTestCase
                 $exec,
                 new Flags(),
                 Env::createEx(),
-                new Streams()
+                new Streams(),
             ))
             ->setMethods(null)
             ->getMock();
@@ -146,7 +146,7 @@ class RunnerTest extends RunnerTestCase
                 $exec,
                 new Flags(),
                 Env::createEx(),
-                new Streams(null, 'php://output', 'php://output')
+                new Streams(null, 'php://output', 'php://output'),
             ))
             ->setMethods(null)
             ->getMock();

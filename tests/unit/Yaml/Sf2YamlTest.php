@@ -47,7 +47,7 @@ class Sf2YamlTest extends TestCase
 
         $struct = $parser->parseFile($path);
 
-        $this->assertIsArray($struct);
+        self::assertIsArray($struct);
     }
 
     /**

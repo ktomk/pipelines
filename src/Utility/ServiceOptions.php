@@ -58,6 +58,10 @@ class ServiceOptions implements Runnable
      * @param Args $args
      * @param Streams $streams
      * @param File $file
+     * @param Exec $exec
+     * @param Env $env
+     * @param RunOpts $runOpts
+     * @param Directories $directories
      *
      * @return ServiceOptions
      */

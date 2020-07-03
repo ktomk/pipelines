@@ -164,7 +164,10 @@ class Timestamps
     }
 
     /**
+     * @param $pos
      * @param int $bytes
+     *
+     * @return mixed
      */
     private function readUint($pos, $bytes)
     {

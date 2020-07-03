@@ -28,7 +28,7 @@ class VcsTest extends TestCase
         $exec->expect('capture', 'git', $expected . "\n");
         $vcs = new Vcs($exec);
         $actual = $vcs->getTopLevelDirectory();
-        $this->assertIsString($actual);
+        self::assertIsString($actual);
         $this->assertSame($expected, $actual);
     }
 }
