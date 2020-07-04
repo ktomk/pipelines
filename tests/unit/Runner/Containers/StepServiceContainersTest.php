@@ -73,9 +73,12 @@ class StepServiceContainersTest extends TestCase
     {
         $file = File::createFromFile($path);
         $step = $file->getDefault()->getSteps()->offsetGet(0);
+        $runOpts = $this->createConfiguredMock('Ktomk\Pipelines\Runner\RunOpts', array(
+            'getPrefix' => 'prefix',
+        ));
 
         $runner = new Runner(
-            $this->createMock('Ktomk\Pipelines\Runner\RunOpts'),
+            $runOpts,
             $this->createMock('Ktomk\Pipelines\Runner\Directories'),
             $exec = new ExecTester($this),
             new Flags(),

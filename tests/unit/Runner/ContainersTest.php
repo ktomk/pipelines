@@ -69,7 +69,7 @@ class ContainersTest extends RunnerTestCase
         $service = new Service('super', array('image' => 'klee/red-bridge'));
         $resolver = function ($a) {return $a;};
 
-        Containers::execRunServiceContainer($exec, $service, $resolver, 'prefix', 'test');
+        Containers::execRunServiceContainer($exec, $service, $resolver, 'prefix', 'test', array());
         $this->addToAssertionCount(1);
     }
 
@@ -79,7 +79,7 @@ class ContainersTest extends RunnerTestCase
         $service = new Service('super', array('image' => 'klee/red-bridge'));
         $resolver = function ($a) {return $a;};
 
-        Containers::execRunServiceContainerAttached($exec, $service, $resolver, 'prefix', 'test');
+        Containers::execRunServiceContainerAttached($exec, $service, $resolver, 'prefix', 'test', array());
         $this->addToAssertionCount(1);
     }
 

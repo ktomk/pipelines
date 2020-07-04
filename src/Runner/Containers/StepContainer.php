@@ -9,6 +9,7 @@ use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\Runner\Containers;
+use Ktomk\Pipelines\Runner\Docker\ArgsBuilder;
 use Ktomk\Pipelines\Runner\Runner;
 
 /**
@@ -173,6 +174,18 @@ class StepContainer
     }
 
     /** docker run args mapping methods */
+
+    /**
+     * @return array
+     */
+    public function obtainLabelOptions()
+    {
+        $labels = new LabelsBuilder();
+
+        $labels->setRole('step');
+
+        return ArgsBuilder::optMap('-l', $labels->toArray());
+    }
 
     /**
      * @return array

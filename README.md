@@ -102,6 +102,9 @@ Or just run for a more shy clean-up:
 to kill and remove all pipeline containers (w/o showing a list)
 first. "zap" is pipelines "make clean" equivalent for `--keep`.
 
+All containers run by `pipelines` are labeled as well to ease
+maintaining them.
+
 Validate your `bitbucket-pipelines.yml` file with `--show` which
 highlights errors found.
 

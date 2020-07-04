@@ -12,6 +12,7 @@ use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\Runner\Containers\NameBuilder;
 use Ktomk\Pipelines\Runner\Containers\StepContainer;
+use Ktomk\Pipelines\Runner\Docker\ArgsBuilder;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
@@ -72,22 +73,27 @@ class Containers
     }
 
     /**
+     * Run service container
+     *
      * @param Exec $exec
      * @param Service $service
      * @param callable $resolver
      * @param string $prefix
      * @param string $project
+     * @param array $labels
      *
      * @return array(int $status, array $network)
      */
-    public static function execRunServiceContainer(Exec $exec, Service $service, $resolver, $prefix, $project)
+    public static function execRunServiceContainer(Exec $exec, Service $service, $resolver, $prefix, $project, array $labels)
     {
         $execRunServiceRunner = self::execRunServiceContainerImpl($exec, $service, $resolver, $prefix, $project);
 
-        return $execRunServiceRunner(false, '--detach');
+        return $execRunServiceRunner(false, Lib::merge('--detach', ArgsBuilder::optMap('-l', $labels)));
     }
 
     /**
+     * Run service container attached
+     *
      * @param Exec $exec
      * @param Service $service
      * @param callable $resolver
@@ -96,11 +102,11 @@ class Containers
      *
      * @return array
      */
-    public static function execRunServiceContainerAttached(Exec $exec, Service $service, $resolver, $prefix, $project)
+    public static function execRunServiceContainerAttached(Exec $exec, Service $service, $resolver, $prefix, $project, array $labels)
     {
         $execRunServiceRunner = self::execRunServiceContainerImpl($exec, $service, $resolver, $prefix, $project);
 
-        return $execRunServiceRunner(true, '--rm');
+        return $execRunServiceRunner(true, Lib::merge('--rm', ArgsBuilder::optMap('-l', $labels)));
     }
 
     /**
@@ -116,11 +122,11 @@ class Containers
     {
         /**
          * @param bool $pass (or capture)
-         * @param string $additionalArg
+         * @param string|string[] $additionalArgs
          *
          * @return array
          */
-        return function ($pass, $additionalArg) use ($exec, $service, $resolver, $prefix, $project) {
+        return function ($pass, $additionalArgs) use ($exec, $service, $resolver, $prefix, $project) {
             $network = array('--network', 'host');
             $image = $service->getImage();
             ImageLogin::loginImage($exec, $resolver, null, $image);
@@ -129,12 +135,16 @@ class Containers
 
             $variables = $resolver($service->getVariables());
 
-            $args = array(
-                $network, '--name',
-                $containerName,
-                $additionalArg,
-                Env::createArgVarDefinitions('-e', $variables),
-                $image->getName(),
+            $args = Lib::merge(
+                array(
+                    $network, '--name',
+                    $containerName,
+                ),
+                $additionalArgs,
+                array(
+                    ArgsBuilder::optMap('-e', $variables, true),
+                    $image->getName(),
+                )
             );
 
             $status = $pass

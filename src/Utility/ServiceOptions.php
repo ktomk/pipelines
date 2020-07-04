@@ -127,12 +127,22 @@ class ServiceOptions implements Runnable
 
         $this->streams->out(sprintf("starting service %s ...\n", $nameOfService));
 
+        $project = $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName();
+
+        $labels = new Containers\LabelsBuilder();
+        $labels
+            ->setPrefix($this->runOpts->getPrefix())
+            ->setProject($project)
+            ->setProjectDirectory($this->directories->getProjectDirectory())
+            ;
+
         list($status) = Containers::execRunServiceContainerAttached(
             $this->exec,
             $service,
             $this->env->getResolver(),
             $this->runOpts->getPrefix(),
-            $this->env->getValue('BITBUCKET_REPO_SLUG') ?: $this->directories->getName()
+            $project,
+            $labels->setRole('service')->toArray()
         );
 
         throw new StatusException('', $status);

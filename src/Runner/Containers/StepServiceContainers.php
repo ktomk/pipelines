@@ -45,13 +45,16 @@ class StepServiceContainers
 
         $network = array();
 
+        $labels = LabelsBuilder::createFromRunner($this->runner);
+
         foreach ($services as $name => $service) {
             list(, $network) = Containers::execRunServiceContainer(
                 $this->runner->getExec(),
                 $service,
                 $this->runner->getEnv()->getResolver(),
                 $this->runner->getRunOpts()->getPrefix(),
-                $this->runner->getProject()
+                $this->runner->getProject(),
+                $labels->setRole('service')->toArray()
             );
         }
 

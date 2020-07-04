@@ -157,7 +157,8 @@ class StepContainerTest extends RunnerTestCase
                 return $a;
             },
             'prefix',
-            'project'
+            'project',
+            array()
         );
         $expected = array(0, array('--network', 'host'));
         $this->assertSame($expected, $actual);
@@ -169,9 +170,6 @@ class StepContainerTest extends RunnerTestCase
         self::assertStringNotContainsString(' -d ', $messages[0]);
     }
 
-    /**
-     * @covers \Ktomk\Pipelines\Runner\Containers\StepContainer::obtainUserOptions
-     */
     public function testObtainUserOptions()
     {
         $step = $this->getStepMock();
@@ -186,7 +184,7 @@ class StepContainerTest extends RunnerTestCase
 
         $runOpts->setUser('1000:1000');
 
-        $expected = array (
+        $expected = array(
             0 => '--user',
             1 => '1000:1000',
             2 => '-v',
@@ -195,6 +193,31 @@ class StepContainerTest extends RunnerTestCase
             5 => '/etc/group:/etc/group:ro',
         );
         $this->assertSame($expected, $container->obtainUserOptions(), 'user option');
+    }
+
+    public function testObtainLabelOptions()
+    {
+        $step = $this->getStepMock();
+        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
+        $runOpts = new RunOpts();
+        $runner->method('getRunOpts')->willReturn($runOpts);
+        $directories = $this->createMock('Ktomk\Pipelines\Runner\Directories');
+        $runner->method('getDirectories')->willReturn($directories);
+
+        $container = new StepContainer('name', $step, $runner);
+
+        $expected = array(
+            0 => '-l',
+            1 => 'pipelines.prefix',
+            2 => '-l',
+            3 => 'pipelines.role=step',
+            4 => '-l',
+            5 => 'pipelines.project.name',
+            6 => '-l',
+            7 => 'pipelines.project.path',
+        );
+
+        $this->assertSame($expected, $container->obtainLabelOptions(), 'label options');
     }
 
     public function testSshOption()
@@ -215,7 +238,7 @@ class StepContainerTest extends RunnerTestCase
         list($handle, $file) = LibTmp::tmpFile();
         $env->initDefaultVars(array('SSH_AUTH_SOCK' => $file));
         $actual = $container->obtainSshOptions();
-        $expected = array (
+        $expected = array(
             0 => '-v',
             1 => $file . ':/var/run/ssh-auth.sock:ro',
             2 => '-e',
