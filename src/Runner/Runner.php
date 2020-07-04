@@ -209,6 +209,16 @@ class Runner
     }
 
     /**
+     * Project directory
+     *
+     * @return string
+     */
+    public function getProjectDirectory()
+    {
+        return $this->getDirectories()->getProjectDirectory();
+    }
+
+    /**
      * Get Prefix
      *
      * The prefix is used when creating containers for the container name and

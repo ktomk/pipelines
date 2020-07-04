@@ -159,4 +159,18 @@ class RunnerTest extends RunnerTestCase
         $this->expectOutputRegex('~^pipelines: step #4 is manual. use `--steps 4-` to continue or `--no-manual` to override$~m');
         $this->assertSame(0, $runner->run($pipeline));
     }
+
+    public function testGetProjectDirectory()
+    {
+        $runner = $this->createPartialMock('Ktomk\Pipelines\Runner\Runner', array(
+            'getDirectories',
+        ));
+        $runner->method('getDirectories')->willReturn(
+            $this->createConfiguredMock('Ktomk\Pipelines\Runner\Directories', array(
+                'getProjectDirectory' => '/host/path/to/project',
+            ))
+        );
+
+        $this->assertSame('/host/path/to/project', $runner->getProjectDirectory());
+    }
 }
