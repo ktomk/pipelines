@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [unreleased]
 ### Changed
 - Re-arrange help section for more specific runner options
+### Fixed
+- Regression identifying pipelines service container (`--docker-list` etc.)
+  since 0.0.42
 
 ## [0.0.42] - 2020-06-25
 ### Added

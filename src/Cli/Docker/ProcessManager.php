@@ -151,7 +151,7 @@ class ProcessManager
             'docker',
             array(
                 'ps', '-q' . ($all ? 'a' : ''), '--no-trunc', '--filter',
-                "name=^/${prefix}",
+                "name=^/${prefix}[-.]",
             ),
             $result
         );

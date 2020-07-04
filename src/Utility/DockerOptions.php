@@ -156,7 +156,7 @@ class DockerOptions
             'docker ps -a',
             array(
                 '--filter',
-                "name=^/${prefix}-",
+                "name=^/${prefix}[-.]",
             )
         );
     }
@@ -176,7 +176,7 @@ class DockerOptions
 
         $count++;
 
-        return $this->ps->findAllContainerIdsByNamePrefix($prefix . '-');
+        return $this->ps->findAllContainerIdsByNamePrefix($prefix);
     }
 
     /**
@@ -195,7 +195,7 @@ class DockerOptions
 
         if (!$status && $hasKill) {
             $count++;
-            $running = $this->ps->findRunningContainerIdsByNamePrefix($prefix . '-');
+            $running = $this->ps->findRunningContainerIdsByNamePrefix($prefix);
             if ($running) {
                 $status = $this->ps->kill($running);
             } else {
