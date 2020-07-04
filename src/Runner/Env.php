@@ -8,6 +8,7 @@ use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\Collector;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFsPath;
+use Ktomk\Pipelines\Runner\Docker\ArgsBuilder;
 
 /**
  * Pipeline environment collaborator
@@ -64,42 +65,6 @@ class Env
         $env->initDefaultVars((array)$inherit);
 
         return $env;
-    }
-
-    /**
-     * @param array $vars
-     *
-     * @return array w/ a string variable definition (name=value) per value
-     */
-    public static function createVarDefinitions(array $vars)
-    {
-        $array = array();
-
-        foreach ($vars as $name => $value) {
-            if (isset($value)) {
-                $array[] = sprintf('%s=%s', $name, $value);
-            }
-        }
-
-        return $array;
-    }
-
-    /**
-     * @param string $option "-e" typically for Docker binary
-     * @param array $vars variables as hashmap
-     *
-     * @return array of options (from $option) and values, ['-e', 'val1', '-e', 'val2', ...]
-     */
-    public static function createArgVarDefinitions($option, array $vars)
-    {
-        $args = array();
-
-        foreach (self::createVarDefinitions($vars) as $definition) {
-            $args[] = $option;
-            $args[] = $definition;
-        }
-
-        return $args;
     }
 
     /**
@@ -292,7 +257,7 @@ class Env
     {
         return Lib::merge(
             $this->collected,
-            self::createArgVarDefinitions($option, $this->vars)
+            ArgsBuilder::optMap($option, $this->vars, true)
         );
     }
 

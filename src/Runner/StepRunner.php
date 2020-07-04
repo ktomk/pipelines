@@ -12,6 +12,7 @@ use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Containers\StepContainer;
+use Ktomk\Pipelines\Runner\Docker\ArgsBuilder;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
@@ -283,7 +284,7 @@ class StepRunner
                 $network,
                 '-i', '--name', $container->getName(),
                 $env->getArgs('-e'),
-                $env::createArgVarDefinitions('-e', $step->getEnv()),
+                ArgsBuilder::optMap('-e', $step->getEnv(), true),
                 $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
                 $mountDockerSock,
                 $mountDockerClient,
