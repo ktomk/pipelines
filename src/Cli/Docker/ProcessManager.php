@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Cli\Docker;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\Value\Prefix;
 
 /**
  * Process manager for docker container
@@ -131,7 +132,7 @@ class ProcessManager
     }
 
     /**
-     * @param string $prefix
+     * @param string $prefix beginning of container name
      * @param bool $all
      *
      * @return null|array
@@ -140,7 +141,7 @@ class ProcessManager
     {
         $ids = null;
 
-        if (0 === preg_match('(^[a-zA-Z0-9][a-zA-Z0-9_.-]+$)', $prefix)) {
+        if (0 === preg_match('(^[a-z}{3,}[a-zA-Z0-9_.-]+$)', $prefix)) {
             throw new \InvalidArgumentException(
                 sprintf('Invalid container name prefix "%s"', $prefix)
             );

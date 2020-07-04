@@ -9,6 +9,7 @@ use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Docker\ProcessManager;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\Value\Prefix;
 use RuntimeException;
 
 /**
@@ -74,7 +75,7 @@ class DockerOptions
     {
         $this->args = $args;
         $this->exec = $exec;
-        $this->prefix = $prefix;
+        $this->prefix = Prefix::verify($prefix);
         $this->streams = $streams;
         $this->ps = $ps;
     }

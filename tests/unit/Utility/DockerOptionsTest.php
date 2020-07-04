@@ -24,7 +24,7 @@ class DockerOptionsTest extends TestCase
         $options = DockerOptions::bind(
             Args::create(array('cmd')),
             new Exec(),
-            '',
+            'prefix',
             new Streams()
         );
         $this->assertInstanceOf(
@@ -43,7 +43,7 @@ class DockerOptionsTest extends TestCase
         $options = new DockerOptions(
             Args::create(array('cmd')),
             $exec,
-            '',
+            'prefix',
             new Streams(),
             new ProcessManager($exec)
         );
@@ -66,7 +66,7 @@ class DockerOptionsTest extends TestCase
         $options = new DockerOptions(
             Args::create(array('cmd', '--docker-list', '--docker-kill', '--docker-clean')),
             $exec,
-            'abc-',
+            'prefix',
             new Streams(),
             new ProcessManager($exec)
         );
@@ -96,7 +96,7 @@ class DockerOptionsTest extends TestCase
         $options = new DockerOptions(
             Args::create(array('cmd', '--docker-list', '--docker-kill', '--docker-clean')),
             $exec,
-            'abc-',
+            'prefix',
             new Streams(),
             new ProcessManager($exec)
         );
