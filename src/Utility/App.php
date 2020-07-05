@@ -353,7 +353,7 @@ class App implements Runnable
             $this->verbose('info: --file overrides non-default --basename');
         }
 
-        /** @var string $path full path as bitbucket-pipelines.yml to process */
+        // full path to bitbucket-pipelines.yml to process
         $path = LibFsPath::isAbsolute($file)
             ? $file
             : $workingDir . '/' . $file;

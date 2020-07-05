@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Utility\Show;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\File\Definitions\Service;
+use Ktomk\Pipelines\File\Definitions\Services as Services;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline\Step;
@@ -101,6 +102,9 @@ class FileShower extends FileShowerAbstract
         return $errors ? 1 : 0;
     }
 
+    /**
+     * @return int
+     */
     public function showServices()
     {
         $file = $this->file;
@@ -139,7 +143,6 @@ class FileShower extends FileShowerAbstract
     private function tableFileSteps($steps, $id, array $table, $errors)
     {
         foreach ($steps as $index => $step) {
-            /** @var Step $step */
             $name = $step->getName();
             null !== $name && $name = sprintf('"%s"', $name);
             null === $name && $name = 'no-name';
@@ -179,10 +182,18 @@ class FileShower extends FileShowerAbstract
         return array($table, $errors);
     }
 
-    private function tableStepsServices(Steps $steps, $serviceDefinitions, $id, array $table, $errors)
+    /**
+     * @param Steps $steps
+     * @param Services $serviceDefinitions
+     * @param string $id
+     * @param array $table
+     * @param int $errors
+     *
+     * @return array
+     */
+    private function tableStepsServices(Steps $steps, Services $serviceDefinitions, $id, array $table, $errors)
     {
         foreach ($steps as $step) {
-            /** @var Step $step */
             $serviceNames = $step->getServices()->getServiceNames();
             if (empty($serviceNames)) {
                 continue;

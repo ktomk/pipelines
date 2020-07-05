@@ -212,6 +212,9 @@ class StepContainer
         return $userOpts;
     }
 
+    /**
+     * @return string[]
+     */
     public function obtainSshOptions()
     {
         $ssh = $this->runner->getRunOpts()->getSsh();

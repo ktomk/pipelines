@@ -39,6 +39,11 @@ class DestructibleString
         );
     }
 
+    /**
+     * @param string $string
+     *
+     * @return self
+     */
     public static function rm($string)
     {
         return new self(

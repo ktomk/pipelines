@@ -48,6 +48,9 @@ class Project
         return $this->getName();
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return basename($this->path);
@@ -73,6 +76,8 @@ class Project
      * @param string $prefix
      *
      * @throws InvalidArgumentException
+     *
+     * @return void
      */
     public function setPrefix($prefix)
     {

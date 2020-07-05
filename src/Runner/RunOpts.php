@@ -193,6 +193,8 @@ class RunOpts
 
     /**
      * @param null|string $user
+     *
+     * @return void
      */
     public function setUser($user)
     {
@@ -209,6 +211,8 @@ class RunOpts
 
     /**
      * @param null|true $ssh
+     *
+     * @return void
      */
     public function setSsh($ssh)
     {

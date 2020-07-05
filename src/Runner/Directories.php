@@ -137,7 +137,6 @@ class Directories
 
         $this->validateBaseDirectory($type);
 
-        $buffer = null;
         if (isset($this->env[$type])) {
             $buffer = $this->env[$type];
         } else {

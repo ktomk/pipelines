@@ -71,7 +71,7 @@ class OptionMatcher
     }
 
     /**
-     * @param $option
+     * @param string|string[] $option
      *
      * @return OptionMatcher
      */

@@ -63,11 +63,16 @@ class OptionIterator extends IteratorIterator
     /* Iterator */
 
     /**
-     * @return null|string
+     * @return string
      */
     public function current()
     {
-        return $this->iterator->current();
+        $current = $this->iterator->current();
+        if (null === $current) {
+            throw new \BadMethodCallException('Invalid iterator state for current()');
+        }
+
+        return $current;
     }
 
     /**
@@ -113,6 +118,8 @@ class OptionIterator extends IteratorIterator
      * which allows --long-option[=argument] optional arguments.
      *
      * @param string|string[] $option
+     *
+     * @return void
      */
     public function seekOption($option)
     {

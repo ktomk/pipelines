@@ -98,6 +98,9 @@ class Pipeline implements FileNode
         return $this->steps->jsonSerialize();
     }
 
+    /**
+     * @return void
+     */
     private function parsePipeline(array $array)
     {
         $this->steps = new Steps(

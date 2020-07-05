@@ -60,7 +60,8 @@ class Yaml
         );
 
         foreach ($classes as $class) {
-            if (is_subclass_of($class, 'Ktomk\Pipelines\Yaml\ParserInterface')
+            if (class_exists($class)
+                && is_subclass_of($class, 'Ktomk\Pipelines\Yaml\ParserInterface')
                 && $class::isAvailable()) {
                 return new $class();
             }

@@ -36,8 +36,10 @@ class OptionIteratorTest extends TestCase
         $iterator = new OptionIterator($args);
         $this->assertSame('--foo', $iterator->current());
         unset($args->arguments[0]);
-        $this->assertNull($iterator->current());
         $this->assertFalse($iterator->valid());
+        $this->expectException('BadMethodCallException');
+        $this->expectExceptionMessage('Invalid iterator state for current()');
+        $iterator->current();
     }
 
     public function testNext()
@@ -58,7 +60,7 @@ class OptionIteratorTest extends TestCase
     {
         $iterator = $this->iter(array(''));
         $iterator->next();
-        $this->assertNull($iterator->current());
+        $this->assertFalse($iterator->valid());
     }
 
     public function testKey()

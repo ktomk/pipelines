@@ -571,6 +571,10 @@ X Sierra and High Sierra with PHP and Docker installed.
 - The libyaml based parser does not support dots (".") in anchor
   names.
 
+- NUL bytes ("`\0`") are not supported verbatim in step-scripts due
+  to defense-in-depth protection on `passthru` in the PHP-runtime to
+  prevent *Null character* injection.
+
 ### Installation
 
 [Phar (Download)](#download-the-phar-php-archive-file) |
@@ -750,6 +754,8 @@ to use the development version for `pipelines`.
       technically there is little win (see [Rootless
       Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md) for what works
       better in this regard)
+- [ ] Count `BITBUCKET_BUILD_NUMBER` on a per project basis (*build-number*
+      feature)
 - [ ] Option to not mount docker.sock
 - [ ] More accessible offline preparation (e.g.
       `--docker-pull-images`, `--go-offline`)

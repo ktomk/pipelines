@@ -68,17 +68,14 @@ class KeepOptions
      * @throws \InvalidArgumentException
      * @throws StatusException
      *
-     * @return array|int
+     * @return array
      */
     public function parse(Args $args)
     {
-        /** @var bool $errorKeep keep on errors */
         $errorKeep = $args->hasOption('error-keep');
 
-        /** @var bool $keep containers */
         $keep = $args->hasOption('keep');
 
-        /** @var bool $noKeep do not keep on errors */
         $noKeep = $args->hasOption('no-keep');
 
         if ($keep && $noKeep) {

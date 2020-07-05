@@ -136,15 +136,12 @@ class Containers
             $variables = $resolver($service->getVariables());
 
             $args = Lib::merge(
-                array(
-                    $network, '--name',
-                    $containerName,
-                ),
+                $network,
+                '--name',
+                $containerName,
                 $additionalArgs,
-                array(
-                    ArgsBuilder::optMap('-e', $variables, true),
-                    $image->getName(),
-                )
+                ArgsBuilder::optMap('-e', $variables, true),
+                $image->getName()
             );
 
             $status = $pass

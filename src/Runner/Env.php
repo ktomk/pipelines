@@ -223,6 +223,8 @@ class Env
      * the first step did run is being reset to 1
      *
      * allows to test it for steps `BITBUCKET_STEP_RUN_NUMBER=2 pipelines --step 1-`
+     *
+     * @return void
      */
     public function resetStepRunNumber()
     {
