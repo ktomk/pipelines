@@ -36,3 +36,10 @@ that `set -e` / `set +e` is ineffective and the step script stops
 after *any* shell pipe with a non-zero exit status.
 
 * Default: `false` (bool).
+
+## `step.clone-path`
+
+Mount point / destination of the project files withing a pipeline step
+container.
+
+* Default: `/app`

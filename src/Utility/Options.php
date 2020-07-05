@@ -23,6 +23,7 @@ class Options
             'docker.socket.path' => array('/var/run/docker.sock'),
             'docker.client.path' => array('/usr/bin/docker'),
             'script.exit-early' => array(false),
+            'step.clone-path' => array('/app'),
         );
 
         return new self($definition);

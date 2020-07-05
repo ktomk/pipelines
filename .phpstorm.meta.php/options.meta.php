@@ -11,7 +11,7 @@ namespace PHPSTORM_META {
 
     registerArgumentsSet(
         'option_names',
-        'docker.client.path', 'docker.socket.path', 'script.exit-early'
+        'docker.client.path', 'docker.socket.path', 'script.exit-early', 'step.clone-path'
     );
 
     expectedArguments(

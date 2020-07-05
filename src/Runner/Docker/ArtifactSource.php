@@ -122,7 +122,7 @@ class ArtifactSource
         );
 
         $status = $this->exec->capture('docker', array(
-            'exec', '-w', '/app', $this->id, $command,
+            'exec', '-w', $this->dir, $this->id, $command,
         ), $out);
 
         if (0 === $status) {
