@@ -133,6 +133,8 @@ class App implements Runnable
 
         $pipelines = File::createFromFile($path);
 
+        ValidationOptions::bind($args, $this->streams, $pipelines)->run();
+
         $fileOptions = FileOptions::bind($args, $this->streams, $pipelines)->run();
 
         $reference = $this->parseReference();

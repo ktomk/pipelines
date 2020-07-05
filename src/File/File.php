@@ -151,6 +151,14 @@ class File
     }
 
     /**
+     * @return array
+     */
+    public function getArray()
+    {
+        return $this->array;
+    }
+
+    /**
      * @param array $array
      *
      * @return Pipelines

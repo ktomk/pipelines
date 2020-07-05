@@ -5,6 +5,12 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Added
+- `--validate[=<path>]` option to schema-validate a `bitbucket-pipelines.yml`;
+  can be used multiple times; validates and exists, non-zero if one or
+  multiple files do not validate
+
 ## [0.0.43] - 2020-07-05
 ### Added
 - Labels for step and service containers

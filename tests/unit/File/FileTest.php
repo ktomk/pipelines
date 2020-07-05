@@ -234,4 +234,16 @@ class FileTest extends TestCase
     {
         $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions', $file->getDefinitions());
     }
+
+    /**
+     * definitions is always available typed
+     *
+     * @depends testCreateFromDefaultFile
+     *
+     * @param File $file
+     */
+    public function testGetArray(File $file)
+    {
+        self::assertIsArray($file->getArray());
+    }
 }

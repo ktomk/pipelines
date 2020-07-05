@@ -38,6 +38,9 @@ $builder
     ->phpExec('composer -n -q install --ignore-platform-reqs')
     // Dependencies
     ->add('vendor/ktomk/symfony-yaml/Symfony/Component/Yaml/{,Exception/}{{Yaml,Inline,Parser,Unescaper,Except*,ParseEx*,Runt*}.php,LICENSE}')
+    ->add('lib/pipelines/schema/pipelines-schema.json')
+    ->add('vendor/justinrainbow/json-schema/src/JsonSchema/**/*.php')
+    ->remove('vendor/justinrainbow/json-schema/src/JsonSchema/Uri/Retrievers/{Curl,PredefinedArray}.php')
     // build phar archive, reset timestamps
     ->build('--version')
     ->exec('git log -n1 --pretty=%ci HEAD', $timestamp)

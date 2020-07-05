@@ -59,6 +59,7 @@ usage: pipelines [<options>] --version | -h | --help
        pipelines [<options>] --service <service>
        pipelines [<options>] --list | --show | --images
                  | --show-pipelines | --show-services
+                 | --validate[=<path>]
        pipelines [<options>] --docker-client-pkgs
        pipelines [<options>] [--docker-list] [--docker-kill]
                  [--docker-clean] [--docker-zap]
@@ -134,6 +135,9 @@ File information options
                           summarized - one line for each pipeline
     --show-services       show all defined services in use by pipeline
                           step and exit
+    --validate[=<path>]   schema-validate file, shows errors if any,
+                          exits; can be used more than once,
+                          exit status is non-zero on error.
 
 Environment control options
     -e, --env <variable>  pass or set an environment <variable> for the

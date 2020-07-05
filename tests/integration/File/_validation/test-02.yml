@@ -1,0 +1,12 @@
+pipelines:
+  custom:
+    private/docker-hub:
+      - step:
+          image:
+            name: ktomk/private:busybox
+            username: $DOCKER_ID_USER
+            password: $DOCKER_ID_PASSWORD
+            email: $DOCKER_ID_EMAIL
+          script:
+            - lib/pipelines/environment.sh
+            - env

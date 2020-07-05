@@ -1,0 +1,132 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "",
+    "title": "Bitbucket Pipelines Schema Test Suite",
+    "type": "object",
+    "properties": {
+        "image": {
+            "$ref": "#/definitions/image"
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+
+        "simpleImage": {
+            "type": "string",
+            "title": "Name of the Docker image which may or may not include registry URL, tag, and digest value",
+            "description": "The Docker container to run your builds.\n\nsee: https://confluence.atlassian.com/x/kYU5Lw for details",
+            "minLength": 1
+        },
+        "imageWithCustomUser": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "$ref": "#/definitions/simpleImage"
+                },
+                "run-as-user": {
+                    "$ref": "#/definitions/runAsUser"
+                }
+            },
+            "required": ["name"],
+            "additionalProperties": false
+        },
+        "privateImage": {
+            "type": "object",
+            "description": "A docker image hosted in a private repository",
+            "properties": {
+                "name": {
+                    "$ref": "#/definitions/simpleImage"
+                },
+                "username": {
+                    "type": "string",
+                    "description": "Username to use to fetch the Docker image",
+                    "minLength": 1
+                },
+                "password": {
+                    "type": "string",
+                    "description": "Password to use to fetch the Docker image",
+                    "minLength": 1
+                },
+                "email": {
+                    "type": "string",
+                    "description": "Email to use to fetch the Docker image",
+                    "format": "email",
+                    "minLength": 1
+                },
+                "run-as-user": {
+                    "$ref": "#/definitions/runAsUser"
+                }
+            },
+            "required": ["name", "username", "password"],
+            "additionalProperties": false
+        },
+        "awsImage": {
+            "type": "object",
+            "description": "A docker image hosted by AWS ECR",
+            "properties": {
+                "name": {
+                    "$ref": "#/definitions/simpleImage"
+                },
+                "aws": {
+                    "type": "object",
+                    "description": "AWS credentials",
+                    "properties": {
+                        "access-key": {
+                            "type": "string",
+                            "description": "AWS Access Key",
+                            "minLength": 1
+                        },
+                        "secret-key": {
+                            "type": "string",
+                            "description": "AWS Secret Key",
+                            "minLength": 1
+                        }
+                    },
+                    "required": ["access-key", "secret-key"],
+                    "additionalProperties": false
+                },
+                "run-as-user": {
+                    "$ref": "#/definitions/runAsUser"
+                }
+            },
+            "required": ["name", "aws"],
+            "additionalProperties": false
+        },
+        "image": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/simpleImage"
+                },
+                {
+                    "$ref": "#/definitions/imageWithCustomUser"
+                },
+                {
+                    "$ref": "#/definitions/privateImage"
+                },
+                {
+                    "$ref": "#/definitions/awsImage"
+                }
+            ]
+        },
+
+        "runAsUser": {
+            "type": "integer",
+            "title": "The UID of a user in the docker image to run as",
+            "description": "Overrides image's default user, specified user UID must be an existing user in the image with a valid home directory"
+        },
+        "max-time": {
+            "type": "integer",
+            "description": "Maximum amount of minutes a step can execute",
+            "minimum": 1,
+            "maximum": 120,
+            "default": 120
+        },
+        "size": {
+            "type": "string",
+            "title": "Multiplier of the resources allocated to a pipeline step",
+            "description": "You can allocate additional resources to a step, or to the whole pipeline. \nBy specifying the size of 2x, you'll have double the resources available (eg. 4GB memory → 8GB memory).\n\nAt this time, valid sizes are 1x and 2x.",
+            "enum": ["1x", "2x"],
+            "default": "1x"
+        }
+    }
+}

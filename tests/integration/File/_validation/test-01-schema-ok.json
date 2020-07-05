@@ -1,0 +1,41 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "",
+    "title": "Bitbucket Pipelines Schema Test Suite",
+    "type": "object",
+    "properties": {
+        "clone": {
+            "$ref": "#/definitions/clone"
+        }
+    },
+    "additionalProperties": false,
+    "definitions": {
+        "clone": {
+            "type": "object",
+            "title": "Contains settings to clone the repository into a container",
+            "description": "Contains settings for when we clone your repository into a container. Settings here include:\n\n* lfs - Support for Git lfs\n\n* depth - the depth of the Git clone.",
+            "properties": {
+                "depth": {
+                    "description": "Depth of Git clones for all pipelines (supported only for Git repositories)",
+                    "oneOf": [
+                        {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        {
+                            "type": "string",
+                            "enum": ["full"]
+                        }
+                    ],
+                    "default": 50
+                },
+                "lfs": {
+                    "type": "boolean",
+                    "description": "Enables the download of LFS files in the clone (supported only for Git repositories)",
+                    "default": false
+                }
+            },
+            "additionalProperties": false
+        }
+    }
+}
