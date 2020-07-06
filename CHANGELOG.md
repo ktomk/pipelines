@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.44] - 2020-07-06
 ### Added
 - `--validate[=<path>]` option to schema-validate a `bitbucket-pipelines.yml`;
   can be used multiple times; validates and exists, non-zero if one or
@@ -426,4 +426,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.41]: https://github.com/ktomk/pipelines/releases/tag/0.0.41
 [0.0.42]: https://github.com/ktomk/pipelines/releases/tag/0.0.42
 [0.0.43]: https://github.com/ktomk/pipelines/releases/tag/0.0.43
+[0.0.44]: https://github.com/ktomk/pipelines/releases/tag/0.0.44
 [unreleased]: https://github.com/ktomk/pipelines
