@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.45] - 2020-07-09
 ### Added
 - `step.clone-path` configuration parameter for the path inside the step
   container to deploy the project files, defaults to `/app`
@@ -437,4 +437,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.42]: https://github.com/ktomk/pipelines/releases/tag/0.0.42
 [0.0.43]: https://github.com/ktomk/pipelines/releases/tag/0.0.43
 [0.0.44]: https://github.com/ktomk/pipelines/releases/tag/0.0.44
+[0.0.45]: https://github.com/ktomk/pipelines/releases/tag/0.0.45
 [unreleased]: https://github.com/ktomk/pipelines
