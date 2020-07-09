@@ -39,7 +39,7 @@ after *any* shell pipe with a non-zero exit status.
 
 ## `step.clone-path`
 
-Mount point / destination of the project files withing a pipeline step
+Mount point / destination of the project files within a pipeline step
 container.
 
 * Default: `/app`

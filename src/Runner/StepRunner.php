@@ -189,8 +189,10 @@ class StepRunner
 
         $chunks = Lib::arrayChunkByStringLength($paths, 131072, 4);
 
+        $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
+
         foreach ($chunks as $paths) {
-            $docker = Lib::cmd('docker', array('exec', '-w', '/app', $id));
+            $docker = Lib::cmd('docker', array('exec', '-w', $clonePath, $id));
             $tar = Lib::cmd('tar', array('c', '-f', '-', $paths));
             $unTar = Lib::cmd('tar', array('x', '-f', '-', '-C', $dir));
 
@@ -231,19 +233,23 @@ class StepRunner
 
         $tmpDir = LibTmp::tmpDir('pipelines-cp.');
         $this->temporaryDirectories[] = DestructibleString::rmDir($tmpDir);
-        LibFs::symlink($dir, $tmpDir . '/app');
+
+        $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
+
+        LibFs::symlink($dir, $tmpDir . $clonePath);
         $cd = Lib::cmd('cd', array($tmpDir . '/.'));
-        $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', 'app'));
+
+        $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $clonePath));
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
         $status = $exec->pass("${cd} && echo 'app' | ${tar} | ${dockerCp}", array());
-        LibFs::unlink($tmpDir . '/app');
+        LibFs::unlink($tmpDir . $clonePath);
         if (0 !== $status) {
             return $status;
         }
 
         $cd = Lib::cmd('cd', array($dir . '/.'));
         $tar = Lib::cmd('tar', array('c', '-f', '-', '.'));
-        $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/app'));
+        $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':' . $clonePath));
         $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
         if (0 !== $status) {
             return $status;
@@ -279,6 +285,8 @@ class StepRunner
         $image = $step->getImage();
         ImageLogin::loginImage($this->runner->getExec(), $this->runner->getEnv()->getResolver(), null, $image);
 
+        $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
+
         list($status, $out, $err) = $container->run(
             array(
                 $network,
@@ -290,7 +298,7 @@ class StepRunner
                 $mountDockerClient,
                 $container->obtainUserOptions(),
                 $container->obtainSshOptions(),
-                '--workdir', '/app', '--detach', '--entrypoint=/bin/sh', $image->getName(),
+                '--workdir', $clonePath, '--detach', '--entrypoint=/bin/sh', $image->getName(),
             )
         );
         $id = $status ? null : $container->getDisplayId();
@@ -381,7 +389,8 @@ class StepRunner
         $hostDeviceDir = $this->pipHostConfigBind($dir);
         $checkMount = $mountDockerSock && null !== $parentName;
         $deviceDir = $hostDeviceDir ?: $dir;
-        if ($checkMount && '/app' === $dir && null === $hostDeviceDir) { // FIXME(tk): hard encoded /app
+        $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
+        if ($checkMount && $clonePath === $dir && null === $hostDeviceDir) {
             $deviceDir = $this->runner->getEnv()->getValue('PIPELINES_PROJECT_PATH');
             if ($deviceDir === $dir || null === $deviceDir) {
                 $this->runner->getStreams()->err("pipelines: fatal: can not detect ${dir} mount point\n");
@@ -393,7 +402,7 @@ class StepRunner
         // FIXME(tk): Never mount anything not matching /home/[a-zA-Z][a-zA-Z0-9]*/[^.].*/...
         //   + do realpath checking
         //   + prevent dot path injections (logical fix first)
-        return array('-v', "${deviceDir}:/app"); // FIXME(tk): hard encoded /app
+        return array('-v', "${deviceDir}:${clonePath}");
     }
 
     /**

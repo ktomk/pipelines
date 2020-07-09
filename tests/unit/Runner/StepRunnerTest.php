@@ -643,8 +643,11 @@ class StepRunnerTest extends RunnerTestCase
         $testProject = $this->getTestProject()->getPath();
 
         $options = OptionsMock::create();
+        $options->define('step.clone-path', '/app');
 
-        if (('/app' !== $testProject) && is_dir($testProject)) { // FIXME(tk): hard encoded /app
+        $clonePath = $options->get('step.clone-path');
+
+        if (($clonePath !== $testProject) && is_dir($testProject)) {
             // fake docker.sock file inside temporary test directory so it exists
             $value = $testProject . '/var';
             LibFs::mkDir($value);

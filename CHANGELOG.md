@@ -5,6 +5,11 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Added
+- `step.clone-path` configuration parameter for the path inside the step
+  container to deploy the project files, defaults to `/app`
+
 ## [0.0.44] - 2020-07-06
 ### Added
 - `--validate[=<path>]` option to schema-validate a `bitbucket-pipelines.yml`;
