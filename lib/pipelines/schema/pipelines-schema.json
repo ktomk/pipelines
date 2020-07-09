@@ -161,6 +161,31 @@
             "title": "Build execution unit",
             "description": "Define s a build execution unit. \n\nSteps are executed in the order that they appear in the bitbucket-pipelines.yml file. \nYou can use up to 10 steps in a pipeline.",
             "properties": {
+                "clone": {
+                    "$ref": "#/definitions/clone"
+                },
+                "condition": {
+                    "type": "object",
+                    "properties": {
+                        "changesets": {
+                            "type": "object",
+                            "properties": {
+                                "includePaths": {
+                                    "type": "array",
+                                    "title": " Execute a step only if one of the modified files matches the expression",
+                                    "description": "Defines files to be matched from in all commits in a pull-request, or the commit otherwise. If the files have no changes, the step is skipped and the pipeline succeeds.",
+                                    "items": {
+                                        "type": "string",
+                                        "description": "Glob pattern for files to match",
+                                        "minLength": 1
+                                    }
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
+                },
                 "name": {
                     "type": "string",
                     "title": "Name of the step",
@@ -399,6 +424,11 @@
                         }
                     ],
                     "default": 50
+                },
+                "enabled": {
+                    "type": "boolean",
+                    "description": "Disabling clones in pipelines steps (Antoine Büsch; Feb 2020) <https://bitbucket.org/blog/disabling-clones-in-pipelines-steps>",
+                    "default": true
                 },
                 "lfs": {
                     "type": "boolean",

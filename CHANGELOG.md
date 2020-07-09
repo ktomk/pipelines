@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - `step.clone-path` configuration parameter for the path inside the step
   container to deploy the project files, defaults to `/app`
+- Schema for new `<pipeline>.step.condition` directives Jun 2020 ([Peter Plewa])
+- Schema for new `clone` and `<pipeline>.step.clone` options Feb/Apr 2020
+  ([Antoine Büsch])
+[Antoine Büsch]: https://bitbucket.org/blog/author/abusch
+[Peter Plewa]: https://bitbucket.org/blog/author/pplewa
 
 ## [0.0.44] - 2020-07-06
 ### Added
