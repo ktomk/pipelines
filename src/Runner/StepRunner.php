@@ -260,8 +260,8 @@ class StepRunner
 
     /**
      * @param StepContainer $container
-     * @param string $dir
-     * @param bool $copy
+     * @param string $dir project directory (host)
+     * @param bool $copy deployment
      * @param Step $step
      *
      * @return array array(string|null $id, int $status, string $out, string $err)
@@ -298,7 +298,8 @@ class StepRunner
                 $mountDockerClient,
                 $container->obtainUserOptions(),
                 $container->obtainSshOptions(),
-                '--workdir', $clonePath, '--detach', '--entrypoint=/bin/sh', $image->getName(),
+                '--workdir', $clonePath, '--detach', '--entrypoint=/bin/sh',
+                $image->getName(),
             )
         );
         $id = $status ? null : $container->getDisplayId();
@@ -373,9 +374,9 @@ class StepRunner
     }
 
     /**
-     * @param bool $copy
-     * @param string $dir
-     * @param array $mountDockerSock
+     * @param bool $copy deployment
+     * @param string $dir project directory
+     * @param array $mountDockerSock docker socket volume args for docker run, empty if not mounting
      *
      * @return array mount options or array(null, int $status) for error handling
      */
