@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Args\ArgsTester;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Utility\App as UtilityApp;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\Env
@@ -48,7 +49,7 @@ class EnvTest extends TestCase
 
     public function testDefaultValue()
     {
-        $slug = 'pipelines';
+        $slug = UtilityApp::UTILITY_NAME;
         $env = Env::createEx(array('BITBUCKET_REPO_SLUG' => $slug));
         $this->assertSame($slug, $env->getValue('BITBUCKET_REPO_SLUG'));
     }

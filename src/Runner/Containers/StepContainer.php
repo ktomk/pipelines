@@ -180,7 +180,7 @@ class StepContainer
      */
     public function obtainLabelOptions()
     {
-        $labels = new LabelsBuilder();
+        $labels = LabelsBuilder::createFromRunner($this->runner);
 
         $labels->setRole('step');
 

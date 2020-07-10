@@ -203,6 +203,7 @@ class StepContainerTest extends RunnerTestCase
         $runner->method('getRunOpts')->willReturn($runOpts);
         $directories = $this->createMock('Ktomk\Pipelines\Runner\Directories');
         $runner->method('getDirectories')->willReturn($directories);
+        $runner->method('getPrefix')->willReturn('pipelines');
 
         $container = new StepContainer('name', $step, $runner);
 
