@@ -15,6 +15,7 @@ use Ktomk\Pipelines\Runner\Containers\StepContainer;
 use Ktomk\Pipelines\Runner\Docker\ArgsBuilder;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
+use Ktomk\Pipelines\Runner\Docker\CacheIo;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
 
 /**
@@ -102,7 +103,12 @@ class StepRunner
 
         $deployCopy && $streams('');
 
+        $cacheIo = CacheIo::createByRunner($this->runner, $id);
+        $cacheIo->deployStepCaches($step);
+
         $status = StepScriptRunner::createRunStepScript($this->runner, $container->getName(), $step);
+
+        $cacheIo->captureStepCaches($step, 0 === $status);
 
         $this->captureStepArtifacts($step, $deployCopy && 0 === $status, $id, $dir);
 

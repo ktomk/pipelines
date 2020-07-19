@@ -111,6 +111,8 @@ class RepositoryTest extends TestCase
         $file = $this->createMock('Ktomk\Pipelines\File\File');
         $image = $this->createMock('Ktomk\Pipelines\File\Image');
         $definitions = $this->createMock('Ktomk\Pipelines\File\Definitions');
+        $caches = $this->createPartialMock('Ktomk\Pipelines\File\Definitions\Caches', array());
+        $definitions->method('getCaches')->willReturn($caches);
         $services = $this->createMock('Ktomk\Pipelines\File\Definitions\Services');
         $definitions->method('getServices')->willReturn($services);
 

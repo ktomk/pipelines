@@ -23,6 +23,8 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class StepRunnerTest extends RunnerTestCase
 {
+    private $removeDirectories = array();
+
     public function testCreation()
     {
         $stepRunner = new StepRunner(
@@ -606,6 +608,68 @@ class StepRunnerTest extends RunnerTestCase
         self::assertSame(0, $runner->runStep($step));
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\Runner\Docker\CacheIo
+     */
+    public function testCaches()
+    {
+        $tmpProjectDir = $this->getTestProject()->getPath();
+        $tmpHomeDir = $tmpProjectDir . '/home';
+
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'docker run step container')
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
+            ->expect('capture', 'docker', 0, 'caches: map path')
+            ->expect('pass', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm');
+
+        $step = $this->createTestStepFromFixture('cache.yml');
+        $runner = $this->createTestStepRunner($exec, Flags::FLAGS, 'php://output', array('HOME' => $tmpHomeDir));
+
+        $this->expectOutputRegex('{^ - composer ~/.composer/cache }m');
+
+        $status = $runner->runStep($step);
+        self::assertSame(0, $status);
+    }
+
+    /**
+     * @covers \Ktomk\Pipelines\Runner\Docker\CacheIo
+     */
+    public function testCachesPrePopulated()
+    {
+        $tmpProjectDir = $this->getTestProject()->getPath();
+        $tmpHomeDir = $tmpProjectDir . '/home';
+
+        // fake caches file
+        $tarDir = $tmpHomeDir . '/.cache/pipelines/caches/local-has-no-slug';
+        LibFs::mkDir($tarDir);
+        touch($tarDir . '/composer.tar');
+
+        $exec = new ExecTester($this);
+        $exec
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'docker run step container')
+            ->expect('capture', 'docker', 0, 'caches: map path')
+            ->expect('pass', 'docker', 0, 'caches: mkdir in container')
+            ->expect('pass', '~<.*/composer\.tar docker cp~', 0, 'caches: copy in')
+            ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
+            ->expect('capture', 'docker', 0, 'caches: map path')
+            ->expect('pass', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
+            ->expect('capture', 'docker', 0, 'docker kill')
+            ->expect('capture', 'docker', 0, 'docker rm');
+
+        $step = $this->createTestStepFromFixture('cache.yml');
+        $runner = $this->createTestStepRunner($exec, Flags::FLAGS, 'php://output', array('HOME' => $tmpHomeDir));
+
+        $this->expectOutputRegex('{^ - composer ~/.composer/cache }m');
+
+        $status = $runner->runStep($step);
+        self::assertSame(0, $status);
+    }
+
     private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')
     {
         $expectedRegex = sprintf(
@@ -656,7 +720,7 @@ class StepRunnerTest extends RunnerTestCase
         $options->define('docker.socket.path', $value);
 
         $runOpts = new RunOpts('pipelinesunittest', $options);
-        $directories = new Directories($_SERVER, new Project($testProject));
+        $directories = new Directories($inherit + $_SERVER, new Project($testProject));
         $flagsObject = new Flags($flags);
         $env = Env::createEx($inherit);
         $streams = new Streams(null, $out, $err);

@@ -1,0 +1,274 @@
+<?php
+
+/* this file is part of pipelines */
+
+namespace Ktomk\Pipelines\Runner\Docker;
+
+use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\Cli\Streams;
+use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\Lib;
+use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibFsPath;
+use Ktomk\Pipelines\Runner\Runner;
+
+/**
+ * Class CacheHandler
+ *
+ * Directory path related cache operations for docker containers when
+ * running pipelines.
+ *
+ * Delegates between local cache storage (directory based, one tar
+ * archive per cache) and (running) step-runner docker container.
+ *
+ * @package Ktomk\Pipelines\Runner\Docker
+ */
+class CacheIo
+{
+    /**
+     * @var string
+     */
+    private $id;
+
+    /**
+     * @var string
+     */
+    private $cachesDirectory;
+
+    /**
+     * @var Streams
+     */
+    private $streams;
+
+    /**
+     * @var Exec
+     */
+    private $exec;
+
+    /**
+     * @var string
+     */
+    private $clonePath;
+
+    /**
+     * @param Runner $runner
+     * @param $id
+     *
+     * @return CacheIo
+     */
+    public static function createByRunner(Runner $runner, $id)
+    {
+        return new self(
+            self::runnerCachesDirectory($runner),
+            $id,
+            $runner->getRunOpts()->getOption('step.clone-path'),
+            $runner->getStreams(),
+            $runner->getExec()
+        );
+    }
+
+    /**
+     * @param Runner $runner
+     *
+     * @return string path of base-directory in which the pipelines project tar files are located
+     */
+    public static function runnerCachesDirectory(Runner $runner)
+    {
+        return (string)$runner->getDirectories()->getBaseDirectory(
+            'XDG_CACHE_HOME',
+            sprintf(
+                'caches/%s',
+                $runner->getProject()
+            )
+        );
+    }
+
+    /**
+     * CacheIo constructor.
+     *
+     * @param string $caches path to directory where tar files are stored
+     * @param string $id container
+     * @param string $clonePath
+     * @param Streams $streams
+     * @param Exec $exec
+     */
+    public function __construct($caches, $id, $clonePath, Streams $streams, Exec $exec)
+    {
+        $this->id = $id;
+        $this->setCachesDirectory($caches);
+        $this->clonePath = $clonePath;
+        $this->streams = $streams;
+        $this->exec = $exec;
+    }
+
+    /**
+     * Deploy step caches into container
+     *
+     * @param Step $step
+     */
+    public function deployStepCaches(Step $step)
+    {
+        $cachesDirectory = $this->cachesDirectory;
+
+        // skip deploying caches if there are no caches
+        if ($this->skip($cachesDirectory, $step)) {
+            return;
+        }
+
+        $id = $this->id;
+        $streams = $this->streams;
+        $exec = $this->exec;
+
+        $streams->out("\x1D+++ populating caches...\n");
+
+        foreach ($step->getCaches() as $name => $path) {
+            $tarFile = sprintf('%s/%s.tar', $cachesDirectory, $name);
+            $tarExists = LibFs::isReadableFile($tarFile);
+            $streams->out(sprintf(" - %s %s (%s)\n", $name, $path, $tarExists ? 'hit' : 'miss'));
+
+            if (!$tarExists) {
+                continue;
+            }
+
+            $containerPath = $this->mapCachePath($path);
+
+            $exec->pass('docker', array('exec', $id, 'mkdir', '-p', $containerPath));
+
+            $cmd = Lib::cmd(
+                sprintf('<%s docker', Lib::quoteArg($tarFile)),
+                array(
+                    'cp',
+                    '-',
+                    sprintf('%s:%s', $id, $containerPath),
+                )
+            );
+            $exec->pass($cmd, array());
+        }
+    }
+
+    /**
+     * Capture cache from container
+     *
+     * @param Step $step
+     * @param bool $capture
+     */
+    public function captureStepCaches(Step $step, $capture)
+    {
+        // skip capturing if disabled
+        if (!$capture) {
+            return;
+        }
+
+        $cachesDirectory = $this->cachesDirectory;
+
+        // skip capturing caches if there are no caches
+        if ($this->skip($cachesDirectory, $step)) {
+            return;
+        }
+
+        $id = $this->id;
+        $exec = $this->exec;
+        $streams = $this->streams;
+
+        $streams->out("\x1D+++ updating caches from container...\n");
+
+        $cachesDirectory = LibFs::mkDir($cachesDirectory);
+
+        foreach ($step->getCaches() as $name => $path) {
+            $tarFile = sprintf('%s/%s.tar', $cachesDirectory, $name);
+            $tarExists = LibFs::isReadableFile($tarFile);
+            $streams->out(sprintf(" - %s %s (%s)\n", $name, $path, $tarExists ? 'update' : 'create'));
+
+            $containerPath = $this->mapCachePath($path);
+
+            $cmd = Lib::cmd(
+                sprintf('>%s docker', Lib::quoteArg($tarFile)),
+                array(
+                    'cp',
+                    sprintf('%s:%s/.', $id, $containerPath),
+                    '-',
+                )
+            );
+            $exec->pass($cmd, array());
+        }
+    }
+
+    /**
+     * Map cache path to container path
+     *
+     * A cache path in a cache definition can be with information for
+     * container context, e.g. $HOME, ~ or just being relative to the
+     * clone directory.
+     *
+     * This requires mapping for the "real" path
+     *
+     * @param string $path component of cache definition
+     *
+     * @return string
+     */
+    public function mapCachePath($path)
+    {
+        $id = $this->id;
+
+        $containerPath = $path;
+
+        // let the container map the path expression
+        $status = $this->exec->capture(
+            'docker',
+            array('exec', $id, '/bin/sh', '-c', sprintf('echo %s', $containerPath)),
+            $out
+        );
+
+        if (0 === $status && 0 < strlen($out) && ('/' === $out[0])) {
+            $containerPath = trim($out);
+        }
+
+        // fallback to '~' -> /root assumption (can fail easy as root might not be the user)
+        if ('~' === $containerPath[0]) {
+            $containerPath = '/root/' . ltrim(substr($containerPath, 1), '/');
+        }
+
+        // handle relative paths
+        if (!LibFsPath::isAbsolute($containerPath)) {
+            $containerPath = LibFsPath::normalizeSegments(
+                $this->clonePath . '/' . $containerPath
+            );
+        }
+
+        return $containerPath;
+    }
+
+    /**
+     * @param string $cachesDirectory
+     * @param Step $step
+     *
+     * @return bool|void
+     */
+    private function skip($cachesDirectory, Step $step)
+    {
+        // caches directory is empty?
+        if (empty($cachesDirectory)) {
+            return true;
+        }
+
+        // step has caches?
+        $caches = $step->getCaches()->getIterator();
+        if (!count($caches)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $path
+     */
+    private function setCachesDirectory($path)
+    {
+        if (!empty($path) && !LibFsPath::isAbsolute($path)) {
+            throw new \InvalidArgumentException(sprintf('Caches directory: Not an absolute path: %s', $path));
+        }
+
+        $this->cachesDirectory = (string)$path;
+    }
+}
