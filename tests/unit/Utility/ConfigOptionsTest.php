@@ -20,6 +20,6 @@ class ConfigOptionsTest extends TestCase
     {
         $args = new Args(array('c', '-c', 'foo=flax'));
         $options = ConfigOptions::bind($args)->run();
-        $this->assertNotNull($options);
+        self::assertNotNull($options);
     }
 }

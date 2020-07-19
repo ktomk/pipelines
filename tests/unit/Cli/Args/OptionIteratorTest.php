@@ -18,15 +18,15 @@ class OptionIteratorTest extends TestCase
     {
         $iterator = $this->iter();
 
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args\OptionIterator', $iterator);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Args\OptionIterator', $iterator);
     }
 
     public function testCurrent()
     {
         $iterator = $this->iter();
-        $this->assertSame('--foo', $iterator->current());
+        self::assertSame('--foo', $iterator->current());
         $iterator->rewind();
-        $this->assertSame('--foo', $iterator->current());
+        self::assertSame('--foo', $iterator->current());
     }
 
     public function testInvalidateCurrent()
@@ -34,9 +34,9 @@ class OptionIteratorTest extends TestCase
         $args = new ArgsTester;
         $args->arguments = array('--foo', 'bar', '-f', 'b', '--', 'parameter');
         $iterator = new OptionIterator($args);
-        $this->assertSame('--foo', $iterator->current());
+        self::assertSame('--foo', $iterator->current());
         unset($args->arguments[0]);
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
         $this->expectException('BadMethodCallException');
         $this->expectExceptionMessage('Invalid iterator state for current()');
         $iterator->current();
@@ -46,31 +46,31 @@ class OptionIteratorTest extends TestCase
     {
         $iterator = $this->iter();
         $iterator->next();
-        $this->assertSame('-f', $iterator->current());
+        self::assertSame('-f', $iterator->current());
     }
 
     public function testNextWithDoubleValue()
     {
         $iterator = $this->iter(array('--foo', 'bar', 'baz', '-f'));
         $iterator->next();
-        $this->assertSame('-f', $iterator->current());
+        self::assertSame('-f', $iterator->current());
     }
 
     public function testNextAtEnd()
     {
         $iterator = $this->iter(array(''));
         $iterator->next();
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
     }
 
     public function testKey()
     {
         $iterator = $this->iter();
-        $this->assertSame(0, $iterator->key());
+        self::assertSame(0, $iterator->key());
         $iterator->next();
-        $this->assertSame(2, $iterator->key());
+        self::assertSame(2, $iterator->key());
         $iterator->next();
-        $this->assertSame(4, $iterator->key());
+        self::assertSame(4, $iterator->key());
     }
 
     public function provideSingleOptionArgs()
@@ -91,9 +91,9 @@ class OptionIteratorTest extends TestCase
     public function testValid(array $array)
     {
         $iterator = $this->iter($array);
-        $this->assertTrue($iterator->valid());
+        self::assertTrue($iterator->valid());
         $iterator->next();
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
     }
 
     public function testRewind()
@@ -101,7 +101,7 @@ class OptionIteratorTest extends TestCase
         $iterator = $this->iter();
         $iterator->next();
         $iterator->rewind();
-        $this->assertSame(0, $iterator->key());
+        self::assertSame(0, $iterator->key());
     }
 
     public function provideSingleOptionArguments()
@@ -124,12 +124,12 @@ class OptionIteratorTest extends TestCase
     public function testGetArgument(array $array, $hasArg)
     {
         $iterator = $this->iter($array);
-        $this->assertSame($hasArg, $iterator->hasArgument());
+        self::assertSame($hasArg, $iterator->hasArgument());
 
         try {
             $actual = $iterator->getArgument();
-            $this->assertTrue($hasArg);
-            $this->assertSame($array[1], $actual);
+            self::assertTrue($hasArg);
+            self::assertSame($array[1], $actual);
         } catch (ArgsException $e) {
             $this->addToAssertionCount(1);
         }
@@ -140,17 +140,17 @@ class OptionIteratorTest extends TestCase
         $iterator = $this->iter();
 
         $iterator->seekOption('foo');
-        $this->assertSame(0, $iterator->key());
-        $this->assertSame('--foo', $iterator->current());
+        self::assertSame(0, $iterator->key());
+        self::assertSame('--foo', $iterator->current());
 
         $iterator->rewind();
         $iterator->seekOption(array('foo-bar', 'foo'));
-        $this->assertSame(0, $iterator->key());
-        $this->assertSame('--foo', $iterator->current());
+        self::assertSame(0, $iterator->key());
+        self::assertSame('--foo', $iterator->current());
 
         $iterator->seekOption('user');
-        $this->assertSame(4, $iterator->key());
-        $this->assertSame('--user=1000:1000', $iterator->current());
+        self::assertSame(4, $iterator->key());
+        self::assertSame('--user=1000:1000', $iterator->current());
     }
 
     private function iter(array $array = array('--foo', 'bar', '-f', 'b', '--user=1000:1000', '--', 'parameter'))

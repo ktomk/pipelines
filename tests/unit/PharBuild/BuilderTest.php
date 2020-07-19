@@ -50,7 +50,7 @@ class BuilderTest extends TestCase
     public function testCreation()
     {
         $builder = Builder::create('fake.phar');
-        $this->assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $builder);
+        self::assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $builder);
     }
 
     /**
@@ -83,7 +83,7 @@ class BuilderTest extends TestCase
         self::assertIsCallable($callback);
         // violate rfc2397 by intention to provoke read error
         $actual = @call_user_func($callback, 'data:no-comma-in-URL');
-        $this->assertNull($actual);
+        self::assertNull($actual);
     }
 
     public function testReplaceFileCallback()
@@ -93,11 +93,11 @@ class BuilderTest extends TestCase
         $callback = $builder->replace('abc', '123');
         self::assertIsCallable($callback);
         $result = call_user_func($callback, 'data:,abc');
-        $this->assertArrayHasKey(0, $result);
-        $this->assertArrayHasKey(1, $result);
-        $this->assertSame('str', $result[0]);
+        self::assertArrayHasKey(0, $result);
+        self::assertArrayHasKey(1, $result);
+        self::assertSame('str', $result[0]);
         self::assertIsString($result[1]);
-        $this->assertSame('123', $result[1]);
+        self::assertSame('123', $result[1]);
     }
 
     /**
@@ -137,8 +137,8 @@ class BuilderTest extends TestCase
                 return $builder;
             });
 
-        $this->assertSame($builder, $builder->phpExec('test', $return));
-        $this->assertSame('OK', $return);
+        self::assertSame($builder, $builder->phpExec('test', $return));
+        self::assertSame('OK', $return);
     }
 
     public function testPhpExecWithInvalidCommand()
@@ -153,15 +153,15 @@ class BuilderTest extends TestCase
     private function assertFNE(Builder $actual)
     {
         $builder = $this->builder;
-        $this->assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $actual);
-        $this->assertSame($builder, $actual, 'the same builder');
-        $this->assertCount(0, $actual->errors(), 'zero errors');
+        self::assertInstanceOf('Ktomk\Pipelines\PharBuild\Builder', $actual);
+        self::assertSame($builder, $actual, 'the same builder');
+        self::assertCount(0, $actual->errors(), 'zero errors');
     }
 
     private function needsPharWriteAccess()
     {
         if ('0' !== ini_get('phar.readonly')) {
-            $this->markTestSkipped('phar.readonly is active');
+            self::markTestSkipped('phar.readonly is active');
         }
     }
 }

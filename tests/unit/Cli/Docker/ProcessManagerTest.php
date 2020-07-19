@@ -18,7 +18,7 @@ class ProcessManagerTest extends TestCase
     public function testCreation()
     {
         $ps = new ProcessManager(new Exec());
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Docker\ProcessManager', $ps);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Docker\ProcessManager', $ps);
     }
 
     public function testFindAllContainerIdsByNamePrefix()
@@ -78,7 +78,7 @@ class ProcessManagerTest extends TestCase
         $exec = new ExecTester($this);
         $exec->expect('capture', 'docker', 0, 'docke ps');
         $pm = new ProcessManager($exec);
-        $this->assertSame(
+        self::assertSame(
             array(),
             $pm->findAllContainerIdsByName('foo')
         );
@@ -90,9 +90,9 @@ class ProcessManagerTest extends TestCase
             'Ktomk\Pipelines\Cli\Docker\ProcessManager',
             array('findAllContainerIdsByName', 'kill', 'remove')
         );
-        $pm->expects($this->once())
+        $pm->expects(self::once())
             ->method('kill');
-        $pm->expects($this->once())
+        $pm->expects(self::once())
             ->method('remove');
         $pm->method('findAllContainerIdsByName')
             ->willReturn(array('1234567'));
@@ -116,7 +116,7 @@ class ProcessManagerTest extends TestCase
             array('findAllContainerIdsByName')
         );
         $pm->method('findAllContainerIdsByName')->willReturn(null);
-        $this->assertNull($pm->findContainerIdByName('foo'));
+        self::assertNull($pm->findContainerIdByName('foo'));
     }
 
     public function testFindContainerIdByNameNoMatches()
@@ -126,7 +126,7 @@ class ProcessManagerTest extends TestCase
             array('findAllContainerIdsByName')
         );
         $pm->method('findAllContainerIdsByName')->willReturn(array());
-        $this->assertNull($pm->findContainerIdByName('foo'));
+        self::assertNull($pm->findContainerIdByName('foo'));
     }
 
     public function testFindContainerIdByNameSingleMatch()
@@ -136,7 +136,7 @@ class ProcessManagerTest extends TestCase
             array('findAllContainerIdsByName')
         );
         $pm->method('findAllContainerIdsByName')->willReturn(array('1234567'));
-        $this->assertSame('1234567', $pm->findContainerIdByName('foo'));
+        self::assertSame('1234567', $pm->findContainerIdByName('foo'));
     }
 
     public function testFindContainerIdByNameMultipleMatches()
@@ -148,6 +148,6 @@ class ProcessManagerTest extends TestCase
         $pm->method('findAllContainerIdsByName')->willReturn(
             array('1234567', '3456789')
         );
-        $this->assertNull($pm->findContainerIdByName('foo'));
+        self::assertNull($pm->findContainerIdByName('foo'));
     }
 }

@@ -18,7 +18,7 @@ class FileTest extends TestCase
 
         $file = File::createFromFile($path);
 
-        $this->assertNotNull($file);
+        self::assertNotNull($file);
 
         return $file;
     }
@@ -46,17 +46,17 @@ class FileTest extends TestCase
     public function testCreateFromFile($path)
     {
         $file = File::createFromFile($path);
-        $this->assertNotNull($file);
+        self::assertNotNull($file);
     }
 
     public function testCreateFromPipeFile()
     {
         $path = __DIR__ . '/../../data/yml/pipe.yml';
         $file = File::createFromFile($path);
-        $this->assertNotNull($file);
+        self::assertNotNull($file);
 
         $default = $file->getById('branches/develop');
-        $this->assertNotNull($default);
+        self::assertNotNull($default);
     }
 
     /**
@@ -80,7 +80,7 @@ class FileTest extends TestCase
 
         $file = File::createFromFile($path);
 
-        $this->assertNotNull($file);
+        self::assertNotNull($file);
 
         return $file;
     }
@@ -92,7 +92,7 @@ class FileTest extends TestCase
      */
     public function testSearchIdByReference(File $file)
     {
-        $this->assertSame('default', $file->searchIdByReference(Reference::create()));
+        self::assertSame('default', $file->searchIdByReference(Reference::create()));
     }
 
     /**
@@ -103,11 +103,11 @@ class FileTest extends TestCase
     public function testGetImage(File $file)
     {
         $image = $file->getImage();
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
         $imageString = (string)$image;
         self::assertIsString($imageString);
         $expectedImage = File::DEFAULT_IMAGE;
-        $this->assertSame($expectedImage, $imageString);
+        self::assertSame($expectedImage, $imageString);
     }
 
     public function testGetImageSet()
@@ -118,7 +118,7 @@ class FileTest extends TestCase
             'pipelines' => array('tags' => array()),
         );
         $file = new File($image);
-        $this->assertSame($expected, (string)$file->getImage());
+        self::assertSame($expected, (string)$file->getImage());
     }
 
     public function testMinimalFileStructureAndDefaultValues()
@@ -129,11 +129,11 @@ class FileTest extends TestCase
 
         $file = new File($minimal);
 
-        $this->assertSame(File::DEFAULT_IMAGE, (string)$file->getImage());
-        $this->assertSame(File::DEFAULT_CLONE, $file->getClone());
+        self::assertSame(File::DEFAULT_IMAGE, (string)$file->getImage());
+        self::assertSame(File::DEFAULT_CLONE, $file->getClone());
 
         $steps = $file->getDefault();
-        $this->assertNull($steps);
+        self::assertNull($steps);
     }
 
     /**
@@ -152,7 +152,7 @@ class FileTest extends TestCase
             'clone' => 666,
             'pipelines' => array('default' => array()),
         ));
-        $this->assertSame(666, $file->getClone());
+        self::assertSame(666, $file->getClone());
     }
 
     public function testDefaultPipeline()
@@ -173,10 +173,10 @@ class FileTest extends TestCase
 
         $file = new File($default);
         $pipeline = $file->getDefault();
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline', $pipeline);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline', $pipeline);
         $steps = $pipeline->getSteps();
-        $this->assertArrayHasKey(0, $steps);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $steps[0]);
+        self::assertArrayHasKey(0, $steps);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $steps[0]);
     }
 
     /**
@@ -203,7 +203,7 @@ class FileTest extends TestCase
     {
         $actual = $file->getPipelines();
 
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\File\Pipelines',
             $actual
         );
@@ -232,7 +232,7 @@ class FileTest extends TestCase
      */
     public function testGetDefinitions(File $file)
     {
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions', $file->getDefinitions());
+        self::assertInstanceOf('Ktomk\Pipelines\File\Definitions', $file->getDefinitions());
     }
 
     /**

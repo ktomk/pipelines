@@ -16,7 +16,7 @@ class VersionTest extends TestCase
     public function testCreation()
     {
         $version = new Version('');
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\Version', $version);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\Version', $version);
     }
 
     public function testResolution()
@@ -30,7 +30,7 @@ class VersionTest extends TestCase
     {
         $version = new Version('1.2.3');
 
-        $this->assertSame('1.2.3', $version->resolveSourceVersion());
+        self::assertSame('1.2.3', $version->resolveSourceVersion());
     }
 
     public function testResolveSourceVersionPackageVersion()
@@ -43,7 +43,7 @@ class VersionTest extends TestCase
             ->getMock();
         $version->method('getPackageVersion')->willReturn('3.2.1');
 
-        $this->assertSame('3.2.1', $version->resolveSourceVersion());
+        self::assertSame('3.2.1', $version->resolveSourceVersion());
     }
 
     public function testResolveSourceVersionGitVersion()
@@ -56,7 +56,7 @@ class VersionTest extends TestCase
             ->getMock();
         $version->method('getGitVersion')->willReturn('3.1.2');
 
-        $this->assertSame('3.1.2', $version->resolveSourceVersion());
+        self::assertSame('3.1.2', $version->resolveSourceVersion());
     }
 
     public function testResolveSourceVersionFallback()
@@ -68,7 +68,7 @@ class VersionTest extends TestCase
             ->setMethods(array('getBuildVersion', 'getPackageVersion', 'getGitVersion'))
             ->getMock();
 
-        $this->assertSame('1.2.3', $version->resolveSourceVersion());
+        self::assertSame('1.2.3', $version->resolveSourceVersion());
     }
 
     public function testGetPackageVersion()
@@ -85,7 +85,7 @@ class VersionTest extends TestCase
             (object)array('name' => 'ktomk/pipelines', 'version' => '4.4.4'),
         ));
 
-        $this->assertSame('4.4.4-composer', $version->getPackageVersion());
+        self::assertSame('4.4.4-composer', $version->getPackageVersion());
     }
 
     public function testGetPackageVersionUnknownFormat()
@@ -102,24 +102,24 @@ class VersionTest extends TestCase
             (object)array('name' => 'ktomk/pipelines'),
         ));
 
-        $this->assertNull($version->getPackageVersion());
+        self::assertNull($version->getPackageVersion());
     }
 
     public function testGetGitVersionInNonGitRepo()
     {
         $version = new Version('@.@.@', '@.@.@', sys_get_temp_dir());
-        $this->assertNull($version->getGitVersion());
+        self::assertNull($version->getGitVersion());
     }
 
     public function testGetGitVersionInInvalidDirectory()
     {
         $version = new Version('@.@.@', '@.@.@', '/dev/null');
-        $this->assertNull($version->getGitVersion());
+        self::assertNull($version->getGitVersion());
     }
 
     public function testGetBuildVersion()
     {
         $version = new Version('0.1.2', '@.@.@');
-        $this->assertSame('0.1.2', $version->getBuildVersion());
+        self::assertSame('0.1.2', $version->getBuildVersion());
     }
 }

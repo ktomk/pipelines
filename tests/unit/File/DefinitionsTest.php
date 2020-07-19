@@ -25,7 +25,7 @@ class DefinitionsTest extends TestCase
 
         $definitions = new Definitions($array['definitions']);
 
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions', $definitions);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Definitions', $definitions);
 
         return $definitions;
     }
@@ -39,7 +39,7 @@ class DefinitionsTest extends TestCase
      */
     public function testGetServices(Definitions $definitions)
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\File\Definitions\Services',
             $definitions->getServices()
         );

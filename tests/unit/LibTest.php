@@ -12,26 +12,26 @@ class LibTest extends TestCase
     public function testRSet()
     {
         $ref = 'a';
-        $this->assertSame($ref, Lib::r($ref, null));
+        self::assertSame($ref, Lib::r($ref, null));
     }
 
     public function testRUnset()
     {
         $ref = null;
-        $this->assertSame('a', Lib::r($ref, 'a'));
+        self::assertSame('a', Lib::r($ref, 'a'));
     }
 
     public function testVSet()
     {
         $variable = false;
         Lib::v($variable, true);
-        $this->assertFalse($variable);
+        self::assertFalse($variable);
     }
 
     public function testVUnset()
     {
         Lib::v($variable, true);
-        $this->assertTrue($variable);
+        self::assertTrue($variable);
     }
 
     public function testGenerateUuid()
@@ -39,7 +39,7 @@ class LibTest extends TestCase
         $actual = Lib::generateUuid();
         $pattern = '/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?' .
             '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i';
-        $this->assertRegExp($pattern, $actual);
+        self::assertRegExp($pattern, $actual);
     }
 
     public function testCmd()
@@ -47,14 +47,14 @@ class LibTest extends TestCase
         $actual = Lib::cmd('foo', array('bar', 'baz'));
         $expected = 'foo bar baz';
         self::assertIsString($actual);
-        $this->assertSame($actual, $expected);
+        self::assertSame($actual, $expected);
     }
 
     public function testCmdArgumentMerging()
     {
         $actual = Lib::cmd('cmd', array('-a', array('-b', 'c')));
         $expected = 'cmd -a -b c';
-        $this->assertSame($actual, $expected);
+        self::assertSame($actual, $expected);
     }
 
     public function provideQuoteArgs()
@@ -78,7 +78,7 @@ class LibTest extends TestCase
     public function testQuoteArg($argument, $expected)
     {
         $actual = Lib::quoteArg($argument);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -90,17 +90,17 @@ class LibTest extends TestCase
 
         $lines = Lib::lines($atEnd);
 
-        $this->assertSame(array('1', '2', '3'), $lines);
+        self::assertSame(array('1', '2', '3'), $lines);
     }
 
     public function testMerge()
     {
-        $this->assertSame(array(1, 3, 4), Lib::merge(1, array(3, 4)));
+        self::assertSame(array(1, 3, 4), Lib::merge(1, array(3, 4)));
     }
 
     public function testMergeEmpty()
     {
-        $this->assertSame(array(), Lib::merge());
+        self::assertSame(array(), Lib::merge());
     }
 
     public function testPhpBinary()
@@ -122,7 +122,7 @@ class LibTest extends TestCase
     {
         $expected = array(array('test'), array('fest'));
         $actual = Lib::arrayChunkByStringLength(array('test', 'fest'), 4);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testEnvServerSuperglobalFiltering()
@@ -130,22 +130,22 @@ class LibTest extends TestCase
         $server = $_SERVER;
 
         $server['foo=bar'] = 'baz';
-        $this->assertArrayHasKey('HOME', $server, 'pre-condition');
-        $this->assertArrayHasKey('argc', $server, 'pre-condition');
-        $this->assertArrayHasKey('REQUEST_TIME', $server, 'pre-condition');
+        self::assertArrayHasKey('HOME', $server, 'pre-condition');
+        self::assertArrayHasKey('argc', $server, 'pre-condition');
+        self::assertArrayHasKey('REQUEST_TIME', $server, 'pre-condition');
 
         $env = Lib::env($server);
 
-        $this->assertArrayNotHasKey('foo=bar', $env, 'behavioral assertion');
-        $this->assertArrayHasKey('HOME', $server, 'behavioral assertion');
-        $this->assertArrayNotHasKey('argc', $env, 'behavioral assertion');
-        $this->assertArrayNotHasKey('REQUEST_TIME', $env, 'behavioral assertion');
+        self::assertArrayNotHasKey('foo=bar', $env, 'behavioral assertion');
+        self::assertArrayHasKey('HOME', $server, 'behavioral assertion');
+        self::assertArrayNotHasKey('argc', $env, 'behavioral assertion');
+        self::assertArrayNotHasKey('REQUEST_TIME', $env, 'behavioral assertion');
     }
 
     public function testEmptyCoalesce()
     {
-        $this->assertNull(Lib::emptyCoalesce());
-        $this->assertNull(Lib::emptyCoalesce(false));
-        $this->assertTrue(Lib::emptyCoalesce(null, false, '0', '', array(), true));
+        self::assertNull(Lib::emptyCoalesce());
+        self::assertNull(Lib::emptyCoalesce(false));
+        self::assertTrue(Lib::emptyCoalesce(null, false, '0', '', array(), true));
     }
 }

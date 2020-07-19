@@ -14,7 +14,7 @@ class ImageNameTest extends TestCase
     public function testCreation()
     {
         $name = new ImageName('foo/bar:latest');
-        $this->assertInstanceOf('Ktomk\Pipelines\File\ImageName', $name);
+        self::assertInstanceOf('Ktomk\Pipelines\File\ImageName', $name);
     }
 
     /**
@@ -51,14 +51,14 @@ class ImageNameTest extends TestCase
     public function testImageNameValidation($subject, $expected)
     {
         $actual = ImageName::validate($subject);
-        $this->assertSame($expected, $actual, $subject);
+        self::assertSame($expected, $actual, $subject);
     }
 
     public function testToString()
     {
         $expected = 'foo/bar:latest';
         $name = new ImageName($expected);
-        $this->assertSame($expected, $name->__toString());
-        $this->assertSame($expected, (string)$name);
+        self::assertSame($expected, $name->__toString());
+        self::assertSame($expected, (string)$name);
     }
 }

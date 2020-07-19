@@ -43,15 +43,15 @@ class YamlTest extends TestCase
     {
         $array = Yaml::file(__FILE__);
 
-        $this->assertNull($array);
+        self::assertNull($array);
     }
 
     public function testYamlNull()
     {
         $array = Yaml::buffer('first: ~');
 
-        $this->assertArrayHasKey('first', $array);
-        $this->assertNull($array['first']);
+        self::assertArrayHasKey('first', $array);
+        self::assertNull($array['first']);
     }
 
     public function testNoParserAvailable()

@@ -16,7 +16,7 @@ class PrefixTest extends TestCase
 {
     public function testVerify()
     {
-        $this->assertSame('foo', Prefix::verify('foo'));
+        self::assertSame('foo', Prefix::verify('foo'));
 
         $this->expectException('UnexpectedValueException');
         $this->expectExceptionMessage('invalid prefix: "p"; a prefix is only lower-case letters with a minimum length of three characters');

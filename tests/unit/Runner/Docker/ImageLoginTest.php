@@ -19,7 +19,7 @@ class ImageLoginTest extends TestCase
         $resolver = function () {
         };
         $login = new ImageLogin($exec, $resolver);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\ImageLogin', $login);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Docker\ImageLogin', $login);
     }
 
     public function testByImageWithStringImage()
@@ -59,9 +59,9 @@ class ImageLoginTest extends TestCase
         };
         $path = __DIR__ . '/../../../data/docker-config.json';
         $login = new ImageLogin($exec, $resolver, $path);
-        $this->assertTrue($login->dockerLoginHasAuth());
-        $this->assertTrue($login->dockerLoginHasAuth('existing.foo.host.example:12345'));
-        $this->assertFalse($login->dockerLoginHasAuth('https://repo.foo/'));
+        self::assertTrue($login->dockerLoginHasAuth());
+        self::assertTrue($login->dockerLoginHasAuth('existing.foo.host.example:12345'));
+        self::assertFalse($login->dockerLoginHasAuth('https://repo.foo/'));
     }
 
     public function testGetDockerConfigPathFromEnvironment()
@@ -71,6 +71,6 @@ class ImageLoginTest extends TestCase
         };
         $login = new ImageLogin($exec, $resolver);
         $actual = $login->getDockerConfigPathFromEnvironment();
-        $this->assertStringEndsWith('/.docker/config.json', $actual);
+        self::assertStringEndsWith('/.docker/config.json', $actual);
     }
 }

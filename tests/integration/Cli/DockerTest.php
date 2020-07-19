@@ -19,7 +19,7 @@ class DockerTest extends TestCase
     {
         $exec = new Exec();
         $docker = new Docker($exec);
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Docker', $docker);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Docker', $docker);
     }
 
     public function testHasCommand()
@@ -39,7 +39,7 @@ class DockerTest extends TestCase
 
         $version = $docker->getVersion();
         if (null === $version) {
-            $this->assertNull($version);
+            self::assertNull($version);
         } else {
             self::assertIsString($version);
         }

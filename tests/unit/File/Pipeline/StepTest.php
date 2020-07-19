@@ -17,7 +17,7 @@ class StepTest extends TestCase
     public function testCreation()
     {
         $step = $this->createStep();
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step);
     }
 
     public function testGetArtifacts()
@@ -28,7 +28,7 @@ class StepTest extends TestCase
         );
         $step = $this->createStep($array);
         $actual = $step->getArtifacts();
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\File\Artifacts',
             $actual
         );
@@ -37,7 +37,7 @@ class StepTest extends TestCase
     public function testGetArtifactsWithNoArtifactsNode()
     {
         $step = $this->createStep();
-        $this->assertNull($step->getArtifacts());
+        self::assertNull($step->getArtifacts());
     }
 
     /**
@@ -83,7 +83,7 @@ class StepTest extends TestCase
             'image' => 'expected',
             'script' => array(':'),
         ));
-        $this->assertSame('expected', (string)$step->getImage());
+        self::assertSame('expected', (string)$step->getImage());
     }
 
     /**
@@ -102,7 +102,7 @@ class StepTest extends TestCase
     public function testGetImageFallback()
     {
         $step = $this->createStep();
-        $this->assertNull($step->getImage());
+        self::assertNull($step->getImage());
     }
 
     public function testGetName()
@@ -111,35 +111,35 @@ class StepTest extends TestCase
             'name' => 'expected',
             'script' => array(':'),
         ));
-        $this->assertSame('expected', $step->getName());
+        self::assertSame('expected', $step->getName());
     }
 
     public function testGetNameFallback()
     {
         $step = $this->createStep();
-        $this->assertNull($step->getName());
+        self::assertNull($step->getName());
     }
 
     public function testGetScript()
     {
         $step = $this->createStep();
-        $this->assertSame(array(':'), $step->getScript());
+        self::assertSame(array(':'), $step->getScript());
     }
 
     public function testJsonSerialize()
     {
         $actual = $this->createStep()->jsonSerialize();
-        $this->assertArrayHasKey('image', $actual);
+        self::assertArrayHasKey('image', $actual);
     }
 
     public function testGetEnv()
     {
-        $this->assertSame(array(), $this->createStep()->getEnv());
+        self::assertSame(array(), $this->createStep()->getEnv());
     }
 
     public function testGetFile()
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\File\File',
             $this->createStep()->getFile()
         );
@@ -149,14 +149,14 @@ class StepTest extends TestCase
     {
         $index = $this->createStep()->getIndex();
         self::assertIsInt($index);
-        $this->assertGreaterThanOrEqual(0, $index);
+        self::assertGreaterThanOrEqual(0, $index);
     }
 
     public function testGetServices()
     {
         $step = $this->createStep();
 
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $step->getServices());
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $step->getServices());
     }
 
     public function testManual()
@@ -166,13 +166,13 @@ class StepTest extends TestCase
             'script' => array(':'),
         );
 
-        $this->assertFalse($this->createStep(null, 0)->isManual());
+        self::assertFalse($this->createStep(null, 0)->isManual());
 
-        $this->assertFalse($this->createStep($manualStep, 0)->isManual(), 'first step can never be manual');
+        self::assertFalse($this->createStep($manualStep, 0)->isManual(), 'first step can never be manual');
 
-        $this->assertFalse($this->createStep(null, 1)->isManual());
+        self::assertFalse($this->createStep(null, 1)->isManual());
 
-        $this->assertTrue($this->createStep($manualStep, 1)->isManual(), 'second step can be manual');
+        self::assertTrue($this->createStep($manualStep, 1)->isManual(), 'second step can be manual');
     }
 
     public function testGetAfterScript()
@@ -181,8 +181,8 @@ class StepTest extends TestCase
             'script' => array(':'),
             'after-script' => array(':'),
         );
-        $this->assertSame(array(), $this->createStep(null)->getAfterScript());
-        $this->assertSame(array(':'), $this->createStep($afterScriptStep)->getAfterScript());
+        self::assertSame(array(), $this->createStep(null)->getAfterScript());
+        self::assertSame(array(':'), $this->createStep($afterScriptStep)->getAfterScript());
     }
 
     /**

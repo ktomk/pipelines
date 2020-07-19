@@ -29,26 +29,32 @@ class ServiceOptions implements Runnable
      * @var Args
      */
     private $args;
+
     /**
      * @var Streams
      */
     private $streams;
+
     /**
      * @var File
      */
     private $file;
+
     /**
      * @var Exec
      */
     private $exec;
+
     /**
      * @var Env
      */
     private $env;
+
     /**
      * @var RunOpts
      */
     private $runOpts;
+
     /**
      * @var Directories
      */

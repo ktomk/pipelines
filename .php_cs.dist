@@ -47,6 +47,7 @@ $config = PhpCsFixer\Config::create()
         'phpdoc_order' => true,
         'phpdoc_separation' => true,
         'phpdoc_types_order' => true,
+        'php_unit_test_case_static_method_calls' => array('call_type' => 'self'),
         'semicolon_after_instruction' => true,
         'strict_comparison' => true,
         'strict_param' => true,

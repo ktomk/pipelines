@@ -23,7 +23,7 @@ class PackageYamlFileReaderTest extends TestCase
         $reader = new PackageYamlFileReader($testPackage);
         $expected = UnpackagerTest::getTestPackage();
         $actual = $reader->asPackageArray();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**

@@ -16,9 +16,9 @@ class ArgsBuilderTest extends TestCase
 {
     public function testOptMap()
     {
-        $this->assertSame(array(), ArgsBuilder::optMap('-l', array()));
+        self::assertSame(array(), ArgsBuilder::optMap('-l', array()));
 
-        $this->assertSame(
+        self::assertSame(
             array('--test', 'foo', '--test', 'bar=baz'),
             ArgsBuilder::optMap('--test', array('foo' => null, 'bar' => 'baz'))
         );

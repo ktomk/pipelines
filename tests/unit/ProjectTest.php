@@ -20,7 +20,7 @@ class ProjectTest extends TestCase
     public function testCreation()
     {
         $project = new Project('test-project-path');
-        $this->assertInstanceOf('Ktomk\Pipelines\Project', $project);
+        self::assertInstanceOf('Ktomk\Pipelines\Project', $project);
 
         return $project;
     }
@@ -35,20 +35,20 @@ class ProjectTest extends TestCase
     public function testGetName()
     {
         $project = new Project(__DIR__ . '/test-project');
-        $this->assertSame('test-project', $project->getName());
+        self::assertSame('test-project', $project->getName());
     }
 
     public function testToString()
     {
         $project = new Project(__DIR__ . '/test-project');
-        $this->assertSame('test-project', (string)$project, 'project string represented by name');
+        self::assertSame('test-project', (string)$project, 'project string represented by name');
     }
 
     public function testGetDirectory()
     {
         $path = __DIR__;
         $project = new Project($path);
-        $this->assertSame($path, $project->getPath());
+        self::assertSame($path, $project->getPath());
     }
 
     /**
@@ -60,9 +60,9 @@ class ProjectTest extends TestCase
      */
     public function testGetAndSetPrefix(Project $project)
     {
-        $this->assertNull($project->getPrefix());
+        self::assertNull($project->getPrefix());
         $project->setPrefix(App::UTILITY_NAME);
-        $this->assertSame(App::UTILITY_NAME, $project->getPrefix());
+        self::assertSame(App::UTILITY_NAME, $project->getPrefix());
 
         $this->expectException('UnexpectedValueException');
         $this->expectExceptionMessage('invalid prefix: "99f"');

@@ -27,7 +27,7 @@ class DirectoriesTest extends TestCase
     {
         $project = new Project(realpath(__DIR__ . '/../../..'));
         $directories = new Directories($_SERVER, $project);
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\Runner\Directories',
             $directories
         );
@@ -51,7 +51,7 @@ class DirectoriesTest extends TestCase
     {
         $project = realpath(__DIR__ . '/../..');
         $directories = new Directories($_SERVER, new Project($project));
-        $this->assertSame(
+        self::assertSame(
             'tests',
             $directories->getName()
         );
@@ -65,7 +65,7 @@ class DirectoriesTest extends TestCase
     {
         $project = LibFsPath::normalizeSegments(__DIR__ . '/../..');
         $directories = new Directories($_SERVER, new Project($project));
-        $this->assertSame(
+        self::assertSame(
             $project,
             $directories->getProjectDirectory()
         );
@@ -74,7 +74,7 @@ class DirectoriesTest extends TestCase
     public function testPipelineLocalDeploy()
     {
         $directories = new Directories($_SERVER, self::getTestProject());
-        $this->assertSame(
+        self::assertSame(
             $_SERVER['HOME'] . '/.pipelines/' . basename(self::getTestProject()),
             $directories->getPipelineLocalDeploy()
         );
@@ -105,7 +105,7 @@ class DirectoriesTest extends TestCase
     {
         $directories = new Directories($env, self::getTestProject());
 
-        $this->assertSame($expected, $directories->getBaseDirectory($type, $suffix));
+        self::assertSame($expected, $directories->getBaseDirectory($type, $suffix));
     }
 
     public function testGetBaseDirectoryThrows()

@@ -14,7 +14,7 @@ class PropertiesTest extends TestCase
     public function testCreation()
     {
         $properties = new Properties();
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\Value\Properties',
             $properties
         );
@@ -29,7 +29,7 @@ class PropertiesTest extends TestCase
      */
     public function testCountableOnCreation(Properties $properties)
     {
-        $this->assertCount(0, $properties);
+        self::assertCount(0, $properties);
     }
 
     /**
@@ -39,7 +39,7 @@ class PropertiesTest extends TestCase
      */
     public function testHasOnCreation(Properties $properties)
     {
-        $this->assertFalse($properties->has('baz'));
+        self::assertFalse($properties->has('baz'));
     }
 
     /**
@@ -49,7 +49,7 @@ class PropertiesTest extends TestCase
      */
     public function testToArrayOnCreation(Properties $properties)
     {
-        $this->assertSame(array(), $properties->toArray());
+        self::assertSame(array(), $properties->toArray());
     }
 
     /**
@@ -58,7 +58,7 @@ class PropertiesTest extends TestCase
      */
     public function testExportOnCreation(Properties $properties)
     {
-        $this->assertSame(array(), $properties->export(array()));
+        self::assertSame(array(), $properties->export(array()));
     }
 
     public function testImport()
@@ -72,7 +72,7 @@ class PropertiesTest extends TestCase
         $expected = array(
             'baz' => 'le baz',
         );
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
 
         return $properties;
     }
@@ -83,7 +83,7 @@ class PropertiesTest extends TestCase
      */
     public function testHasAfterImport(Properties $properties)
     {
-        $this->assertTrue($properties->has('foo'));
+        self::assertTrue($properties->has('foo'));
     }
 
     /**
@@ -96,7 +96,7 @@ class PropertiesTest extends TestCase
         $expected = array(
             'foo' => 'le foo',
         );
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -109,7 +109,7 @@ class PropertiesTest extends TestCase
         $expected = array(
             'foo' => 'le foo',
         );
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testExportProperties()
@@ -119,7 +119,7 @@ class PropertiesTest extends TestCase
         $properties->importPropertiesArray($array);
 
         $actual = $properties->exportPropertiesByName(array('bar', 'baz'));
-        $this->assertSame($array, $actual);
+        self::assertSame($array, $actual);
     }
 
     public function testExportWithRequiredKey()
@@ -129,7 +129,7 @@ class PropertiesTest extends TestCase
         $properties->import($array, array_keys($array));
 
         $actual = $properties->export(array(array('foo'), array('bar')));
-        $this->assertSame($array, $actual);
+        self::assertSame($array, $actual);
     }
 
     /**
@@ -152,6 +152,6 @@ class PropertiesTest extends TestCase
      */
     public function testCountableAfterImport(Properties $properties)
     {
-        $this->assertCount(1, $properties);
+        self::assertCount(1, $properties);
     }
 }

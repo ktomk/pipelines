@@ -19,7 +19,7 @@ class RunnerOptionsTest extends TestCase
     {
         $args = Args::create(array('cmd', '--error-keep', '--prefix', 'prefix', '--docker-client', __FILE__));
         $runner = RunnerOptions::bind($args, Streams::create());
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\RunnerOptions', $runner);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\RunnerOptions', $runner);
 
         return $runner;
     }
@@ -35,7 +35,7 @@ class RunnerOptionsTest extends TestCase
     public function testParse(RunnerOptions $runner)
     {
         $actual = $runner->run();
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\RunOpts', $actual);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\RunOpts', $actual);
     }
 
     /**

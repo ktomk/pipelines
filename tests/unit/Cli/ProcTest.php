@@ -14,33 +14,33 @@ class ProcTest extends TestCase
     public function testCreation()
     {
         $proc = new Proc('');
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Proc', $proc);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Proc', $proc);
     }
 
     public function testGetStatus()
     {
         $proc = new Proc(':');
-        $this->assertNull($proc->getStatus());
+        self::assertNull($proc->getStatus());
         $proc->run();
-        $this->assertNotNull($proc->getStatus());
+        self::assertNotNull($proc->getStatus());
     }
 
     public function testSetStatus()
     {
         $proc = new Proc(':');
-        $this->assertNull($proc->getStatus());
+        self::assertNull($proc->getStatus());
         $proc->setStatus(0);
-        $this->assertSame(0, $proc->getStatus());
+        self::assertSame(0, $proc->getStatus());
     }
 
     public function testGetBuffer()
     {
         $proc = new Proc(':');
-        $this->assertSame('', $proc->getStandardOutput());
-        $this->assertSame('', $proc->getStandardError());
+        self::assertSame('', $proc->getStandardOutput());
+        self::assertSame('', $proc->getStandardError());
         $proc->run();
-        $this->assertSame('', $proc->getStandardOutput());
-        $this->assertSame('', $proc->getStandardError());
+        self::assertSame('', $proc->getStandardOutput());
+        self::assertSame('', $proc->getStandardError());
     }
 
     /**
@@ -51,6 +51,6 @@ class ProcTest extends TestCase
     public function testRun()
     {
         $proc = new Proc(PHP_BINARY . ' -v');
-        $this->assertSame(0, $proc->run());
+        self::assertSame(0, $proc->run());
     }
 }

@@ -1,7 +1,7 @@
 # Pipelines Environment Variable Usage
 
-Environment variables (sometimes also called environment
-parameters) are a first grade citizen of the `pipelines` utility.
+Environment variables (also known as environment parameters) are a first
+grade citizen of the `pipelines` utility.
 
 The `pipelines` utility has support for Bitbucket Cloud Pipelines
 Plugin environment variables. This document describes along the
@@ -67,59 +67,69 @@ the depployments are not (yet) supported, therefore the variable
 call makes not much sense as it would be set for every script,
 and not the deployment script only.
 
-However:
-
-Some variables which are valid per project and which are marked
-"currently unsupported" above do make sense to be put into the
+*However:* Some variables which are valid per project and which are
+marked "currently unsupported" above do make sense to be put into the
 auto-loading environment files (`.env` and `.env.dist`). As long
 as their values are *not* considered a secret, they can be added
-to `.env.dist` which's intention is to be committed in the
-project repository. Otherwise, instead of poisoning your local
-environment, project secrets *can* be put into the private `.env`
-file as long as you consider files on your local system safe for
-storage (if your computer is connected to the internet this might
-not be the case and might be a short-cumming with the overall
-Atlassian Bitbucket Cloud Pipelines Plugin anyways).
+including the values to `.env.dist` which intention is to be committed
+in the project repository (see your VCS/SCMs' documentation, e.g. [for
+`git` see git-ignore][GIT-IGNORE] \[GIT-IGNORE]).
+
+Otherwise, instead of poisoning your local environment, project secrets
+*can* be put into the private `.env` file (or any other `*.env` file via
+the `--env-file` option).
+
+This is as long as you consider your local system safe (if your computer
+is connected to the internet this might not be the case and might be an
+overall short-coming with the Atlassian Bitbucket Cloud Pipelines
+Plugin, take care [!] as *Secured Variables* are just *masked* and can
+be read by any user who has write access to a Bitbucket repository -
+similar to read access on a/your local system).
 
 ### Dealing w/ Secrets as Variable Values
 
-For secret values, put them into the `.env` file only (if at all)
-which's intention is to *not* be committed in the project
-repository.
+For secret environment parameters, put them into the `.env` file only
+(or other `.env` files - if at all) which by intention is/are *not* to
+be committed in the project repository.
 
-However:
+However: *Required* variables (with secrets) *should* be added with
+their name *only* to `.env.dist` file which is the project distribution
+parameter definition so that it clearly is documented which variables
+*are* required (this can be very helpful to document which secrets are
+needed and for non-secret what [sane] defaults are).
 
-*Required* variables (with secrets) *should* be added with their
-name *only* to `.env.dist` file which is the project distribution
-so that it is documented that these variables *are* required
-(this can be very helpful to document which secrets are needed).
+### Example Configuration of an Environment File
 
-### Environment File Example Configuration
+*Example configuration in a git based project with "dot env"
+files as they work w/ the pipelines utility:*
 
-Example configuration in a git based project with "dot env"
-files as they work w/ the pipelines utility.
+The pipelines utility adheres to environment files as by the Docker
+project. That is mainly b/c it is highly dependent on the Docker client
+utility and the environment file-format in the Docker project ships
+with all needed features:
 
-The pipelines utility adheres to environment files as by the
-Docker project. That is mainly b/c it is highly dependent on
-the Docker client utility but also the environment file-format
-in the Docker project ships with all needed features: variable
-definition, variable import and comments.
+* **environment variables**,
+* environment parameter **imports** / **definitions** and
+* **comments** .
 
 The following example consists of three files: First a
 `.gitignore` file that takes care that no environment files
 but `.env.dist` is getting committed to the git repository.
 
 This is necessary as these files might contain secrets (even in
-plain text) which *should never* go into the projects history.
+plain text) which *should never* go into the projects history (applies
+to `git`-utility managed projects only for `.gitignore` see your VCS
+utility if different for similar options).
 
-The file intended to be committed is the `.env.dist` file. It
-should contain all major variables but no secrets. This is
-possible by writing down the variable name only. One such
-variable in the example is `AWS_ACCESS_KEY_ID`. The key-id and
-the access key are considered a secret in the following example.
+From `pipelines` perspective, the file intended to be committed is the
+`.env.dist` file. It should contain all major variables but no secrets.
+This is possible by writing down the *variable (parameter) name*
+**only**. One such variable in the example is `AWS_ACCESS_KEY_ID`. The
+key-id and the access key are considered a secret in the following
+example.
 
 The `.env` file then (can) contain private information if ok
-persisted in the local file-system. Different dot env files
+persisted in the local file-system. Different *dot-env* files
 can be provided w/ the `--env-file <path>` option of the
 `pipelines` (or `docker`) utility.
 
@@ -173,26 +183,33 @@ environment variables are required for it. Additionally the
 project-wide default values are provided and the configuration
 setup does allow (local) (secret) configuration.
 
-The comment blocks for a section are multi-line and follow the
+The comment blocks for a section are multi-line and follow an
 exemplary format of the first line of the comment block having a
 separating three-dash-line and a single (empty) line at the end
 after the second line containing a section title so that it is
 easy to *diff* between `.env` and `.env.dist` (and other) files.
 
-Single line comments are not that practical with text differs for
-*sections*, this is how this format came to live. It is however
-up to every users discreet own experiences and needs on how to
-introduce sections in dot env files.
+### Why Multi-Line Comments?
 
-Keep notice that there is a single empty line before any other
-*but* the first section comment block *if* the first section
-comment block starts on the very first line of the file.
+Why multi-line comments? In practice I found that single line comments
+are not that practical with text differs for *sections*, actually this
+is how this format came to life; when using various `diff`-utilities to
+compare these various *dot-env* files.
+
+It is however up to every users discreet own experience(s) and need(s)
+on how to introduce sections in dot env files. It is only a subjective
+suggestion.
+
+**Note** that there is a single empty line before any other *but* the
+first section comment block *if* the first section comment block starts
+on the very first line of the file. This is crucial for all *differs*
+I've run across.
 
 ## Environment Parameters Considered for Distribution
 
 If a project fully relies on Atlassian Bitbucket Cloud Pipelines
 Environment (by my reading of their documentation) the following
-environment variable and values should be distributed within the
+environment variables and values should be distributed within the
 project:
 
 * `BITBUCKET_PROJECT_KEY`

@@ -78,7 +78,7 @@ class LabelsBuilder
     {
         $labels = array();
 
-        $labels['pipelines.prefix'] = UtilityApp::UTILITY_NAME === $this->prefix ? null : $this->prefix;
+        $labels['pipelines.prefix'] = UtilityApp::UTILITY_NAME === $this->prefix ? '' : $this->prefix;
         $labels['pipelines.role'] = $this->role;
         $labels['pipelines.project.name'] = $this->project;
         $labels['pipelines.project.path'] = $this->projectDirectory;

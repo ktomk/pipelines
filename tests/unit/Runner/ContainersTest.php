@@ -21,7 +21,7 @@ class ContainersTest extends RunnerTestCase
         $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
 
         $stepContainers = new Containers($runner, $exec);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers', $stepContainers);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Containers', $stepContainers);
     }
 
     public function testExecKillAndRemove()
@@ -39,7 +39,7 @@ class ContainersTest extends RunnerTestCase
 
         $actual = Containers::execRun($exec, array());
         self::assertIsArray($actual);
-        $this->assertCount(4, $actual);
+        self::assertCount(4, $actual);
     }
 
     public function testExecShutdownContainer()
@@ -90,7 +90,7 @@ class ContainersTest extends RunnerTestCase
         $resolver = function ($a) {return $a;};
 
         $actual = Containers::execRunServiceContainerImpl($exec, $service, $resolver, 'prefix', 'test');
-        $this->assertNotNull($actual);
+        self::assertNotNull($actual);
         self::assertIsArray($actual(true, '--rm'));
         self::assertIsArray($actual(false, '--detach'));
     }
@@ -112,6 +112,6 @@ class ContainersTest extends RunnerTestCase
         $stepContainers = new Containers($runner);
 
         $stepContainer = $stepContainers->createStepContainer($step);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepContainer', $stepContainer);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepContainer', $stepContainer);
     }
 }

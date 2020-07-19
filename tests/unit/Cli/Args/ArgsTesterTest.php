@@ -14,6 +14,6 @@ class ArgsTesterTest extends TestCase
     public function testDefaultIsArray()
     {
         $argsTester = new ArgsTester();
-        $this->assertSame(array(), $argsTester->arguments);
+        self::assertSame(array(), $argsTester->arguments);
     }
 }

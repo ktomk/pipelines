@@ -16,7 +16,7 @@ class ArtifactSourceTest extends TestCase
     {
         $exec = new ExecTester($this);
         $source = new ArtifactSource($exec, '*fake*', '/app');
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\ArtifactSource', $source);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Docker\ArtifactSource', $source);
 
         return $source;
     }
@@ -27,7 +27,7 @@ class ArtifactSourceTest extends TestCase
      */
     public function testGetId(ArtifactSource $source)
     {
-        $this->assertSame('*fake*', $source->getId());
+        self::assertSame('*fake*', $source->getId());
     }
 
     public function testGetFiles()
@@ -38,7 +38,7 @@ class ArtifactSourceTest extends TestCase
         $source = new ArtifactSource($exec, '*fake*', '/app');
         $actual = $source->getAllFiles();
         self::assertIsArray($actual);
-        $this->assertGreaterThanOrEqual(18, count($actual));
+        self::assertGreaterThanOrEqual(18, count($actual));
     }
 
     public function testGetFileFindFailure()
@@ -47,7 +47,7 @@ class ArtifactSourceTest extends TestCase
         $exec->expect('capture', 'docker', 126);
         $source = new ArtifactSource($exec, '*fake*', '/app');
         $actual = $source->getAllFiles();
-        $this->assertSame(array(), $actual);
+        self::assertSame(array(), $actual);
     }
 
     public function testFindByPattern()
@@ -63,6 +63,6 @@ class ArtifactSourceTest extends TestCase
         $result = $source->findByPattern('build/html/**.html');
         self::assertIsArray($result);
         $actual = array_intersect($expected, $result);
-        $this->assertSame($expected, $actual, 'all expected must be found');
+        self::assertSame($expected, $actual, 'all expected must be found');
     }
 }

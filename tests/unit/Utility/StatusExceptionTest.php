@@ -19,7 +19,7 @@ class StatusExceptionTest extends TestCase
     public function testCreation()
     {
         $actual = new StatusException('this is what it counts for', 1);
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\Utility\StatusException',
             $actual
         );
@@ -34,7 +34,7 @@ class StatusExceptionTest extends TestCase
      */
     public function testThrowable(StatusException $exception)
     {
-        $this->assertInstanceOf('Exception', $exception);
+        self::assertInstanceOf('Exception', $exception);
     }
 
     /**
@@ -42,7 +42,7 @@ class StatusExceptionTest extends TestCase
      */
     public function testMinimumCodeZero()
     {
-        $this->assertNotNull(
+        self::assertNotNull(
             new StatusException('', 0)
         );
     }
@@ -62,7 +62,7 @@ class StatusExceptionTest extends TestCase
      */
     public function testMaximumCode255()
     {
-        $this->assertNotNull(
+        self::assertNotNull(
             new StatusException('', 255)
         );
     }

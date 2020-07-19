@@ -38,7 +38,7 @@ class AppTest extends TestCase
         $app = new App(new Streams());
         $args = array_merge((array)'pipelines-test', $arguments);
         $status = $app->main($args);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testInvalidPrefixGivesError()
@@ -51,7 +51,7 @@ class AppTest extends TestCase
             '!$"',
         );
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     public function testEmptyBasenameGivesError()
@@ -64,7 +64,7 @@ class AppTest extends TestCase
             '',
         );
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     public function testFileOverridesBasenameVerbose()
@@ -83,7 +83,7 @@ class AppTest extends TestCase
             '--no-run',
         );
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     public function testNonReadableFilename()
@@ -100,7 +100,7 @@ class AppTest extends TestCase
             '--no-run',
         );
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     public function testUnknownOption()
@@ -114,7 +114,7 @@ class AppTest extends TestCase
             '--for-the-fish-thank-you',
         );
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     public function testInvalidWrongPipelineNameArgumentException()
@@ -128,7 +128,7 @@ class AppTest extends TestCase
             '--debug', '--pipeline', 'test/more',
         );
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     public function testCopyDeployMode()
@@ -139,7 +139,7 @@ class AppTest extends TestCase
             '--deploy', 'copy', '--dry-run',
         );
         $status = $app->main($args);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testArtifacts()
@@ -151,6 +151,6 @@ class AppTest extends TestCase
             '--dry-run',
         );
         $status = $app->main($args);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 }

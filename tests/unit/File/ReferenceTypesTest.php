@@ -38,7 +38,7 @@ class ReferenceTypesTest extends TestCase
      */
     public function testIsValidId($id, $expected)
     {
-        $this->assertSame($expected, ReferenceTypes::isValidId($id));
+        self::assertSame($expected, ReferenceTypes::isValidId($id));
     }
 
     /**
@@ -69,7 +69,7 @@ class ReferenceTypesTest extends TestCase
      */
     public function testIsPatternSection($section, $expected)
     {
-        $this->assertSame($expected, ReferenceTypes::isPatternSection($section));
+        self::assertSame($expected, ReferenceTypes::isPatternSection($section));
     }
 
     /**
@@ -79,7 +79,7 @@ class ReferenceTypesTest extends TestCase
     {
         $actual = ReferenceTypes::getSections();
         self::assertIsArray($actual);
-        $this->assertContainsOnly('string', $actual, true);
+        self::assertContainsOnly('string', $actual, true);
     }
 
     /**
@@ -108,6 +108,6 @@ class ReferenceTypesTest extends TestCase
      */
     public function testIsSection($section, $expected)
     {
-        $this->assertSame($expected, ReferenceTypes::isSection($section));
+        self::assertSame($expected, ReferenceTypes::isSection($section));
     }
 }

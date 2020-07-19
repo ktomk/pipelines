@@ -20,7 +20,7 @@ class DestructibleStringTest extends TestCase
             __NAMESPACE__ . '\LibFs::rmDir'
         );
 
-        $this->assertDirectoryExists((string)$tempDir);
+        self::assertDirectoryExists((string)$tempDir);
 
         return $tempDir;
     }
@@ -30,18 +30,18 @@ class DestructibleStringTest extends TestCase
         $dir = DestructibleString::rmDir(
             LibTmp::tmpDir('pipelines-test-destruction.')
         );
-        $this->assertDirectoryExists((string)$dir);
+        self::assertDirectoryExists((string)$dir);
         $dir->__destruct();
-        $this->assertDirectoryNotExists((string)$dir);
+        self::assertDirectoryNotExists((string)$dir);
     }
 
     public function testRm()
     {
         list($handle, $tmpFile) = LibTmp::tmpFile();
         $file = DestructibleString::rm($tmpFile);
-        $this->assertFileExists((string)$file);
+        self::assertFileExists((string)$file);
         $file->__destruct();
-        $this->assertFileNotExists((string)$file);
+        self::assertFileNotExists((string)$file);
         unset($handle);
     }
 
@@ -54,6 +54,6 @@ class DestructibleStringTest extends TestCase
     {
         $path = (string)$tempDir;
         $tempDir->__destruct();
-        $this->assertDirectoryNotExists($path);
+        self::assertDirectoryNotExists($path);
     }
 }

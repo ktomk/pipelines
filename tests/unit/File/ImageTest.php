@@ -14,7 +14,7 @@ class ImageTest extends TestCase
     public function testCreateFromString()
     {
         $image = new Image('account-name/java:8u66');
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
     }
 
     /**
@@ -37,7 +37,7 @@ class ImageTest extends TestCase
             'email' => '$DOCKER_HUB_EMAIL',
         );
         $image = new Image($array);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
     }
 
     /**
@@ -52,7 +52,7 @@ class ImageTest extends TestCase
             'name' => 'account-name/java:8u66',
         );
         $image = new Image($array);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Image', $image);
     }
 
     /**
@@ -79,14 +79,14 @@ class ImageTest extends TestCase
     {
         $expected = 'foo/bar:tag';
         $image = new Image($expected);
-        $this->assertSame($expected, (string)$image->getName());
+        self::assertSame($expected, (string)$image->getName());
     }
 
     public function testNameAsString()
     {
         $expected = 'foo/bar:tag';
         $image = new Image(array('name' => $expected));
-        $this->assertSame($expected, $image->__toString());
+        self::assertSame($expected, $image->__toString());
     }
 
     public function testGetProperties()
@@ -95,7 +95,7 @@ class ImageTest extends TestCase
         $image = new Image(array('name' => $expected));
         $actual = $image->getProperties();
         $class = 'Ktomk\Pipelines\Value\Properties';
-        $this->assertInstanceOf($class, $actual);
+        self::assertInstanceOf($class, $actual);
     }
 
     public function testJsonSerialize()
@@ -105,7 +105,7 @@ class ImageTest extends TestCase
         );
         $image = new Image($expected);
         $actual = $image->jsonSerialize();
-        $this->assertSame(
+        self::assertSame(
             $expected,
             $actual
         );
@@ -139,7 +139,7 @@ class ImageTest extends TestCase
         } catch (ParseException $exception) {
             $thrown = true;
         }
-        $this->assertSame($expected, $thrown);
+        self::assertSame($expected, $thrown);
     }
 
     /**

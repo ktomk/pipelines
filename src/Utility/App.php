@@ -153,9 +153,10 @@ class App implements Runnable
             $directories
         )->run();
 
-        $pipelineId = $pipelines->searchIdByReference($reference) ?: 'default';
-
-        $pipelineId = $args->getOptionArgument('pipeline', $pipelineId);
+        $pipelineId = $args->getOptionArgument(
+            'pipeline',
+            $pipelines->searchIdByReference($reference) ?: 'default'
+        );
 
         $streams = $this->parseStreams();
 

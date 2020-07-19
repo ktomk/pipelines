@@ -148,7 +148,7 @@ class GlobTest extends TestCase
      */
     public function testExpandBrace($expected, $subject)
     {
-        $this->assertSame($expected, Glob::expandBrace($subject), $subject);
+        self::assertSame($expected, Glob::expandBrace($subject), $subject);
     }
 
     /**
@@ -159,7 +159,7 @@ class GlobTest extends TestCase
     private function assert($pattern, $subject, $expected)
     {
         $actual = Glob::match($pattern, $subject);
-        $this->assertSame($expected, $actual, sprintf(
+        self::assertSame($expected, $actual, sprintf(
             "pattern '%s' %s subject '%s'",
             $pattern,
             $expected ? 'matches' : 'mismatches',

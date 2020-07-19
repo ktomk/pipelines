@@ -29,7 +29,7 @@ class StreamsTest extends TestCase
     public function testCreate()
     {
         $streams = Streams::create();
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Streams', $streams);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Streams', $streams);
     }
 
     public function testHandleWrite()
@@ -38,7 +38,7 @@ class StreamsTest extends TestCase
         $streams = new Streams(null, null, $capture);
         $streams->err('more');
         rewind($capture);
-        $this->assertSame('more', stream_get_contents($capture));
+        self::assertSame('more', stream_get_contents($capture));
     }
 
     public function testNullHandleWrite()
@@ -47,7 +47,7 @@ class StreamsTest extends TestCase
         $streams = new Streams(null, null, $capture);
         $streams->out("something\n");
         rewind($capture);
-        $this->assertSame('', stream_get_contents($capture));
+        self::assertSame('', stream_get_contents($capture));
     }
 
     public function testCloseResourcesOnDestructor()

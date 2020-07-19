@@ -17,13 +17,13 @@ class EnvResolverTest extends TestCase
     public function testCreation()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\EnvResolver', $resolver);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\EnvResolver', $resolver);
     }
 
     public function testGetValue()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
-        $this->assertNull($resolver->getValue('UID'));
+        self::assertNull($resolver->getValue('UID'));
     }
 
     public function testAddArgs()
@@ -35,11 +35,11 @@ class EnvResolverTest extends TestCase
             '-e', 'MOCHA',
         ));
         $resolver->addArguments($args);
-        $this->assertSame('annabelle', $resolver->getValue('USER'));
-        $this->assertSame('green', $resolver->getValue('OVERRIDE'));
-        $this->assertNull($resolver->getValue('DECAFFEINATED'));
-        $this->assertSame('1000', $resolver->getValue('UID'), 'exported variable');
-        $this->assertNull($resolver->getValue('MOCHA'), 'unset, file override');
+        self::assertSame('annabelle', $resolver->getValue('USER'));
+        self::assertSame('green', $resolver->getValue('OVERRIDE'));
+        self::assertNull($resolver->getValue('DECAFFEINATED'));
+        self::assertSame('1000', $resolver->getValue('UID'), 'exported variable');
+        self::assertNull($resolver->getValue('MOCHA'), 'unset, file override');
     }
 
     public function testAddLines()
@@ -54,13 +54,13 @@ class EnvResolverTest extends TestCase
         $resolver->addLines($lines);
 
         $actual = $resolver->getValue('DOCKER_ID_PASSWORD');
-        $this->assertNull($actual, 'non-existing environment variable');
+        self::assertNull($actual, 'non-existing environment variable');
 
         $actual = $resolver->getValue('DOCKER_ID_USER');
-        $this->assertSame('electra', $actual, 'existing variable');
+        self::assertSame('electra', $actual, 'existing variable');
 
         $actual = $resolver->getValue('DOCKER_ID_EMAIL');
-        $this->assertSame('foo@example.com', $actual, 'set variable');
+        self::assertSame('foo@example.com', $actual, 'set variable');
     }
 
     public function testAddFile()
@@ -69,10 +69,10 @@ class EnvResolverTest extends TestCase
         $resolver->addFile(__DIR__ . '/../../../.env.dist');
 
         $actual = $resolver->getValue('DOCKER_ID_PASSWORD');
-        $this->assertNull($actual, 'non-existing environment variable');
+        self::assertNull($actual, 'non-existing environment variable');
 
         $actual = $resolver->getValue('DOCKER_ID_USER');
-        $this->assertSame('electra', $actual, 'existing variable');
+        self::assertSame('electra', $actual, 'existing variable');
     }
 
     /**
@@ -90,14 +90,14 @@ class EnvResolverTest extends TestCase
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
         $resolver->addFileIfExists('/abc/xyz/nada-kar-la-da');
-        $this->assertNull($resolver->getValue('UID'));
+        self::assertNull($resolver->getValue('UID'));
     }
 
     public function testAddFileIfExists2()
     {
         $resolver = new EnvResolver(array('UID' => '1000'));
         $resolver->addFileIfExists(__DIR__ . '/../../data/env/test.env');
-        $this->assertNull($resolver->getValue('UID'));
+        self::assertNull($resolver->getValue('UID'));
     }
 
     /**
@@ -116,15 +116,15 @@ class EnvResolverTest extends TestCase
         $resolver = new EnvResolver(array('UID' => '1000'));
 
         $actual = $resolver->resolveString('UID');
-        $this->assertSame('UID', $actual, 'no variable');
+        self::assertSame('UID', $actual, 'no variable');
 
         $actual = $resolver->resolveString('$UID');
-        $this->assertSame('', $actual, 'undefined variable');
+        self::assertSame('', $actual, 'undefined variable');
 
         $resolver->addDefinition('UID');
 
         $actual = $resolver->resolveString('$UID');
-        $this->assertSame('1000', $actual, 'defined variable');
+        self::assertSame('1000', $actual, 'defined variable');
     }
 
     public function testStringResolver()
@@ -154,10 +154,10 @@ class EnvResolverTest extends TestCase
 
         # string mode
         $actual = array_map($resolver, $input);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
 
         # array mode
         $actual = $resolver($input);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 }

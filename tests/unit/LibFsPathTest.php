@@ -41,7 +41,7 @@ class LibFsPathTest extends TestCase
     public function testIsAbsolute($path, $expected)
     {
         $actual = LibFsPath::isAbsolute($path);
-        $this->assertSame($expected, $actual, "path '${path}' is (not) absolute");
+        self::assertSame($expected, $actual, "path '${path}' is (not) absolute");
     }
 
     public function provideBasenamePaths() {
@@ -63,7 +63,7 @@ class LibFsPathTest extends TestCase
     public function testIsBasename($path, $expected)
     {
         $actual = LibFsPath::isBasename($path);
-        $this->assertSame($expected, $actual, 'path is (not) basename');
+        self::assertSame($expected, $actual, 'path is (not) basename');
     }
 
     public function providePaths()
@@ -85,7 +85,7 @@ class LibFsPathTest extends TestCase
      */
     public function testNormalize($path, $expected)
     {
-        $this->assertSame($expected, LibFsPath::normalize($path));
+        self::assertSame($expected, LibFsPath::normalize($path));
     }
 
     /**
@@ -122,7 +122,7 @@ class LibFsPathTest extends TestCase
      */
     public function testNormalizeSegments($path, $expected)
     {
-        $this->assertSame($expected, LibFsPath::normalizeSegments($path));
+        self::assertSame($expected, LibFsPath::normalizeSegments($path));
     }
 
     public function testContainsRelativeSegment()
@@ -165,6 +165,6 @@ class LibFsPathTest extends TestCase
         if (null === $expected) {
             $this->expectException('InvalidArgumentException');
         }
-        $this->assertSame($expected, LibFsPath::gateAbsolutePortable($path));
+        self::assertSame($expected, LibFsPath::gateAbsolutePortable($path));
     }
 }

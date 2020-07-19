@@ -13,8 +13,8 @@ class OptionMatcherTest extends TestCase
 {
     public function testCreate()
     {
-        $this->assertTrue(OptionMatcher::create('user')->match('--user=1000:1000'));
-        $this->assertFalse(OptionMatcher::create('user')->match('--foo-user=1000:1000'));
+        self::assertTrue(OptionMatcher::create('user')->match('--user=1000:1000'));
+        self::assertFalse(OptionMatcher::create('user')->match('--foo-user=1000:1000'));
     }
 
     /**
@@ -69,7 +69,7 @@ class OptionMatcherTest extends TestCase
     public function testMatchOptionArg($expected, $option, $arg, $equals)
     {
         $actual = OptionMatcher::matchOptionArg($option, $arg, $equals);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -83,6 +83,6 @@ class OptionMatcherTest extends TestCase
     public function testMatch($expected, $option, $arg, $equals)
     {
         $matcher = new OptionMatcher($option, $equals);
-        $this->assertSame($expected, $matcher->match($arg));
+        self::assertSame($expected, $matcher->match($arg));
     }
 }

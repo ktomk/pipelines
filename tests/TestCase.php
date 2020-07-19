@@ -385,7 +385,7 @@ class TestCase extends PhpunitTestCase
         }
 
         /** @noinspection PhpUnitTestsInspection */
-        $this->assertTrue(\is_dir($directory), $message);
+        self::assertTrue(\is_dir($directory), $message);
     }
 
     /**
@@ -401,7 +401,7 @@ class TestCase extends PhpunitTestCase
         }
 
         /** @noinspection PhpUnitTestsInspection */
-        $this->assertFalse(\is_dir($directory), $message);
+        self::assertFalse(\is_dir($directory), $message);
     }
 
     /**
@@ -417,7 +417,7 @@ class TestCase extends PhpunitTestCase
         }
 
         /** @noinspection PhpUnitTestsInspection */
-        $this->assertTrue(\file_exists($filename), $message);
+        self::assertTrue(\file_exists($filename), $message);
     }
 
     /**
@@ -433,6 +433,6 @@ class TestCase extends PhpunitTestCase
         }
 
         /** @noinspection PhpUnitTestsInspection */
-        $this->assertFalse(\file_exists($filename), $message);
+        self::assertFalse(\file_exists($filename), $message);
     }
 }

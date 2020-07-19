@@ -26,7 +26,7 @@ class StepServiceContainersTest extends TestCase
         $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
 
         $services = new StepServiceContainers($step, $runner);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepServiceContainers', $services);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepServiceContainers', $services);
     }
 
     public function testObtainNetworkWithoutServices()
@@ -36,7 +36,7 @@ class StepServiceContainersTest extends TestCase
         );
 
         $services = new StepServiceContainers($step, $runner);
-        $this->assertSame(array(), $services->obtainNetwork());
+        self::assertSame(array(), $services->obtainNetwork());
     }
 
     public function testObtainNetworkWithService()
@@ -48,7 +48,7 @@ class StepServiceContainersTest extends TestCase
         $exec->expect('capture', 'docker');
 
         $services = new StepServiceContainers($step, $runner);
-        $this->assertSame(array('--network', 'host'), $services->obtainNetwork());
+        self::assertSame(array('--network', 'host'), $services->obtainNetwork());
     }
 
     public function testShutdown()

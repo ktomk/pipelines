@@ -28,6 +28,7 @@ pipelines:
               composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
               | grep -q '^4.' || { composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit;
                 composer require --no-suggest --dev phpunit/phpunit ^4; }
+            - composer install
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
           services:
             - docker
@@ -113,6 +114,20 @@ pipelines:
             - bin/pipelines --pipeline custom/recursion --dry-run # must fail
           services:
             - docker
+    recursion-pip-happy:
+      - step:
+          image: php:7.0
+          script:
+            - 'docker version --format "client: {{.Client.Version}} / server: {{.Server.Version}}"'
+            - docker cp --help
+            - bin/pipelines --pipeline custom/recursion-pip-happy/end
+          services:
+            - docker
+    recursion-pip-happy/end:
+      - step:
+          image: php:7.0
+          script:
+            - ':'
     private/docker-hub:
       - step:
           image:
@@ -131,6 +146,7 @@ pipelines:
             - printenv | sort
     after-script:
       - step:
+          image: ktomk/pipelines:busybox
           name: Happy
           script:
             - echo "fine"
@@ -138,6 +154,7 @@ pipelines:
             - 'echo "BITBUCKET_EXIT_CODE: ${BITBUCKET_EXIT_CODE}"'
       - step:
           name: Broken
+          image: ktomk/pipelines:busybox
           script:
             - exit 123
             - echo "already broken"

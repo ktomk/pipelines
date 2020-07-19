@@ -72,7 +72,7 @@ class RunnerTestCase extends TestCase
         );
         $pipelineSteps = $pipeline->getSteps();
         $step = $pipelineSteps[0];
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step, 'creating the test step failed');
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step, 'creating the test step failed');
 
         return $step;
     }
@@ -90,9 +90,9 @@ class RunnerTestCase extends TestCase
         $array = Yaml::file($path);
         $fileObject = new File($array);
         $pipelineObject = $fileObject->getById($pipeline);
-        $this->assertNotNull($pipelineObject);
+        self::assertNotNull($pipelineObject);
         $pipelineSteps = $pipelineObject->getSteps();
-        $this->assertArrayHasKey($step - 1, $pipelineSteps);
+        self::assertArrayHasKey($step - 1, $pipelineSteps);
 
         return $pipelineSteps[$step - 1];
     }

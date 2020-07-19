@@ -16,7 +16,7 @@ class RunOptsTest extends TestCase
     public function testCreation()
     {
         $opts = RunOpts::create('prefix', '');
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\RunOpts', $opts);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\RunOpts', $opts);
 
         return $opts;
     }
@@ -30,7 +30,7 @@ class RunOptsTest extends TestCase
     {
         self::assertIsString($opts->getPrefix());
         $opts->setPrefix('foo');
-        $this->assertSame('foo', $opts->getPrefix());
+        self::assertSame('foo', $opts->getPrefix());
     }
 
     /**
@@ -40,11 +40,11 @@ class RunOptsTest extends TestCase
      */
     public function testGetOptions(RunOpts $opts)
     {
-        $this->assertNull($opts->getOption('foo.bar.baz'));
-        $this->assertNotNull($opts->getOption('docker.socket.path'));
+        self::assertNull($opts->getOption('foo.bar.baz'));
+        self::assertNotNull($opts->getOption('docker.socket.path'));
 
-        $this->assertFalse($opts->getBoolOption('foo.bar.baz'));
-        $this->assertTrue($opts->getBoolOption('docker.socket.path'));
+        self::assertFalse($opts->getBoolOption('foo.bar.baz'));
+        self::assertTrue($opts->getBoolOption('docker.socket.path'));
     }
 
     /**
@@ -53,7 +53,7 @@ class RunOptsTest extends TestCase
     public function testGetOptionsWithNull()
     {
         $opts = new RunOpts();
-        $this->assertNull($opts->getOption('foo.bar'));
+        self::assertNull($opts->getOption('foo.bar'));
     }
 
     /**
@@ -65,7 +65,7 @@ class RunOptsTest extends TestCase
     {
         self::assertIsString($opts->getBinaryPackage());
         $opts->setBinaryPackage('foo');
-        $this->assertSame('foo', $opts->getBinaryPackage());
+        self::assertSame('foo', $opts->getBinaryPackage());
     }
 
     /**

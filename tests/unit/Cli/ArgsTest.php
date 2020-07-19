@@ -14,10 +14,10 @@ class ArgsTest extends TestCase
     public function testCreation()
     {
         $args = new Args(array('test'));
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args', $args);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Args', $args);
 
         $args = Args::create(array('test'));
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args', $args);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Args', $args);
     }
 
     public function testMissingCommand()
@@ -31,17 +31,17 @@ class ArgsTest extends TestCase
     public function testUtility()
     {
         $args = Args::create(array('cmd'));
-        $this->assertSame('cmd', $args->getUtility());
+        self::assertSame('cmd', $args->getUtility());
     }
 
     public function testHasOption()
     {
         $args = Args::create(array('cmd', '--verbose', '-v', '--', '--operand'));
-        $this->assertFalse($args->hasOption('cmd'));
-        $this->assertFalse($args->hasOption('f'));
-        $this->assertTrue($args->hasOption('verbose'));
-        $this->assertTrue($args->hasOption(array('foo', 'v')));
-        $this->assertFalse($args->hasOption('operand'));
+        self::assertFalse($args->hasOption('cmd'));
+        self::assertFalse($args->hasOption('f'));
+        self::assertTrue($args->hasOption('verbose'));
+        self::assertTrue($args->hasOption(array('foo', 'v')));
+        self::assertFalse($args->hasOption('operand'));
     }
 
     public function testMapOption()
@@ -53,16 +53,16 @@ class ArgsTest extends TestCase
                 return $option;
             }
         );
-        $this->assertSame(array('verbose' => array(0 => true, 1 => 'verbose')), $actual);
+        self::assertSame(array('verbose' => array(0 => true, 1 => 'verbose')), $actual);
     }
 
     public function testOptionConsumption()
     {
         $args = new Args(array('--verbose'));
-        $this->assertCount(1, $args->getRemaining());
+        self::assertCount(1, $args->getRemaining());
 
-        $this->assertTrue($args->hasOption(array('v', 'verbose')));
-        $this->assertCount(0, $args->getRemaining());
+        self::assertTrue($args->hasOption(array('v', 'verbose')));
+        self::assertCount(0, $args->getRemaining());
     }
 
     public function provideFirstRemainingOptions()
@@ -88,7 +88,7 @@ class ArgsTest extends TestCase
     public function testGetFirstRemainingOption(array $arguments, $expected)
     {
         $args = new Args($arguments);
-        $this->assertSame($expected, $args->getFirstRemainingOption());
+        self::assertSame($expected, $args->getFirstRemainingOption());
     }
 
     /**
@@ -98,7 +98,7 @@ class ArgsTest extends TestCase
     {
         $args = new Args(array('--prefix', 'value'));
         $actual = $args->getOptionArgument('prefix');
-        $this->assertSame('value', $actual);
+        self::assertSame('value', $actual);
     }
 
     /**
@@ -108,20 +108,20 @@ class ArgsTest extends TestCase
     {
         $args = new Args(array('--prefix', 'value'));
         $actual = $args->getOptionArgument('volume', 100);
-        $this->assertSame(100, $actual);
+        self::assertSame(100, $actual);
 
         $args = new Args(array('--prefix', 'value', '--', 'operand'));
         $actual = $args->getOptionArgument('volume', 100);
-        $this->assertSame(100, $actual);
+        self::assertSame(100, $actual);
     }
 
     public function testGetOptionOptionalArgument()
     {
         $args = new Args(array('--foo', '--bar=', '--baz=foo'));
-        $this->assertNull($args->getOptionOptionalArgument('faux', true));
-        $this->assertTrue($args->getOptionOptionalArgument('foo', true));
-        $this->assertSame('', $args->getOptionOptionalArgument('bar', true));
-        $this->assertSame('foo', $args->getOptionOptionalArgument('baz', true));
+        self::assertNull($args->getOptionOptionalArgument('faux', true));
+        self::assertTrue($args->getOptionOptionalArgument('foo', true));
+        self::assertSame('', $args->getOptionOptionalArgument('bar', true));
+        self::assertSame('foo', $args->getOptionOptionalArgument('baz', true));
     }
 
     /**
@@ -142,7 +142,7 @@ class ArgsTest extends TestCase
     public function testNonMandatoryOption()
     {
         $args = new Args(array('--prefix', 'value'));
-        $this->assertNull($args->getOptionArgument('volume'));
+        self::assertNull($args->getOptionArgument('volume'));
     }
 
     /**
@@ -176,7 +176,7 @@ class ArgsTest extends TestCase
     {
         $args = new Args(array('--prefix', '--'));
 
-        $this->assertSame('default', $args->getStringOptionArgument('suffix', 'default'));
+        self::assertSame('default', $args->getStringOptionArgument('suffix', 'default'));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('default value must be string, integer given');

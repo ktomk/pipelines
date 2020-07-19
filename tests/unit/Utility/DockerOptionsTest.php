@@ -27,7 +27,7 @@ class DockerOptionsTest extends TestCase
             'prefix',
             new Streams()
         );
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\Utility\DockerOptions',
             $options
         );

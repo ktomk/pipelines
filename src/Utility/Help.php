@@ -102,7 +102,7 @@ Pipeline runner options
     --file <path>         path to the pipelines file, overrides looking up
                           the <basename> file from the current working
                           directory, use '-' to read from stdin
-    --trigger <ref>       build trigger, <ref> can be of either
+    --trigger <ref>       build trigger; <ref> can be either of:
                           tag:<name>, branch:<name>, bookmark:<name> or
                           pr:<branch-name>[:<destination-branch>]
                           determines the pipeline to run

@@ -15,7 +15,7 @@ class LibYamlTest extends TestCase
     protected function setUp()
     {
         if (!extension_loaded('yaml')) {
-            $this->markTestSkipped(
+            self::markTestSkipped(
                 'The YAML extension is not available.'
             );
         }
@@ -23,7 +23,7 @@ class LibYamlTest extends TestCase
 
     public function testCreation()
     {
-        $this->assertInstanceOf('Ktomk\Pipelines\Yaml\LibYaml', $this->createParser());
+        self::assertInstanceOf('Ktomk\Pipelines\Yaml\LibYaml', $this->createParser());
     }
 
     public function testParsing()
@@ -49,15 +49,15 @@ class LibYamlTest extends TestCase
     {
         $array = $this->createParser()->parseFile(__FILE__);
 
-        $this->assertNull($array);
+        self::assertNull($array);
     }
 
     public function testYamlNull()
     {
         $array = $this->createParser()->parseBuffer('first: ~');
 
-        $this->assertArrayHasKey('first', $array);
-        $this->assertNull($array['first']);
+        self::assertArrayHasKey('first', $array);
+        self::assertNull($array['first']);
     }
 
     /**

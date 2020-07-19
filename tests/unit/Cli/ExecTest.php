@@ -14,21 +14,21 @@ class ExecTest extends TestCase
     public function testCreation()
     {
         $exec = new Exec();
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Exec', $exec);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Exec', $exec);
     }
 
     public function testPass()
     {
         $exec = new Exec();
         $actual = $exec->pass(':', array());
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     public function testCapture()
     {
         $exec = new Exec();
         $actual = $exec->capture(':', array());
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     public function testDebugger()
@@ -38,17 +38,17 @@ class ExecTest extends TestCase
             $lines[] = $message;
         });
         $actual = $exec->capture(':', array());
-        $this->assertSame(0, $actual);
-        $this->assertArrayHasKey(0, $lines);
-        $this->assertSame(':', $lines[0]);
-        $this->assertCount(2, $lines);
+        self::assertSame(0, $actual);
+        self::assertArrayHasKey(0, $lines);
+        self::assertSame(':', $lines[0]);
+        self::assertCount(2, $lines);
     }
 
     public function testDeactivation()
     {
         $exec = new Exec();
         $exec->setActive(false);
-        $this->assertSame(0, $exec->pass('/dev/null', array()));
-        $this->assertSame(0, $exec->capture('/dev/null', array()));
+        self::assertSame(0, $exec->pass('/dev/null', array()));
+        self::assertSame(0, $exec->capture('/dev/null', array()));
     }
 }

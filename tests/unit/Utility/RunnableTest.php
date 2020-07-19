@@ -15,6 +15,6 @@ class RunnableTest extends TestCase
     public function testImplementability()
     {
         $runnable = RunnableTester::create();
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\Runnable', $runnable);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\Runnable', $runnable);
     }
 }

@@ -13,23 +13,23 @@ class ErrorCatcherTest extends TestCase
     {
         $catcher = new ErrorCatcher();
 
-        $this->assertInstanceOf('Ktomk\Pipelines\ErrorCatcher', $catcher);
+        self::assertInstanceOf('Ktomk\Pipelines\ErrorCatcher', $catcher);
 
         $catcher = ErrorCatcher::create();
 
-        $this->assertInstanceOf('Ktomk\Pipelines\ErrorCatcher', $catcher);
+        self::assertInstanceOf('Ktomk\Pipelines\ErrorCatcher', $catcher);
     }
 
     public function testEnd()
     {
         $catcher = new ErrorCatcher();
-        $this->assertFalse($catcher->end());
+        self::assertFalse($catcher->end());
     }
 
     public function testEndWithError()
     {
         $catcher = new ErrorCatcher();
         trigger_error('test');
-        $this->assertTrue($catcher->end());
+        self::assertTrue($catcher->end());
     }
 }

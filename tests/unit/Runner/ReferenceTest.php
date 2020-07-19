@@ -15,7 +15,7 @@ class ReferenceTest extends TestCase
     public function testCreation()
     {
         $ref = Reference::create(null);
-        $this->assertNotNull($ref);
+        self::assertNotNull($ref);
     }
 
     /**
@@ -43,7 +43,7 @@ class ReferenceTest extends TestCase
      */
     public function testValidation($string, $valid)
     {
-        $this->assertSame($valid, Reference::valid($string), sprintf('reference "%s"', $string));
+        self::assertSame($valid, Reference::valid($string), sprintf('reference "%s"', $string));
     }
 
     /**
@@ -58,16 +58,16 @@ class ReferenceTest extends TestCase
             $this->addToAssertionCount(1);
             $type = Reference::create($string);
             if (null !== $string && !$valid) {
-                $this->fail('An expected exception has not been thrown');
+                self::fail('An expected exception has not been thrown');
             }
-            $this->assertNotNull($type);
+            self::assertNotNull($type);
             if (null !== $string) {
-                $this->assertNotNull($type->getType());
-                $this->assertNotNull($type->getName());
+                self::assertNotNull($type->getType());
+                self::assertNotNull($type->getName());
             }
         } catch (InvalidArgumentException $e) {
             if ($valid) {
-                $this->fail('Exception');
+                self::fail('Exception');
             }
         }
     }
@@ -75,8 +75,8 @@ class ReferenceTest extends TestCase
     public function testNullObject()
     {
         $ref = new Reference(null);
-        $this->assertNull($ref->getType());
-        $this->assertNull($ref->getName());
+        self::assertNull($ref->getType());
+        self::assertNull($ref->getName());
     }
 
     public function testGetPipelinesType()
@@ -85,10 +85,10 @@ class ReferenceTest extends TestCase
             return Reference::create($ref)->getPipelinesType();
         };
 
-        $this->assertNull($f(null));
-        $this->assertSame('bookmarks', $f('bookmark:stable'));
-        $this->assertSame('branches', $f('branch:master'));
-        $this->assertSame('tags', $f('tag:1.0.0'));
-        $this->assertSame('pull-requests', $f('pr:feature'));
+        self::assertNull($f(null));
+        self::assertSame('bookmarks', $f('bookmark:stable'));
+        self::assertSame('branches', $f('branch:master'));
+        self::assertSame('tags', $f('tag:1.0.0'));
+        self::assertSame('pull-requests', $f('pr:feature'));
     }
 }

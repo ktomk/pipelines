@@ -23,7 +23,7 @@ class StepScriptRunnerTest extends RunnerTestCase
         $runner = $this->mockRunner($exec);
 
         $scriptRunner = new StepScriptRunner($runner, '*mock-run*');
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepScriptRunner', $scriptRunner);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\StepScriptRunner', $scriptRunner);
 
         $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
         $step->method('getScript')->willReturn(array());
@@ -31,7 +31,7 @@ class StepScriptRunnerTest extends RunnerTestCase
         $this->expectOutputRegex('~^\Qscript non-zero exit status: 0\E$~'); # null to 0 conversion
         $actual = StepScriptRunner::createRunStepScript($runner, '*mock-run*', $step);
 
-        $this->assertNull($actual);
+        self::assertNull($actual);
     }
 
     public function testRunStepScript()
@@ -43,7 +43,7 @@ class StepScriptRunnerTest extends RunnerTestCase
         $exec->expect('pass', '~^<<\'SCRIPT\' ~');
 
         $actual = $scriptRunner->runStepScript($step);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     public function testRunStepScriptAndAfterScript()
@@ -62,7 +62,7 @@ after-script non-zero exit status: 1
 ');
 
         $actual = $scriptRunner->runStepScript($step);
-        $this->assertSame(3, $actual);
+        self::assertSame(3, $actual);
     }
 
     public function testRunStepScriptWithPipe()
@@ -75,7 +75,7 @@ after-script non-zero exit status: 1
         $exec->expect('pass', '~^<<\'SCRIPT\' ~');
 
         $actual = $scriptRunner->runStepScript($step);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     public function testRunStepScriptWithAfterScriptPipe()
@@ -92,7 +92,7 @@ after-script non-zero exit status: 1
         $exec->expect('pass', '~^<<\'SCRIPT\' ~', 0, 'after-script');
 
         $actual = $scriptRunner->runStepScript($step);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     /**

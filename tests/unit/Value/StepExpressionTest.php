@@ -52,8 +52,8 @@ class StepExpressionTest extends TestCase
             $this->expectException('InvalidArgumentException');
         }
         $expr = StepExpression::createFromString($expression);
-        $this->assertInstanceOf('Ktomk\Pipelines\Value\StepExpression', $expr);
-        $this->assertSame($expected, $expr->getSegments());
+        self::assertInstanceOf('Ktomk\Pipelines\Value\StepExpression', $expr);
+        self::assertSame($expected, $expr->getSegments());
     }
 
     public function testResolveCountableOutOfBounds()
@@ -106,17 +106,17 @@ class StepExpressionTest extends TestCase
         $actual = StepExpression::createFromString($expression)
             ->resolveCountable(range(1, 19));
 
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testResolveSteps()
     {
         $steps = $this->createPartialMock('Ktomk\Pipelines\File\Pipeline\Steps', array('count'));
-        $steps->expects($this->once())->method('count')->willReturn(1);
+        $steps->expects(self::once())->method('count')->willReturn(1);
 
         $actual = StepExpression::createFromString('1,1')
             ->resolveSteps($steps);
-        $this->assertSame(array(null, null), $actual);
+        self::assertSame(array(null, null), $actual);
     }
 
     /**
@@ -128,6 +128,6 @@ class StepExpressionTest extends TestCase
     public function testValidate($expression, array $decomposed = null)
     {
         $expected = null !== $decomposed;
-        $this->assertSame($expected, StepExpression::validate($expression));
+        self::assertSame($expected, StepExpression::validate($expression));
     }
 }

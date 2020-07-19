@@ -15,6 +15,9 @@ IFS=$'\n\t'
 # [ 4] docker service inside pipelines
 # [ 2] pipelines inside pipelines
 # [ 3] pipelines inside pipelines (services: - docker)
+# [ 7] relative docker client package path w/ --working-dir
+# [ 8] recursion detection (non-phar)
+# [ 9] pip recursion happy path (non-phar)
 #
 
 case ${1-0} in
@@ -79,6 +82,10 @@ case ${1-0} in
       ;;
   8 ) echo "# 8: recursion detection (non-phar)"
       ../../bin/pipelines --pipeline custom/recursion || test $? -eq 127
+      exit
+      ;;
+  9 ) echo "# 9: pip recursion happy path (non-phar)"
+      ../../bin/pipelines --pipeline custom/recursion-pip-happy
       exit
       ;;
   * ) >&2 echo "unknown step ${1}"

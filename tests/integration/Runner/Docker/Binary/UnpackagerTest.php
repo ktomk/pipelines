@@ -45,16 +45,16 @@ class UnpackagerTest extends TestCase
 
         $actual = $unpackager->getLocalBinary($testPackage);
         self::assertIsString($actual);
-        $this->assertFileExists($actual);
+        self::assertFileExists($actual);
 
-        $this->assertFileExists($prepared['prep']['pkg_local']);
-        $this->assertFileExists($prepared['prep']['bin_local']);
+        self::assertFileExists($prepared['prep']['pkg_local']);
+        self::assertFileExists($prepared['prep']['bin_local']);
 
         // remove local binary to test if fetched from cache works
         LibFs::rm($prepared['prep']['bin_local']);
         $actual = $unpackager->getLocalBinary($testPackage);
         self::assertIsString($actual);
-        $this->assertFileExists($actual);
-        $this->assertFileExists($prepared['prep']['bin_local']);
+        self::assertFileExists($actual);
+        self::assertFileExists($prepared['prep']['bin_local']);
     }
 }

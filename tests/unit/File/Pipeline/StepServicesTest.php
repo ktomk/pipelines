@@ -19,7 +19,7 @@ class StepServicesTest extends TestCase
     public function testCreation()
     {
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), array());
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
     }
 
     public function testCreationParseException()
@@ -29,7 +29,7 @@ class StepServicesTest extends TestCase
 
         $yaml = (object)array();
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
     }
 
     public function testCreationCauseRealProblems()
@@ -39,21 +39,21 @@ class StepServicesTest extends TestCase
 
         $yaml = array('fine', array('scrap'), (object)array());
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepServices', $services);
     }
 
     public function testHas()
     {
         $services = new StepServices($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), array('docker'));
-        $this->assertTrue($services->has('docker'));
-        $this->assertFalse($services->has('mysql'));
+        self::assertTrue($services->has('docker'));
+        self::assertFalse($services->has('mysql'));
     }
 
     public function testGetDefinitions()
     {
         $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
         $services = new StepServices($step, array('redis', 'docker', 'mysql'));
-        $this->assertSame(array(), $services->getDefinitions());
+        self::assertSame(array(), $services->getDefinitions());
     }
 
     public function testGetDefinitionsWithFileAndDefinitions()
@@ -61,8 +61,8 @@ class StepServicesTest extends TestCase
         $file = File::createFromFile(__DIR__ . '/../../../data/yml/service-definitions.yml');
         $services = $file->getPipelines()->getDefault()->getSteps()->offsetGet(0)->getServices();
         $actual = $services->getDefinitions();
-        $this->assertCount(1, $actual);
-        $this->assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Definitions\Service', $actual);
+        self::assertCount(1, $actual);
+        self::assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Definitions\Service', $actual);
     }
 
     /**
@@ -72,11 +72,11 @@ class StepServicesTest extends TestCase
     {
         $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
         $services = new StepServices($step, array());
-        $this->assertNull($services->getFile());
+        self::assertNull($services->getFile());
 
         $step->method('getFile')->willReturn($this->createMock('Ktomk\Pipelines\File\File'));
         $services = new StepServices($step, array());
-        $this->assertInstanceOf('Ktomk\Pipelines\File\File', $services->getFile());
+        self::assertInstanceOf('Ktomk\Pipelines\File\File', $services->getFile());
     }
 
     /**
@@ -87,9 +87,9 @@ class StepServicesTest extends TestCase
         $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
         $services = new StepServices($step, array());
 
-        $this->assertSame(array(), $services->getServiceNames());
+        self::assertSame(array(), $services->getServiceNames());
 
         $services = new StepServices($step, array('docker', 'foo', 'bar', 'baz'));
-        $this->assertSame(array('foo', 'bar', 'baz'), $services->getServiceNames());
+        self::assertSame(array('foo', 'bar', 'baz'), $services->getServiceNames());
     }
 }

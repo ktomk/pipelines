@@ -23,7 +23,7 @@ class FileOptionsTest extends TestCase
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = new FileOptions($args, $output, $file);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\FileOptions', $options);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\FileOptions', $options);
     }
 
     public function testBind()
@@ -33,7 +33,7 @@ class FileOptionsTest extends TestCase
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = FileOptions::bind($args, $output, $file);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\FileOptions', $options);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\FileOptions', $options);
     }
 
     public function provideTestRunArgs()
@@ -61,9 +61,9 @@ class FileOptionsTest extends TestCase
 
         try {
             $options->run();
-            $this->assertNull($expected);
+            self::assertNull($expected);
         } catch (StatusException $e) {
-            $this->assertSame($expected, $e->getCode());
+            self::assertSame($expected, $e->getCode());
         }
     }
 
@@ -75,6 +75,6 @@ class FileOptionsTest extends TestCase
 
         $options = new FileOptions($arg, $output, $file);
         $actual = $options->showPipelines($file);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 }

@@ -65,12 +65,12 @@ abstract class NameBuilder
      *           prefix       service name
      *
      * @param string $prefix
-     * @param string $serviceName
-     * @param string $projectName
+     * @param string $service name
+     * @param string $project name
      *
      * @return string
      */
-    public static function serviceContainerName($prefix, $serviceName, $projectName)
+    public static function serviceContainerName($prefix, $service, $project)
     {
         return self::slugify(
             sprintf(
@@ -79,8 +79,8 @@ abstract class NameBuilder
                 implode(
                     '.',
                     array(
-                        self::slugify($serviceName, '-', 'unnamed'),
-                        $projectName,
+                        self::slugify($service, '-', 'unnamed'),
+                        $project,
                     )
                 )
             )
@@ -100,11 +100,11 @@ abstract class NameBuilder
      * @param string $stepName
      * @param int $stepNumber (step numbers start at one)
      * @param string $prefix
-     * @param string $projectName
+     * @param string $project name
      *
      * @return string
      */
-    public static function stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $projectName)
+    public static function stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $project)
     {
         return self::slugify(
             sprintf(
@@ -116,7 +116,7 @@ abstract class NameBuilder
                         (string)(int)max(1, $stepNumber),
                         self::slugify($stepName, '-', 'no-name'),
                         self::slugify($pipelineId, '-', 'null'),
-                        $projectName,
+                        $project,
                     )
                 )
             ),
@@ -129,18 +129,18 @@ abstract class NameBuilder
      *
      * @param string $prefix
      * @param Step $step
-     * @param string $projectName
+     * @param string $project name
      *
      * @return string
      *
      * @see StepContainer::generateName()
      */
-    public static function stepContainerNameByStep(Step $step, $prefix, $projectName)
+    public static function stepContainerNameByStep(Step $step, $prefix, $project)
     {
         $pipelineId = $step->getPipeline()->getId();
         $stepName = $step->getName();
         $stepNumber = $step->getIndex() + 1;
 
-        return self::stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $projectName);
+        return self::stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $project);
     }
 }

@@ -17,7 +17,7 @@ class OptionsTest extends TestCase
     public function testCreate()
     {
         $options = Options::create();
-        $this->assertNull($options->get('foo.bar.baz'));
+        self::assertNull($options->get('foo.bar.baz'));
         self::assertIsString($options->get('docker.socket.path'));
     }
 
@@ -25,12 +25,12 @@ class OptionsTest extends TestCase
     {
         $options = OptionsMock::create();
 
-        $this->assertNull($options->get('foo.bar.baz'));
-        $this->assertNotNull($options->define('foo.bar.baz', 'top')->get('foo.bar.baz'));
-        $this->assertSame('top', $options->get('foo.bar.baz'));
+        self::assertNull($options->get('foo.bar.baz'));
+        self::assertNotNull($options->define('foo.bar.baz', 'top')->get('foo.bar.baz'));
+        self::assertSame('top', $options->get('foo.bar.baz'));
 
         self::assertIsString($options->get('docker.socket.path'));
         $options->define('docker.socket.path', '/var/run/super-docker.sock');
-        $this->assertSame('/var/run/super-docker.sock', $options->get('docker.socket.path'));
+        self::assertSame('/var/run/super-docker.sock', $options->get('docker.socket.path'));
     }
 }

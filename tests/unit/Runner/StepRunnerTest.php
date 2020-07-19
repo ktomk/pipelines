@@ -28,7 +28,7 @@ class StepRunnerTest extends RunnerTestCase
         $stepRunner = new StepRunner(
             $this->createMock('Ktomk\Pipelines\Runner\Runner')
         );
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\StepRunner', $stepRunner);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\StepRunner', $stepRunner);
     }
 
     /**
@@ -45,7 +45,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('~pipelines: setting up the container failed~');
         $actual = $runner->runStep($step);
-        $this->assertNotSame(0, $actual);
+        self::assertNotSame(0, $actual);
     }
 
     /**
@@ -63,7 +63,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('{^\x1d\+\+\+ step #1\n}');
         $actual = $runner->runStep($step);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     public function testCopy()
@@ -71,10 +71,10 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 1, 'zap')
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 0, 'run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0, 'copy deployment /app create')
             ->expect('pass', $this->deploy_copy_cmd_2, 0, 'copy deployment /app copy')
-            ->expect('pass', '~ docker exec ~', 0)
+            ->expect('pass', '~ docker exec ~', 0, 'run step script')
             ->expect('capture', 'docker', 0, 'docker kill')
             ->expect('capture', 'docker', 0, 'docker rm');
 
@@ -84,7 +84,7 @@ class StepRunnerTest extends RunnerTestCase
         $this->expectOutputRegex('{^\x1D\+\+\+ copying files into container\.\.\.\n}m');
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     /**
@@ -97,8 +97,8 @@ class StepRunnerTest extends RunnerTestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'run step container')
             ->expect('pass', $this->deploy_copy_cmd, 1);
 
         $step = $this->createTestStep();
@@ -106,7 +106,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $status = $runner->runStep($step);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     /**
@@ -116,8 +116,8 @@ class StepRunnerTest extends RunnerTestCase
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 1);
 
@@ -126,7 +126,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex('{^pipelines: deploy copy failure}');
         $status = $runner->runStep($step);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 
     /**
@@ -138,8 +138,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
             ->expect('capture', 'docker', 0, 'run the container')
-            ->expect('pass', '~ docker exec ~', 255)
-        ;
+            ->expect('pass', '~ docker exec ~', 255);
 
         $this->keepContainerOnErrorExecTest($exec);
     }
@@ -154,8 +153,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', $containerId) # id for name of potential re-use
-            ->expect('pass', '~ docker exec ~', 255)
-        ;
+            ->expect('pass', '~ docker exec ~', 255);
 
         $this->keepContainerOnErrorExecTest($exec, $containerId);
     }
@@ -167,19 +165,18 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', "123456789\n", 'zap: docker ps')
             ->expect('capture', 'docker', "123456789\n", 'zap: docker kill')
             ->expect('capture', 'docker', "123456789\n", 'zap: docker rm')
-            ->expect('capture', 'docker', 0, 'docker run')
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0, 'deploy copy stage 1')
             ->expect('pass', $this->deploy_copy_cmd_2, 0, 'deploy copy stage 1')
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', 0, 'docker kill')
-            ->expect('capture', 'docker', 0, 'docker rm')
-        ;
+            ->expect('capture', 'docker', 0, 'docker rm');
 
         $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS);
         $step = $this->createTestStep();
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     /**
@@ -190,14 +187,13 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', "123456789\n", 'existing id')
-            ->expect('pass', '~ docker exec ~', 0)
-        ;
+            ->expect('pass', '~ docker exec ~', 0);
 
         $runner = $this->createTestStepRunner($exec, (Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE) ^ Flags::FLAGS);
         $step = $this->createTestStep();
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testDockerHubImageLogin()
@@ -216,7 +212,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputString('');
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testMountInCopyFails()
@@ -230,7 +226,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputString("pipelines: fatal: can not detect /app mount point\npipelines: setting up the container failed\n");
         $status = $runner->runStep($step);
-        $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
+        self::assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
 
     public function testMountWithoutHostConfig()
@@ -244,7 +240,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputString('');
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status, 'passed as detected as non-pip');
+        self::assertSame(0, $status, 'passed as detected as non-pip');
     }
 
     public function testWithHostConfig()
@@ -262,7 +258,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputString("pipelines: fatal: can not detect /app mount point\npipelines: setting up the container failed\n");
         $status = $runner->runStep($step);
-        $this->assertSame(1, $status, 'non-zero status as mounting not possible with mock');
+        self::assertSame(1, $status, 'non-zero status as mounting not possible with mock');
     }
 
     /* docker socket tests */
@@ -278,7 +274,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputString('');
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testRunStepWithDockerHostParameterDockerSocket()
@@ -296,7 +292,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputString('');
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testRunStepWithPipDockerSocket()
@@ -328,7 +324,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->expect('capture', 'docker', 0, 'rm');
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     /* docker client tests */
@@ -354,8 +350,7 @@ class StepRunnerTest extends RunnerTestCase
         $testRepository = $this->getMockBuilder('Ktomk\Pipelines\Runner\Docker\Binary\Repository')
             ->setConstructorArgs(array($exec, array(), UnPackager::fromDirectories($exec, $testDirectories)))
             ->setMethods(array('getPackageLocalBinary'))
-            ->getMock()
-        ;
+            ->getMock();
         $testRepository->method('getPackageLocalBinary')->willReturn(__DIR__ . '/../../data/package/docker-test-stub');
 
         $runner = new Runner(
@@ -384,7 +379,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $step = $this->createTestStep(array('services' => array('docker')));
         $actual = $mockRunner->runStep($step);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     /**
@@ -418,7 +413,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->expect('capture', 'docker', 0, 'rm');
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     /**
@@ -450,7 +445,7 @@ class StepRunnerTest extends RunnerTestCase
         $this->expectException('\InvalidArgumentException');
         $this->expectExceptionMessage('not a readable file');
         $mockRunner->runStep($step);
-        $this->fail('an expected exception was not thrown');
+        self::fail('an expected exception was not thrown');
     }
 
     /* artifact tests */
@@ -461,30 +456,29 @@ class StepRunnerTest extends RunnerTestCase
 
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . $tmpProjectDir, 0)
             ->expect('capture', 'docker', 0, 'docker kill')
-            ->expect('capture', 'docker', 0, 'docker rm')
-        ;
+            ->expect('capture', 'docker', 0, 'docker rm');
 
         $step = $this->createTestStep(array('artifacts' => array('build/foo-package.tgz')));
         $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS);
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testArtifactsNoMatch()
     {
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', '~ docker exec ~', 0)
@@ -497,7 +491,7 @@ class StepRunnerTest extends RunnerTestCase
         $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS);
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testArtifactsFailure()
@@ -506,8 +500,8 @@ class StepRunnerTest extends RunnerTestCase
 
         $exec = new ExecTester($this);
         $exec
-            ->expect('capture', 'docker', 1)
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 1, 'zap')
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
             ->expect('pass', '~ docker exec ~', 0)
@@ -518,15 +512,14 @@ class StepRunnerTest extends RunnerTestCase
                 1
             )
             ->expect('capture', 'docker', 0, 'docker kill')
-            ->expect('capture', 'docker', 0, 'docker rm')
-        ;
+            ->expect('capture', 'docker', 0, 'docker rm');
 
         $this->expectOutputRegex('~^pipelines: Artifact failure: \'build/foo-package.tgz\' \\(1, 1 paths, 1\\d\\d bytes\\)$~m');
         $step = $this->createTestStep(array('artifacts' => array('build/foo-package.tgz')));
         $runner = $this->createTestStepRunner($exec, Flags::FLAG_DEPLOY_COPY | Flags::FLAGS, array(null, 'php://output'));
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     /* public/new */
@@ -546,7 +539,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $stepRunner = new StepRunner($runner);
         $actual = $stepRunner->getDockerBinaryRepository();
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $actual);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $actual);
     }
 
     public function testAfterScript()
@@ -554,7 +547,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 1, 'zap')
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'after-script')
             ->expect('capture', 'docker', 0, 'docker kill')
@@ -566,7 +559,7 @@ class StepRunnerTest extends RunnerTestCase
         $this->expectOutputRegex('{^After script:}m');
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function testAfterScriptFailing()
@@ -574,7 +567,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 1, 'zap')
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 123, 'after-script')
             ->expect('capture', 'docker', 0, 'docker kill')
@@ -586,7 +579,7 @@ class StepRunnerTest extends RunnerTestCase
         $this->expectOutputRegex('{^after-script non-zero exit status: 123$}m');
 
         $status = $runner->runStep($step);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     /**
@@ -598,7 +591,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', 1, 'zap')
-            ->expect('capture', 'docker', 0)
+            ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('capture', 'docker', 0, 'run services')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('capture', 'docker', 0, 'docker kill')
@@ -610,7 +603,7 @@ class StepRunnerTest extends RunnerTestCase
         $runner = $this->createTestStepRunner($exec, Flags::FLAGS, array('php://output', 'php://output'));
 
         $this->expectOutputRegex('~effective-image: redis$~m');
-        $this->assertSame(0, $runner->runStep($step));
+        self::assertSame(0, $runner->runStep($step));
     }
 
     private function keepContainerOnErrorExecTest(ExecTester $exec, $id = '*dry-run*')
@@ -625,7 +618,7 @@ class StepRunnerTest extends RunnerTestCase
 
         $this->expectOutputRegex($expectedRegex);
         $status = $runner->runStep($step);
-        $this->assertSame(255, $status);
+        self::assertSame(255, $status);
     }
 
     /**

@@ -77,7 +77,7 @@ class UnpackagerTest extends TestCase
     {
         $directories = new Directories(Lib::env($_SERVER), new Project('/dev/null'));
         $unPackager = UnPackager::fromDirectories(new ExecTester($this), $directories);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\UnPackager', $unPackager);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\UnPackager', $unPackager);
     }
 
     /**
@@ -94,7 +94,7 @@ class UnpackagerTest extends TestCase
         $package = self::getTestPackage();
         $actual = $unPackager->getLocalBinary($package);
 
-        $this->assertSame(
+        self::assertSame(
             sprintf(
                 '%s/.local/share/pipelines/static-docker/%s.%s',
                 $testHome,
@@ -120,7 +120,7 @@ class UnpackagerTest extends TestCase
 
         $package = self::getTestPackage();
         $actual = $unPackager->getLocalBinary($package);
-        $this->assertSame(
+        self::assertSame(
             sprintf(
                 '%s/.local/share/pipelines/static-docker/%s.%s',
                 $testHome,
@@ -162,7 +162,7 @@ class UnpackagerTest extends TestCase
 
         try {
             $unpackager->getLocalBinary($package);
-            $this->fail('an expected exception was not thrown');
+            self::fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
             self::assertStringContainsString('Extraction collision: "', $ex->getMessage());
         }
@@ -173,7 +173,7 @@ class UnpackagerTest extends TestCase
 
         try {
             $unpackager->getLocalBinary($package);
-            $this->fail('an expected exception was not thrown');
+            self::fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
             self::assertStringContainsString('/docker-test-stub.tgz.', $ex->getMessage());
         }
@@ -199,9 +199,9 @@ class UnpackagerTest extends TestCase
         try {
             $unpacker->extractFromTgzFile($pkg['uri'], 'fake', $dest);
             passthru(sprintf('ls -al %s', Lib::quoteArg($dest)));
-            $this->fail('an expected exception was not thrown');
+            self::fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
-            $this->assertSame('Nonzero tar exit status: 1', $ex->getMessage());
+            self::assertSame('Nonzero tar exit status: 1', $ex->getMessage());
         }
 
         $this->expectException('UnexpectedValueException');
@@ -231,7 +231,7 @@ class UnpackagerTest extends TestCase
         // hash checksum mismatch throws exception
         try {
             $unpackager->verifyFileHash($package['uri'], 'fake-hash');
-            $this->fail('an expected exception was not thrown');
+            self::fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
             self::assertStringContainsString('sha256 checksum mismatch: "fake-hash" for file "', $ex->getMessage());
         }
@@ -239,7 +239,7 @@ class UnpackagerTest extends TestCase
         // non-existent file throws exception
         try {
             $unpackager->verifyFileHash($package['uri'] . '.fake', 'fake-hash');
-            $this->fail('an expected exception was not thrown');
+            self::fail('an expected exception was not thrown');
         } catch (UnexpectedValueException $ex) {
             self::assertStringContainsString('not a readable file:', $ex->getMessage());
         }

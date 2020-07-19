@@ -16,7 +16,7 @@ class CollectorTest extends TestCase
     {
         $args = new Args(array('test'));
         $collector = new Collector($args);
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args\Collector', $collector);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Args\Collector', $collector);
     }
 
     /**
@@ -30,9 +30,9 @@ class CollectorTest extends TestCase
         $options = new OptionIterator($collector);
         foreach ($options as $index => $option)
         {
-            $this->assertSame($index, 0);
-            $this->assertSame('-f', $option);
-            $this->assertSame('bar', $options->getArgument());
+            self::assertSame($index, 0);
+            self::assertSame('-f', $option);
+            self::assertSame('bar', $options->getArgument());
         }
     }
 
@@ -41,6 +41,6 @@ class CollectorTest extends TestCase
         $collector = new Collector($args = new ArgsTester());
         $expected = array();
         $actual = $collector->getArgs();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 }

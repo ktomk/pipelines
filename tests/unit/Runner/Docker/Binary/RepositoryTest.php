@@ -20,7 +20,7 @@ class RepositoryTest extends TestCase
     public function testCreation()
     {
         $repo = Repository::create(new Exec(), new Directories(array('HOME' => '/foo'), new Project('bar')));
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $repo);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $repo);
     }
 
     public function testInject()
@@ -64,7 +64,7 @@ class RepositoryTest extends TestCase
             Repository::PKG_INTEGRATE,
             Repository::PKG_TEST,
         );
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -73,31 +73,31 @@ class RepositoryTest extends TestCase
     public function testResolve()
     {
         $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
-        $this->assertSame($repo, $repo->resolve(Repository::PKG_INTEGRATE));
-        $this->assertSame($repo, $repo->resolve(Repository::PKG_TEST));
+        self::assertSame($repo, $repo->resolve(Repository::PKG_INTEGRATE));
+        self::assertSame($repo, $repo->resolve(Repository::PKG_TEST));
         $expected = UnpackagerTest::getTestPackage();
         $actual = $repo->asPackageArray();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testResolveYamlFile()
     {
         $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
         $testPackagePath = __DIR__ . '/../../../../../lib/package/docker-42.42.1-binsh-test-stub.yml';
-        $this->assertSame($repo, $repo->resolve($testPackagePath));
+        self::assertSame($repo, $repo->resolve($testPackagePath));
         $expected = UnpackagerTest::getTestPackage();
         $actual = $repo->asPackageArray();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testResolveBinaryPath()
     {
         $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
         $testBinary = __DIR__ . '/../../../../data/package/docker-test-stub';
-        $this->assertSame($repo, $repo->resolve($testBinary));
+        self::assertSame($repo, $repo->resolve($testBinary));
         $expected = array('prep' => array('bin_local' => $testBinary));
         $actual = $repo->asPackageArray();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testGetBinaryPath()
@@ -109,7 +109,7 @@ class RepositoryTest extends TestCase
         $expected = '/foo/bin/docker';
         $repo->method('getPackageLocalBinary')->willReturn($expected);
         $actual = $repo->getBinaryPath();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     /**
@@ -119,11 +119,11 @@ class RepositoryTest extends TestCase
     {
         $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
         $testBinary = __DIR__ . '/../../../../data/package/docker-test-stub';
-        $this->assertSame($repo, $repo->resolve($testBinary));
+        self::assertSame($repo, $repo->resolve($testBinary));
         $expected = array('prep' => array('bin_local' => $testBinary));
         $package = $repo->asPackageArray();
         $repo->getPackageLocalBinary($package);
-        $this->assertSame($expected, $package);
+        self::assertSame($expected, $package);
     }
 
     /**
@@ -145,7 +145,7 @@ class RepositoryTest extends TestCase
         $repo = $this->createPartialMock('Ktomk\Pipelines\Runner\Docker\Binary\Repository', array());
         $package = $repo->asPackageArray();
 
-        $this->assertArrayHasKey('name', $package, 'default package has name');
-        $this->assertSame('docker-19.03.1-linux-static-x86_64', $package['name']);
+        self::assertArrayHasKey('name', $package, 'default package has name');
+        self::assertSame('docker-19.03.1-linux-static-x86_64', $package['name']);
     }
 }

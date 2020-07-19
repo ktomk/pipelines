@@ -22,15 +22,15 @@ class YamlReferenceTest extends TestCase
             $idDefault,
             $idAlias,
         );
-        $this->assertSame($expected, $actual, 'alias is loaded');
+        self::assertSame($expected, $actual, 'alias is loaded');
 
-        $this->assertNotSame(
+        self::assertNotSame(
             $default = $file->getById($idDefault),
             $alias = $file->getById($idAlias),
             'alias yaml node must create their identities'
         );
 
-        $this->assertSame(
+        self::assertSame(
             $default->jsonSerialize(),
             $alias->jsonSerialize(),
             'alias yaml node must create their nodes'

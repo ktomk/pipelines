@@ -21,13 +21,13 @@ class ExecTesterTest extends TestCase
         $this->addToAssertionCount(1);
 
         $tester->expect('pass', ':');
-        $this->assertSame(0, $tester->pass(':', array()));
+        self::assertSame(0, $tester->pass(':', array()));
 
-        $this->assertSame(array(':'), $tester->getDebugMessages());
+        self::assertSame(array(':'), $tester->getDebugMessages());
 
         $tester->expect('capture', ':', 1);
-        $this->assertSame(1, $tester->capture(':', array('capture')));
+        self::assertSame(1, $tester->capture(':', array('capture')));
 
-        $this->assertSame(array(':', ': capture'), $tester->getDebugMessages());
+        self::assertSame(array(':', ': capture'), $tester->getDebugMessages());
     }
 }

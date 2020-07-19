@@ -37,7 +37,7 @@ class RepositoryTest extends TestCase
     public function testCreation()
     {
         $binary = Repository::create(new ExecTester($this), $this->createMock('Ktomk\Pipelines\Runner\Directories'));
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $binary);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Docker\Binary\Repository', $binary);
     }
 
     /**
@@ -60,8 +60,8 @@ class RepositoryTest extends TestCase
         $repository->resolve(Repository::PKG_INTEGRATE);
         $containerId = '424242-so-long-and-thanks-for-all-the-fish';
         list($status, $message) = $repository->inject($containerId);
-        $this->assertSame(1, $status);
-        $this->assertRegExp("~${containerId}~", $message);
+        self::assertSame(1, $status);
+        self::assertRegExp("~${containerId}~", $message);
         $this->addToAssertionCount(1);
     }
 
@@ -76,7 +76,7 @@ class RepositoryTest extends TestCase
         $repository = Repository::create(new Exec(), $directories);
         $repository->resolve(Repository::PKG_TEST);
         $actual = $repository->inject('42-bin-sh');
-        $this->assertSame(array(1, "Error: No such container: 42-bin-sh\n"), $actual);
+        self::assertSame(array(1, "Error: No such container: 42-bin-sh\n"), $actual);
     }
 
     /**
@@ -133,6 +133,6 @@ class RepositoryTest extends TestCase
 
         $this->expectOutputRegex('~\Qpipelinesintegrationtest-2.no-name.null.pipelines-test-suite\E~');
         $actual = $runner->runStep($step);
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 }

@@ -16,7 +16,7 @@ class KeepOptionsTest extends TestCase
     {
         $args = Args::create(array('test-util', '--error-keep'));
         $keep = KeepOptions::bind($args);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\KeepOptions', $keep);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\KeepOptions', $keep);
 
         return $keep;
     }
@@ -31,7 +31,7 @@ class KeepOptionsTest extends TestCase
     public function testRun(KeepOptions $keep)
     {
         $actual = $keep->run();
-        $this->assertInstanceOf(get_class($keep), $actual);
+        self::assertInstanceOf(get_class($keep), $actual);
     }
 
     /**
@@ -41,7 +41,7 @@ class KeepOptionsTest extends TestCase
      */
     public function testHasErrorKeep(KeepOptions $keep)
     {
-        $this->assertTrue($keep->hasErrorKeep());
+        self::assertTrue($keep->hasErrorKeep());
     }
 
     public function provideExclusivityExceptions()
@@ -67,10 +67,10 @@ class KeepOptionsTest extends TestCase
 
         try {
             $keep->parse($args);
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (StatusException $exception) {
-            $this->assertSame($expected, $exception->getMessage());
-            $this->assertSame(1, $exception->getCode());
+            self::assertSame($expected, $exception->getMessage());
+            self::assertSame(1, $exception->getCode());
         }
     }
 
@@ -97,6 +97,6 @@ class KeepOptionsTest extends TestCase
         $args = Args::create($argv);
         $keep = new KeepOptions($args);
         $actual = $keep->parse($args);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 }

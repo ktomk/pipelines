@@ -22,7 +22,7 @@ class ServicesTest extends TestCase
     public function testCreation()
     {
         $services = new Services(array());
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions\Services', $services);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Definitions\Services', $services);
 
         return $services;
     }
@@ -36,7 +36,7 @@ class ServicesTest extends TestCase
      */
     public function testGetNonExistingService(Services $services)
     {
-        $this->assertNull($services->getByName('foo'));
+        self::assertNull($services->getByName('foo'));
     }
 
     /**
@@ -48,21 +48,21 @@ class ServicesTest extends TestCase
      */
     public function testGetNonExistingServicesByNames(Services $services)
     {
-        $this->assertSame(array(), $services->getByNames(array('foo', 'docker', 'baz')));
+        self::assertSame(array(), $services->getByNames(array('foo', 'docker', 'baz')));
     }
 
     public function testParsing()
     {
         $array = Yaml::file(__DIR__ . '/../../../data/yml/service-definitions.yml');
-        $this->assertArrayHasKey('definitions', $array, 'fixture complete 1');
+        self::assertArrayHasKey('definitions', $array, 'fixture complete 1');
         self::assertIsArray($array['definitions'], 'fixture complete 2');
-        $this->assertArrayHasKey('services', $array['definitions'], 'fixture complete 3');
+        self::assertArrayHasKey('services', $array['definitions'], 'fixture complete 3');
         self::assertIsArray($array['definitions']['services'], 'fixture complete 4');
 
         $services = new Services($array['definitions']['services']);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions\Services', $services);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Definitions\Services', $services);
 
-        $this->assertCount(2, $services);
+        self::assertCount(2, $services);
     }
 
     /**

@@ -16,21 +16,21 @@ class OptionFilterIteratorTest extends TestCase
     {
         $args = new Args(array('cmd', '--foo', '-f', '--bar', '-b'));
         $filter = new OptionFilterIterator($args, array());
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args\OptionFilterIterator', $filter);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Args\OptionFilterIterator', $filter);
     }
 
     public function testEmptyFiltering()
     {
         $args = new Args(array('cmd', '--foo', '-f', '--bar', '-b'));
         $filter = new OptionFilterIterator($args, null);
-        $this->assertSame(0, iterator_count($filter));
+        self::assertSame(0, iterator_count($filter));
     }
 
     public function testSingleFiltering()
     {
         $args = new Args(array('cmd', '--foo', '-f', '--bar', '-b'));
         $filter = new OptionFilterIterator($args, array('f', 'bar'));
-        $this->assertSame(2, iterator_count($filter));
+        self::assertSame(2, iterator_count($filter));
     }
 
     public function provideInvalidOptions()
@@ -68,7 +68,7 @@ class OptionFilterIteratorTest extends TestCase
         $iterator = new OptionFilterIterator($args, array('foo', 'f'));
         $expected = '--foo, -f';
         $actual = $iterator->getOptionDescription();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testGetArguments()
@@ -79,6 +79,6 @@ class OptionFilterIteratorTest extends TestCase
         $iterator = new OptionFilterIterator($args, array('f', 'foo'));
         $expected = array('blue', 'red');
         $actual = $iterator->getArguments();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 }

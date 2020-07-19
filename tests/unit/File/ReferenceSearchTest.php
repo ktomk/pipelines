@@ -35,16 +35,16 @@ class ReferenceSearchTest extends TestCase
     public function testSearching()
     {
         $actual = $this->searchReference('branch:feature/unicorns');
-        $this->assertNotNull($actual);
+        self::assertNotNull($actual);
     }
 
     public function testSearchDirect()
     {
         $actual = $this->searchReference('branch:feature/unicorns');
-        $this->assertSame('feature/*', $this->getFirstStepName($actual));
+        self::assertSame('feature/*', $this->getFirstStepName($actual));
 
         $actual = $this->searchReference('branch:feature/bb-123-fix-links');
-        $this->assertSame('feature/bb-123-fix-links', $this->getFirstStepName($actual));
+        self::assertSame('feature/bb-123-fix-links', $this->getFirstStepName($actual));
     }
 
     public function testSearchFirstPatternNoHit()
@@ -62,7 +62,7 @@ class ReferenceSearchTest extends TestCase
     public function testSearchByBracePatternInBranch()
     {
         $actual = $this->searchReference('branch:bar');
-        $this->assertSame('foo and bar branches', $this->getFirstStepName($actual));
+        self::assertSame('foo and bar branches', $this->getFirstStepName($actual));
     }
 
     private function getFirstStepName(Pipeline $pipeline)
@@ -75,6 +75,6 @@ class ReferenceSearchTest extends TestCase
     private function assertDefault(Pipeline $pipeline)
     {
         $default = $this->pipelines->getDefault();
-        $this->assertSame($default, $pipeline, 'is default pipeline');
+        self::assertSame($default, $pipeline, 'is default pipeline');
     }
 }

@@ -18,8 +18,8 @@ class Sf2YamlTest extends TestCase
     public function testCreation()
     {
         $parser = new Sf2Yaml();
-        $this->assertInstanceOf('Ktomk\Pipelines\Yaml\Sf2Yaml', $parser);
-        $this->assertInstanceOf('Ktomk\Pipelines\Yaml\ParserInterface', $parser);
+        self::assertInstanceOf('Ktomk\Pipelines\Yaml\Sf2Yaml', $parser);
+        self::assertInstanceOf('Ktomk\Pipelines\Yaml\ParserInterface', $parser);
 
         return $parser;
     }
@@ -66,6 +66,6 @@ class Sf2YamlTest extends TestCase
 
         $struct = $parser->parseFile($path);
 
-        $this->assertNull($struct);
+        self::assertNull($struct);
     }
 }

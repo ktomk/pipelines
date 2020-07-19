@@ -377,7 +377,7 @@ to the own user account (like root is user).
 
 Export files from the pipeline by making use of artifacts, these
 are copied back into the working tree while in (implicit)
-`--deploy copy` mode. Artifacts files are always created by the
+`--deploy copy` mode. Artifacts' files are always created by the
 user running pipelines. This also (near) perfectly emulates the
 file format `artifacts` section with the benefit/downside that
 you might want to prepare a clean build in a pipeline step
@@ -402,9 +402,10 @@ containers.
 
 #### Services? Check!
 
-The local pipeline runner runs all the service containers on
-your host. This is similar to [use services and databases in
-Bitbucket Pipelines][BBPL-SRV] \[BBPL-SRV].
+The local pipeline runner runs all the service containers on your local
+box/system (that is your piplelines' host). This is similar to
+[use services and databases in Bitbucket Pipelines][BBPL-SRV]
+\[BBPL-SRV].
 
 Even before any pipeline step makes use of a service,
 a service definition can already be tested with the `--service`

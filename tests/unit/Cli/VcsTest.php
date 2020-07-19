@@ -17,7 +17,7 @@ class VcsTest extends TestCase
     {
         $exec = new ExecTester($this);
         $vcs = new Vcs($exec);
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Vcs', $vcs);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Vcs', $vcs);
     }
 
     public function testGetTopLevelDirectory()
@@ -29,6 +29,6 @@ class VcsTest extends TestCase
         $vcs = new Vcs($exec);
         $actual = $vcs->getTopLevelDirectory();
         self::assertIsString($actual);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 }

@@ -17,7 +17,7 @@ class LabelsBuilderTest extends TestCase
     public function testCreation()
     {
         $builder = new LabelsBuilder();
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\LabelsBuilder', $builder);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Containers\LabelsBuilder', $builder);
     }
 
     public function testCreationFromRunner()
@@ -29,31 +29,31 @@ class LabelsBuilderTest extends TestCase
         ));
 
         $builder = LabelsBuilder::createFromRunner($runner);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\LabelsBuilder', $builder);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Containers\LabelsBuilder', $builder);
     }
 
     public function testSetPrefix()
     {
         $builder = new LabelsBuilder();
-        $this->assertSame($builder, $builder->setPrefix('prefix'));
+        self::assertSame($builder, $builder->setPrefix('prefix'));
     }
 
     public function testSetProject()
     {
         $builder = new LabelsBuilder();
-        $this->assertSame($builder, $builder->setProject('project'));
+        self::assertSame($builder, $builder->setProject('project'));
     }
 
     public function testSetProjectDirectory()
     {
         $builder = new LabelsBuilder();
-        $this->assertSame($builder, $builder->setProjectDirectory('/path/to/project'));
+        self::assertSame($builder, $builder->setProjectDirectory('/path/to/project'));
     }
 
     public function testSetRole()
     {
         $builder = new LabelsBuilder();
-        $this->assertSame($builder, $builder->setRole('step'));
+        self::assertSame($builder, $builder->setRole('step'));
     }
 
     public function testToArrayWithRole()
@@ -73,6 +73,6 @@ class LabelsBuilderTest extends TestCase
         );
 
         $actual = $builder->setRole('step')->toArray();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 }

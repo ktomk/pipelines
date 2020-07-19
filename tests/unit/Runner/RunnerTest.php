@@ -24,7 +24,7 @@ class RunnerTest extends RunnerTestCase
             new Directories($_SERVER, $this->getTestProject()),
             $this->createMock('Ktomk\Pipelines\Cli\Exec')
         );
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Runner', $runner);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Runner', $runner);
     }
 
     public function testErrorStatusWithPipelineHavingEmptySteps()
@@ -47,7 +47,7 @@ class RunnerTest extends RunnerTestCase
             new Streams(null, null, 'php://output')
         );
         $status = $runner->run($pipeline);
-        $this->assertSame($runner::STATUS_NO_STEPS, $status);
+        self::assertSame($runner::STATUS_NO_STEPS, $status);
     }
 
     public function testHitRecursion()
@@ -70,7 +70,7 @@ class RunnerTest extends RunnerTestCase
         /** @var MockObject|Pipeline $pipeline */
         $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
         $status = $runner->run($pipeline);
-        $this->assertSame(127, $status);
+        self::assertSame(127, $status);
     }
 
     public function provideRunStatuses()
@@ -103,7 +103,7 @@ class RunnerTest extends RunnerTestCase
         $runner->method('runStep')->willReturn($status);
 
         $step = $this->createTestStep();
-        $this->assertSame($status, $runner->run($step->getPipeline()));
+        self::assertSame($status, $runner->run($step->getPipeline()));
     }
 
     public function testRunStep()
@@ -127,7 +127,7 @@ class RunnerTest extends RunnerTestCase
             ->getMock();
 
         $step = $this->createTestStep();
-        $this->assertSame(0, $runner->runStep($step));
+        self::assertSame(0, $runner->runStep($step));
     }
 
     public function testStopAtManualStep()
@@ -157,7 +157,7 @@ class RunnerTest extends RunnerTestCase
         $pipeline = $file->getDefault();
 
         $this->expectOutputRegex('~^pipelines: step #4 is manual. use `--steps 4-` to continue or `--no-manual` to override$~m');
-        $this->assertSame(0, $runner->run($pipeline));
+        self::assertSame(0, $runner->run($pipeline));
     }
 
     public function testGetProjectDirectory()
@@ -171,6 +171,6 @@ class RunnerTest extends RunnerTestCase
             ))
         );
 
-        $this->assertSame('/host/path/to/project', $runner->getProjectDirectory());
+        self::assertSame('/host/path/to/project', $runner->getProjectDirectory());
     }
 }

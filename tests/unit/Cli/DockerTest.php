@@ -48,14 +48,14 @@ class DockerTest extends TestCase
         );
 
         $docker = new Docker($exec);
-        $this->assertFalse($docker->hasCommand());
-        $this->assertNull($docker->getVersion());
+        self::assertFalse($docker->hasCommand());
+        self::assertNull($docker->getVersion());
 
-        $this->assertNull($docker->getVersion());
-        $this->assertSame('0.0.0-err', @$docker->getVersion());
+        self::assertNull($docker->getVersion());
+        self::assertSame('0.0.0-err', @$docker->getVersion());
 
         $procGoodOutput = "17.09.1-ce\n";
-        $this->assertSame('17.09.1-ce', $docker->getVersion());
+        self::assertSame('17.09.1-ce', $docker->getVersion());
         unset($procGoodOutput);
     }
 
@@ -71,7 +71,7 @@ class DockerTest extends TestCase
 
         $docker = new Docker($exec);
         $actual = $docker->hostDevice('container-name', '/app');
-        $this->assertSame('/home/user/workspace/projects/pipelines', $actual, 'extraction from json fixture');
+        self::assertSame('/home/user/workspace/projects/pipelines', $actual, 'extraction from json fixture');
     }
 
     public function testHostDeviceMountOnNonMountPoint()
@@ -86,7 +86,7 @@ class DockerTest extends TestCase
 
         $docker = new Docker($exec);
         $actual = $docker->hostDevice('container-name', '/thanks-for-the-fish');
-        $this->assertSame('/thanks-for-the-fish', $actual, 'fall back on non-mount-point');
+        self::assertSame('/thanks-for-the-fish', $actual, 'fall back on non-mount-point');
     }
 
     public function testHostDeviceMountDockerInspectFails()
@@ -97,7 +97,7 @@ class DockerTest extends TestCase
 
         $docker = new Docker($exec);
         $actual = $docker->hostDevice('container-name', '/app');
-        $this->assertSame('/app', $actual, 'docker command fails');
+        self::assertSame('/app', $actual, 'docker command fails');
     }
 
     public function testHostDeviceMountJsonParseFailure()
@@ -112,12 +112,12 @@ class DockerTest extends TestCase
 
         $docker = new Docker($exec);
         $actual = $docker->hostDevice('container-name', '/app');
-        $this->assertSame('/app', $actual, 'extraction from json fixture');
+        self::assertSame('/app', $actual, 'extraction from json fixture');
     }
 
     public function testGetProcessManager()
     {
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\Cli\Docker\ProcessManager',
             Docker::create()->getProcessManager()
         );

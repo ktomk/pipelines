@@ -16,7 +16,7 @@ class AppTest extends TestCase
     public function testCreation()
     {
         $app = App::create();
-        $this->assertNotNull($app);
+        self::assertNotNull($app);
     }
 
     public function testMainExceptionHandlingArgsException()
@@ -24,7 +24,7 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputRegex('{^pipelines: option --prefix requires an argument\n--------\nclass....:}');
         $actual = $app->main(array('cmd', '--debug', '--prefix'));
-        $this->assertNotSame(0, $actual);
+        self::assertNotSame(0, $actual);
     }
 
     public function testMainExceptionHandlingParseException()
@@ -34,7 +34,7 @@ class AppTest extends TestCase
             'cmd', '--file', 'tests/data/yml/invalid-pipeline.yml',
             '--pipeline', 'custom/unit-tests',
         ));
-        $this->assertSame(2, $actual);
+        self::assertSame(2, $actual);
     }
 
     /**
@@ -46,7 +46,7 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, 'php://output', null));
         $this->expectOutputRegex('{^usage: pipelines }m');
         $actual = $app->main(array('cmd', '--verbose', '--prefix'));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     /**
@@ -56,7 +56,7 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputRegex('{^pipelines: invalid prefix: \'123\'\n}');
         $actual = $app->main(array('cmd', '--prefix', '123'));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     /**
@@ -66,14 +66,14 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputRegex('{^pipelines: not a basename: \'\'\n}');
         $actual = $app->main(array('cmd', '--basename', ''));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function testEmptyFileStatus()
     {
         $app = new App(new Streams());
         $actual = $app->main(array('cmd', '--file', ''));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function testFileNonDefaultBasenameChange()
@@ -81,7 +81,7 @@ class AppTest extends TestCase
         $this->expectOutputRegex('{^info: --file overrides non-default --basename$}m');
         $app = new App(new Streams(null, 'php://output'));
         $actual = $app->main(array('cmd', '--basename', 'pipelines.yml', '--file', 'my-pipelines.yml', '-v'));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function testFileAbsolutePath()
@@ -90,7 +90,7 @@ class AppTest extends TestCase
         $this->expectOutputRegex(sprintf('{^pipelines: not a readable file: %s}', preg_quote($file, '{}')));
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--file', $file));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     /**
@@ -103,7 +103,7 @@ class AppTest extends TestCase
         $this->expectOutputRegex(sprintf('{^info: reading pipelines from stdin\npipelines: fatal: No YAML parser available$}m'));
         $app = new App(new Streams(null, 'php://output', 'php://output'));
         $actual = $app->main(array('cmd', '--verbose', '--file', '-'));
-        $this->assertSame(2, $actual);
+        self::assertSame(2, $actual);
 
         Yaml::$classes = array();
     }
@@ -116,21 +116,21 @@ class AppTest extends TestCase
         ));
         $app = new App(new Streams(null, 'php://output'));
         $actual = $app->main(array('cmd', '--working-dir', __DIR__, '-v', '--no-run'));
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     public function testInvalidWorkingDirStatus()
     {
         $app = new App(new Streams());
         $actual = @$app->main(array('cmd', '--working-dir', '/foo/comes/bar/and/thanks/for/the-fish'));
-        $this->assertSame(2, $actual);
+        self::assertSame(2, $actual);
     }
 
     public function testNoPipelineToRunStatus()
     {
         $app = new App(new Streams());
         $actual = $app->main(array('cmd', '--file', 'tests/data/yml/no-default-pipeline.yml'));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function testShowPipelinesWithError()
@@ -138,7 +138,7 @@ class AppTest extends TestCase
         $this->expectOutputRegex('{ERROR\s+\'image\' invalid Docker image}');
         $app = new App(new Streams(null, 'php://output'));
         $actual = $app->main(array('cmd', '--file', 'tests/data/yml/invalid-pipeline.yml', '--show'));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function testUnknownDeployMode()
@@ -146,7 +146,7 @@ class AppTest extends TestCase
         $this->expectOutputRegex('{^pipelines: unknown deploy mode \'flux-compensate\'}');
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', '--deploy', 'flux-compensate'));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function testUnknownOption()
@@ -155,7 +155,7 @@ class AppTest extends TestCase
         $this->expectOutputRegex(sprintf('{^pipelines: unknown option: %s}', preg_quote($option, '{}')));
         $app = new App(new Streams(null, null, 'php://output'));
         $actual = $app->main(array('cmd', $option));
-        $this->assertSame(1, $actual);
+        self::assertSame(1, $actual);
     }
 
     public function provideArguments()
@@ -185,7 +185,7 @@ class AppTest extends TestCase
         $app = new App(new Streams());
         $args = array_merge((array)'pipelines-test', $arguments);
         $status = $app->main($args);
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 
     public function provideErroneousArguments()
@@ -213,6 +213,6 @@ class AppTest extends TestCase
         $app = new App(new Streams(null, null, 'php://output'));
         $args = array_merge((array)'pipelines-test', $arguments);
         $status = $app->main($args);
-        $this->assertSame(1, $status);
+        self::assertSame(1, $status);
     }
 }

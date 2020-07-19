@@ -24,7 +24,7 @@ class StepsTest extends TestCase
         $definition = array(array('step' => array('script' => array(':'))));
         $pipeline = $this->getTestPipeline();
         $steps = new Steps($pipeline, $definition);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Steps', $steps);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Steps', $steps);
 
         return $steps;
     }
@@ -104,8 +104,8 @@ class StepsTest extends TestCase
         $array = $steps->getSteps();
         self::assertIsArray($array);
         self::assertCount(1, $array);
-        $this->assertArrayHasKey(0, $array);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $array[0]);
+        self::assertArrayHasKey(0, $array);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $array[0]);
     }
 
     /**
@@ -116,11 +116,11 @@ class StepsTest extends TestCase
         $pipeline = $this->getTestPipeline();
         $definition = array(array('step' => array('script' => array(':'))));
         $steps = new Steps($pipeline, $definition);
-        $this->assertCount(count($steps), $steps->getIterator(), 'pre-condition');
+        self::assertCount(count($steps), $steps->getIterator(), 'pre-condition');
         $steps->setGetIteratorFunctor(function (Steps $steps) {
             return new \ArrayIterator(array_merge($steps->getSteps(), $steps->getSteps()));
         });
-        $this->assertCount(count($steps) * 2, $steps->getIterator());
+        self::assertCount(count($steps) * 2, $steps->getIterator());
     }
 
     public function testGetStepsInherited()
@@ -138,13 +138,13 @@ class StepsTest extends TestCase
         self::assertIsArray($array);
         self::assertCount(3, $array);
 
-        $this->assertArrayHasKey(0, $array);
-        $this->assertArrayHasKey(1, $array);
-        $this->assertArrayHasKey(2, $array);
-        $this->assertArrayNotHasKey(-1, $array);
-        $this->assertArrayNotHasKey(3, $array);
+        self::assertArrayHasKey(0, $array);
+        self::assertArrayHasKey(1, $array);
+        self::assertArrayHasKey(2, $array);
+        self::assertArrayNotHasKey(-1, $array);
+        self::assertArrayNotHasKey(3, $array);
 
-        $this->assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Pipeline\Step', $array);
+        self::assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Pipeline\Step', $array);
     }
 
     public function testGetStepsArrayInherited()
@@ -160,32 +160,32 @@ class StepsTest extends TestCase
         $steps = new Steps($pipeline, $definition);
         self::assertCount(3, $steps);
 
-        $this->assertArrayHasKey(0, $steps);
-        $this->assertArrayHasKey(1, $steps);
-        $this->assertArrayHasKey(2, $steps);
-        $this->assertArrayNotHasKey(-1, $steps);
-        $this->assertArrayNotHasKey(3, $steps);
+        self::assertArrayHasKey(0, $steps);
+        self::assertArrayHasKey(1, $steps);
+        self::assertArrayHasKey(2, $steps);
+        self::assertArrayNotHasKey(-1, $steps);
+        self::assertArrayNotHasKey(3, $steps);
 
-        $this->assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Pipeline\Step', $steps);
+        self::assertContainsOnlyInstancesOf('Ktomk\Pipelines\File\Pipeline\Step', $steps);
 
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $steps[0]);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $steps[0]);
 
-        $this->assertTrue($steps->offsetExists(0));
-        $this->assertTrue($steps->offsetExists(1));
-        $this->assertTrue($steps->offsetExists(2));
-        $this->assertFalse($steps->offsetExists(-1));
-        $this->assertFalse($steps->offsetExists(3));
+        self::assertTrue($steps->offsetExists(0));
+        self::assertTrue($steps->offsetExists(1));
+        self::assertTrue($steps->offsetExists(2));
+        self::assertFalse($steps->offsetExists(-1));
+        self::assertFalse($steps->offsetExists(3));
 
         try {
             $steps[0] = 'foo';
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (\BadMethodCallException $ex) {
             $this->addToAssertionCount(1);
         }
 
         try {
             unset($steps[0]);
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (\BadMethodCallException $ex) {
             $this->addToAssertionCount(1);
         }
@@ -197,7 +197,7 @@ class StepsTest extends TestCase
         $pipeline = $this->getTestPipeline();
         $steps = new Steps($pipeline, $definition);
 
-        $this->assertSame($pipeline, $steps->getPipeline());
+        self::assertSame($pipeline, $steps->getPipeline());
     }
 
     /**
@@ -207,7 +207,7 @@ class StepsTest extends TestCase
      */
     public function testJsonSerialize(Steps $steps)
     {
-        $this->assertArrayHasKey(
+        self::assertArrayHasKey(
             'steps',
             $steps->jsonSerialize()
         );
@@ -215,13 +215,13 @@ class StepsTest extends TestCase
 
     public function testFullIter()
     {
-        $this->assertNotNull(Steps::fullIter(null));
+        self::assertNotNull(Steps::fullIter(null));
 
         $steps = $this->createConfiguredMock('Ktomk\Pipelines\File\Pipeline\Steps', array(
             'getIterator' => $this->createMock('Ktomk\Pipelines\File\Pipeline\StepsIterator'),
         ));
 
-        $this->assertNotNull(Steps::fullIter($steps));
+        self::assertNotNull(Steps::fullIter($steps));
     }
 
     public function testTestParseEmptyStep()
@@ -237,9 +237,9 @@ class StepsTest extends TestCase
     {
         try {
             new Steps($pipeline, $array);
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (ParseException $e) {
-            $this->assertSame($expected, $e->getParseMessage());
+            self::assertSame($expected, $e->getParseMessage());
         }
     }
 

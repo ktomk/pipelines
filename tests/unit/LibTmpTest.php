@@ -19,7 +19,7 @@ class LibTmpTest extends TestCase
         $dir = LibTmp::tmpDir('pipelines-fs-rmdir-test.');
         $this->cleaners[] = DestructibleString::rmDir($dir);
 
-        $this->assertDirectoryExists($dir);
+        self::assertDirectoryExists($dir);
     }
 
     /**
@@ -28,9 +28,9 @@ class LibTmpTest extends TestCase
     public function testTmpFile()
     {
         list($handle, $file) = LibTmp::tmpFile();
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
         unset($handle);
-        $this->assertFileNotExists($file);
+        self::assertFileNotExists($file);
     }
 
     /**
@@ -39,10 +39,10 @@ class LibTmpTest extends TestCase
     public function testTmpFilePut()
     {
         $file = LibTmp::tmpFilePut('FOO');
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
         $actual = file_get_contents($file);
         LibFs::rm($file);
-        $this->assertSame('FOO', $actual);
-        $this->assertFileNotExists($file);
+        self::assertSame('FOO', $actual);
+        self::assertFileNotExists($file);
     }
 }

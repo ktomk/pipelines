@@ -18,7 +18,7 @@ class IteratorTest extends TestCase
         $args = new ArgsTester();
         $args->arguments = array('--foo', 'bar', '', '--', 'parameter');
         $iterator = new Iterator($args);
-        $this->assertInstanceOf('Ktomk\Pipelines\Cli\Args\Iterator', $iterator);
+        self::assertInstanceOf('Ktomk\Pipelines\Cli\Args\Iterator', $iterator);
     }
 
     public function testIteration()
@@ -27,7 +27,7 @@ class IteratorTest extends TestCase
         $args->arguments = array('--foo', 'bar', '', '--', 'parameter');
         $iterator = new Iterator($args);
         $actual = iterator_to_array($iterator, true);
-        $this->assertSame($args->arguments, $actual);
+        self::assertSame($args->arguments, $actual);
     }
 
     public function testInvalidation()
@@ -35,10 +35,10 @@ class IteratorTest extends TestCase
         $args = new ArgsTester();
         $args->arguments = array('--foo', 'bar', '', '--', 'parameter');
         $iterator = new Iterator($args);
-        $this->assertSame('--foo', $iterator->current());
+        self::assertSame('--foo', $iterator->current());
         unset($args->arguments[0]);
-        $this->assertNull($iterator->current());
-        $this->assertFalse($iterator->valid());
+        self::assertNull($iterator->current());
+        self::assertFalse($iterator->valid());
     }
 
     public function testHasNext()
@@ -46,9 +46,9 @@ class IteratorTest extends TestCase
         $args = new ArgsTester();
         $args->arguments = array('--foo', 'bar');
         $iterator = new Iterator($args);
-        $this->assertNotNull($iterator->getNext());
+        self::assertNotNull($iterator->getNext());
         $iterator->next();
-        $this->assertNull($iterator->getNext());
+        self::assertNull($iterator->getNext());
     }
 
     public function testNextWhileInvalidated()
@@ -56,8 +56,8 @@ class IteratorTest extends TestCase
         $args = new ArgsTester();
         $args->arguments = array();
         $iterator = new Iterator($args);
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
         $iterator->next();
-        $this->assertFalse($iterator->valid());
+        self::assertFalse($iterator->valid());
     }
 }

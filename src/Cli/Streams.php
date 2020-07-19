@@ -37,7 +37,7 @@ class Streams
 
     /**
      * Streams constructor.
-     *|string
+     *
      * handles can be null (noop), a resource (reuse) or a string that
      * is opened before use (currently on creation, could be postponed)
      *
@@ -66,6 +66,8 @@ class Streams
 
     /**
      * @param string $string
+     *
+     * @return void
      */
     public function __invoke($string)
     {

@@ -40,7 +40,7 @@ class LibFsTest extends TestCase
      */
     public function testIsPortableFilename($filename, $expected)
     {
-        $this->assertSame($expected, LibFs::isPortableFilename($filename));
+        self::assertSame($expected, LibFs::isPortableFilename($filename));
     }
 
     public function testMkdir()
@@ -56,20 +56,20 @@ class LibFsTest extends TestCase
         }
 
         $result = LibFs::mkDir($testDir);
-        $this->assertDirectoryExists($testDir);
-        $this->assertSame($testDir, $result);
+        self::assertDirectoryExists($testDir);
+        self::assertSame($testDir, $result);
         $result = LibFs::mkDir($testDir);
-        $this->assertDirectoryExists($testDir);
-        $this->assertSame($testDir, $result);
+        self::assertDirectoryExists($testDir);
+        self::assertSame($testDir, $result);
 
         # clean up
         $result = rmdir($testDir);
-        $this->assertTrue($result);
-        $this->assertDirectoryNotExists($testDir);
+        self::assertTrue($result);
+        self::assertDirectoryNotExists($testDir);
 
         $result = rmdir($baseDir);
-        $this->assertTrue($result);
-        $this->assertDirectoryNotExists($baseDir);
+        self::assertTrue($result);
+        self::assertDirectoryNotExists($baseDir);
     }
 
     public function testRename()
@@ -79,11 +79,11 @@ class LibFsTest extends TestCase
 
         $file = $baseDir . '/test';
         file_put_contents($file, 'DATA');
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
 
         LibFs::rename($file, $file . '.new');
-        $this->assertFileNotExists($file);
-        $this->assertFileExists($file . '.new');
+        self::assertFileNotExists($file);
+        self::assertFileExists($file . '.new');
         LibFs::rm($file . '.new');
 
         $this->expectException('RuntimeException');
@@ -98,13 +98,13 @@ class LibFsTest extends TestCase
 
         $file = $baseDir . '/test';
         file_put_contents($file, 'DATA');
-        $this->assertFileExists($file);
+        self::assertFileExists($file);
         $result = LibFs::rm($file);
-        $this->assertFileNotExists($file);
-        $this->assertSame($file, $result);
+        self::assertFileNotExists($file);
+        self::assertSame($file, $result);
         $result = LibFs::rm($file);
-        $this->assertFileNotExists($file);
-        $this->assertSame($file, $result);
+        self::assertFileNotExists($file);
+        self::assertSame($file, $result);
     }
 
     /**
@@ -115,12 +115,12 @@ class LibFsTest extends TestCase
         $subDir = sys_get_temp_dir() . '/pipelines-fs-tests/subdir';
         LibFs::mkDir($subDir);
         file_put_contents($subDir . '/test', 'DATA');
-        $this->assertFileExists($subDir . '/test');
+        self::assertFileExists($subDir . '/test');
 
         $dir = LibFsPath::normalizeSegments($subDir . '/..');
-        $this->assertDirectoryExists($dir);
+        self::assertDirectoryExists($dir);
         LibFs::rmDir($dir);
-        $this->assertDirectoryNotExists($dir);
+        self::assertDirectoryNotExists($dir);
     }
 
     /**
@@ -129,15 +129,15 @@ class LibFsTest extends TestCase
     public function testRmDirOnNonExistingDirectory()
     {
         $dir = LibTmp::tmpDir('pipelines-fs-rmdir-test.') . '/not-existing';
-        $this->assertDirectoryNotExists($dir);
+        self::assertDirectoryNotExists($dir);
         LibFs::rmDir($dir);
         $this->addToAssertionCount(1);
 
         // also test on a previously existing directory
         $dirname = dirname($dir);
-        $this->assertDirectoryExists($dirname);
+        self::assertDirectoryExists($dirname);
         LibFs::rmDir($dirname);
-        $this->assertDirectoryNotExists($dirname);
+        self::assertDirectoryNotExists($dirname);
         LibFs::rmDir($dirname);
         $this->addToAssertionCount(1);
     }
@@ -149,10 +149,10 @@ class LibFsTest extends TestCase
     {
         $dir = LibTmp::tmpDir('pipelines-fs-rmdir-test.');
         $this->cleaners[] = DestructibleString::rmDir($dir);
-        $this->assertDirectoryExists($dir);
+        self::assertDirectoryExists($dir);
         $subDir = $dir . '/test';
         file_put_contents($subDir, 'DATA');
-        $this->assertDirectoryNotExists($subDir);
+        self::assertDirectoryNotExists($subDir);
         $this->expectException('UnexpectedValueException');
         $this->expectExceptionMessage('Failed to open directory');
         LibFs::rmDir($subDir);
@@ -164,68 +164,68 @@ class LibFsTest extends TestCase
         $testDir = $baseDir . '/test';
         $link = $baseDir . '/link';
         LibFs::unlink($link);
-        $this->assertFileNotExists($link);
+        self::assertFileNotExists($link);
 
         LibFs::mkDir($testDir);
         LibFs::symlink($testDir, $link);
-        $this->assertFileExists($link);
+        self::assertFileExists($link);
         LibFs::symlink($testDir, $link);
-        $this->assertFileExists($link);
+        self::assertFileExists($link);
 
         LibFs::unlink($link);
-        $this->assertFileNotExists($link);
+        self::assertFileNotExists($link);
 
         # clean up
         rmdir($testDir);
         rmdir($baseDir);
-        $this->assertDirectoryNotExists($testDir);
-        $this->assertDirectoryNotExists($baseDir);
+        self::assertDirectoryNotExists($testDir);
+        self::assertDirectoryNotExists($baseDir);
     }
 
     public function testFileLookUpSelf()
     {
         $expected = __FILE__;
         $actual = LibFs::fileLookUp(basename($expected), __DIR__);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testFileLookUpCopying()
     {
         $expected = dirname(dirname(__DIR__)) . '/COPYING';
         $actual = LibFs::fileLookUp(basename($expected), __DIR__);
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testFileLookUpCopyingWorkingDirectory()
     {
         $expected = './COPYING';
         $actual = LibFs::fileLookUp(basename($expected));
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testFileLookUpNonExistingFile()
     {
         $actual = LibFs::fileLookUp('chinese-black-beans-sauce-vs-vietnamese-spring-rolls', __DIR__);
-        $this->assertNull($actual);
+        self::assertNull($actual);
     }
 
     public function testCanFopen()
     {
-        $this->assertTrue(LibFs::canFopen(__FILE__, 'rb'));
+        self::assertTrue(LibFs::canFopen(__FILE__, 'rb'));
     }
 
     public function testCanFopenFail()
     {
-        $this->assertFalse(LibFs::canFopen(__FILE__ . 'xxxx'));
+        self::assertFalse(LibFs::canFopen(__FILE__ . 'xxxx'));
     }
 
     public function testIsReadableFile()
     {
-        $this->assertTrue(LibFs::isReadableFile(__FILE__));
+        self::assertTrue(LibFs::isReadableFile(__FILE__));
     }
 
     public function testIsReadableFileOnDirectory()
     {
-        $this->assertFalse(LibFs::isReadableFile(__DIR__));
+        self::assertFalse(LibFs::isReadableFile(__DIR__));
     }
 }

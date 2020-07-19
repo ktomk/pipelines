@@ -35,6 +35,6 @@ class ImageTest extends TestCase
         if (0 !== $status) {
             echo "\n", $command, "\n", implode("\n", $output), "\n";
         }
-        $this->assertSame(0, $status);
+        self::assertSame(0, $status);
     }
 }

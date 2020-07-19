@@ -24,9 +24,9 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service($name, $array);
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Definitions\Service', $service);
-        $this->assertSame($name, $service->getName());
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Image', $service->getImage());
+        self::assertInstanceOf('Ktomk\Pipelines\File\Definitions\Service', $service);
+        self::assertSame($name, $service->getName());
+        self::assertInstanceOf('Ktomk\Pipelines\File\Image', $service->getImage());
     }
 
     /**
@@ -47,11 +47,11 @@ class ServiceTest extends TestCase
         );
 
         $service = new Service($name, $array);
-        $this->assertSame(array(), $service->getVariables());
+        self::assertSame(array(), $service->getVariables());
 
         $array['variables'] = array('FOO' => '$BAR', 'BAR' => 'BAZ');
         $service = new Service($name, $array);
-        $this->assertSame(array('FOO' => '$BAR', 'BAR' => 'BAZ'), $service->getVariables());
+        self::assertSame(array('FOO' => '$BAR', 'BAR' => 'BAZ'), $service->getVariables());
     }
 
     public function testVariablesParseError()
@@ -75,9 +75,9 @@ class ServiceTest extends TestCase
     {
         try {
             new Service($name, $array);
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (ParseException $e) {
-            $this->assertSame($message, $e->getParseMessage());
+            self::assertSame($message, $e->getParseMessage());
         }
     }
 }

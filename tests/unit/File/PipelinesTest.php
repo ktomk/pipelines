@@ -27,12 +27,12 @@ class PipelinesTest extends TestCase
 
         $result = Yaml::file($path);
 
-        $this->assertArrayHasKey('pipelines', $result, 'file fixture broken');
+        self::assertArrayHasKey('pipelines', $result, 'file fixture broken');
         self::assertIsArray($result['pipelines'], 'file fixture broken');
 
         $pipelines = new Pipelines($result['pipelines'], $this->createMock('Ktomk\Pipelines\File\File'));
 
-        $this->assertInstanceOf('Ktomk\Pipelines\File\Pipelines', $pipelines);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipelines', $pipelines);
 
         return $pipelines;
     }
@@ -47,8 +47,8 @@ class PipelinesTest extends TestCase
     public function testGetPipelines(Pipelines $pipelines)
     {
         $actual = $pipelines->getPipelines();
-        $this->assertGreaterThan(1, count($actual));
-        $this->assertContainsOnlyInstancesOf(
+        self::assertGreaterThan(1, count($actual));
+        self::assertContainsOnlyInstancesOf(
             'Ktomk\Pipelines\File\Pipeline',
             $actual
         );
@@ -96,10 +96,10 @@ class PipelinesTest extends TestCase
     public function testGetFileUnassociated()
     {
         $pipelines = new Pipelines($this->getMinimalArray(), $mock = $this->createMock('Ktomk\Pipelines\File\File'));
-        $this->assertSame($mock, $pipelines->getFile());
+        self::assertSame($mock, $pipelines->getFile());
 
         $pipelines = new Pipelines($this->getMinimalArray());
-        $this->assertNull($pipelines->getFile());
+        self::assertNull($pipelines->getFile());
     }
 
     /**
@@ -132,7 +132,7 @@ class PipelinesTest extends TestCase
         $prop->setAccessible(true);
         $array = $prop->getValue($pipelines);
         $actual = $array['branches']['master'];
-        $this->assertSame($pipeline, $actual);
+        self::assertSame($pipeline, $actual);
     }
 
     public function testGetReference()
@@ -140,11 +140,11 @@ class PipelinesTest extends TestCase
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $pipeline = $file->getById('branches/master');
-        $this->assertNotNull($pipeline);
+        self::assertNotNull($pipeline);
 
         # test instance count
         $default = $file->getById('default');
-        $this->assertSame($default, $file->getDefault());
+        self::assertSame($default, $file->getDefault());
     }
 
     public function testGetPipelineIds()
@@ -152,8 +152,8 @@ class PipelinesTest extends TestCase
         $pipelines = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')->getPipelines();
         $ids = $pipelines->getPipelineIds();
         self::assertIsArray($ids);
-        $this->assertArrayHasKey(12, $ids);
-        $this->assertSame('custom/unit-tests', $ids[12]);
+        self::assertArrayHasKey(12, $ids);
+        self::assertSame('custom/unit-tests', $ids[12]);
     }
 
     /**
@@ -217,20 +217,20 @@ class PipelinesTest extends TestCase
         );
         $pipelines = new Pipelines($withoutDefault);
 
-        $this->assertNull($pipelines->getIdDefault());
-        $this->assertNull($pipelines->getDefault());
+        self::assertNull($pipelines->getIdDefault());
+        self::assertNull($pipelines->getDefault());
 
         $reference = Reference::create();
         $pipeline = $pipelines->searchReference($reference);
-        $this->assertNull($pipeline);
+        self::assertNull($pipeline);
 
         $reference = Reference::create();
         $pipeline = $pipelines->searchIdByReference($reference);
-        $this->assertNull($pipeline);
+        self::assertNull($pipeline);
 
         $reference = Reference::create('bookmark:xy');
         $pipeline = $pipelines->searchIdByReference($reference);
-        $this->assertNull($pipeline);
+        self::assertNull($pipeline);
     }
 
     /**
@@ -273,9 +273,9 @@ class PipelinesTest extends TestCase
         ))));
         $pipelines = $file->getPipelines();
         $pipeline = $pipelines->getById('default');
-        $this->assertNotNull($pipeline);
+        self::assertNotNull($pipeline);
         $actual = $pipelines->getId($pipeline);
-        $this->assertSame('default', $actual);
+        self::assertSame('default', $actual);
     }
 
     /**
@@ -292,7 +292,7 @@ class PipelinesTest extends TestCase
         $pipelines = $file->getPipelines();
 
         $pipeline = new Pipeline($file, array(array('step' => array('script' => array(':')))));
-        $this->assertNull($pipelines->getId($pipeline));
+        self::assertNull($pipelines->getId($pipeline));
     }
 
     /**
@@ -316,7 +316,7 @@ class PipelinesTest extends TestCase
 
         $file = File::createFromFile($path);
 
-        $this->assertNotNull($file);
+        self::assertNotNull($file);
 
         $this->expectException('Ktomk\Pipelines\File\ParseException');
         $this->expectExceptionMessage('file parse error: invalid pipeline id \'');
@@ -345,6 +345,6 @@ class PipelinesTest extends TestCase
     {
         $steps = $pipeline->getSteps();
         $first = $steps[0];
-        $this->assertSame($expected, $first->getName(), $message);
+        self::assertSame($expected, $first->getName(), $message);
     }
 }

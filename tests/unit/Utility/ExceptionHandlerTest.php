@@ -20,7 +20,7 @@ class ExceptionHandlerTest extends TestCase
     {
         $streams = new Streams();
         $handler = new ExceptionHandler($streams, new Help($streams), true);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\ExceptionHandler', $handler);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\ExceptionHandler', $handler);
 
         return $handler;
     }
@@ -32,7 +32,7 @@ class ExceptionHandlerTest extends TestCase
     public function testHandle(ExceptionHandler $handler)
     {
         $runnable = RunnableTester::create();
-        $this->assertNull($handler->handle($runnable));
+        self::assertNull($handler->handle($runnable));
     }
 
     /**
@@ -46,7 +46,7 @@ class ExceptionHandlerTest extends TestCase
                 throw new UnexpectedValueException('handle this!');
             }
         );
-        $this->assertSame(2, $handler->handle($runnable));
+        self::assertSame(2, $handler->handle($runnable));
     }
 
     /**
@@ -60,6 +60,6 @@ class ExceptionHandlerTest extends TestCase
                 throw new ArgsException('handle this!', 22);
             }
         );
-        $this->assertSame(22, $handler->handle($runnable));
+        self::assertSame(22, $handler->handle($runnable));
     }
 }

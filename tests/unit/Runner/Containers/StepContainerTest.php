@@ -28,8 +28,8 @@ class StepContainerTest extends RunnerTestCase
         $runner->method('getExec')->willReturn(new Exec());
 
         $container = new StepContainer('test-step-container', $step, $runner);
-        $this->assertNotNull($container);
-        $this->assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepContainer', $container);
+        self::assertNotNull($container);
+        self::assertInstanceOf('Ktomk\Pipelines\Runner\Containers\StepContainer', $container);
     }
 
     public function testGetName()
@@ -41,7 +41,7 @@ class StepContainerTest extends RunnerTestCase
 
         $container = new StepContainer($expected, $this->getStepMock(), $runner);
         $actual = $container->getName();
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
     }
 
     public function testKeepOrKillThrowsException()
@@ -66,12 +66,12 @@ class StepContainerTest extends RunnerTestCase
         $container = new StepContainer($name, $this->getStepMock(), $runner);
 
         $exec->expect('capture', 'docker');
-        $this->assertNull($container->keepOrKill(false));
+        self::assertNull($container->keepOrKill(false));
 
         $exec->expect('capture', 'docker', '1234567');
-        $this->assertSame('1234567', $container->keepOrKill(true));
+        self::assertSame('1234567', $container->keepOrKill(true));
 
-        $this->assertSame('1234567', $container->getId());
+        self::assertSame('1234567', $container->getId());
     }
 
     public function testKillAndRemoveThrowsNot()
@@ -114,14 +114,14 @@ class StepContainerTest extends RunnerTestCase
         $runner->method('getExec')->willReturn($exec);
 
         $container = new StepContainer('test-step-container', $this->getStepMock(), $runner);
-        $this->assertNull($container->getId(), 'precondition');
+        self::assertNull($container->getId(), 'precondition');
 
         $exec->expect('capture', 'docker', '1234567', 'run');
         $actual = $container->run(array());
         self::assertIsArray($actual);
-        $this->assertCount(3, $actual);
-        $this->assertSame('1234567', $container->getId());
-        $this->assertSame('1234567', $container->getDisplayId());
+        self::assertCount(3, $actual);
+        self::assertSame('1234567', $container->getId());
+        self::assertSame('1234567', $container->getDisplayId());
     }
 
     public function testRunDryRun()
@@ -130,14 +130,14 @@ class StepContainerTest extends RunnerTestCase
         $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
         $runner->method('getExec')->willReturn($exec);
         $container = new StepContainer('test-step-container', $this->getStepMock(), $runner);
-        $this->assertNull($container->getId(), 'precondition');
+        self::assertNull($container->getId(), 'precondition');
 
         $exec->expect('capture', 'docker', '', 'run');
         $actual = $container->run(array());
         self::assertIsArray($actual);
-        $this->assertCount(3, $actual);
-        $this->assertNull($container->getId());
-        $this->assertSame('*dry-run*', $container->getDisplayId());
+        self::assertCount(3, $actual);
+        self::assertNull($container->getId());
+        self::assertSame('*dry-run*', $container->getDisplayId());
     }
 
     public function testExecRunServiceContainerAttached()
@@ -161,10 +161,10 @@ class StepContainerTest extends RunnerTestCase
             array()
         );
         $expected = array(0, array('--network', 'host'));
-        $this->assertSame($expected, $actual);
+        self::assertSame($expected, $actual);
 
         $messages = $exec->getDebugMessages();
-        $this->assertCount(1, $messages);
+        self::assertCount(1, $messages);
         self::assertStringContainsString(' --rm ', $messages[0]);
         self::assertStringNotContainsString(' --detached ', $messages[0]);
         self::assertStringNotContainsString(' -d ', $messages[0]);
@@ -180,7 +180,7 @@ class StepContainerTest extends RunnerTestCase
         $container = new StepContainer('name', $step, $runner);
 
         $expected = array();
-        $this->assertSame($expected, $container->obtainUserOptions(), 'no user option');
+        self::assertSame($expected, $container->obtainUserOptions(), 'no user option');
 
         $runOpts->setUser('1000:1000');
 
@@ -192,7 +192,7 @@ class StepContainerTest extends RunnerTestCase
             4 => '-v',
             5 => '/etc/group:/etc/group:ro',
         );
-        $this->assertSame($expected, $container->obtainUserOptions(), 'user option');
+        self::assertSame($expected, $container->obtainUserOptions(), 'user option');
     }
 
     public function testObtainLabelOptions()
@@ -209,7 +209,7 @@ class StepContainerTest extends RunnerTestCase
 
         $expected = array(
             0 => '-l',
-            1 => 'pipelines.prefix',
+            1 => 'pipelines.prefix=',
             2 => '-l',
             3 => 'pipelines.role=step',
             4 => '-l',
@@ -218,7 +218,7 @@ class StepContainerTest extends RunnerTestCase
             7 => 'pipelines.project.path',
         );
 
-        $this->assertSame($expected, $container->obtainLabelOptions(), 'label options');
+        self::assertSame($expected, $container->obtainLabelOptions(), 'label options');
     }
 
     public function testSshOption()
@@ -233,7 +233,7 @@ class StepContainerTest extends RunnerTestCase
         $container = new StepContainer('name', $step, $runner);
 
         $actual = $container->obtainSshOptions();
-        $this->assertSame(array(), $actual, 'no ssh option');
+        self::assertSame(array(), $actual, 'no ssh option');
 
         $runOpts->setSsh(true);
         list($handle, $file) = LibTmp::tmpFile();
@@ -245,7 +245,7 @@ class StepContainerTest extends RunnerTestCase
             2 => '-e',
             3 => 'SSH_AUTH_SOCK=/var/run/ssh-auth.sock',
         );
-        $this->assertSame($expected, $actual, 'ssh option');
+        self::assertSame($expected, $actual, 'ssh option');
         unset($handle);
     }
 

@@ -17,9 +17,9 @@ class ParseExceptionTest extends TestCase
     public function testCreation()
     {
         $exception = new ParseException('message string');
-        $this->assertInstanceOf('Ktomk\Pipelines\File\ParseException', $exception);
-        $this->assertInstanceOf('InvalidArgumentException', $exception);
-        $this->assertInstanceOf('Exception', $exception);
+        self::assertInstanceOf('Ktomk\Pipelines\File\ParseException', $exception);
+        self::assertInstanceOf('InvalidArgumentException', $exception);
+        self::assertInstanceOf('Exception', $exception);
 
         return $exception;
     }

@@ -17,7 +17,7 @@ class ArtifactsTest extends TestCase
     {
         $array = array('build/html/testdox.html');
         $artifacts = new Artifacts($array);
-        $this->assertInstanceOf(
+        self::assertInstanceOf(
             'Ktomk\Pipelines\File\Artifacts',
             $artifacts
         );
@@ -48,6 +48,6 @@ class ArtifactsTest extends TestCase
         $array = array('build/html/testdox.html');
         $artifacts = new Artifacts($array);
         $actual = $artifacts->getPatterns();
-        $this->assertSame($array, $actual);
+        self::assertSame($array, $actual);
     }
 }

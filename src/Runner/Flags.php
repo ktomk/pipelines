@@ -11,6 +11,8 @@ class Flags
 {
     /**
      * default flags
+     *
+     * 19: FLAG_DOCKER_REMOVE (1) | FLAG_DOCKER_KILL (2) | FLAG_SOCKET (16)
      */
     const FLAGS = 19;
 

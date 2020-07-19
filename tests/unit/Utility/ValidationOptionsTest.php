@@ -25,7 +25,7 @@ class ValidationOptionsTest extends TestCase
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = new ValidationOptions($args, $output, $file);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\ValidationOptions', $options);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\ValidationOptions', $options);
     }
 
     public function testBind()
@@ -35,7 +35,7 @@ class ValidationOptionsTest extends TestCase
         $file = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml');
 
         $options = ValidationOptions::bind($args, $output, $file);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\ValidationOptions', $options);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\ValidationOptions', $options);
     }
 
     public function provideTestRunArgs()
@@ -68,11 +68,11 @@ class ValidationOptionsTest extends TestCase
 
         try {
             $options->run();
-            $this->assertNull($expected);
+            self::assertNull($expected);
         } catch (StatusException $e) {
-            $this->assertSame($expected, $e->getCode());
+            self::assertSame($expected, $e->getCode());
         } catch (UnexpectedValueException $e) {
-            $this->assertSame($expected, $e->getCode());
+            self::assertSame($expected, $e->getCode());
         }
     }
 }

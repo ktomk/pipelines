@@ -19,7 +19,7 @@ class HelpTest extends TestCase
     {
         $streams = new Streams(null, 'php://output');
         $help = new Help($streams);
-        $this->assertInstanceOf('Ktomk\Pipelines\Utility\Help', $help);
+        self::assertInstanceOf('Ktomk\Pipelines\Utility\Help', $help);
 
         return $help;
     }
@@ -42,7 +42,7 @@ class HelpTest extends TestCase
     {
         $this->expectOutputRegex('~^usage: pipelines \\[<options>] ~');
         $actual = $help->showHelp();
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     /**
@@ -53,7 +53,7 @@ class HelpTest extends TestCase
     {
         $this->expectOutputRegex('~^pipelines version [^\\n]{5,}$~');
         $actual = $help->showVersion();
-        $this->assertSame(0, $actual);
+        self::assertSame(0, $actual);
     }
 
     /**
@@ -67,9 +67,9 @@ class HelpTest extends TestCase
 
         try {
             $help->run($args);
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (StatusException $e) {
-            $this->assertSame(0, $e->getCode());
+            self::assertSame(0, $e->getCode());
         }
     }
 
@@ -84,9 +84,9 @@ class HelpTest extends TestCase
 
         try {
             $help->run($args);
-            $this->fail('an expected exception has not been thrown');
+            self::fail('an expected exception has not been thrown');
         } catch (StatusException $e) {
-            $this->assertSame(0, $e->getCode());
+            self::assertSame(0, $e->getCode());
         }
     }
 

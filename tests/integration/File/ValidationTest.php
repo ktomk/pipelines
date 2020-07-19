@@ -24,7 +24,7 @@ class ValidationTest extends TestCase
             Constraint::CHECK_MODE_DISABLE_FORMAT
         );
         $this->debugValidator($validator);
-        $this->assertTrue($validator->isValid());
+        self::assertTrue($validator->isValid());
     }
 
     /**
@@ -38,7 +38,7 @@ class ValidationTest extends TestCase
             Constraint::CHECK_MODE_DISABLE_FORMAT
         );
         $this->debugValidator($validator);
-        $this->assertFalse($validator->isValid());
+        self::assertFalse($validator->isValid());
     }
 
     /**
@@ -52,11 +52,11 @@ class ValidationTest extends TestCase
 
         // test for regression on "const" constraint in "oneOf"
         list($data, $validator) = $this->validatorByFixture($yamlFile, $prefix . 'test-01-schema-fail.json');
-        $this->assertFalse($validator->isValid());
+        self::assertFalse($validator->isValid());
 
         // demonstrate "enum" work-around working
         list($data, $validator) = $this->validatorByFixture($yamlFile, $prefix . 'test-01-schema-ok.json');
-        $this->assertTrue($validator->isValid());
+        self::assertTrue($validator->isValid());
 
         $this->debugValidator($validator);
     }
@@ -75,7 +75,7 @@ class ValidationTest extends TestCase
 
         // test for image parse error on pipeline step
         list($data, $validator) = $this->validatorByFixture($yamlFile, $prefix . 'test-02-schema-fail.json');
-        $this->assertFalse($validator->isValid());
+        self::assertFalse($validator->isValid());
 
         // test for image parse error on pipeline step
         list($data, $validator) = $this->validatorByFixture(
@@ -84,7 +84,7 @@ class ValidationTest extends TestCase
             Constraint::CHECK_MODE_DISABLE_FORMAT
         );
         $this->debugValidator($validator);
-        $this->assertTrue($validator->isValid());
+        self::assertTrue($validator->isValid());
     }
 
     /**
@@ -101,7 +101,7 @@ class ValidationTest extends TestCase
 
         // test for image parse error on pipeline step
         list($data, $validator) = $this->validatorByFixture($yamlFile, $prefix . 'test-03-schema-fail.json');
-        $this->assertFalse($validator->isValid());
+        self::assertFalse($validator->isValid());
 
         // test for image w/o parse error disabling format
         list($data, $validator) = $this->validatorByFixture(
@@ -110,7 +110,7 @@ class ValidationTest extends TestCase
             Constraint::CHECK_MODE_DISABLE_FORMAT
         );
         $this->debugValidator($validator);
-        $this->assertTrue($validator->isValid());
+        self::assertTrue($validator->isValid());
     }
 
     private function validatorByFixture($yamlFile, $schemaFile, $checkMode = null)
