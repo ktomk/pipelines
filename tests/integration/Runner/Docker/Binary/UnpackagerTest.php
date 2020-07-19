@@ -3,8 +3,10 @@
 namespace Ktomk\Pipelines\Integration\Runner\Docker\Binary;
 
 use Ktomk\Pipelines\Cli\Exec;
+use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DirectoriesTest;
 use Ktomk\Pipelines\Runner\Docker\Binary\UnPackager;
@@ -20,6 +22,11 @@ use Ktomk\Pipelines\TestCase;
 class UnpackagerTest extends TestCase
 {
     /**
+     * @var array
+     */
+    private $removeDirectories = array();
+
+    /**
      * Integration test against a real users $HOME setting w/ a test-package
      *
      * Binaries are stored XDG_DATA_HOME based, e.g. ~/.local/share/pipelines/static-docker and are
@@ -29,8 +36,12 @@ class UnpackagerTest extends TestCase
      */
     public function testTestPackage()
     {
+        $testDir = LibTmp::tmpDir('pipelines-test.');
+        $this->removeDirectories[] = DestructibleString::rmDir($testDir);
+        $testHome = LibFs::mkDir($testDir . '/home');
+
         $exec = new Exec();
-        $directories = new Directories(Lib::env($_SERVER), DirectoriesTest::getTestProject());
+        $directories = new Directories(Lib::env(array('HOME' => $testHome) + $_SERVER), DirectoriesTest::getTestProject());
         $packageDirectory = $directories->getBaseDirectory('XDG_CACHE_HOME', 'package-docker');
         $binariesDirectory = $directories->getBaseDirectory('XDG_DATA_HOME', 'static-docker');
 
