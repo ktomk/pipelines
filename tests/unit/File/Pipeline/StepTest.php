@@ -132,6 +132,13 @@ class StepTest extends TestCase
         self::assertArrayHasKey('image', $actual);
     }
 
+    public function testGetCaches()
+    {
+        $step = $this->createStep();
+
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepCaches', $step->getCaches());
+    }
+
     public function testGetEnv()
     {
         self::assertSame(array(), $this->createStep()->getEnv());

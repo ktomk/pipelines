@@ -37,6 +37,21 @@ class DefinitionsTest extends TestCase
      *
      * @return void
      */
+    public function testGetCaches(Definitions $definitions)
+    {
+        self::assertInstanceOf(
+            'Ktomk\Pipelines\File\Definitions\Caches',
+            $definitions->getCaches()
+        );
+    }
+
+    /**
+     * @depends testParsing
+     *
+     * @param Definitions $definitions
+     *
+     * @return void
+     */
     public function testGetServices(Definitions $definitions)
     {
         self::assertInstanceOf(

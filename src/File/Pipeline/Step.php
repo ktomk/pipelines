@@ -95,6 +95,16 @@ class Step implements FileNode
     }
 
     /**
+     * @return StepCaches
+     */
+    public function getCaches()
+    {
+        $caches = isset($this->step['caches']) ? $this->step['caches'] : array();
+
+        return new StepCaches($this, $caches);
+    }
+
+    /**
      * @return StepServices
      */
     public function getServices()

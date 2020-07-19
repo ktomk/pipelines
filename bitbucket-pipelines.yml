@@ -20,6 +20,9 @@ pipelines:
       - step:
           # has no zip: tomsowerby/php-5.3:cli
           image: cespi/php-5.3:cli-latest
+          caches:
+            - composer
+            - build-http-cache
           script:
             - command -v composer || lib/pipelines/composer-install.sh
             - composer config secure-http false && composer config disable-tls true
@@ -217,6 +220,8 @@ pipelines:
             - echo "ok."
 
 definitions:
+  caches:
+    build-http-cache: build/store/http-cache
   services:
     redis:
       image: redis:6.0.4-alpine

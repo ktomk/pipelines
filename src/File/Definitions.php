@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\File;
 
+use Ktomk\Pipelines\File\Definitions\Caches;
 use Ktomk\Pipelines\File\Definitions\Services;
 use Ktomk\Pipelines\Lib;
 
@@ -20,6 +21,11 @@ class Definitions
     private $array;
 
     /**
+     * @var Definitions\Caches
+     */
+    private $caches;
+
+    /**
      * @var Definitions\Services
      */
     private $services;
@@ -31,6 +37,10 @@ class Definitions
      */
     public function __construct(array $array)
     {
+        Lib::v($array['caches'], array());
+
+        $this->caches = $this->parseDefinitionsCaches($array['caches']);
+
         Lib::v($array['services'], array());
 
         $this->services = $this->parseDefinitionsServices($array['services']);
@@ -39,11 +49,29 @@ class Definitions
     }
 
     /**
+     * @return Caches
+     */
+    public function getCaches()
+    {
+        return $this->caches;
+    }
+
+    /**
      * @return Services
      */
     public function getServices()
     {
         return $this->services;
+    }
+
+    /**
+     * @param array $array
+     *
+     * @return Caches
+     */
+    private function parseDefinitionsCaches(array $array)
+    {
+        return new Caches($array);
     }
 
     /**

@@ -1,0 +1,21 @@
+# this file is part of pipelines
+#
+# fixture file to test caches
+clone:
+  depth: 1
+
+pipelines:
+  default:
+    - step:
+        name: composer cache
+        caches:
+          - composer
+        image: php:7.4-alpine
+        script:
+          - apk add --no-cache --virtual .composer-rundeps bash git unzip
+          - lib/pipelines/composer-install.sh
+          - composer update
+definitions:
+  caches:
+    composer-ignore: ~/.composer/cache
+

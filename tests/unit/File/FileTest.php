@@ -31,6 +31,7 @@ class FileTest extends TestCase
             array($dir . '/alias.yml'),
             array($dir . '/alias2.yml'),
             array($dir . '/bitbucket-pipelines.yml'),
+            array($dir . '/cache.yml'),
             array($dir . '/images.yml'),
             array($dir . '/no-default-pipeline.yml'),
             array($dir . '/steps.yml'),
