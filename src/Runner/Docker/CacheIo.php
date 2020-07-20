@@ -51,6 +51,11 @@ class CacheIo
     private $clonePath;
 
     /**
+     * @var bool
+     */
+    private $noCache = false;
+
+    /**
      * @param Runner $runner
      * @param $id
      *
@@ -63,7 +68,8 @@ class CacheIo
             $id,
             $runner->getRunOpts()->getOption('step.clone-path'),
             $runner->getStreams(),
-            $runner->getExec()
+            $runner->getExec(),
+            $runner->getFlags()->noCache()
         );
     }
 
@@ -91,14 +97,16 @@ class CacheIo
      * @param string $clonePath
      * @param Streams $streams
      * @param Exec $exec
+     * @param bool $noCache
      */
-    public function __construct($caches, $id, $clonePath, Streams $streams, Exec $exec)
+    public function __construct($caches, $id, $clonePath, Streams $streams, Exec $exec, $noCache)
     {
         $this->id = $id;
         $this->setCachesDirectory($caches);
         $this->clonePath = $clonePath;
         $this->streams = $streams;
         $this->exec = $exec;
+        $this->noCache = $noCache;
     }
 
     /**
@@ -111,7 +119,7 @@ class CacheIo
         $cachesDirectory = $this->cachesDirectory;
 
         // skip deploying caches if there are no caches
-        if ($this->skip($cachesDirectory, $step)) {
+        if ($this->skip($this->noCache, $cachesDirectory, $step)) {
             return;
         }
 
@@ -162,7 +170,7 @@ class CacheIo
         $cachesDirectory = $this->cachesDirectory;
 
         // skip capturing caches if there are no caches
-        if ($this->skip($cachesDirectory, $step)) {
+        if ($this->skip($this->noCache, $cachesDirectory, $step)) {
             return;
         }
 
@@ -239,13 +247,18 @@ class CacheIo
     }
 
     /**
+     * @param bool $noCache
      * @param string $cachesDirectory
      * @param Step $step
      *
      * @return bool|void
      */
-    private function skip($cachesDirectory, Step $step)
+    private function skip($noCache, $cachesDirectory, Step $step)
     {
+        if ($noCache) {
+            return true;
+        }
+
         // caches directory is empty?
         if (empty($cachesDirectory)) {
             return true;

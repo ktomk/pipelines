@@ -42,6 +42,11 @@ class Flags
     const FLAG_SOCKET = 16;
 
     /**
+     * do not make use of dependency caches
+     */
+    const FLAG_NO_CACHE = 32;
+
+    /**
      * @var int flags bit-mask value
      */
     public $memory = self::FLAGS;
@@ -112,6 +117,14 @@ class Flags
     public function useDockerSocket()
     {
         return (bool)($this->memory & self::FLAG_SOCKET);
+    }
+
+    /**
+     * @return bool
+     */
+    public function noCache()
+    {
+        return (bool)($this->memory & self::FLAG_NO_CACHE);
     }
 
     /**

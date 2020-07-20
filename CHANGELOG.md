@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- dependency caches and `--no-cache` for the old behavior
 ### Fixed
 - Integration test polluting `$HOME` for docker client stub
 

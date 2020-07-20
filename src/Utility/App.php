@@ -110,6 +110,8 @@ class App implements Runnable
 
         $keep = KeepOptions::bind($args)->run();
 
+        $cache = CacheOptions::bind($args)->run();
+
         $basename = $this->parseBasename();
 
         $workingDir = $this->parseWorkingDir();
@@ -164,7 +166,7 @@ class App implements Runnable
 
         $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions, $runOpts);
 
-        $flags = $this->getRunFlags($keep, $deployMode);
+        $flags = $this->getRunFlags($keep, $deployMode, $cache);
 
         $runner = Runner::createEx($runOpts, $directories, $exec, $flags, $env, $streams);
 
@@ -508,10 +510,11 @@ class App implements Runnable
      *
      * @param KeepOptions $keep
      * @param string $deployMode
+     * @param CacheOptions $cache
      *
      * @return Flags
      */
-    private function getRunFlags(KeepOptions $keep, $deployMode)
+    private function getRunFlags(KeepOptions $keep, $deployMode, CacheOptions $cache)
     {
         $flagsValue = Flags::FLAGS;
         if ($keep->errorKeep) {
@@ -519,6 +522,8 @@ class App implements Runnable
         } elseif ($keep->keep) {
             $flagsValue &= ~(Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE);
         }
+
+        $cache->hasCache() || $flagsValue |= Flags::FLAG_NO_CACHE;
 
         if ('copy' === $deployMode) {
             $flagsValue |= Flags::FLAG_DEPLOY_COPY;

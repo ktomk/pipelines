@@ -86,6 +86,16 @@ class CacheIoTest extends TestCase
         self::assertSame('/relative', $io->mapCachePath('./relative'));
     }
 
+    public function testDeployAndCaptureWithNoCacheFlag()
+    {
+        $io = $this->newCacheIo('', '', true);
+        $step = $this->createMock('Ktomk\Pipelines\File\Pipeline\Step');
+        $io->deployStepCaches($step);
+        $this->addToAssertionCount(1);
+        $io->captureStepCaches($step, true);
+        $this->addToAssertionCount(1);
+    }
+
     public function testDeployAndCaptureWithEmptyCacheDirectory()
     {
         $io = $this->newCacheIo('', '');
@@ -120,10 +130,11 @@ class CacheIoTest extends TestCase
      *
      * @param string $caches
      * @param string $id
+     * @param bool $noCache
      *
      * @return CacheIo
      */
-    private function newCacheIo($caches, $id)
+    private function newCacheIo($caches, $id, $noCache = false)
     {
         return new CacheIo(
             $caches,
@@ -132,7 +143,8 @@ class CacheIoTest extends TestCase
             $this->createMock('Ktomk\Pipelines\Cli\Streams'),
             $exec = null === $this->execTester
                 ? $this->createMock('Ktomk\Pipelines\Cli\Exec')
-                : $this->execTester
+                : $this->execTester,
+            $noCache
         );
     }
 
@@ -157,6 +169,10 @@ class CacheIoTest extends TestCase
             : $this->execTester;
 
         $runner->method('getExec')->willReturn($exec);
+
+        $runner->method('getFlags')->willReturn(
+            $flags = $this->createMock('Ktomk\Pipelines\Runner\Flags')
+        );
 
         return $runner;
     }

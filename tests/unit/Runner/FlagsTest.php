@@ -76,6 +76,12 @@ class FlagsTest extends TestCase
         self::assertSame($remove, $flags->removeContainer());
     }
 
+    public function testNoCache()
+    {
+        $flags = new Flags();
+        self::assertFalse($flags->noCache());
+    }
+
     private function flagsValue(Flags $flags = null)
     {
         null === $flags && $flags = new Flags();
