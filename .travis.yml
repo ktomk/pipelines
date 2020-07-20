@@ -1,6 +1,9 @@
 os: linux
 dist: xenial
 language: php
+cache:
+  directories:
+    - $HOME/.cache/pipelines
 
 services:
   - docker
