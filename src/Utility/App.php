@@ -18,7 +18,6 @@ use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\LibFsStream;
 use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Directories;
-use Ktomk\Pipelines\Runner\Env;
 use Ktomk\Pipelines\Runner\Flags;
 use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\Runner\Runner;
@@ -139,7 +138,8 @@ class App implements Runnable
 
         $reference = $this->parseReference();
 
-        $env = $this->parseEnv(Lib::env($_SERVER), $reference, $project->getPath());
+        $env = EnvParser::create($this->arguments)
+            ->parse(Lib::env($_SERVER), $reference, $project->getPath());
 
         $directories = new Directories(Lib::env($_SERVER), $project);
 
@@ -235,45 +235,6 @@ class App implements Runnable
         }
 
         return $deployMode;
-    }
-
-    /**
-     * @param array $inherit from this environment
-     * @param Reference $reference
-     * @param string $workingDir
-     *
-     * @throws InvalidArgumentException
-     * @throws ArgsException
-     *
-     * @return Env
-     */
-    private function parseEnv(array $inherit, $reference, $workingDir)
-    {
-        $args = $this->arguments;
-
-        Lib::v($inherit['BITBUCKET_REPO_SLUG'], basename($workingDir));
-
-        $env = Env::create($inherit);
-
-        $noDotEnvFiles = $args->hasOption('no-dot-env-files');
-        $noDotEnvDotDist = $args->hasOption('no-dot-env-dot-dist');
-
-        if (false === $noDotEnvFiles) {
-            $filesToCollect = array();
-            if (false === $noDotEnvDotDist) {
-                $filesToCollect[] = $workingDir . '/.env.dist';
-            }
-            $filesToCollect[] = $workingDir . '/.env';
-            $env->collectFiles($filesToCollect);
-        }
-
-        $env->collect($args, array('e', 'env', 'env-file'));
-        $resolved = $env->getVariables();
-
-        $env->initDefaultVars($resolved + $inherit);
-        $env->addReference($reference);
-
-        return $env;
     }
 
     /**
