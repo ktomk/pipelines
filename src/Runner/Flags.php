@@ -4,6 +4,9 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Utility\CacheOptions;
+use Ktomk\Pipelines\Utility\KeepOptions;
+
 /**
  * Flags for use in Runner
  */
@@ -50,6 +53,33 @@ class Flags
      * @var int flags bit-mask value
      */
     public $memory = self::FLAGS;
+
+    /**
+     * Map diverse parameters to run flags
+     *
+     * @param KeepOptions $keep
+     * @param string $deployMode
+     * @param CacheOptions $cache
+     *
+     * @return Flags
+     */
+    public static function createForUtility(KeepOptions $keep, $deployMode, CacheOptions $cache)
+    {
+        $flagsValue = Flags::FLAGS;
+        if ($keep->errorKeep) {
+            $flagsValue |= Flags::FLAG_KEEP_ON_ERROR;
+        } elseif ($keep->keep) {
+            $flagsValue &= ~(Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE);
+        }
+
+        $cache->hasCache() || $flagsValue |= Flags::FLAG_NO_CACHE;
+
+        if ('copy' === $deployMode) {
+            $flagsValue |= Flags::FLAG_DEPLOY_COPY;
+        }
+
+        return new Flags($flagsValue);
+    }
 
     /**
      * Flags constructor.

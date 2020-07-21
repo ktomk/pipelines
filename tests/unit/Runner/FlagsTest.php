@@ -4,7 +4,10 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Utility\CacheOptions;
+use Ktomk\Pipelines\Utility\KeepOptions;
 
 /**
  * @covers \Ktomk\Pipelines\Runner\Flags
@@ -14,6 +17,32 @@ class FlagsTest extends TestCase
     public function testCreation()
     {
         $flags = new Flags();
+        self::assertInstanceOf('\Ktomk\Pipelines\Runner\Flags', $flags);
+    }
+
+    public function provideCreations()
+    {
+        return array(
+            array(array(), 'copy'),
+            array(array('--keep'), 'copy'),
+            array(array('--error-keep'), 'copy'),
+        );
+    }
+
+    /**
+     * @dataProvider provideCreations
+     *
+     * @param array $args
+     * @param string $deploy
+     *
+     * @throws \Ktomk\Pipelines\Utility\StatusException
+     */
+    public function testCreationForUtility(array $args, $deploy)
+    {
+        $args = new Args($args);
+        $keep = new KeepOptions($args);
+        $cache = new CacheOptions($args);
+        $flags = Flags::createForUtility($keep->run(), $deploy, $cache);
         self::assertInstanceOf('\Ktomk\Pipelines\Runner\Flags', $flags);
     }
 

@@ -166,7 +166,7 @@ class App implements Runnable
 
         $pipeline = $this->getRunPipeline($pipelines, $pipelineId, $fileOptions, $runOpts);
 
-        $flags = $this->getRunFlags($keep, $deployMode, $cache);
+        $flags = Flags::createForUtility($keep, $deployMode, $cache);
 
         $runner = Runner::createEx($runOpts, $directories, $exec, $flags, $env, $streams);
 
@@ -503,32 +503,5 @@ class App implements Runnable
         if ($this->verbose) {
             $this->info($message);
         }
-    }
-
-    /**
-     * Map diverse parameters to run flags
-     *
-     * @param KeepOptions $keep
-     * @param string $deployMode
-     * @param CacheOptions $cache
-     *
-     * @return Flags
-     */
-    private function getRunFlags(KeepOptions $keep, $deployMode, CacheOptions $cache)
-    {
-        $flagsValue = Flags::FLAGS;
-        if ($keep->errorKeep) {
-            $flagsValue |= Flags::FLAG_KEEP_ON_ERROR;
-        } elseif ($keep->keep) {
-            $flagsValue &= ~(Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE);
-        }
-
-        $cache->hasCache() || $flagsValue |= Flags::FLAG_NO_CACHE;
-
-        if ('copy' === $deployMode) {
-            $flagsValue |= Flags::FLAG_DEPLOY_COPY;
-        }
-
-        return new Flags($flagsValue);
     }
 }
