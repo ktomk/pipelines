@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.47] - 2020-07-23
 ### Added
 - version info to `--debug` above the stacktrace/s (thanks [Andreas Sundqvist])
 [Andreas Sundqvist]: https://github.com/sunkan
@@ -448,4 +448,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.44]: https://github.com/ktomk/pipelines/releases/tag/0.0.44
 [0.0.45]: https://github.com/ktomk/pipelines/releases/tag/0.0.45
 [0.0.46]: https://github.com/ktomk/pipelines/releases/tag/0.0.46
+[0.0.47]: https://github.com/ktomk/pipelines/releases/tag/0.0.47
 [unreleased]: https://github.com/ktomk/pipelines
