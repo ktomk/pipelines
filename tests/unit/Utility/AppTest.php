@@ -22,7 +22,7 @@ class AppTest extends TestCase
     public function testMainExceptionHandlingArgsException()
     {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputRegex('{^pipelines: option --prefix requires an argument\n--------\nclass....:}');
+        $this->expectOutputRegex('{^pipelines: option --prefix requires an argument\npipelines: version .*\n--------\nclass....:}');
         $actual = $app->main(array('cmd', '--debug', '--prefix'));
         self::assertNotSame(0, $actual);
     }

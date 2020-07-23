@@ -150,6 +150,8 @@ class ExceptionHandler
      */
     private function debugException(Exception $e)
     {
+        $this->debugInfoOfPipelinesItself();
+
         for (; $e; $e = $e->getPrevious()) {
             $this->error('--------');
             $this->error(sprintf('class....: %s', get_class($e)));
@@ -161,6 +163,16 @@ class ExceptionHandler
             $this->error($e->getTraceAsString());
         }
         $this->error('--------');
+    }
+
+    private function debugInfoOfPipelinesItself()
+    {
+        $this->error(sprintf(
+            'pipelines: version %s w/ php %s (libyaml: %s)',
+            Version::resolve(App::VERSION),
+            PHP_VERSION,
+            \phpversion('yaml') ?: 'n/a'
+        ));
     }
 
     /**
