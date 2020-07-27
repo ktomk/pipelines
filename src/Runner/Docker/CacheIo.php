@@ -7,7 +7,6 @@ namespace Ktomk\Pipelines\Runner\Docker;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\Pipeline\Step;
-use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
 use Ktomk\Pipelines\Runner\Runner;
@@ -54,6 +53,11 @@ class CacheIo
      * @var bool
      */
     private $noCache = false;
+
+    /**
+     * @var AbstractionLayer
+     */
+    private $dal;
 
     /**
      * @param Runner $runner
@@ -106,6 +110,7 @@ class CacheIo
         $this->clonePath = $clonePath;
         $this->streams = $streams;
         $this->exec = $exec;
+        $this->dal = new AbstractionLayerImpl($exec);
         $this->noCache = $noCache;
     }
 
@@ -125,7 +130,6 @@ class CacheIo
 
         $id = $this->id;
         $streams = $this->streams;
-        $exec = $this->exec;
 
         $streams->out("\x1D+++ populating caches...\n");
 
@@ -140,17 +144,8 @@ class CacheIo
 
             $containerPath = $this->mapCachePath($path);
 
-            $exec->pass('docker', array('exec', $id, 'mkdir', '-p', $containerPath));
-
-            $cmd = Lib::cmd(
-                sprintf('<%s docker', Lib::quoteArg($tarFile)),
-                array(
-                    'cp',
-                    '-',
-                    sprintf('%s:%s', $id, $containerPath),
-                )
-            );
-            $exec->pass($cmd, array());
+            $this->dal->execute($id, array('mkdir', '-p', $containerPath));
+            $this->dal->importTar($tarFile, $id, $containerPath);
         }
     }
 
@@ -175,7 +170,6 @@ class CacheIo
         }
 
         $id = $this->id;
-        $exec = $this->exec;
         $streams = $this->streams;
 
         $streams->out("\x1D+++ updating caches from container...\n");
@@ -188,16 +182,7 @@ class CacheIo
             $streams->out(sprintf(" - %s %s (%s)\n", $name, $path, $tarExists ? 'update' : 'create'));
 
             $containerPath = $this->mapCachePath($path);
-
-            $cmd = Lib::cmd(
-                sprintf('>%s docker', Lib::quoteArg($tarFile)),
-                array(
-                    'cp',
-                    sprintf('%s:%s/.', $id, $containerPath),
-                    '-',
-                )
-            );
-            $exec->pass($cmd, array());
+            $this->dal->exportTar($id, $containerPath . '/.', $tarFile);
         }
     }
 
@@ -221,13 +206,8 @@ class CacheIo
         $containerPath = $path;
 
         // let the container map the path expression
-        $status = $this->exec->capture(
-            'docker',
-            array('exec', $id, '/bin/sh', '-c', sprintf('echo %s', $containerPath)),
-            $out
-        );
-
-        if (0 === $status && 0 < strlen($out) && ('/' === $out[0])) {
+        $out = $this->dal->execute($id, array('/bin/sh', '-c', sprintf('echo %s', $containerPath)));
+        if (0 < strlen((string)$out) && ('/' === $out[0])) {
             $containerPath = trim($out);
         }
 

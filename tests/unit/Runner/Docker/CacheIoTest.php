@@ -69,7 +69,7 @@ class CacheIoTest extends TestCase
     public function testMapCachePathContainerResolution()
     {
         $exec = $this->execTester();
-        $exec->expect('capture', 'docker', '/foo/bar', 'exec echo for resolve');
+        $exec->expect('capture', '~^docker ~', '/foo/bar', 'exec echo for resolve');
 
         $io = $this->newCacheIo('', '');
 
@@ -79,7 +79,7 @@ class CacheIoTest extends TestCase
     public function testMapCachePathRelative()
     {
         $exec = $this->execTester();
-        $exec->expect('capture', 'docker', 0, 'exec echo for resolve');
+        $exec->expect('capture', '~^docker ~', 0, 'exec echo for resolve');
 
         $io = $this->newCacheIo('', '');
 

@@ -621,8 +621,8 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
-            ->expect('capture', 'docker', 0, 'caches: map path')
-            ->expect('pass', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
+            ->expect('capture', '~^docker exec ~', 0, 'caches: map path')
+            ->expect('capture', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
             ->expect('capture', 'docker', 0, 'docker kill')
             ->expect('capture', 'docker', 0, 'docker rm');
 
@@ -652,12 +652,12 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0, 'docker run step container')
-            ->expect('capture', 'docker', 0, 'caches: map path')
-            ->expect('pass', 'docker', 0, 'caches: mkdir in container')
-            ->expect('pass', '~<.*/composer\.tar docker cp~', 0, 'caches: copy in')
+            ->expect('capture', '~^docker exec ~', 0, 'caches: map path')
+            ->expect('capture', '~^docker exec .* mkdir -p ~', 0, 'caches: mkdir in container')
+            ->expect('capture', '~<.*/composer\.tar docker cp ~', 0, 'caches: copy in')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
-            ->expect('capture', 'docker', 0, 'caches: map path')
-            ->expect('pass', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
+            ->expect('capture', '~^docker exec ~', 0, 'caches: map path')
+            ->expect('capture', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
             ->expect('capture', 'docker', 0, 'docker kill')
             ->expect('capture', 'docker', 0, 'docker rm');
 
