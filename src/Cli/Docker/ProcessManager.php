@@ -6,7 +6,6 @@ namespace Ktomk\Pipelines\Cli\Docker;
 
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Lib;
-use Ktomk\Pipelines\Value\Prefix;
 
 /**
  * Process manager for docker container

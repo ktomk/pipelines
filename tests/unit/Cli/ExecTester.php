@@ -210,7 +210,7 @@ class ExecTester extends Exec
             sprintf("Method on exec mismatch with command '%s'%s", $command, $message ? " // ${message}" : '')
         );
 
-        if ('~' === $expectedCommand[0]) {
+        if ('' !== $expectedCommand && '~' === $expectedCommand[0]) {
             $testCase::assertRegExp(
                 $expectedCommand,
                 $command,
