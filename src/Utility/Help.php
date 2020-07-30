@@ -55,7 +55,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--user[=<name|uid>[:<group|gid>]]]
                  [--deploy mount | copy ] [--pipeline <id>]
                  [(--step | --steps) <steps>] [--no-manual]
-                 [--trigger <ref>]
+                 [--trigger <ref>] [--no-cache]
        pipelines [<options>] --service <service>
        pipelines [<options>] --list | --show | --images
                  | --show-pipelines | --show-services
@@ -123,6 +123,7 @@ Pipeline runner options
     --no-run              do not run the pipeline
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
+    --no-cache            disable step caches; docker always caches
 
 File information options
     --images              list all images in file, in order of use, w/o

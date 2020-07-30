@@ -10,9 +10,11 @@
 set -u
 IFS="$(printf '\n\t ')"
 
-cd build/store/http-cache || exit 2
-
 package="docker-17.12.0-ce.tgz"
+cache="${HOME}/.cache/build-http-cache"
+
+mkdir -p -- "${cache}"
+cd "${cache}" || exit 2
 
 if [ ! -f "${package}" ]; then
   curl -fsSLO "https://download.docker.com/linux/static/stable/x86_64/${package}"

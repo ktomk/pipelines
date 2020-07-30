@@ -7,9 +7,11 @@
 set -u
 IFS="$(printf '\n\t ')"
 
-cd build/store/http-cache || exit 2
-
 package="composer.phar"
+cache="${HOME}/.cache/build-http-cache"
+
+mkdir -p -- "${cache}"
+cd "${cache}" || exit 2
 
 RESULT=0
 if [ ! -f "${package}" ]; then

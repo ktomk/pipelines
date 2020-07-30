@@ -18,8 +18,7 @@ pipelines:
             - lib/pipelines/lint.sh
     unit-tests-php-5.3:
       - step:
-          # has no zip: tomsowerby/php-5.3:cli
-          image: cespi/php-5.3:cli-latest
+          image: cespi/php-5.3:cli-latest # has no zip: tomsowerby/php-5.3:cli
           caches:
             - composer
             - build-http-cache
@@ -221,7 +220,7 @@ pipelines:
 
 definitions:
   caches:
-    build-http-cache: build/store/http-cache
+    build-http-cache: ~/.cache/build-http-cache
   services:
     redis:
       image: redis:6.0.4-alpine

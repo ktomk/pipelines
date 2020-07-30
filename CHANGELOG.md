@@ -7,7 +7,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
-- dependency caches and `--no-cache` for the old behavior
+- dependency caches and `--no-cache` for previous behavior, [caches
+  documentation](doc/PIPELINES-CACHES.md)
 ### Fixed
 - Integration test polluting `$HOME` for docker client stub
 

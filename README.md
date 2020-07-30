@@ -145,7 +145,7 @@ usage: pipelines [<options>] --version | -h | --help
                  [--user[=<name|uid>[:<group|gid>]]]
                  [--deploy mount | copy ] [--pipeline <id>]
                  [(--step | --steps) <steps>] [--no-manual]
-                 [--trigger <ref>]
+                 [--trigger <ref>] [--no-cache]
        pipelines [<options>] --service <service>
        pipelines [<options>] --list | --show | --images
                  | --show-pipelines | --show-services
@@ -179,7 +179,7 @@ Pipeline runner options
     --file <path>         path to the pipelines file, overrides looking up
                           the <basename> file from the current working
                           directory, use '-' to read from stdin
-    --trigger <ref>       build trigger, <ref> can be of either
+    --trigger <ref>       build trigger; <ref> can be either of:
                           tag:<name>, branch:<name>, bookmark:<name> or
                           pr:<branch-name>[:<destination-branch>]
                           determines the pipeline to run
@@ -200,6 +200,7 @@ Pipeline runner options
     --no-run              do not run the pipeline
     --prefix <prefix>     use a different prefix for container
                           names, default is 'pipelines'
+    --no-cache            disable step caches; docker always caches
 
 File information options
     --images              list all images in file, in order of use, w/o
@@ -759,13 +760,15 @@ to use the development version for `pipelines`.
       technically there is little win (see [Rootless
       Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md) for what works
       better in this regard)
+- [x] Have caches on a per-project basis
+- [x] Copy local composer cache into container for better
+      (offline) usage in PHP projects (see
+      [Populate Caches](doc/PIPELINES-CACHES.md#populate-caches))
 - [ ] Count `BITBUCKET_BUILD_NUMBER` on a per project basis (*build-number*
       feature)
 - [ ] Option to not mount docker.sock
 - [ ] More accessible offline preparation (e.g.
       `--docker-pull-images`, `--go-offline`)
-- [ ] Copy local composer cache into container for better
-      (offline) usage in PHP projects
 - [ ] Check Docker existence before running a pipeline
 - [ ] Pipes support (*pipe* feature)
     - [X] Show scripts with pipe/s
@@ -775,9 +778,11 @@ to use the development version for `pipelines`.
 - [ ] Write section about the file format support/limitations
 - [ ] Pipeline file properties support
     - [X] step.trigger (`--steps` / `--no-manual` options)
+    - [X] step.caches (to disable use `--no-cache` option)
     - [ ] clone (*git-deployment* feature)
-    - [ ] definitions (incremental support)
+    - [X] definitions
         - [X] services (*services* feature)
+        - [X] caches (*caches* feature)
     - [ ] max-time (never needed this)
     - [ ] size (likely neglected for local run, limited support for
       [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))
