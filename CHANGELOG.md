@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.48] - 2020-07-31
 ### Added
 - dependency caches and `--no-cache` for previous behavior, [caches
   documentation](doc/PIPELINES-CACHES.md)
@@ -456,4 +456,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.45]: https://github.com/ktomk/pipelines/releases/tag/0.0.45
 [0.0.46]: https://github.com/ktomk/pipelines/releases/tag/0.0.46
 [0.0.47]: https://github.com/ktomk/pipelines/releases/tag/0.0.47
+[0.0.48]: https://github.com/ktomk/pipelines/releases/tag/0.0.48
 [unreleased]: https://github.com/ktomk/pipelines
