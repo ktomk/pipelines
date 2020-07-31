@@ -65,16 +65,14 @@ class FileShower extends FileShowerAbstract
     {
         $pipelines = $this->file->getPipelines();
 
-        $errors = 0;
-        $table = array(array('PIPELINE ID', 'STEP', 'IMAGE', 'NAME'));
-        foreach ($this->tablePipelineIdsPipelines($pipelines, $table, $errors) as $id => $pipeline) {
+        $table = new FileTable(array('PIPELINE ID', 'STEP', 'IMAGE', 'NAME'));
+
+        foreach ($this->tablePipelineIdsPipelines($pipelines, $table) as $id => $pipeline) {
             $steps = (null === $pipeline) ? array() : $pipeline->getSteps();
-            list($table, $errors) = $this->tableFileSteps($steps, $id, $table, $errors);
+            $this->tableFileSteps($steps, $id, $table);
         }
 
-        $this->textTable($table);
-
-        return $errors ? 1 : 0;
+        return $this->outputTableAndReturn($table);
     }
 
     /**
@@ -86,20 +84,18 @@ class FileShower extends FileShowerAbstract
     {
         $pipelines = $this->file->getPipelines();
 
-        $errors = 0;
-        $table = array(array('PIPELINE ID', 'IMAGES', 'STEPS'));
-        foreach ($this->tablePipelineIdsPipelines($pipelines, $table, $errors) as $id => $pipeline) {
+        $table = new FileTable(array('PIPELINE ID', 'IMAGES', 'STEPS'));
+
+        foreach ($this->tablePipelineIdsPipelines($pipelines, $table) as $id => $pipeline) {
             $steps = (null === $pipeline) ? null : $pipeline->getSteps();
             list($images, $names) = $this->getImagesAndNames($steps);
 
             $images = $images ? implode(', ', $images) : '';
             $steps = sprintf('%d%s', count($steps), $names ? ' ("' . implode('"; "', $names) . '")' : '');
-            $table[] = array($id, $images, $steps);
+            $table->addRow(array($id, $images, $steps));
         }
 
-        $this->textTable($table);
-
-        return $errors ? 1 : 0;
+        return $this->outputTableAndReturn($table);
     }
 
     /**
@@ -108,90 +104,87 @@ class FileShower extends FileShowerAbstract
     public function showServices()
     {
         $file = $this->file;
-        $pipelines = $file->getPipelines();
 
-        $errors = 0;
-        $table = array(array('PIPELINE ID', 'STEP', 'SERVICE', 'IMAGE'));
+        $table = new FileTable(array('PIPELINE ID', 'STEP', 'SERVICE', 'IMAGE'));
 
         try {
             $serviceDefinitions = $file->getDefinitions()->getServices();
+            foreach ($this->tablePipelineIdsPipelines($file->getPipelines(), $table) as $id => $pipeline) {
+                $this->tableStepsServices($pipeline->getSteps(), $serviceDefinitions, $id, $table);
+            }
         } catch (ParseException $e) {
-            $table[] = array('', '', 'ERROR', $e->getParseMessage());
-            $this->textTable($table);
-
-            return 1;
+            $table->addErrorRow(array('', '', 'ERROR', $e->getParseMessage()));
         }
 
-        foreach ($this->tablePipelineIdsPipelines($pipelines, $table, $errors) as $id => $pipeline) {
-            list($table, $errors)
-                = $this->tableStepsServices($pipeline->getSteps(), $serviceDefinitions, $id, $table, $errors);
-        }
-
-        $this->textTable($table);
-
-        return $errors ? 1 : 0;
+        return $this->outputTableAndReturn($table);
     }
 
     /**
      * @param Step[]|Steps $steps
      * @param string $id
-     * @param array $table
-     * @param int $errors
+     * @param FileTable $table
      *
-     * @return array
+     * @return void
      */
-    private function tableFileSteps($steps, $id, array $table, $errors)
+    private function tableFileSteps($steps, $id, FileTable $table)
     {
         foreach ($steps as $index => $step) {
             $name = $step->getName();
-            null !== $name && $name = sprintf('"%s"', $name);
-            null === $name && $name = 'no-name';
+            $name = null === $name ? 'no-name' : sprintf('"%s"', $name);
 
-            $table[] = array($id, $index + 1, $step->getImage(), $name);
-            list($table, $errors) = $this->tableFileStepsServices(
-                $step->getServices()->getServiceNames(),
-                $step,
-                $id,
-                $index + 1,
-                $table,
-                $errors
-            );
+            $table->addRow(array($id, ++$index, $step->getImage(), $name));
+            $this->tableFileStepsCaches($step, $id, $index, $table);
+            $this->tableFileStepsServices($step, $id, $index, $table);
         }
-
-        return array($table, $errors);
     }
 
     /**
-     * @param array|string[] $serviceNames
      * @param Step $step
      * @param string $id
      * @param int $stepNumber 1 based
-     * @param array $table
-     * @param int $errors
+     * @param FileTable $table
      *
-     * @return array
+     * @return void
      */
-    private function tableFileStepsServices($serviceNames, Step $step, $id, $stepNumber, array $table, $errors)
+    private function tableFileStepsCaches(Step $step, $id, $stepNumber, FileTable $table)
     {
-        foreach ($serviceNames as $serviceName) {
-            /** @var Service $service */
-            ($service = $step->getFile()->getDefinitions()->getServices()->getByName($serviceName)) || $errors++;
-            $table[] = array($id, $stepNumber, $service ? $service->getImage() : 'ERROR', 'service:' . $serviceName);
-        }
+        $caches = $step->getCaches();
+        $cacheDefinitions = $step->getFile()->getDefinitions()->getCaches();
 
-        return array($table, $errors);
+        foreach ($caches->getNames() as $cacheName) {
+            $cacheLabel = 'cache: ' . $cacheName;
+            $definition = $cacheDefinitions->getByName($cacheName);
+            $cacheDescription = true === $definition ? '*internal*' : $definition;
+            $table->addRow(array($id, $stepNumber, $cacheLabel, $cacheDescription));
+        }
+    }
+
+    /**
+     * @param Step $step
+     * @param string $id
+     * @param int $stepNumber 1 based
+     * @param FileTable $table
+     *
+     * @return void
+     */
+    private function tableFileStepsServices(Step $step, $id, $stepNumber, FileTable $table)
+    {
+        foreach ($step->getServices()->getServiceNames() as $serviceName) {
+            /** @var Service $service */
+            $service = $step->getFile()->getDefinitions()->getServices()->getByName($serviceName);
+            $table->addFlaggedRow($service, array($id, $stepNumber, $service ? $service->getImage() : 'ERROR', 'service:' . $serviceName));
+        }
     }
 
     /**
      * @param Steps $steps
      * @param Services $serviceDefinitions
      * @param string $id
-     * @param array $table
-     * @param int $errors
+     * @param FileTable $table
      *
-     * @return array
+     * @return void
      */
-    private function tableStepsServices(Steps $steps, Services $serviceDefinitions, $id, array $table, $errors)
+    private function tableStepsServices(Steps $steps, Services $serviceDefinitions, $id, FileTable $table)
     {
         foreach ($steps as $step) {
             $serviceNames = $step->getServices()->getServiceNames();
@@ -202,16 +195,13 @@ class FileShower extends FileShowerAbstract
             $stepNo = $step->getIndex() + 1;
 
             foreach ($serviceNames as $name) {
-                if (!$service = $serviceDefinitions->getByName($name)) {
-                    $table[] = array($id, $stepNo, 'ERROR', sprintf('Undefined service: "%s"', $name));
-                    $errors++;
+                if ($service = $serviceDefinitions->getByName($name)) {
+                    $table->addRow(array($id, $stepNo, $name, $service->getImage()));
                 } else {
-                    $table[] = array($id, $stepNo, $name, $service->getImage());
+                    $table->addErrorRow(array($id, $stepNo, 'ERROR', sprintf('Undefined service: "%s"', $name)));
                 }
             }
         }
-
-        return array($table, $errors);
     }
 
     /**

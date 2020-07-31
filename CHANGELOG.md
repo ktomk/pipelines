@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [unreleased]
 ### Added
+- `--show` step caches
+- step caches validation against cache definitions (broken name,
+  undefined custom cache) when parsing step caches (`--show`, running a
+  pipeline step etc.).
 - php cs-fixer custom fixers (thanks [Kuba Werlos])
 
 [Kuba Werlos]: https://github.com/kubawerlos

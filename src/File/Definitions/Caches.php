@@ -40,6 +40,27 @@ class Caches
     }
 
     /**
+     * @param string $name
+     *
+     * @return null|string|true path of custom or default cache definition, true for internal caches and null for no definition
+     */
+    public function getByName($name)
+    {
+        // docker cache is system-wide in pipelines
+        if ('docker' === $name) {
+            return true;
+        }
+
+        $mapMode = $this->map + $this->predefined;
+
+        if (isset($mapMode[$name])) {
+            return $mapMode[$name];
+        }
+
+        return null;
+    }
+
+    /**
      * @param array $names
      *
      * @return array cache map
@@ -47,8 +68,10 @@ class Caches
     public function getByNames(array $names)
     {
         $reservoir = array();
+
         $mapMode = $this->map + $this->predefined;
         unset($mapMode['docker']); // docker cache is system-wide in pipelines
+
         foreach ($names as $name) {
             if (!isset($mapMode[$name])) {
                 continue;

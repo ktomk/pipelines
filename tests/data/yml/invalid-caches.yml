@@ -1,0 +1,15 @@
+# this file is part of pipelines
+#
+# fixture file for cache definitions
+
+pipelines:
+  default:
+    - step:
+        image: ktomk/pipelines:busybox
+        caches:
+          - borked # this cache is missing a definition
+        script:
+          - echo "hello world"
+definitions:
+  caches:
+    home: "~"

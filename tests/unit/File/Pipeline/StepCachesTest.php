@@ -4,7 +4,9 @@
 
 namespace Ktomk\Pipelines\File\Pipeline;
 
+use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Yaml\Yaml;
 
 /**
  * Class StepCachesTest
@@ -31,14 +33,35 @@ class StepCachesTest extends TestCase
         self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepCaches', $caches);
     }
 
-    public function testCreationParseExceptionForCacheName()
+    public function testCreationParseExceptionForCacheNameBeingNotStringButNull()
     {
         $this->expectException('Ktomk\Pipelines\File\ParseException');
         $this->expectExceptionMessage('file parse error: \'caches\' cache name string expected');
 
-        $yaml = array('composer', null);
+        $yaml = array(null);
         $caches = new StepCaches($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
         self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepCaches', $caches);
+    }
+
+    public function testCreationParseExceptionForCacheNameBeingEmptyString()
+    {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage('file parse error: \'caches\' cache name must not be empty');
+
+        $yaml = array('');
+        $caches = new StepCaches($this->createMock('Ktomk\Pipelines\File\Pipeline\Step'), $yaml);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\StepCaches', $caches);
+    }
+
+    public function testCreationParseExceptionForUndefinedCustomOrDefaultCache()
+    {
+        $this->expectException('Ktomk\Pipelines\File\ParseException');
+        $this->expectExceptionMessage(
+            "file parse error: cache 'borked' must reference a custom or default cache definition"
+        );
+
+        $file = new File(Yaml::file(__DIR__ . '/../../../data/yml/invalid-caches.yml'));
+        $file->getDefault()->getSteps()->offsetGet(0)->getCaches();
     }
 
     public function testGetDefinition()
@@ -57,6 +80,13 @@ class StepCachesTest extends TestCase
             $this->createPartialMock('Ktomk\Pipelines\File\Definitions\Caches', array())
         );
         self::assertSame(array(), $caches->getDefinitions(), 'no caches as there are no caches defined');
+    }
+
+    public function testParseDefaultCache()
+    {
+        $file = new File(Yaml::file(__DIR__ . '/../../../data/yml/cache.yml'));
+        $stepCaches = $file->getDefault()->getSteps()->offsetGet(0)->getCaches();
+        self::assertSame(array('composer', 'docker'), $stepCaches->getNames(), 'parsing worked');
     }
 
     public function testGetIterator()

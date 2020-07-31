@@ -13,6 +13,7 @@ use Ktomk\Pipelines\TestCase;
  *
  * @covers \Ktomk\Pipelines\Utility\Show\FileShower
  * @covers \Ktomk\Pipelines\Utility\Show\FileShowerAbstract
+ * @covers \Ktomk\Pipelines\Utility\Show\FileTable
  */
 class FileShowerTest extends TestCase
 {
@@ -65,6 +66,7 @@ class FileShowerTest extends TestCase
     public function provideFileForMethod()
     {
         return array(
+            array(__DIR__ . '/../../../data/yml/invalid-caches.yml', 'showFile', 1, "file parse error: cache 'borked' must reference a custom or default cache definition"),
             array(__DIR__ . '/../../../data/yml/invalid-pipeline.yml', 'showPipelines', 1),
             array(__DIR__ . '/../../../data/yml/invalid-pipeline.yml', 'showFile', 1),
             array(__DIR__ . '/../../../data/yml/invalid-service-definitions.yml', 'showPipelines', 0),
@@ -75,6 +77,7 @@ class FileShowerTest extends TestCase
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showFile', 0),
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showImages', 0),
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showServices', 0),
+            array(__DIR__ . '/../../../data/yml/cache.yml', 'showFile', 0),
         );
     }
 
@@ -84,11 +87,18 @@ class FileShowerTest extends TestCase
      * @param string $path
      * @param string $method file-shower method name
      * @param int $expected
+     * @param null|string $parseExceptionMessage
      */
-    public function testShowFileByMethod($path, $method, $expected)
+    public function testShowFileByMethod($path, $method, $expected, $parseExceptionMessage = null)
     {
         $file = File::createFromFile($path);
         $shower = new FileShower(new Streams(), $file);
+
+        if (null !== $parseExceptionMessage) {
+            $this->expectException('Ktomk\Pipelines\File\ParseException');
+            $this->expectExceptionMessage($parseExceptionMessage);
+        }
+
         self::assertSame($expected, $shower->{$method}());
     }
 }

@@ -39,10 +39,11 @@ class StepCaches implements FileNode, \IteratorAggregate
      */
     public function __construct(Step $step, $caches)
     {
+        $this->step = $step;
+
         // quick validation: script
         $parsed = $this->parseCaches($caches);
 
-        $this->step = $step;
         $this->caches = array_flip($parsed);
     }
 
@@ -57,7 +58,17 @@ class StepCaches implements FileNode, \IteratorAggregate
             return array();
         }
 
-        return $file->getDefinitions()->getCaches()->getByNames(array_keys($this->caches));
+        return $file->getDefinitions()->getCaches()->getByNames($this->getNames());
+    }
+
+    /**
+     * Get all cache names of step
+     *
+     * @return array|string[]
+     */
+    public function getNames()
+    {
+        return array_keys($this->caches);
     }
 
     /**
@@ -96,8 +107,40 @@ class StepCaches implements FileNode, \IteratorAggregate
             }
 
             '' === ($cache = trim($cache)) || $reservoir[] = $cache;
+
+            $this->verifyCache($cache);
         }
 
         return $reservoir;
+    }
+
+    /**
+     * @param string $cache
+     *
+     * @throws ParseException
+     *
+     * @return void
+     */
+    private function verifyCache($cache)
+    {
+        if ('' === $cache) {
+            throw new ParseException("'caches' cache name must not be empty");
+        }
+
+        if (null === $this->getCacheDefinitionByName($cache)) {
+            throw new ParseException(
+                sprintf("cache '%s' must reference a custom or default cache definition", $cache)
+            );
+        }
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return null|string|true
+     */
+    private function getCacheDefinitionByName($name)
+    {
+        return $this->step->getFile()->getDefinitions()->getCaches()->getByName($name);
     }
 }

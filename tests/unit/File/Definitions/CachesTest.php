@@ -41,7 +41,17 @@ class CachesTest extends TestCase
         new Caches(array('foo' => false, 'name' => 'path'));
     }
 
-    public function testGetByNameForCustomCache()
+    public function testGetByName()
+    {
+        $array = array('name' => 'path');
+        $caches = new Caches($array);
+
+        self::assertSame('~/.composer/cache', $caches->getByName('composer'), 'default cache');
+        self::assertTrue($caches->getByName('docker'), 'internal cache');
+        self::assertNull($caches->getByName('wrong-cache-name'), 'undefined, non-default cache');
+    }
+
+    public function testGetByNamesForCustomCache()
     {
         $array = array('name' => 'path');
         $caches = new Caches($array);
@@ -50,7 +60,7 @@ class CachesTest extends TestCase
         self::assertSame($array, $caches->getByNames(array_keys($array)));
     }
 
-    public function testGetByNameForPredefinedCache()
+    public function testGetByNamesForPredefinedCache()
     {
         $caches = new Caches(array());
         self::assertSame(array('composer' => '~/.composer/cache'), $caches->getByNames(array('composer')));

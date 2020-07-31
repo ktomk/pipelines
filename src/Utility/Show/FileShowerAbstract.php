@@ -54,27 +54,34 @@ class FileShowerAbstract
 
     /**
      * @param Pipelines $pipelines
-     * @param array $table
-     * @param int $errors
+     * @param FileTable $table
      *
      * @return array
      */
-    protected function tablePipelineIdsPipelines(Pipelines $pipelines, array &$table, &$errors)
+    protected function tablePipelineIdsPipelines(Pipelines $pipelines, FileTable $table)
     {
         $return = array();
 
         foreach ($pipelines->getPipelineIds() as $id) {
             list($pipeline, $message) = $this->getShowPipeline($pipelines, $id);
-            if ($message) {
-                $table[] = array($id, 'ERROR', $message);
-                $errors++;
-
-                continue;
-            }
-            $return[$id] = $pipeline;
+            $message ? $table->addErrorRow(array($id, 'ERROR', $message)) : $return[$id] = $pipeline;
         }
 
         return $return;
+    }
+
+    /**
+     * output text table and return status
+     *
+     * @param FileTable $table
+     *
+     * @return int 1 if with errors, 0 if none
+     */
+    protected function outputTableAndReturn(FileTable $table)
+    {
+        $this->textTable($table->toArray());
+
+        return $table->getErrors() ? 1 : 0;
     }
 
     /* text table implementation */
@@ -84,7 +91,7 @@ class FileShowerAbstract
      *
      * @return void
      */
-    protected function textTable(array $table)
+    private function textTable(array $table)
     {
         $sizes = $this->textTableGetSizes($table);
 

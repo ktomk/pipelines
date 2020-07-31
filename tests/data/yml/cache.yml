@@ -10,6 +10,7 @@ pipelines:
         name: composer cache
         caches:
           - composer
+          - docker
         image: php:7.4-alpine
         script:
           - apk add --no-cache --virtual .composer-rundeps bash git unzip
