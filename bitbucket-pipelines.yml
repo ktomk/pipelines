@@ -20,8 +20,8 @@ pipelines:
       - step:
           image: cespi/php-5.3:cli-latest # has no zip: tomsowerby/php-5.3:cli
           caches:
-            - composer
             - build-http-cache
+            - composer
           script:
             - command -v composer || lib/pipelines/composer-install.sh
             - composer config secure-http false && composer config disable-tls true
@@ -44,8 +44,10 @@ pipelines:
     unit-tests: # run phpunit suite
       - step:
           image: php:7.0
+          caches:
+            - build-http-cache
           script:
-            - lib/pipelines/composer-install.sh
+            - command -v composer || lib/pipelines/composer-install.sh
             - vendor/bin/phpunit --testsuite unit,integration
           services:
             - docker
@@ -70,6 +72,8 @@ pipelines:
       - step:
           image: php:7.0
           name: docker-in-docker w/ install script
+          caches:
+            - build-http-cache
           script:
             - lib/pipelines/docker-client-install.sh
             - docker version
@@ -90,6 +94,8 @@ pipelines:
       - step:
           image: php:7.0
           name: default pipeline inside pipelines pipeline (extra docker client install)
+          caches:
+            - build-http-cache
           script:
             - lib/pipelines/docker-client-install.sh
             - docker version
