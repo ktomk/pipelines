@@ -148,19 +148,22 @@ class Args extends ArgsArgs
      * NOTE: returns only the first option value if multiple options would match
      *
      * @param string|string[] $option
-     * @param null|bool|string $default [optional]
+     * @param null|int|string $default [optional]
      * @param bool $required [optional]
      *
      * @throws InvalidArgumentException
      * @throws ArgsException
      *
      * @return null|bool|string
+     *
+     * @psalm-template T as null|string|int
+     * @psalm-param T $default
+     * @psalm-return (T is null ? null|string : (T is string ? string : null|int))
      */
     public function getOptionArgument($option, $default = null, $required = false)
     {
         $result = null;
 
-        /** @var OptionFilterIterator|OptionIterator $options */
         $options = new OptionFilterIterator($this, $option);
         /** @noinspection LoopWhichDoesNotLoopInspection */
         foreach ($options as $index => $argument) {
@@ -175,8 +178,7 @@ class Args extends ArgsArgs
             if ($required) {
                 throw new ArgsException(sprintf(
                     'option %s is not optional',
-                    $options/** @scrutinizer ignore-call */
-                        ->getOptionDescription()
+                    $options->getOptionDescription()
                 ));
             }
 

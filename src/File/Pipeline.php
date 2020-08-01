@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\File;
 
 use Ktomk\Pipelines\File\Dom\FileNode;
-use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\Pipeline\Steps;
 use Ktomk\Pipelines\Value\StepExpression;
 
@@ -51,11 +50,18 @@ class Pipeline implements FileNode
     /**
      * get id of pipeline within the corresponding pipelines object
      *
-     * @return null|string id, can be null in fake/test conditions
+     * @return string pipeline-id
      */
     public function getId()
     {
-        return $this->file->getPipelines()->getId($this);
+        $id = $this->file->getPipelines()->getId($this);
+        if (null === $id) {
+            // @codeCoverageIgnoreStart
+            throw new \BadMethodCallException('non associated pipeline has no id');
+            // @codeCoverageIgnoreEnd
+        }
+
+        return $id;
     }
 
     /**
@@ -79,7 +85,7 @@ class Pipeline implements FileNode
     }
 
     /**
-     * @return Step[]|Steps
+     * @return Steps
      */
     public function getSteps()
     {
@@ -122,7 +128,7 @@ class Pipeline implements FileNode
     {
         $result = array();
         foreach ($mapList as $map) {
-            if (!is_array($map) || 1 === !count($map)) {
+            if (!is_array($map) || 0 === count($map)) {
                 continue;
             }
             $key = key($map);

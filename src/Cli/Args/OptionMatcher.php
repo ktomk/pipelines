@@ -14,7 +14,7 @@ namespace Ktomk\Pipelines\Cli\Args;
 class OptionMatcher
 {
     /**
-     * @var string|string[]
+     * @var string[]
      */
     private $option;
 

@@ -28,7 +28,7 @@ abstract class NameBuilder
 
         // all non-allowed characters -> replacement (which is normally a separator "_", "." or "-")
         $buffer = preg_replace('([^a-zA-Z0-9_.-]+)', (string)$replacement, (string)$string);
-        if (false === $buffer) {
+        if (null === $buffer) {
             // @codeCoverageIgnoreStart
             throw new UnexpectedValueException('regex operation failed');
             // @codeCoverageIgnoreEnd
@@ -138,7 +138,7 @@ abstract class NameBuilder
     public static function stepContainerNameByStep(Step $step, $prefix, $project)
     {
         $pipelineId = $step->getPipeline()->getId();
-        $stepName = $step->getName();
+        $stepName = (string)$step->getName();
         $stepNumber = $step->getIndex() + 1;
 
         return self::stepContainerName($pipelineId, $stepName, $stepNumber, $prefix, $project);

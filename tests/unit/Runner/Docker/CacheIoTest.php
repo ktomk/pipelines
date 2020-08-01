@@ -158,7 +158,7 @@ class CacheIoTest extends TestCase
             $directories = $this->createPartialMock('Ktomk\Pipelines\Runner\Directories', array())
         );
         $runner->method('getProject')->willReturn('test-project');
-        $runner->method('getRunOpts')->willReturn(new RunOpts());
+        $runner->method('getRunOpts')->willReturn(RunOpts::create());
 
         $runner->method('getStreams')->willReturn(
             $this->createMock('Ktomk\Pipelines\Cli\Streams')

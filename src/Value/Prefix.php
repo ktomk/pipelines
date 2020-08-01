@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Value;
 
+use Ktomk\Pipelines\Utility\App;
 use UnexpectedValueException;
 
 /**
@@ -13,6 +14,8 @@ use UnexpectedValueException;
  */
 abstract class Prefix
 {
+    const DEFAULT_PREFIX = App::UTILITY_NAME;
+
     /**
      * @param string $prefix
      *
@@ -28,5 +31,25 @@ abstract class Prefix
             'invalid prefix: "%s"; a prefix is only lower-case letters with a minimum length of three characters',
             $prefix
         ));
+    }
+
+    /**
+     * filter a prefix
+     *
+     * always return a verified prefix (string)
+     *
+     * @param null|string $prefix [optional] if null, defaults to the default prefix
+     *
+     * @return string verified prefix
+     */
+    public static function filter($prefix = null)
+    {
+        $buffer = $prefix;
+
+        if (null === $buffer) {
+            $buffer = self::DEFAULT_PREFIX;
+        }
+
+        return self::verify($buffer);
     }
 }

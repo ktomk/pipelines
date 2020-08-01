@@ -82,7 +82,8 @@ class Containers
      * @param string $project
      * @param array $labels
      *
-     * @return array(int $status, array $network)
+     * @return array
+     * @psalm-return array{0: int, 1: array}
      */
     public static function execRunServiceContainer(Exec $exec, Service $service, $resolver, $prefix, $project, array $labels)
     {

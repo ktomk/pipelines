@@ -8,6 +8,8 @@ namespace Ktomk\Pipelines\File\Pipeline;
  * Class StepsIterator
  *
  * @package Ktomk\Pipelines\File\Pipeline
+ *
+ * @template-implements \Iterator<int, Step>
  */
 class StepsIterator implements \Iterator
 {
@@ -55,7 +57,7 @@ class StepsIterator implements \Iterator
      * Undefined behaviour if the iteration has not yet been
      * started (e.g. the iterator has not yet been rewound)
      *
-     * @return int
+     * @return null|int
      */
     public function getStepIndex()
     {
@@ -74,6 +76,7 @@ class StepsIterator implements \Iterator
         return 0 !== $this->index
             && !$this->noManual
             && $this->current()
+            && isset($this->current)
             && $this->current->isManual();
     }
 
@@ -85,6 +88,9 @@ class StepsIterator implements \Iterator
         $this->inner->next();
     }
 
+    /**
+     * @return int
+     */
     public function key()
     {
         return $this->inner->key();

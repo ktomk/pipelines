@@ -107,7 +107,7 @@ abstract class PipelinesReferences extends Pipelines
             return $result;
         }
 
-        list($resolve, $result) = self::idPattern($pipelines, $type, $reference);
+        list($resolve, $result) = self::idPattern($pipelines, $type, (string)$reference);
 
         # fall-back to default pipeline on no match
         return $resolve ? $result : self::idDefault($pipelines);

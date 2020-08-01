@@ -40,20 +40,36 @@ class RunOptsTest extends TestCase
      */
     public function testGetOptions(RunOpts $opts)
     {
-        self::assertNull($opts->getOption('foo.bar.baz'));
         self::assertNotNull($opts->getOption('docker.socket.path'));
 
-        self::assertFalse($opts->getBoolOption('foo.bar.baz'));
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage("unknown option: 'foo.bar.baz'");
+        $opts->getOption('foo.bar.baz');
+    }
+
+    /**
+     * @depends testCreation
+     *
+     * @param RunOpts $opts
+     */
+    public function testGetBoolOption(RunOpts $opts)
+    {
         self::assertTrue($opts->getBoolOption('docker.socket.path'));
+
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage("unknown option: 'foo.bar.baz'");
+        $opts->getBoolOption('foo.bar.baz');
     }
 
     /**
      * by default options if n/a return null
      */
-    public function testGetOptionsWithNull()
+    public function testGetOptionWithoutOptions()
     {
         $opts = new RunOpts();
-        self::assertNull($opts->getOption('foo.bar'));
+        $this->expectException('BadMethodCallException');
+        $this->expectExceptionMessage('no options');
+        $opts->getOption('foo.bar');
     }
 
     /**

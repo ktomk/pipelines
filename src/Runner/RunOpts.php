@@ -18,12 +18,12 @@ class RunOpts
     private $prefix;
 
     /**
-     * @var Options
+     * @var null|Options
      */
     private $options;
 
     /**
-     * @var string
+     * @var null|string
      */
     private $binaryPackage;
 
@@ -51,7 +51,7 @@ class RunOpts
      * Static factory method
      *
      * @param string $prefix [optional]
-     * @param string $binaryPackage [optional] package name or path to binary (string)
+     * @param null|string $binaryPackage [optional] package name or path to binary (string)
      * @param Options $options [optional]
      *
      * @return RunOpts
@@ -66,17 +66,19 @@ class RunOpts
     /**
      * RunOpts constructor.
      *
-     * NOTE: All run options are optional by design (pass NULL).
+     * NOTE: All run options are optional by design (pass NULL), some have defaults
+     *       for that, some need to be initialized/set (marked [setter]) before
+     *       dedicated use.
      *
-     * @param string $prefix
-     * @param null|Options $options
-     * @param string $binaryPackage package name or path to binary (string)
-     * @param null|string $user user option, non-null (string) if set
-     * @param null|true $ssh
+     * @param null|string $prefix [optional] null for default, string for prefix
+     * @param null|Options $options [optional]
+     * @param string $binaryPackage [optional][setter] package name or path to binary (string)
+     * @param null|string $user [optional] user option, non-null (string) if set
+     * @param null|true $ssh [optional] ssh support for runner, null for none, true for support of ssh agent
      */
     public function __construct($prefix = null, Options $options = null, $binaryPackage = null, $user = null, $ssh = null)
     {
-        $this->prefix = null === $prefix ? $prefix : Prefix::verify($prefix);
+        $this->setPrefix($prefix);
         $this->options = $options;
         $this->binaryPackage = $binaryPackage;
         $this->user = $user;
@@ -88,9 +90,9 @@ class RunOpts
      *
      * @return void
      */
-    public function setPrefix($prefix)
+    public function setPrefix($prefix = null)
     {
-        $this->prefix = $prefix;
+        $this->prefix = Prefix::filter($prefix);
     }
 
     /**
@@ -106,17 +108,29 @@ class RunOpts
     }
 
     /**
+     *
+     * FIXME(tk): technically the underlying $this->options-get() can also
+     *            return bool, this is somewhat not fully implemented and
+     *            should perhaps be delegated.
+     *
      * @param string $name
      *
-     * @return null|string
+     * @return string
      */
     public function getOption($name)
     {
         if (!isset($this->options)) {
-            return null;
+            throw new \BadMethodCallException('no options');
         }
 
-        return $this->options->get($name);
+        $buffer = $this->options->get($name);
+        if (null === $buffer) {
+            throw new \InvalidArgumentException(
+                sprintf("unknown option: '%s'", $name)
+            );
+        }
+
+        return $buffer;
     }
 
     /**
@@ -144,6 +158,12 @@ class RunOpts
      */
     public function getBinaryPackage()
     {
+        if (null === $this->binaryPackage) {
+            // @codeCoverageIgnoreStart
+            throw new \BadMethodCallException('binary-package not yet initialized');
+            // @codeCoverageIgnoreEnd
+        }
+
         return $this->binaryPackage;
     }
 

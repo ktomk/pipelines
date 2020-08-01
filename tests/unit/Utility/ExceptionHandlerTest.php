@@ -62,4 +62,14 @@ class ExceptionHandlerTest extends TestCase
         );
         self::assertSame(22, $handler->handle($runnable));
     }
+
+    public function testHandleStatus()
+    {
+        self::assertSame(
+            0,
+            $this->createPartialMock('Ktomk\Pipelines\Utility\ExceptionHandler', array())->handleStatus(
+                $this->getMockForAbstractClass('Ktomk\Pipelines\Utility\StatusRunnable')
+            )
+        );
+    }
 }

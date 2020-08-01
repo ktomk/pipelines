@@ -36,7 +36,7 @@ class FileShower extends FileShowerAbstract
         }
 
         foreach ($images as $image) {
-            $this->info($image);
+            $this->info((string)$image);
         }
 
         return 0;
@@ -129,12 +129,13 @@ class FileShower extends FileShowerAbstract
     private function tableFileSteps($steps, $id, FileTable $table)
     {
         foreach ($steps as $index => $step) {
+            $stepNumber = (int)$index + 1;
             $name = $step->getName();
             $name = null === $name ? 'no-name' : sprintf('"%s"', $name);
 
-            $table->addRow(array($id, ++$index, $step->getImage(), $name));
-            $this->tableFileStepsCaches($step, $id, $index, $table);
-            $this->tableFileStepsServices($step, $id, $index, $table);
+            $table->addRow(array($id, $stepNumber, $step->getImage(), $name));
+            $this->tableFileStepsCaches($step, $id, $stepNumber, $table);
+            $this->tableFileStepsServices($step, $id, $stepNumber, $table);
         }
     }
 

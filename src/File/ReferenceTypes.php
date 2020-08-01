@@ -17,12 +17,17 @@ namespace Ktomk\Pipelines\File;
  */
 class ReferenceTypes
 {
+    const REF_BRANCHES = 'branches';
+    const REF_TAGS = 'tags';
+    const REF_BOOKMARKS = 'bookmarks';
+    const REF_PULL_REQUESTS = 'pull-requests';
+
     /**
      * pipelines sections on first level that contain pipelines on second level
      *
      * @var array
      */
-    private static $sections = array('branches', 'tags', 'bookmarks', 'pull-requests', 'custom');
+    private static $sections = array(self::REF_BRANCHES, self::REF_TAGS, self::REF_BOOKMARKS, self::REF_PULL_REQUESTS, 'custom');
 
     /**
      * @param string $id
@@ -40,6 +45,8 @@ class ReferenceTypes
      * @param null|int|string $section
      *
      * @return bool
+     *
+     * @psalm-assert-if-true string $section
      */
     public static function isPatternSection($section)
     {

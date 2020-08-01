@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 
 use InvalidArgumentException;
+use Ktomk\Pipelines\File\ReferenceTypes;
 
 class Reference
 {
@@ -20,10 +21,10 @@ class Reference
     private $value;
 
     private static $map = array(
-        'bookmark' => 'bookmarks',
-        'branch' => 'branches',
-        'pr' => 'pull-requests',
-        'tag' => 'tags',
+        'bookmark' => ReferenceTypes::REF_BOOKMARKS,
+        'branch' => ReferenceTypes::REF_BRANCHES,
+        'pr' => ReferenceTypes::REF_PULL_REQUESTS,
+        'tag' => ReferenceTypes::REF_TAGS,
     );
 
     /**
@@ -81,7 +82,7 @@ class Reference
     }
 
     /**
-     * @return null|string
+     * @return string
      */
     public function getName()
     {

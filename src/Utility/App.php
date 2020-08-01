@@ -23,7 +23,7 @@ use Ktomk\Pipelines\Runner\Reference;
 use Ktomk\Pipelines\Runner\Runner;
 use Ktomk\Pipelines\Runner\RunOpts;
 
-class App implements Runnable
+class App implements StatusRunnable
 {
     const BBPL_BASENAME = 'bitbucket-pipelines.yml';
 
@@ -87,7 +87,7 @@ class App implements Runnable
             $args->hasOption('debug')
         );
 
-        return $handler->handle($this);
+        return $handler->handleStatus($this);
     }
 
     /**
@@ -278,6 +278,7 @@ class App implements Runnable
         /** @var null|string $file as bitbucket-pipelines.yml to process */
         $file = $args->getOptionArgument('file', null);
         if (null === $file && null !== $file = LibFs::fileLookUp($basename, $workingDir)) {
+            /** @var string $file */
             $buffer = dirname($file);
             if ($buffer !== $workingDir) {
                 $this->changeWorkingDir($buffer);

@@ -159,7 +159,7 @@ class Pipelines implements Dom\FileNode
     }
 
     /**
-     * @return File
+     * @return null|File
      */
     public function getFile()
     {

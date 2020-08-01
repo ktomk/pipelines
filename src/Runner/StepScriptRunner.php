@@ -167,9 +167,11 @@ class StepScriptRunner
         $pipe = is_array($line) && isset($line['pipe']) && is_string($line['pipe']);
 
         if ($standard) {
+            /** @var null|float|int|string $line */
             return (string)$line;
         }
 
+        $line = (array)$line;
         $buffer = '';
 
         if ($pipe) {

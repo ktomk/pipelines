@@ -67,14 +67,14 @@ class StepExpression
         }
 
         if (empty($to)) {
-            return range(self::verifyValueCount($from, $count), $count);
+            return range(self::verifyValueCount((int)$from, $count), $count);
         }
 
         if (empty($from)) {
             return range(self::verifyValueCount(1, $count), self::verifyValueCount($to, $count));
         }
 
-        return range(self::verifyValueCount($from, $count), self::verifyValueCount($to, $count));
+        return range(self::verifyValueCount((int)$from, $count), self::verifyValueCount($to, $count));
     }
 
     /**

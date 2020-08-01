@@ -159,6 +159,8 @@ class EnvResolver
             ));
         }
 
+        /** @var array{0: string, 1: string, 2: null|string} $matches */
+
         list(, $name, $value) = $matches + array(2 => null);
 
         if (null === $value && isset($this->environment[$name])) {

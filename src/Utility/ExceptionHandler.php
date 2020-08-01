@@ -42,7 +42,7 @@ class ExceptionHandler
     /**
      * @param Runnable $runnable
      *
-     * @return mixed|void
+     * @return null|mixed
      */
     public function handle(Runnable $runnable)
     {
@@ -53,6 +53,16 @@ class ExceptionHandler
         }
 
         return $status;
+    }
+
+    /**
+     * @param StatusRunnable $runnable
+     *
+     * @return int
+     */
+    public function handleStatus(StatusRunnable $runnable)
+    {
+        return (int)$this->handle($runnable);
     }
 
     /**

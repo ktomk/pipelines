@@ -22,4 +22,10 @@ class PrefixTest extends TestCase
         $this->expectExceptionMessage('invalid prefix: "p"; a prefix is only lower-case letters with a minimum length of three characters');
         Prefix::verify('p');
     }
+
+    public function testFilterForDefault()
+    {
+        self::assertSame(Prefix::DEFAULT_PREFIX, Prefix::filter());
+        self::assertSame(Prefix::DEFAULT_PREFIX, Prefix::filter(null));
+    }
 }

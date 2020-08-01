@@ -48,7 +48,7 @@ class StepRunner
     /**
      * @param Step $step
      *
-     * @return null|int exist status of step script or null if the run operation failed
+     * @return null|int exist status of step script, null if the run operation failed
      */
     public function runStep(Step $step)
     {
@@ -71,7 +71,7 @@ class StepRunner
             "\x1D+++ step #%d\n\n    name...........: %s\n    effective-image: %s\n    container......: %s\n",
             $step->getIndex() + 1,
             $step->getName() ? '"' . $step->getName() . '"' : '(unnamed)',
-            $image->getName(),
+            (string)$image->getName(),
             $container->getName()
         ));
 

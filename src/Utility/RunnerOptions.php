@@ -87,7 +87,7 @@ class RunnerOptions
     {
         $this->args = $args;
         $this->streams = $streams;
-        $this->exec = $exec;
+        $this->exec = $exec ?: new Exec();
     }
 
     /**
@@ -148,7 +148,7 @@ class RunnerOptions
     private function parseUser(Args $args)
     {
         $result = $args->getOptionOptionalArgument('user', true);
-        if (true !== $result) {
+        if (null === $result || is_string($result)) {
             return $result;
         }
 

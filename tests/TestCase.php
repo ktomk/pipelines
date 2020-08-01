@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines;
 
+use BadMethodCallException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase as PhpunitTestCase;
@@ -19,9 +20,20 @@ use PHPUnit\Util\InvalidArgumentHelper;
  */
 class TestCase extends PhpunitTestCase
 {
+    /**
+     * @var null|string
+     */
     private $expectedException;
+
+    /**
+     * @var null|string
+     */
     private $expectedExceptionMessage;
 
+    /**
+     * @param $actual
+     * @param string $message
+     */
     public static function assertIsArray($actual, $message = '')
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -83,9 +95,9 @@ class TestCase extends PhpunitTestCase
      * assertStringContainsString was added in Phpunit 8 to lighten up usage
      * of assertContains power-factory
      *
-     * @param mixed $needle
-     * @param mixed $haystack
-     * @param mixed $message
+     * @param string $needle
+     * @param string $haystack
+     * @param string $message
      */
     public static function assertStringContainsString($needle, $haystack, $message = '')
     {
@@ -104,9 +116,11 @@ class TestCase extends PhpunitTestCase
      * assertStringContainsString was added in Phpunit 8 to lighten up usage
      * of assertContains power-factory
      *
-     * @param mixed $needle
-     * @param mixed $haystack
-     * @param mixed $message
+     * @param string $needle
+     * @param string $haystack
+     * @param string $message
+     *
+     * @return void
      */
     public static function assertStringNotContainsString($needle, $haystack, $message = '')
     {
@@ -166,6 +180,8 @@ class TestCase extends PhpunitTestCase
 
     /**
      * @param string $exception
+     *
+     * @return void
      */
     public function expectException($exception)
     {
@@ -183,6 +199,8 @@ class TestCase extends PhpunitTestCase
      * @param string $message
      *
      * @throws Exception
+     *
+     * @return void
      */
     public function expectExceptionMessage($message)
     {
@@ -204,6 +222,8 @@ class TestCase extends PhpunitTestCase
      * @param int|string $code
      *
      * @throws Exception
+     *
+     * @return void
      */
     public function expectExceptionCode($code)
     {
@@ -211,6 +231,10 @@ class TestCase extends PhpunitTestCase
             parent::expectExceptionCode($code);
 
             return;
+        }
+
+        if (null === $this->expectedException) {
+            throw new BadMethodCallException('No exception expected');
         }
 
         $this->setExpectedException($this->expectedException, $this->expectedExceptionMessage, $code);
@@ -223,6 +247,8 @@ class TestCase extends PhpunitTestCase
      * @param string $messageRegExp
      *
      * @throws Exception
+     *
+     * @return void
      */
     public function expectExceptionMessageMatches($messageRegExp)
     {
@@ -235,6 +261,11 @@ class TestCase extends PhpunitTestCase
         $this->expectExceptionMessageRegExp($messageRegExp);
     }
 
+    /**
+     * @param string $messageRegExp
+     *
+     * @return void
+     */
     public function expectExceptionMessageRegExp($messageRegExp)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -250,6 +281,13 @@ class TestCase extends PhpunitTestCase
         $this->setExpectedExceptionRegExp($this->expectedException, $messageRegExp);
     }
 
+    /**
+     * @param string $class
+     * @param null|string $message
+     * @param null|int|string $code
+     *
+     * @return void
+     */
     public function setExpectedException($class, $message = null, $code = null)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -271,6 +309,13 @@ class TestCase extends PhpunitTestCase
         }
     }
 
+    /**
+     * @param string $class
+     * @param string $messageRegExp
+     * @param null|int|string $code
+     *
+     * @return void
+     */
     public function setExpectedExceptionRegExp($class, $messageRegExp = '', $code = null)
     {
         if (is_callable('parent::' . __FUNCTION__)) {
@@ -300,9 +345,9 @@ class TestCase extends PhpunitTestCase
      * @param string $originalClassName
      *
      * @throws Exception
+     * @throws \InvalidArgumentException
      *
      * @return MockObject
-     *
      */
     protected function createMock($originalClassName)
     {
@@ -323,12 +368,12 @@ class TestCase extends PhpunitTestCase
      * Returns a configured test double for the specified class.
      *
      * @param string $originalClassName
-     * @param array  $configuration
+     * @param array $configuration
      *
      * @throws Exception
+     * @throws \InvalidArgumentException
      *
      * @return MockObject
-     *
      */
     protected function createConfiguredMock($originalClassName, array $configuration)
     {
@@ -348,13 +393,13 @@ class TestCase extends PhpunitTestCase
     /**
      * Returns a partial test double for the specified class.
      *
-     * @param string   $originalClassName
+     * @param string $originalClassName
      * @param string[] $methods
      *
-     * @throws
+     * @throws Exception
+     * @throws \InvalidArgumentException
      *
      * @return MockObject
-     *
      */
     protected function createPartialMock($originalClassName, array $methods)
     {
@@ -377,6 +422,8 @@ class TestCase extends PhpunitTestCase
      *
      * @param string $directory
      * @param string $message
+     *
+     * @return void
      */
     private function shimAssertDirectoryExists($directory, $message = '')
     {
@@ -393,6 +440,8 @@ class TestCase extends PhpunitTestCase
      *
      * @param string $directory
      * @param string $message
+     *
+     * @return void
      */
     private function shimAssertDirectoryNotExists($directory, $message = '')
     {
@@ -409,6 +458,8 @@ class TestCase extends PhpunitTestCase
      *
      * @param string $filename
      * @param string $message
+     *
+     * @return void
      */
     private function shimAssertFileExists($filename, $message = '')
     {
@@ -425,6 +476,8 @@ class TestCase extends PhpunitTestCase
      *
      * @param string $filename
      * @param string $message
+     *
+     * @return void
      */
     private function shimAssertFileNotExists($filename, $message = '')
     {

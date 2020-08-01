@@ -33,7 +33,7 @@ class PackageYamlFileReader implements PackageInterface
     /**
      * @throws \InvalidArgumentException
      *
-     * @return null|array
+     * @return array
      */
     public function asPackageArray()
     {
@@ -43,7 +43,7 @@ class PackageYamlFileReader implements PackageInterface
                 sprintf("not a readable file: '%s'", $path)
             );
         }
-        $package = Yaml::buffer(file_get_contents($path));
+        $package = (array)Yaml::buffer(file_get_contents($path));
 
         $this->resolveUri($package['uri']);
 

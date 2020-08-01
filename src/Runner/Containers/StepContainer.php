@@ -25,7 +25,7 @@ class StepContainer
     private $id;
 
     /**
-     * @var null|string name of the container
+     * @var string name of the container
      */
     private $name;
 
@@ -80,7 +80,7 @@ class StepContainer
     }
 
     /**
-     * @return null|string name of the container, NULL if no name generated yet
+     * @return string name of the container [undefined: NULL if no name generated yet]
      */
     public function getName()
     {

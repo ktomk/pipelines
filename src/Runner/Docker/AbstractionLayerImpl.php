@@ -52,6 +52,13 @@ class AbstractionLayerImpl implements AbstractionLayer
         $this->throws($throws);
     }
 
+    /**
+     * @param string $id
+     * @param array|string[] $arguments
+     *
+     * @return null|string null on error (non-zero exit status),
+     *                     string with standard output (rtrim-med) on success
+     */
     public function execute($id, array $arguments)
     {
         $status = $this->exec->capture(

@@ -447,6 +447,7 @@ class Builder
      *
      * @param string $command
      * @param string $return [by-ref] last line of the output (w/o newline/white space at end)
+     * @param-out string $return
      *
      * @throws \RuntimeException
      *
@@ -480,6 +481,7 @@ class Builder
     public function phpExec($command, &$return = null)
     {
         list($utility, $parameters) = preg_split('(\s)', $command, 2) + array(1 => null);
+        /** @var string $utility */
 
         $phpUtility = sprintf(
             '%s -f %s --',
@@ -666,7 +668,7 @@ class Builder
      */
     private function _bchunks(array $files)
     {
-        ksort($files, SORT_STRING) || $this->err();
+        ksort($files, SORT_STRING) || $this->err('internal: _bchunks ksort failed');
 
         $lastType = null;
         $chunks = array();
@@ -710,7 +712,7 @@ class Builder
      *
      * @throws \RuntimeException
      *
-     * @return bool|string
+     * @return false|string
      */
     private function _tempname($suffix = null)
     {
@@ -734,13 +736,13 @@ class Builder
     }
 
     /**
-     * @param string $message [optional]
+     * @param string $message
      *
      * @throws \RuntimeException
      *
      * @return void
      */
-    private function err($message = null)
+    private function err($message)
     {
         // fallback to global static: if STDIN is used for PHP
         // process, the default constants aren't ignored.
@@ -766,6 +768,10 @@ class Builder
             // php file read is STDIN (which is the case for phpt tests for PHP
             // code) so this is a work around as this code is tested w/ phpt.
             $handle = constant('STDERR');
+            /**
+             * @psalm-suppress TypeDoesNotContainType
+             * @psalm-suppress RedundantCondition
+             */
             if (false === is_resource($handle)) {
                 $message = 'fatal i/o error: failed to acquire stream from STDERR';
                 $this->errors[] = $message;

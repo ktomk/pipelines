@@ -229,9 +229,17 @@ class Repository implements PackageInterface
     {
         $package = $this->package;
         if (!$package) {
-            $package = $this->resolve(self::PKG_INTEGRATE)->package;
+            $package = $this->resolve(self::PKG_INTEGRATE)->getPackageAsArray();
         }
 
         return $package;
+    }
+
+    /**
+     * @return array
+     */
+    private function getPackageAsArray()
+    {
+        return (array)$this->package;
     }
 }

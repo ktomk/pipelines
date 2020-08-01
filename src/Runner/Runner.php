@@ -139,7 +139,7 @@ class Runner
     /**
      * @param Step $step
      *
-     * @return int status (as in exit status, 0 OK, !0 NOK)
+     * @return null|int status (as in exit status, 0 OK, !0 NOK), null if the run operation failed
      */
     public function runStep(Step $step)
     {
@@ -236,7 +236,8 @@ class Runner
     /**
      * @param Pipeline\StepsIterator $steps
      *
-     * @return array(int, Pipeline\StepsIterator)
+     * @return array
+     * @psalm-return array{0: int, 1: Pipeline\StepsIterator}
      */
     private function runSteps(Pipeline\StepsIterator $steps)
     {
@@ -254,6 +255,6 @@ class Runner
             return array(self::STATUS_NO_STEPS, $steps);
         }
 
-        return array($status, $steps);
+        return array((int)$status, $steps);
     }
 }

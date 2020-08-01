@@ -207,7 +207,7 @@ class CacheIo
 
         // let the container map the path expression
         $out = $this->dal->execute($id, array('/bin/sh', '-c', sprintf('echo %s', $containerPath)));
-        if (0 < strlen((string)$out) && ('/' === $out[0])) {
+        if (null !== $out && (0 < strlen($out)) && ('/' === $out[0])) {
             $containerPath = trim($out);
         }
 

@@ -78,6 +78,7 @@ class ConfigOptions extends Options implements Runnable
 
         while (null !== $setting = $args->getOptionArgument('c')) {
             list($name, $value) = explode('=', $setting, 2) + array('undef', null);
+            /** @var string $name */
             $default = $options->get($name);
             $type = null === $default ? 'string' : gettype($default);
             settype($value, $type) && $options->definition[$name] = array($value);

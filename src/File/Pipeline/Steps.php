@@ -11,6 +11,10 @@ use Ktomk\Pipelines\File\Pipeline;
  * Class Steps
  *
  * A Pipeline consist of Steps. Some of them can be parallel.
+ *
+ * @template-implements \IteratorAggregate<int, Step>
+ *
+ * @see Steps::getIterator
  */
 class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 {
