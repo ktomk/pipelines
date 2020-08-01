@@ -7,7 +7,7 @@ namespace Ktomk\Pipelines\Value;
 use UnexpectedValueException;
 
 /**
- * Class Prefix
+ * Pipelines Prefix
  *
  * @package Ktomk\Pipelines\Value
  */

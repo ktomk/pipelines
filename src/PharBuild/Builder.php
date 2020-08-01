@@ -642,7 +642,7 @@ class Builder
             return array();
             // @codeCoverageIgnoreEnd
         }
-        if ($result === array()) {
+        if (array() === $result) {
             $this->err(sprintf(
                 'ineffective pattern: %s',
                 $pattern === $glob

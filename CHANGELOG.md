@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [0.0.47] - 2020-07-23
 ### Added
 - version info to `--debug` above the stacktrace/s (thanks [Andreas Sundqvist])
+
 [Andreas Sundqvist]: https://github.com/sunkan
 
 ## [0.0.46] - 2020-07-10
@@ -28,6 +29,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Schema for new `<pipeline>.step.condition` directives Jun 2020 ([Peter Plewa])
 - Schema for new `clone` and `<pipeline>.step.clone` options Feb/Apr 2020
   ([Antoine Büsch])
+
 [Antoine Büsch]: https://bitbucket.org/blog/author/abusch
 [Peter Plewa]: https://bitbucket.org/blog/author/pplewa
 

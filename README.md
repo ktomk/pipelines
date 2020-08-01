@@ -577,6 +577,10 @@ X Sierra and High Sierra with PHP and Docker installed.
 - The libyaml based parser does not support dots (".") in anchor
   names.
 
+- The libyaml based parser does not support _folded scalar_ ("`>`") as
+  _block style indicator_. Suggested workaround is to use _literal
+  style_ ("`|`").
+
 - NUL bytes ("`\0`") are not supported verbatim in step-scripts due
   to defense-in-depth protection on `passthru` in the PHP-runtime to
   prevent *Null character* injection.
