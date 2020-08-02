@@ -38,11 +38,12 @@ class AbstractionLayerImplTest extends TestCase
      * @depends testContainerRemoveIfExist
      *
      * @param string $name of test container
+     *
+     * @return string
      */
-    public function testLifecycleFresh($name)
+    public function testLifecycleStartFresh($name)
     {
-        $exec = new Exec();
-        $dal = new AbstractionLayerImpl($exec, true);
+        $dal = new AbstractionLayerImpl(new Exec(), true);
 
         $id = $dal->start('ktomk/pipelines:busybox', array('--name', $name));
         self::assertIsString($id);
@@ -50,11 +51,24 @@ class AbstractionLayerImplTest extends TestCase
         $result = $dal->execute($id, array('echo', 'test'));
         self::assertSame('test', $result, 'execute');
 
+        return $id;
+    }
+
+    /**
+     * @depends testLifecycleStartFresh
+     *
+     * @param string $id
+     */
+    public function testLifecycleKillAfterStart($id)
+    {
+        $dal = new AbstractionLayerImpl(new Exec(), true);
+
         $actual = $dal->kill($id);
         self::assertIsString($actual);
 
         $actual = $dal->remove($id, false);
         self::assertIsString($actual, 'remove after kill');
+        self::assertSame($id, $actual, 'kill returns the container id if called with id');
     }
 
     public function testExecuteOnNonExistentContainer()
@@ -70,8 +84,7 @@ class AbstractionLayerImplTest extends TestCase
     {
         $tmpDir = DestructibleString::rmDir(LibTmp::tmpDir('pipelines-integration.tar.'));
 
-        $exec = new Exec();
-        $dal = new AbstractionLayerImpl($exec);
+        $dal = new AbstractionLayerImpl(new Exec());
 
         $name = 'pipelines-integration-test-containers.dal-tar';
         $dal->remove($name); // allow to re-test if failed and container not yet removed

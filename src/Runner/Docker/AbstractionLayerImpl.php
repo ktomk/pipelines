@@ -101,6 +101,14 @@ class AbstractionLayerImpl implements AbstractionLayer
         return rtrim($out);
     }
 
+    /**
+     * remove a container
+     *
+     * @param string $idOrName docker container
+     * @param bool $force optional
+     *
+     * @return null|string
+     */
     public function remove($idOrName, $force = true)
     {
         $status = $this->exec->capture(
@@ -113,6 +121,7 @@ class AbstractionLayerImpl implements AbstractionLayer
             $err
         );
 
+        // idempotent removal for throw behaviour, removing an nonexistent is not an exception, never
         if (1 === $status) {
             return null;
         }
