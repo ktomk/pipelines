@@ -5,10 +5,10 @@
 namespace Ktomk\Pipelines\Integration\Runner\Docker;
 
 use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Docker\AbstractionLayerImpl;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 
 /**
  * Class DockerAbstractionLayerTest

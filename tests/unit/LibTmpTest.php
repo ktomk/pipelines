@@ -4,6 +4,8 @@
 
 namespace Ktomk\Pipelines;
 
+use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
+
 /**
  * @covers \Ktomk\Pipelines\LibTmp
  */

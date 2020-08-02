@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Docker;
-use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
@@ -17,6 +16,7 @@ use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\CacheIo;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
+use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 
 /**
  * Runner for a single step of a pipeline

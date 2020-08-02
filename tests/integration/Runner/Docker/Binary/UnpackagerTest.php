@@ -3,7 +3,6 @@
 namespace Ktomk\Pipelines\Integration\Runner\Docker\Binary;
 
 use Ktomk\Pipelines\Cli\Exec;
-use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
@@ -11,6 +10,7 @@ use Ktomk\Pipelines\Runner\Directories;
 use Ktomk\Pipelines\Runner\DirectoriesTest;
 use Ktomk\Pipelines\Runner\Docker\Binary\UnPackager;
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 
 /**
  * Class BinaryUnpackagerTest

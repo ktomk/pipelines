@@ -2,13 +2,16 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Value\SideEffect;
+
+use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * Class DestructibleStringTest
  *
  * @package Ktomk\Pipelines
- * @covers \Ktomk\Pipelines\DestructibleString
+ * @covers \Ktomk\Pipelines\Value\SideEffect\DestructibleString
  */
 class DestructibleStringTest extends TestCase
 {
@@ -17,7 +20,7 @@ class DestructibleStringTest extends TestCase
         $tempDir = new DestructibleString(
             LibTmp::tmpDir('pipelines-test-destruction.'),
             /* @see LibFs::rmDir() */
-            __NAMESPACE__ . '\LibFs::rmDir'
+            'Ktomk\Pipelines\LibFs::rmDir'
         );
 
         self::assertDirectoryExists((string)$tempDir);

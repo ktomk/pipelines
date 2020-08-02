@@ -2,7 +2,7 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Value\SideEffect;
 
 /**
  * Class DestructibleString

@@ -7,13 +7,13 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Cli\ExecTester;
 use Ktomk\Pipelines\Cli\Streams;
-use Ktomk\Pipelines\DestructibleString;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\Binary\UnPackager;
 use Ktomk\Pipelines\Utility\OptionsMock;
+use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
