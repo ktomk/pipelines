@@ -44,18 +44,6 @@ class StepContainerTest extends RunnerTestCase
         self::assertSame($expected, $actual);
     }
 
-    public function testKeepOrKillThrowsException()
-    {
-        $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
-        $runner->method('getExec')->willReturn(new ExecTester($this));
-
-        $container = new StepContainer(null, $this->getStepMock(), $runner);
-
-        $this->expectException('BadMethodCallException');
-        $this->expectExceptionMessage('Container has no name yet');
-        $container->keepOrKill(false);
-    }
-
     public function testKeepOrKill()
     {
         $exec = new ExecTester($this);

@@ -17,7 +17,6 @@ class LibFsStreamTest extends TestCase
         self::assertTrue(LibFsStream::isReadable(__FILE__), 'standard file');
         self::assertTrue(LibFsStream::isReadable('php://stdin'), 'php stream: php://stdin');
 
-        self::assertFalse(LibFsStream::isReadable(null), 'non-string so that resources seem filtered');
         self::assertFalse(LibFsStream::isReadable('http:'), 'php stream: http:');
         self::assertFalse(LibFsStream::isReadable('http://'), 'php stream: http://');
         self::assertFalse(LibFsStream::isReadable('http://ktomk.github.io/'), 'php stream: http://...');

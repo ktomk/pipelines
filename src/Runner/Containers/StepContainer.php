@@ -106,9 +106,6 @@ class StepContainer
         $keep = null === $keep ? $this->runner->getFlags()->reuseContainer() : $keep;
 
         $name = $this->name;
-        if (null === $name) {
-            throw new \BadMethodCallException('Container has no name yet');
-        }
 
         $processManager = Docker::create($this->runner->getExec())->getProcessManager();
 
