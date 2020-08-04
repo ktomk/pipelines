@@ -7,8 +7,8 @@ namespace Ktomk\Pipelines;
 class Lib
 {
     /**
-     * @param mixed $d
      * @param mixed $v
+     * @param mixed $d
      *
      * @return mixed
      */

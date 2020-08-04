@@ -104,7 +104,7 @@ abstract class PipelinesReferences extends Pipelines
 
         list($resolve, $result) = self::idNonPatternMatch($pipelines, $type, $reference);
         if ($resolve) {
-            return  $result;
+            return $result;
         }
 
         list($resolve, $result) = self::idPattern($pipelines, $type, $reference);

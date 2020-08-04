@@ -142,8 +142,8 @@ class GlobTest extends TestCase
     }
 
     /**
-     * @param $subject
      * @param $expected
+     * @param $subject
      * @dataProvider provideBracePattern
      */
     public function testExpandBrace($expected, $subject)

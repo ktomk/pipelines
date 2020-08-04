@@ -26,12 +26,12 @@ class ImageName
      */
     public static function validate($name)
     {
-        $pattern =
-            '{^' .
-            '([a-zA-Z0-9.-]+(:[0-9]+)?/)?' . # <prefix>
-            '([a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)(/[a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)*' . # <name-components>
-            '(:[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127})?' . # <tag-name>
-            '$}';
+        $pattern
+            = '{^'
+            . '([a-zA-Z0-9.-]+(:[0-9]+)?/)?' # <prefix>
+            . '([a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)(/[a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)*' # <name-components>
+            . '(:[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127})?' # <tag-name>
+            . '$}';
 
         $result = preg_match($pattern, $name);
 

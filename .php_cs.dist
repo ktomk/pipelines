@@ -1,9 +1,20 @@
 <?php
 
 $config = PhpCsFixer\Config::create()
+    ->registerCustomFixers(new PhpCsFixerCustomFixers\Fixers())
     ->setCacheFile('build/cache/.php_cs.cache')
     ->setRiskyAllowed(true)
     ->setRules(array(
+        PhpCsFixerCustomFixers\Fixer\CommentSurroundedBySpacesFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\InternalClassCasingFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\NoDuplicatedArrayKeyFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\NoDuplicatedImportsFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\NoPhpStormGeneratedCommentFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\OperatorLinebreakFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\PhpdocNoSuperfluousParamFixer::name() => true,
+        // problems with psalm annotations: PhpCsFixerCustomFixers\Fixer\PhpdocParamOrderFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\SingleSpaceAfterStatementFixer::name() => true,
+        PhpCsFixerCustomFixers\Fixer\SingleSpaceBeforeStatementFixer::name() => true,
         'declare_strict_types' => false,
         'braces' => true,
         'cast_spaces' => array('space' => 'none'),

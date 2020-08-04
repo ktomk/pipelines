@@ -37,8 +37,8 @@ class LibTest extends TestCase
     public function testGenerateUuid()
     {
         $actual = Lib::generateUuid();
-        $pattern = '/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?' .
-            '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i';
+        $pattern = '/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'
+            . '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i';
         self::assertRegExp($pattern, $actual);
     }
 

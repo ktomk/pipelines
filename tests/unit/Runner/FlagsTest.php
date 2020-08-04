@@ -49,8 +49,8 @@ class FlagsTest extends TestCase
     public function testReuseContainer()
     {
         $value = $this->flagsValue($flags = new Flags());
-        $reuseContainer =
-            ($value & Flags::FLAG_KEEP_ON_ERROR)
+        $reuseContainer
+            = ($value & Flags::FLAG_KEEP_ON_ERROR)
             || !($value & (Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE));
         self::assertSame($reuseContainer, $flags->reuseContainer());
     }

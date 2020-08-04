@@ -127,8 +127,8 @@ abstract class NameBuilder
     /**
      * generate step container name
      *
-     * @param string $prefix
      * @param Step $step
+     * @param string $prefix
      * @param string $project name
      *
      * @return string

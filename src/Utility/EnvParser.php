@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Utility;
 
+use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\ArgsException;
 use Ktomk\Pipelines\Lib;
@@ -32,7 +33,7 @@ class EnvParser
      *
      * @param Args $arguments
      */
-    public function  __construct(Args $arguments)
+    public function __construct(Args $arguments)
     {
         $this->arguments = $arguments;
     }

@@ -42,14 +42,14 @@ class RunnerTestCase extends TestCase
         parent::setUp();
 
         // create container target directory "/app" by tar
-        $this->deploy_copy_cmd = '~cd ' . sys_get_temp_dir() . '/pipelines-cp\.[^/]+/\. ' .
-            "&& echo 'app' | tar c -h -f - --no-recursion app " .
-            "| docker  cp - '\\*dry-run\\*:/\\.'~";
+        $this->deploy_copy_cmd = '~cd ' . sys_get_temp_dir() . '/pipelines-cp\.[^/]+/\. '
+            . "&& echo 'app' | tar c -h -f - --no-recursion app "
+            . "| docker  cp - '\\*dry-run\\*:/\\.'~";
 
         // copy over project files into container "/app" directory by tar
-        $this->deploy_copy_cmd_2 = '~cd ' . sys_get_temp_dir() . '/pipelines-test-suite[^/]*/\. ' .
-            '&& tar c -f - . ' .
-            "| docker  cp - '\\*dry-run\\*:/app'~";
+        $this->deploy_copy_cmd_2 = '~cd ' . sys_get_temp_dir() . '/pipelines-test-suite[^/]*/\. '
+            . '&& tar c -f - . '
+            . "| docker  cp - '\\*dry-run\\*:/app'~";
     }
 
     /**

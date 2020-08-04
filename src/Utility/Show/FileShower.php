@@ -123,8 +123,8 @@ class FileShower extends FileShowerAbstract
         }
 
         foreach ($this->tablePipelineIdsPipelines($pipelines, $table, $errors) as $id => $pipeline) {
-            list($table, $errors) =
-                $this->tableStepsServices($pipeline->getSteps(), $serviceDefinitions, $id, $table, $errors);
+            list($table, $errors)
+                = $this->tableStepsServices($pipeline->getSteps(), $serviceDefinitions, $id, $table, $errors);
         }
 
         $this->textTable($table);

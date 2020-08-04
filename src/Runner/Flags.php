@@ -136,8 +136,7 @@ class Flags
      */
     public function reuseContainer()
     {
-        return
-            ($this->memory & self::FLAG_KEEP_ON_ERROR)
+        return ($this->memory & self::FLAG_KEEP_ON_ERROR)
             || !($this->memory & (self::FLAG_DOCKER_KILL | self::FLAG_DOCKER_REMOVE));
     }
 

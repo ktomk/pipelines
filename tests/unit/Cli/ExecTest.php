@@ -34,7 +34,7 @@ class ExecTest extends TestCase
     public function testDebugger()
     {
         $lines = array();
-        $exec = new Exec(function($message) use (&$lines) {
+        $exec = new Exec(function ($message) use (&$lines) {
             $lines[] = $message;
         });
         $actual = $exec->capture(':', array());
