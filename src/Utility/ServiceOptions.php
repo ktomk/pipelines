@@ -79,8 +79,7 @@ class ServiceOptions implements Runnable
         Env $env,
         RunOpts $runOpts,
         Directories $directories
-    )
-    {
+    ) {
         return new self($args, $streams, $file, $exec, $env, $runOpts, $directories);
     }
 
@@ -103,8 +102,7 @@ class ServiceOptions implements Runnable
         Env $env,
         RunOpts $runOpts,
         Directories $directories
-    )
-    {
+    ) {
         $this->args = $args;
         $this->streams = $streams;
         $this->file = $file;

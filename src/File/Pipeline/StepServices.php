@@ -113,7 +113,7 @@ class StepServices implements FileNode
             }
 
             '' === ($service = trim($service)) || $reservoir[] = $service;
-         }
+        }
 
         return $reservoir;
     }

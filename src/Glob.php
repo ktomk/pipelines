@@ -39,7 +39,8 @@ class Glob
      *
      * @return bool
      */
-    public static function match($pattern, $subject) {
+    public static function match($pattern, $subject)
+    {
         $regex = implode(
             '|',
             array_map(array('Ktomk\Pipelines\Glob', 'map'), self::expandBrace($pattern))

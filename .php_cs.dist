@@ -5,6 +5,7 @@ $config = PhpCsFixer\Config::create()
     ->setRiskyAllowed(true)
     ->setRules(array(
         'declare_strict_types' => false,
+        'braces' => true,
         'cast_spaces' => array('space' => 'none'),
         'single_quote' => false,
         'concat_space' => array('spacing' => 'one'),

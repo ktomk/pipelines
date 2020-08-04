@@ -52,7 +52,8 @@ class AppTest extends TestCase
     /**
      * --prefix has invalid argument so exit status is 1
      */
-    public function testInvalidPrefix() {
+    public function testInvalidPrefix()
+    {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputRegex('{^pipelines: invalid prefix: \'123\'\n}');
         $actual = $app->main(array('cmd', '--prefix', '123'));
@@ -62,7 +63,8 @@ class AppTest extends TestCase
     /**
      * --basename has invalid argument so exit status is 1
      */
-    public function testInvalidEmptyBasename() {
+    public function testInvalidEmptyBasename()
+    {
         $app = new App(new Streams(null, null, 'php://output'));
         $this->expectOutputRegex('{^pipelines: not a basename: \'\'\n}');
         $actual = $app->main(array('cmd', '--basename', ''));

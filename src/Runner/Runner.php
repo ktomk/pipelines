@@ -68,8 +68,7 @@ class Runner
         Flags $flags = null,
         Env $env = null,
         Streams $streams = null
-    )
-    {
+    ) {
         $flags = null === $flags ? new Flags() : $flags;
         $env = null === $env ? Env::createEx() : $env;
         $streams = null === $streams ? Streams::create() : $streams;
@@ -94,8 +93,7 @@ class Runner
         Flags $flags,
         Env $env,
         Streams $streams
-    )
-    {
+    ) {
         $this->runOpts = $runOpts;
         $this->directories = $directories;
         $this->exec = $exec;

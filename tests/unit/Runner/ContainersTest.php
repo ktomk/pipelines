@@ -67,7 +67,9 @@ class ContainersTest extends RunnerTestCase
     {
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $service = new Service('super', array('image' => 'klee/red-bridge'));
-        $resolver = function ($a) {return $a;};
+        $resolver = function ($a) {
+            return $a;
+        };
 
         Containers::execRunServiceContainer($exec, $service, $resolver, 'prefix', 'test', array());
         $this->addToAssertionCount(1);
@@ -77,7 +79,9 @@ class ContainersTest extends RunnerTestCase
     {
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $service = new Service('super', array('image' => 'klee/red-bridge'));
-        $resolver = function ($a) {return $a;};
+        $resolver = function ($a) {
+            return $a;
+        };
 
         Containers::execRunServiceContainerAttached($exec, $service, $resolver, 'prefix', 'test', array());
         $this->addToAssertionCount(1);
@@ -87,7 +91,9 @@ class ContainersTest extends RunnerTestCase
     {
         $exec = $this->createMock('Ktomk\Pipelines\Cli\Exec');
         $service = new Service('super', array('image' => 'klee/red-bridge'));
-        $resolver = function ($a) {return $a;};
+        $resolver = function ($a) {
+            return $a;
+        };
 
         $actual = Containers::execRunServiceContainerImpl($exec, $service, $resolver, 'prefix', 'test');
         self::assertNotNull($actual);

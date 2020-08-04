@@ -28,8 +28,7 @@ class CollectorTest extends TestCase
         $collector = new Collector($args);
         $collector->collect(array('f'));
         $options = new OptionIterator($collector);
-        foreach ($options as $index => $option)
-        {
+        foreach ($options as $index => $option) {
             self::assertSame($index, 0);
             self::assertSame('-f', $option);
             self::assertSame('bar', $options->getArgument());

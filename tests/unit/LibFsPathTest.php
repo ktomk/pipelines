@@ -19,7 +19,8 @@ class LibFsPathTest extends TestCase
      */
     private $cleaners = array();
 
-    public function provideAbsolutePaths() {
+    public function provideAbsolutePaths()
+    {
         return array(
             array('foo.txt', false),
             array('', false),
@@ -44,7 +45,8 @@ class LibFsPathTest extends TestCase
         self::assertSame($expected, $actual, "path '${path}' is (not) absolute");
     }
 
-    public function provideBasenamePaths() {
+    public function provideBasenamePaths()
+    {
         return array(
             array('foo.txt', true),
             array('', false),
