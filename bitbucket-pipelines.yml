@@ -26,10 +26,16 @@ pipelines:
             - command -v composer || lib/pipelines/composer-install.sh
             - composer config secure-http false && composer config disable-tls true
             - composer show -i phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
-            - >
-              composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
-              | grep -q '^4.' || { composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit;
-                composer require --no-suggest --dev phpunit/phpunit ^4; }
+            - |
+              composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p' | grep -q '^4.' \
+                || { \
+                  composer remove --dev \
+                    friendsofphp/php-cs-fixer \
+                    kubawerlos/php-cs-fixer-custom-fixers \
+                    phpunit/phpunit \
+                  ; \
+                  composer require --no-suggest --dev phpunit/phpunit ^4; \
+              }
             - composer install
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
           services:

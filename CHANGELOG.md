@@ -5,6 +5,12 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+### Added
+- php cs-fixer custom fixers (thanks [Kuba Werlos])
+
+[Kuba Werlos]: https://github.com/kubawerlos
+
 ## [0.0.48] - 2020-07-31
 ### Added
 - dependency caches and `--no-cache` for previous behavior, [caches

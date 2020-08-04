@@ -38,11 +38,9 @@ before_install:
 install:
   - echo "${TRAVIS_PHP_VERSION}"
   - if [[ "${TRAVIS_PHP_VERSION}" == "master" ]]; then IGNORE_PLATFORM_REQS="--ignore-platform-reqs"; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "7.4snapshot" ]]; then tests/shell/run.sh ./test-php74.sh 1 2; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "7.4" ]]; then tests/shell/run.sh ./test-php74.sh 1 2; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "7.0snapshot" ]]; then composer update; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "7.0" ]]; then composer update; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "5.6" ]]; then composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit; composer require --dev phpunit/phpunit ^5 --update-with-dependencies --no-suggest; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.4* ]]; then tests/shell/run.sh ./test-php74.sh 1 2; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.[01]* ]]; then composer remove --dev kubawerlos/php-cs-fixer-custom-fixers; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == "5.6" ]]; then composer remove --dev friendsofphp/php-cs-fixer kubawerlos/php-cs-fixer-custom-fixers phpunit/phpunit; composer require --dev phpunit/phpunit ^5 --update-with-dependencies --no-suggest; fi
   - composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-}
   - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
 
