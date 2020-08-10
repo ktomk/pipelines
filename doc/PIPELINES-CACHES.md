@@ -7,25 +7,34 @@ The `pipelines` utility has caches support since
 version 0.0.48 (July 2020), _docker_ was always
 "cached" as it is handled by docker on your host.
 
+What is the benefit of a cache when running
+`pipelines` locally?
+
 Pipeline caches can help to speed-up pipeline execution
-to spare network round-trips and computation and
-once populated even run `pipelines` completely
-offline from your local system (if the tools in
-in the build script support offline usage, e.g.
-_composer_ does fall-back to the cache in case
-remote resources are not reachable, it is also
-much faster when it can install from cache).
+and spare network round-trips and computation.
+
+Once populated, caches even allow to run
+`pipelines` completely offline from your local
+system (if the tools in the build script support
+offline usage, e.g. _composer_ does fall-back to
+the cache in case remote resources are not
+reachable, it is also much faster when it can
+install from cache - this is only exemplary).
 
 To ignore caches for a pipeline run, add the
 `--no-cache` switch which effectively does not
 use caches and establishes the old behaviour.
 
-Most often caches are for caching build dependencies. For
-example Composer packages, Node modules etc. . All
-predefined caches are supported as documented for
-[the Bitbucket Pipelines file-format][BBPL-CACHES] \[BBPL-CACHES]:
+Most often caches are for caching build dependencies.
+For example Composer packages, Node modules etc. .
 
 ### Predefined Caches
+
+All predefined caches are supported as documented for
+[the Bitbucket Pipelines file-format][BBPL-CACHES]
+\[BBPL-CACHES] which makes it straight forward
+to configure a dependency cache just by its name:
+
 
 | Cache Name | Path                             |
 | ---------- |----------------------------------|
@@ -52,12 +61,13 @@ the projects phpunit test-suite.
 This requires to remove some project dependencies
 that are managed by composer and install an also
 dated but PHP 5.3 compatible version of Phpunit
-(4.x).
+(4.x), shown in the following YAML.
 
 Having the _composer_ cache allows to cache all
 these outdated dependencies, the pipeline runs
 much faster as composer installs the dependencies
-from cache:
+from cache, turning integration testing against
+very specific systems straight forward:
 
 ```yaml
 pipelines:
@@ -82,7 +92,8 @@ definitions:
 It is also an example of a cache named `build-http-cache`
 which is caching the path `build/store/http-cache`, a
 relative path to the *clone directory* which is also
-the pipelines' default working directory.
+the pipelines' default working directory (and the
+project directory).
 
 !!! note
     If `--deploy mount` is in use
@@ -91,7 +102,7 @@ the pipelines' default working directory.
     mount, will populate the local directory.
     This may not be wanted, consider to not use
     `--deploy mount` but (implicit) `--deploy copy`
-    _and_ appropriate caches.
+    _and_ appropriate caches or artifacts.
 
 Cache paths are resolved against the running pipelines'
 container, the use of `~` or `$HOME` is supported.
@@ -111,8 +122,8 @@ differences in how caches are kept and updated.
 Bitbucket Pipelines keeps a cache for seven days,
 then deletes/drops it. A cache is only created and
 never updated. As after seven days it will be
-deleted (or deleted manually), it will be re-created
-on the next pipeline run.
+deleted (or if deleted manually earlier), it will
+be re-created on the next pipeline run.
 
 In difference, the `pipelines` utility keeps caches
 endlessly and _updates_ them after each (successful)
@@ -122,29 +133,34 @@ This better reflects running pipelines locally as
 it keeps any cache policy out of the equation,
 there aren't any remote resources to be managed.
 
-Also there are no remote storage for caches
-necessary locally, which means updating caches
-after each successful pipeline step run is
-considered an improvement here as caches are less
-stale.
+Having up-to-date caches after each successful
+local pipeline step run is considered an
+improvement as caches are less stale. The meaning
+of remote is directly in the meaning of the
+dependencies and not with the indirection that the
+pipeline run in some cloud far away. Shift left.
 
 ### The Docker Cache
 
-Another difference is the _docker_ cache. It is
+Another difference is the _docker cache_. It is
 always "cached" as it is `docker` on your host and
 falls under its own configuration/policy - more
-control for you as a user.
+control for you as a user. More interoperable
+with your overall docker needs. Makes containers
+more transparent.
 
 ### Resource Limits and Remote Usage
 
 There are no resource limits per cache other than
-the cache is limited by your own disk-space.
+the cache is limited by your own disk-space and
+other resources you allow docker to use.
 
 `pipelines` itself does not upload the cache files
-to any remote system on its own. However if the
+to any remote location on its own. However if the
 folder it stores the tar-files in is being shared
 (e.g. shared home folder), sharing the cache may
-happen (see as well the next section).
+happen (see as well the next section, especially
+if this is not your intention).
 
 ### Where Pipelines stores Caches
 
@@ -161,7 +177,7 @@ and keeps cache files `pipelines` creates within
 your home directory.
 
 Paths in the tar file are relative to the cache path
-of the container.
+in the container.
 
 Having a central directory on a standard system
 path comes with the benefit that if `pipelines`
@@ -178,21 +194,29 @@ Apply any caching policy of your own needs then
 with such an integration to fit your expectations
 and (remote) build requirements.
 
-## More Cache Operations
+Also if you want to move the cache out of the home
+directory, you can make use of the XDG_CACHE_HOME
+environment variable to have it at any location
+you like.
+
+## Cache Operations
 
 Support for caches in the `pipelines` utility is
 sufficient for supporting them in the file-format
 (read: minimal), this leaves it open to maintaining
-them on your system to you. This is merely
-straight forward for simple things like dropping
-caches and leaves you with many more options for
-inspecting caches easily, populating caches
-(warming them up) and even merging into caches.
+them on your system (read: done by you). This is
+merely straight forward for simple things like
+dropping caches and leaves you with many more
+options for inspecting caches easily, populating
+caches (warming them up), even merging into
+caches and sharing across projects.
+
+Your system, your control.
 
 As caches are based on standard tar-files, common
 and more advanced tasks can be done by interacting
-with the shell with all the utilities you love and
-know.
+with (the shell with) all the utilities you love
+and hate and know best.
 
 ### List and Inspect Caches
 
@@ -201,7 +225,7 @@ the `du` utility can be used:
 
 ```
 $ du -ch ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/*/*.tar
-35M	    /home/user/.cache/pipelines/caches/pipelines/build-http-cache.tar
+35M     /home/user/.cache/pipelines/caches/pipelines/build-http-cache.tar
 69M     /home/user/.cache/pipelines/caches/pipelines/composer.tar
 104M    total
 ```
@@ -223,23 +247,28 @@ path_ as all paths are relative to the cache path
 
 #### Migrating from Project Directory to Caches
 
+_(this section certainly is of special-interest
+and focus to detail on migrating to
+caches locally)_
+
 In the example above also an intersection with copying
 files into the container (`--deploy copy`) and
 downloading new files in the container (`composer.phar`)
-has been done.
+has been done (copy back into the project via
+_artifacts_).
 
 This is as previously there was no such caching
-and the project directory has been used as a
-workaround for offline usage and used here just as
-an example that it is possible to migrate away
-from such kind of workaround usage.
+and the project directory has been used as a store
+for offline copies of remote files; used here as
+an example to migrate away from such kind of a
+workaround.
 
-The example combines of having a work-around for a `pipelines`
+The example combines a workaround for a `pipelines`
 version with no cache support (and no docker client
 support, using the path `build/store/http-cache`)
-running pipelines offline regardless. Technically
+but running pipelines offline regardless. Technically
 this is not necessary any longer, so the cache could be
-moved into `~/.cache/build-http-cache` (or similar)
+moved into `~/.cache/build-http-cache` (exemplary)
 by changing the path in the `definitions` section.
 
 As the name of the cache does not change - just the
@@ -257,10 +286,15 @@ To drop a cache, removing the tar file in the
 cache directory suffices.
 
 !!! warning
-    Dropping a cache may prevent executing a pipeline successfully
-    when being offline.
+    Dropping a cache may prevent executing a
+    pipeline successfully when being offline. To
+    test dropping a cache, move the cache tar
+    file to a backup location before removing it
+    from the filesystem so in case of error
+    iterating the pipeline run fails, it can be
+    moved back.
 
-Example:
+Example (removal):
 
 ```
 $ rm -vi -- ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/build-http-cache.tar
@@ -278,6 +312,10 @@ Modify the `rm` command as you see fit to drop a
 cache (or all caches of a project or even all
 projects).
 
+Use the `mv` command to (re)-move the cache by
+moving the file to a different location in the
+local file-system.
+
 ### Populate Caches
 
 It is possible to pre-populate caches by importing
@@ -293,7 +331,7 @@ does not yet exist.
 The following section demonstrates it by the
 example of [_composer_][COMPOSER] \[COMPOSER].
 
-#### Populate Composer Cache from your Host
+#### Populate Composer Cache from Your Host
 
 To populate the composer cache from your local
 system, all that needs to be done is to create
@@ -318,7 +356,7 @@ $ tar -cf ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/composer.t
   -C ~/.cache/composer/ .
 ```
 
-#### Merge back to your Host
+#### Merge Back to Your Host
 
 Similar it is also possible to import/merge caches
 back into the local system by un-tarring to a
@@ -351,6 +389,10 @@ As kept containers are with all the changes to the
 file-system, this effectively caches all build
 dependencies on the fly out of the box w/o
 specifying/defining caches first.
+
+As artifacts are copied back into the project
+directory (at least at a successful last step)
+making use of artifacts also add some options.
 
 ## References
 
