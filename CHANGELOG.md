@@ -9,8 +9,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - [Documentation about working offline][Offline-PL] incl. pipelines
   example yaml files
+- Shell test for artifacts
 ### Changed
 - Updated readme
+### Fixed
+- Artifacts. Broken since 0.0.43
 
 [Offline-PL]: doc/PIPELINES-OFFLINE.md
 

@@ -1,0 +1,11 @@
+image: ktomk/pipelines:busybox
+
+pipelines:
+  default:
+    - step:
+        name: artifacts test
+        artifacts:
+          - build/artifacts-test/**
+        script:
+          - mkdir -p build/artifacts-test
+          - touch build/artifacts-test/foo

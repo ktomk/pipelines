@@ -153,12 +153,14 @@ class StepRunner
             return;
         }
 
+        $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
+
         $exec = $this->runner->getExec();
         $streams = $this->runner->getStreams();
 
         $streams->out("\x1D+++ copying artifacts from container...\n");
 
-        $source = new ArtifactSource($exec, $id, $dir);
+        $source = new ArtifactSource($exec, $id, $clonePath);
 
         $patterns = $artifacts->getPatterns();
         foreach ($patterns as $pattern) {
