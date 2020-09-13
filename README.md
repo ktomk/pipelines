@@ -399,18 +399,9 @@ script while you can keep artifacts from pipelines locally.
 
 On the plane? Riding Deutsche Bahn? Or just a rainy day on a
 remote location with broken net? Coding while abroad? Or just
-Bitbucket down again? Before going into offline mode, make
-use of `--images` and the shell:
+Bitbucket down again?
 
-```bash
-$ pipelines --images | while read -r image; do \
-   docker image pull "$image"; done;
-```
-
-As an alternative or when the Docker containers are available
-locally only, build all containers before going offline if
-they need to. Pipelines always prefers locally stored
-containers.
+Before going into offline mode, read about [*Working Offline*](doc/PIPELINES-OFFLINE.md)
 
 #### Services? Check!
 

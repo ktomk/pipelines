@@ -1,0 +1,20 @@
+---
+# Example pipelines file caching APK packages for/in an Alpine Linux container
+pipelines:
+  default:
+    - step:
+        image: alpine:3.12
+        name: alpine apk cache example
+        caches:
+          - apk-example
+        script:
+          - 'echo "alpine release: $(head -1 /etc/alpine-release)"'
+          - ln -s /var/cache/apk /etc/apk/cache # apk cache requires a symlink
+          - ping -c 1 alpinelinux.org || true # no ping if offline
+          - apk add bash
+          - /bin/bash --version
+          - apk add composer
+          - composer --version
+definitions:
+  caches:
+    apk-example: /var/cache/apk

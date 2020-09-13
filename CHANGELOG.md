@@ -6,8 +6,13 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- [Documentation about working offline][Offline-PL] incl. pipelines
+  example yaml files
 ### Changed
 - Updated readme
+
+[Offline-PL]: doc/PIPELINES-OFFLINE.md
 
 ## [0.0.49] - 2020-08-10
 ### Added
