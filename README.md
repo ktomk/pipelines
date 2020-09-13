@@ -108,9 +108,20 @@ maintaining them.
 Validate your `bitbucket-pipelines.yml` file with `--show` which
 highlights errors found.
 
+For schema-validation use `--validate [<file>]`. Schema validation
+might show errors that are not an issue when executing a pipeline
+(`--show` and/or `--dry-run` is better for that) but validates
+against a schema which is aligned with the one that Atlassian/
+Bitbucket provides (the schema is more lax compared to upstream
+for the cases known to us to offer a better practical experience).
+E.g. use it for checks in your CI pipeline or linting files before
+push in a pre-commit hook or your local build.
+
 Inspect your pipeline with `--dry-run` which will process the
-pipeline but not execute anything. Combine with `--verbose` to
-show the commands which would have run verbatim.
+pipeline but not execute anything. Combine with `-v`, `--verbose`
+to show the commands which would have run verbatim which allows
+to better understand how `pipelines` actually works. Nothing to
+hide here.
 
 Use `--no-run` to not run the pipeline at all, this can be used
 to test the utilities options.
@@ -574,7 +585,7 @@ X Sierra and High Sierra with PHP and Docker installed.
   for building the phar file the workaround was to entail the
   larger parts of the pattern.
 
-- The libyaml based parser does not support dots (".") in anchor
+- The libyaml based parser does not support dots ("`.`") in anchor
   names.
 
 - The libyaml based parser does not support _folded scalar_ ("`>`") as
@@ -756,14 +767,14 @@ to use the development version for `pipelines`.
 - [x] Stop at manual steps (`--no-manual` to override)
 - [x] Support BITBUCKET_PR_DESTINATION_BRANCH with
       `--trigger pr:<source>:<destination>`
-- [x] Run pipeline services
-- [x] Run pipelines as current user with `--user` (`--deploy mount`
-      should not enforce the container default user \[often "root"]
-      for project file operation any longer), however the Docker utility
-      still requires you (the current user) to be root like, so
-      technically there is little win (see [Rootless
-      Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md) for what works
-      better in this regard)
+- [x] Pipeline services
+- [x] Run as current user with `--user` (`--deploy mount` should not
+      enforce the container default user \[often "root"] for project
+      file operations any longer), however the Docker utility still
+      requires you (the current user) to be root like, so technically
+      there is little win (see [Rootless
+      Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md) for what works better
+      in this regard)
 - [x] Have caches on a per-project basis
 - [x] Copy local composer cache into container for better
       (offline) usage in PHP projects (see
