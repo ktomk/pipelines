@@ -5,7 +5,7 @@ documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.50] - 2020-09-14
 ### Added
 - [Documentation about working offline][Offline-PL] incl. pipelines
   example yaml files
@@ -484,4 +484,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 [0.0.47]: https://github.com/ktomk/pipelines/releases/tag/0.0.47
 [0.0.48]: https://github.com/ktomk/pipelines/releases/tag/0.0.48
 [0.0.49]: https://github.com/ktomk/pipelines/releases/tag/0.0.49
+[0.0.50]: https://github.com/ktomk/pipelines/releases/tag/0.0.50
 [unreleased]: https://github.com/ktomk/pipelines
