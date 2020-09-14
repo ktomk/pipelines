@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 ### Changed
 - Updated [documentation about working offline][Offline-PL]
+### Fixed
+- Shell test for artifacts, missing in 0.0.50
 
 ## [0.0.50] - 2020-09-14
 ### Added
