@@ -8,8 +8,8 @@ pipelines:
         caches:
           - apk-example
         script:
-          - 'echo "alpine release: $(head -1 /etc/alpine-release)"'
-          - ln -s /var/cache/apk /etc/apk/cache # apk cache requires a symlink
+          - >
+            echo "alpine release: $(head -1 /etc/alpine-release)"
           - ping -c 1 alpinelinux.org || true # no ping if offline
           - apk add bash
           - /bin/bash --version
@@ -17,4 +17,4 @@ pipelines:
           - composer --version
 definitions:
   caches:
-    apk-example: /var/cache/apk
+    apk-example: /etc/apk/cache

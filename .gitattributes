@@ -1,10 +1,18 @@
 #   When editing .md files w/ Phpstorm, it's quite often that Tom
 # leaves whitespace at the end of lines. Most likely b/c Phpstorm
 # is not precise here for .md or it's just that Tom does not
-# configures Phpstorm properly. Anyway, Tom prefers Git for
+# configure Phpstorm properly. Anyway, Tom prefers Git for
 # development over Phpstorm, therefore Tom gives it a filter:
 #
 #   $ git config --global filter.space-removal-at-eol.clean 'sed -e "s/ \+$//"'
 #
 
 *.md filter=space-removal-at-eol
+
+
+#  When merging changes that document per theirs commits in the
+# change-log, there are often conflicts in that file despite these
+# conflicts are trivial for a human eye. Tom has been reading
+# online that the union merge strategy should levitate this issue.
+
+CHANGELOG.md merge=union

@@ -47,8 +47,8 @@ class Help
             <<<'EOD'
 usage: pipelines [<options>] --version | -h | --help
        pipelines [<options>] [--working-dir <path>] [--file <path>]
-                 [--basename <basename>] [--prefix <prefix>] [--verbatim]
-                 [--[no-|error-]keep] [--no-run]
+                 [--basename <basename>] [--prefix <prefix>]
+                 [--verbatim] [--[no-|error-]keep] [--no-run]
                  [(-e | --env) <variable>] [--env-file <path>]
                  [--no-dot-env-files] [--no-dot-env-dot-dist]
                  [--docker-client <package>] [--ssh]
@@ -83,42 +83,43 @@ Generic options
     -v, --verbose         be more verbose, show more information and
                           commands to be executed
     --dry-run             do not execute commands, e.g. invoke docker or
-                          run containers, with --verbose show the commands
-                          that would have run w/o --dry-run
+                          run containers, with --verbose show the
+                          commands that would have run w/o --dry-run
     -c <name>=<value>     pass a configuration parameter to the command
 
 Pipeline runner options
     --basename <basename> set basename for pipelines file, defaults to
                           'bitbucket-pipelines.yml'
-    --deploy mount|copy   how files from the working directory are placed
-                          into the pipeline container:
+    --deploy mount|copy   how files from the working directory are
+                          placed into the pipeline container:
                           copy     (default) working dir is copied into
-                                 the container. stronger isolation as the
-                                 pipeline scripts can change all files
-                                 without side-effects in the working
-                                 directory
+                                 the container. stronger isolation as
+                                 the pipeline scripts can change all
+                                 files without side-effects in the
+                                 working directory
                           mount    the working directory is mounted.
                                  fastest, no isolation
-    --file <path>         path to the pipelines file, overrides looking up
-                          the <basename> file from the current working
-                          directory, use '-' to read from stdin
+    --file <path>         path to the pipelines file, overrides looking
+                          up the <basename> file from the current
+                          working directory, use '-' to read from stdin
     --trigger <ref>       build trigger; <ref> can be either of:
                           tag:<name>, branch:<name>, bookmark:<name> or
                           pr:<branch-name>[:<destination-branch>]
                           determines the pipeline to run
-    --pipeline <id>       run pipeline with <id>, use --list for a list of
-                          all pipeline ids available.
+    --pipeline <id>       run pipeline with <id>, use --list for a list
+                          of all pipeline ids available
     --step, --steps <steps>
-                          execute not all but this/these <steps>. duplicates
-                          and different order allowed, <steps> are a comma/
-                          space separated list of step and step ranges, e.g.
-                          1 2 3; 1-3; 1,2-3; 3-1 or -1,3- and 1,1,2,2,3,3.
-    --no-manual           ignore manual steps, by default manual steps stop
-                          the pipeline execution when not the first step
-                          in the pipeline invocation
-    --verbatim            only give verbatim output of the pipeline, do not
-                          display other information like which step currently
-                          executes, which image is in use etc.
+                          execute not all but this/these <steps>. all
+                          duplicates and orderings allowed, <steps> are
+                          a comma/space separated list of step and step
+                          ranges, e.g. 1 2 3; 1-3; 1,2-3; 3-1 or -1,3-
+                          and 1,1,3,3,2,2
+    --no-manual           ignore manual steps, by default manual steps
+                          stop the pipeline execution when not the first
+                          step in invocation of a pipeline
+    --verbatim            only give verbatim output of the pipeline, do
+                          not display other information like which step
+                          currently executes, which image is in use ...
     --working-dir <path>  run as if pipelines was started in <path>
     --no-run              do not run the pipeline
     --prefix <prefix>     use a different prefix for container
@@ -135,10 +136,10 @@ File information options
                           format without services and images / steps are
                           summarized - one line for each pipeline
     --show-services       show all defined services in use by pipeline
-                          step and exit
+                          steps and exit
     --validate[=<path>]   schema-validate file, shows errors if any,
                           exits; can be used more than once,
-                          exit status is non-zero on error.
+                          exit status is non-zero on error
 
 Environment control options
     -e, --env <variable>  pass or set an environment <variable> for the
@@ -157,32 +158,32 @@ Environment control options
 
 Keep options
     --keep                always keep docker containers
-    --error-keep          keep docker docker containers if a step failed;
-                          outputs the non-zero exit status and the id of
-                          the container kept and exit w/ container exec
-                          exit status
-    --no-keep             do not keep docker containers; default behaviour
+    --error-keep          keep docker containers if a step failed;
+                          outputs non-zero exit status and the id of the
+                          container kept and exit w/ container exec exit
+                          status
+    --no-keep             do not keep docker containers; default
 
 Container runner options
-    --ssh                 ssh agent forwarding: if $SSH_AUTH_SOCK is set and
-                          accessible, mount SSH authentication socket read
-                          only and set SSH_AUTH_SOCK in the pipeline step
-                          container to the mount point.
+    --ssh                 ssh agent forwarding: if $SSH_AUTH_SOCK is set
+                          and accessible, mount SSH authentication
+                          socket read only and set SSH_AUTH_SOCK in the
+                          pipeline step container to the mount point.
     --user[=<name|uid>[:<group|gid>]]
-                          run pipeline step container as current or given
-                          user/group; overrides default container user
+                          run pipeline step container as current or
+                          given user/group; overrides default container
+                          user
 
 Service runner options
-    --service <service>   run <service> attached to the current shell and
-                          waits until the service exits, exit status is
-                          exit status of the docker run service container
+    --service <service>   run <service> attached to the current shell
+                          and waits until the service exits, exit status
+                          is the one of the docker run service container
 
 Docker service options
     --docker-client <package>
                           which docker client binary to use for the
-                          pipeline service 'docker'
-                          defaults to 'docker-19.03.1-linux-static-x86_64'
-                          package
+                          pipeline service 'docker' defaults to
+                          'docker-19.03.1-linux-static-x86_64' package
     --docker-client-pkgs  list all docker client packages that ship with
                           pipelines and exit
 
@@ -192,9 +193,9 @@ Docker container maintenance options
       (--keep, --error-keep)
 
       pipelines uses a prefix followed by '-' and a compound name based
-      on step-number, step-name, pipeline id and image name for container
-      names. the prefix is either 'pipelines' or the one set by
-      --prefix <prefix>
+      on step-number, step-name, pipeline id and image name for
+      container names. the prefix is either 'pipelines' or the one set
+      by --prefix <prefix>
 
       three options are built-in to monitor and interact with leftovers,
       if one or more of these are given, the following operations are
@@ -209,8 +210,8 @@ Docker container maintenance options
                           go
 
 Less common options
-    --debug               flag for trouble-shooting fatal errors, errors,
-                          warnings and notices
+    --debug               flag for trouble-shooting fatal errors,
+                          errors, warnings, notices and strict warnings
 
 EOD
         );

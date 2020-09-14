@@ -166,14 +166,15 @@ other resources you allow docker to use.
 
 Take this with a grain of salt, there is no
 specific handling that makes `pipelines` fatal or
-panic if a there isn't a certain amount of disk-
-space left. `pipelines` will fails if your disk
-have run out of any space, but you normally want
-to know earlier (unless a throw-away system), so
-if you're running short on disk-space, consider
-for what to use the (not) remaining space.
+panic if there is not enought disk-space left.
 
-Apropos not having enough space locally:
+`pipelines` will fail if your disk runs out of
+ space, but you normally want to know earlier
+(unless a throw-away system), so if you're running
+short on disk-space, consider for what to use the
+(not) remaining space.
+
+Apropos locally:
 
 `pipelines` itself does not upload the cache files
 to any remote location on its own. However if the
@@ -185,7 +186,7 @@ if this is not your intention).
 So just in case your home directory is managed and
 will fill-up some remote storage towards its
 limits talk with your sysadmin before this happens
-and tell her/him about your needs upfront. disk
+and tell her/him about your needs upfront. Disk
 space is relatively cheap these days but if
 managed, it is better to raise requirements
 earlier than later.
@@ -196,7 +197,7 @@ Caching is per project by keeping the cache as a
 tar-file with the name of the cache in it:
 
 ```
-${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/<project>/<cache-name>.tar
+${XDG_CACHE_HOME-$HOME/.cache}/pipelines/caches/<project>/<cache-name>.tar
 ```
 
 In case you find it cryptic to read:
@@ -204,20 +205,21 @@ In case you find it cryptic to read:
 This respects the *[XDG Base Directory Specification
 ][XDG-BASEDIR]* \[XDG-BASEDIR]
 and keeps cache files `pipelines` creates within
-your home directory unless XDG_CACHE_HOME has been
-set.
+your home directory unless `XDG_CACHE_HOME` has
+been set outside your home directory.
 
 This is the directory where _all_ of the cache
 files will end up, there is one tar-file for each
 cache.
 
-So there is one tar-file per each pipeline cache.
+So there is one tar-file per each pipeline cache
+per project.
 
 Paths in the tar file are relative to the cache
 path in the container.
 
 Having a central directory on a standard system
-path comes with the benefits that it is easy to
+path comes with the benefit that it is easy to
 manage centrally.
 
 Be it for your local system or for remote systems.
@@ -230,16 +232,16 @@ build system with ease.
 For example when running in a CI system like [Travis
 CI][TRAVIS-CI] \[TRAVIS-CI], caches can be easily
 retained between (remote) builds by caching the
-entire XDG_CACHE_HOME/HOME cache folder.
+entire `XDG_CACHE_HOME`/`HOME` cache folder.
 
 Apply any caching policy of your own needs then
 with such an integration to fit your expectations
 and (remote) build requirements.
 
 Also if you want to move the cache out of the home
-directory, you can make use of the XDG_CACHE_HOME
-environment variable to have it at any location
-you like.
+directory, you can make use of the
+`XDG_CACHE_HOME` environment variable to have it
+at any location you like.
 
 ## Cache Operations
 
@@ -274,7 +276,7 @@ To list all caches on disk including size information
 the `du` utility can be used:
 
 ```
-$ du -ch ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/*/*.tar
+$ du -ch ${XDG_CACHE_HOME-$HOME/.cache}/pipelines/caches/*/*.tar
 35M     /home/user/.cache/pipelines/caches/pipelines/build-http-cache.tar
 69M     /home/user/.cache/pipelines/caches/pipelines/composer.tar
 104M    total
@@ -288,7 +290,7 @@ For more details on any specific cache, the `tar`
 utility is of use:
 
 ```
-$ tar -vtf ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/build-http-cache.tar
+$ tar -vtf ${XDG_CACHE_HOME-$HOME/.cache}/pipelines/caches/pipelines/build-http-cache.tar
 drwxrwxr-x 1000/1000         0 2020-07-29 01:12 ./
 -rw-r--r-- 1000/1000       629 2020-07-05 10:53 ./.gitignore
 -rwxrwxrwx 0/0         1969526 2020-07-24 01:42 ./composer.phar
@@ -331,11 +333,11 @@ but running pipelines offline regardless.
 
 Technically this is not necessary any longer, but
 it shows how this has been done without any caches
-support in `pipelines`.
+support in `pipelines` earlier.
 
-As now caches are support, the cache can be moved
-into `~/.cache/build-http-cache` (exemplary) by
-changing the path in the `definitions` section.
+As now caches are supported, the cache can be
+moved into `~/.cache/build-http-cache` (exemplary)
+by changing the path in the `definitions` section.
 
 As the name of the cache does not change - just the
 path in the definition - after updating all affected
@@ -370,7 +372,7 @@ cache directory suffices.
 Example (removal):
 
 ```
-$ rm -vi -- ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/build-http-cache.tar
+$ rm -vi -- ${XDG_CACHE_HOME-$HOME/.cache}/pipelines/caches/pipelines/build-http-cache.tar
 rm: remove regular file '/home/user/.cache/pipelines/caches/pipelines/build-http-cache.tar'? y
 removed '/home/user/.cache/pipelines/caches/pipelines/build-http-cache.tar'
 ```
@@ -392,7 +394,7 @@ local file-system.
 ### Populate Caches
 
 It is possible to pre-populate caches by importing
-files/directories them from the local system (aka
+files/directories from the local system (aka
 warming up caches).
 
 This works by creating a tar-file with relative
@@ -417,15 +419,15 @@ cache directory of composer can differ:
 !!! warning
     Utilities like `tar` in the following
     example do overwrite existing files. Better
-    safe than sorry, so backup the cache tar-file
+    safe than sorry, backup the cache tar-file
     first in case it already exists. This is
     especially noteworthy for offline scenarios
     as once dependencies are lost, your build
     breaks unless you're able to retain them from
-    the wide-area network again.
+    the wide-area network (going online) again.
 
 ```
-$ tar -cf ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/composer.tar \
+$ tar -cf ${XDG_CACHE_HOME-$HOME/.cache}/pipelines/caches/pipelines/composer.tar \
   -C ~/.cache/composer/ .
 ```
 
@@ -436,7 +438,7 @@ back into the local system by un-tarring to a
 local directory:
 
 ```
-$ tar -xf ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/composer.tar \
+$ tar -xf ${XDG_CACHE_HOME-$HOME/.cache}/pipelines/caches/pipelines/composer.tar \
   -C ~/.cache/composer/
 ```
 
@@ -444,7 +446,7 @@ $ tar -xf ${XDG_CACHE_HOME-${HOME}/.cache}/pipelines/caches/pipelines/composer.t
     It depends on the underlying utility if merging
     caches is possible or not. Here for `composer`
     it is, for other utilities this might vary on
-    their robustness and stability.
+    their robustness and cache structure.
 
 Merging into tar files is similarly possible,
 see your tar manual for append operations.

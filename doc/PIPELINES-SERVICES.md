@@ -178,7 +178,7 @@ error: database is uninitialized and password option is not specified
 *Command-line example:* Missing variable for pipelines `mysql` service
 
 Fixing the service definition (here by adding a variable to it) and
-and running the `pipelines --service mysql` again, will show the service
+running the `pipelines --service mysql` again, will show the service
 properly running by displaying the output of the service.
 
 Press <kbd>ctrl</kbd> + <kbd>z</kbd> to suspend the process and
