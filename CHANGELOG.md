@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated [documentation about working offline][Offline-PL]
 ### Fixed
+- Detecting readable local streams wrong for non-local remote streams
 - Shell test for artifacts, missing in 0.0.50
 
 ## [0.0.50] - 2020-09-14

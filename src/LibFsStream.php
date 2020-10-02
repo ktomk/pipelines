@@ -26,6 +26,10 @@ class LibFsStream
             return true;
         }
 
+        if (!stream_is_local($path)) {
+            return false;
+        }
+
         return LibFs::canFopen($path, 'rb');
     }
 
