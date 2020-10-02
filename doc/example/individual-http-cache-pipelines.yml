@@ -1,5 +1,8 @@
 ---
+# this file is part of pipelines
+#
 # Example pipelines file caching remote files (here installing composer)
+#
 pipelines:
   default:
     - step:

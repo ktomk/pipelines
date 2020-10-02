@@ -771,6 +771,8 @@ to use the development version for `pipelines`.
 - [x] Copy local composer cache into container for better
       (offline) usage in PHP projects (see
       [Populate Caches](doc/PIPELINES-CACHES.md#populate-caches))
+- [ ] Support for `BITBUCKET_DOCKER_HOST_INTERNAL` environment variable
+      / host.docker.internal hostname within pipelines
 - [ ] Count `BITBUCKET_BUILD_NUMBER` on a per project basis (*build-number*
       feature)
 - [ ] Option to not mount docker.sock

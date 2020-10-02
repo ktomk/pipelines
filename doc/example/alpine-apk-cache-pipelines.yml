@@ -1,5 +1,8 @@
 ---
+# this file is part of pipelines
+#
 # Example pipelines file caching APK packages for/in an Alpine Linux container
+#
 pipelines:
   default:
     - step:

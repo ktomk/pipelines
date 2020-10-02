@@ -1,0 +1,43 @@
+---
+# this file is part of pipelines
+#
+# Example pipelines file with docker compose
+#
+pipelines:
+  default:
+    - step:
+        name: docker compose example
+        image: docker/compose:latest
+        services:
+          - docker
+        caches:
+          - docker
+        script:
+          - |
+            <<'DC' docker-compose --file - up --abort-on-container-exit
+            version: "3.8"
+            services:
+              minio:
+                image: minio/minio:edge
+                container_name: minio
+                expose:
+                  - "9000"
+                environment:
+                  MINIO_ACCESS_KEY: minio
+                  MINIO_SECRET_KEY: minio123
+                command: server /data
+              mc:
+                image: minio/mc:latest
+                depends_on:
+                  - minio
+                entrypoint: >
+                  /bin/sh -c "/usr/bin/mc config host rm local
+                              /usr/bin/mc config host add --quiet --api s3v4 \
+                                local http://minio:9000 minio minio123
+                              test `curl -o /dev/null -sw '%{http_code}' \
+                                http://minio:9000` = 403 || sleep 1 \
+                                && test `curl -o /dev/null -sw '%{http_code}' \
+                                http://minio:9000` = 403 || sleep 1
+                              /usr/bin/mc rb --force local/ciip-support/
+                              /usr/bin/mc mb --quiet local/ciip-support/"
+            DC
