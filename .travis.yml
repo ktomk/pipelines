@@ -67,6 +67,7 @@ script:
   - travis_retry docker pull php:5.3 | grep 'php:5.3' || true # prefetch
   - bin/pipelines --deploy mount --pipeline custom/lint-php
   - bin/pipelines --deploy copy --pipeline custom/unit-tests-php-5.3
+  - tests/shell/run.sh
 
 notifications:
   email: false
