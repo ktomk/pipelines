@@ -87,7 +87,7 @@ class ValidationOptions implements Runnable
 
         if ($didValidate) {
             throw new StatusException(
-                sprintf('verify done%s', $allValid ? '' : ', with errors'),
+                sprintf('validate done%s', $allValid ? '' : ', with errors'),
                 $allValid ? 0 : 1
             );
         }

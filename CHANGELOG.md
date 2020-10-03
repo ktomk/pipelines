@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Updated [documentation about working offline][Offline-PL]
 ### Fixed
+- Done message for `--validate` saying "verify done" instead of
+  "validate done" since 0.0.44
 - Detecting readable local streams wrong for non-local remote streams
 - Shell test for artifacts, missing in 0.0.50
 
