@@ -1,0 +1,11 @@
+# mkdocs docs_dir imports from project
+CHANGELOG.md
+doc
+lib/build/build.php
+lib/build/mkdocs/README.md
+lib/package/docker-42.42.1-binsh-test-stub.yml
+lib/pipelines/composer-install.sh
+lib/pipelines/docker-client-install.sh
+lib/pipelines/schema/pipelines-schema.json
+README.md
+src/PharBuild/Timestamps.php

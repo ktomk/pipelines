@@ -1,0 +1,103 @@
+# Project Information
+site_name: Pipelines - Run Bitbucket Pipelines Wherever They Dock
+# site_url: https://ktomk.github.io/pipelines/
+
+# Project Repository
+# repo_name: ktomk/pipelines
+# repo_url: https://github.com/ktomk/pipelines
+# edit_uri: ./edit/master
+
+# Build
+use_directory_urls: false
+
+# Site Structure
+nav:
+  - Read Me:
+    - README.md
+    - Change Log: CHANGELOG.md
+    - Copying: COPYING.md
+  - Docs:
+    - doc/PIPELINES-OFFLINE.md
+    - doc/PIPELINES-CACHES.md
+    - doc/PIPELINES-SERVICES.md
+    - Reference:
+        - doc/PIPELINES-VARIABLE-REFERENCE.md
+        - doc/CONFIGURATION-PARAMETERS.md
+    - How-To:
+        - Docker Client Binary Packages for Pipelines: doc/PIPELINES-HOWTO-DOCKER-CLIENT-BINARY.md
+        - Rootless Pipelines: doc/PIPELINES-HOWTO-ROOTLESS.md
+    - Appendix:
+        - Utility Development: doc/DEVELOPMENT.md
+        - HTML Documentation Build: lib/build/mkdocs/README.md
+        - doc/DOCKER-NAME-TAG.md
+
+# Theme and Mkdocs Plugins
+theme:
+  logo: assets/logo.svg
+  favicon: assets/favicon.png
+  name: material
+  custom_dir: theme
+  features:
+    - tabs               # mkdocs-material 5
+    - navigation.tabs    # mkdocs-material 6
+  icon:
+    repo: fontawesome/brands/github
+  font: false
+extra_css:
+  - assets/extra.css
+
+extra:
+  social:
+    - icon: pipelines
+      name: Pipelines homepage
+      link: https://ktomk.github.io/pipelines/
+    - icon: fontawesome/brands/github
+      name: Pipelines utility Github repository
+      link: https://github.com/ktomk/pipelines
+    - icon: fontawesome/brands/docker
+      name: Pipelines test container images on Docker Hub
+      link: https://hub.docker.com/r/ktomk/pipelines
+    - icon: fontawesome/solid/code
+      name: ktomk.github.io
+      link: https://ktomk.github.io/
+      separate: true
+    - icon: logo
+      name: Made with Material for MkDocs + Mkdocs + Makefile + <3
+      link: https://squidfunk.github.io/mkdocs-material/
+plugins:
+  - search # necessary for search to work
+  - localsearch # support for some browsers file:// site search compatibility
+  - minify:
+      minify_html: true
+      htmlmin_opts:
+        remove_comments: true
+
+markdown_extensions:
+  - admonition
+  - markdown.extensions.codehilite:
+      guess_lang: false
+  - markdown.extensions.toc:
+      permalink: true
+      slugify: !!python/name:pymdownx.slugs.gfm
+  - meta
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.inlinehilite
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.snippets:
+      base_path: docs
+      check_paths: true
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde

@@ -175,6 +175,14 @@ pipelines:
       - step: *lint-php81-alpine
     unit-tests: # run phpunit suite
       - step: *unit-tests-php70
+    html-docs:
+      - step:
+          name: build html-docs with mkdocs
+          image: ktomk/pipelines:mkdocs-material
+          artifacts: [build/html-docs/**, build/html-docs.tar.gz]
+          caches: [composer, pip]
+          script:
+            - make -C lib/build/mkdocs clean ../../../build/html-docs.tar.gz
     artifact-tests: # run phpunit suite w/ artifact
       - step:
           image: php:7.0

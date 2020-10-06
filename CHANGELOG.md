@@ -8,8 +8,13 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- html-docs (mkdocs build, pipeline), see as well
+  [Pipelines HTML Documentation Build]
 ### Change
 - Documentation (diverse)
+
+[Pipelines HTML Documentation Build]: lib/build/mkdocs/README.md
 
 ## [0.0.59] - 2021-11-08
 ### Fix

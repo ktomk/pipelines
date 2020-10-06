@@ -1,0 +1,8 @@
+# mkdoc includes (e.g. for snippets)
+#
+# the include directory allows to keep the build
+# directory/docs_dir free from snippet files
+# or templates
+
+# composer vendored licensing; via Makefile
+/COPYING_VENDOR_LICENSING.md

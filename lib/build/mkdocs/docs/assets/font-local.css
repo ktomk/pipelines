@@ -1,0 +1,64 @@
+/*
+ * roboto (incl. mono) font-face set
+ *
+ * local font files for mkdocs-material theme type
+ * setting.
+ *
+ * for:
+ *
+ *     theme:
+ *       font:
+ *         text: Roboto
+ *         code: Roboto Mono
+ *
+ * as:
+ *
+ *     theme:
+ *       font: false
+ *
+ * with extra.css /
+ */
+
+:root {
+    --md-text-font-family: "Roboto";
+    --md-code-font-family: "Roboto Mono";
+}
+
+/* roboto-300 - latin (Light 300) */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Roboto Light'), local('Roboto');
+}
+
+/* roboto-regular - latin (Regular 400) */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Regular'), local('Roboto')
+}
+
+/* roboto-italic - latin (Regular 400 italic) */
+@font-face {
+    font-family: 'Roboto';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Roboto Italic'), local('Roboto');
+}
+/* roboto-700 - latin (Bold 700) */
+@font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Roboto Bold'), local('Roboto');
+}
+
+/* roboto-mono-regular - latin (Regular 400) */
+@font-face {
+    font-family: 'Roboto Mono';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Roboto Mono'), local('Roboto-Mono');
+}
