@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 ### Added
+- Composer script descriptions
 - More pipeline example YAML files
 ### Changed
 - Updated [documentation about working offline][Offline-PL]

@@ -89,6 +89,21 @@
       "@test"
     ]
   },
+  "scripts-descriptions": {
+    "build": "Build phar file",
+    "ci": "Run CI build",
+    "cs-check": "Validate code-style",
+    "cs-fix": "Fix code-style",
+    "dev": "Run cs-fix and unit-test",
+    "integration-test": "Run integration-tests",
+    "reset": "Reset composer dependencies to GIT SCM HEAD",
+    "test": "Run all tests",
+    "phpunit": "Phpunit script stub",
+    "phpunit-test": "Run all phpunit tests",
+    "unit-test": "Run unit-tests",
+    "which": "Locate composer command",
+    "which-php": "Locate php command"
+  },
   "config": {
     "autoloader-suffix": "pipelines",
     "sort-packages": true
