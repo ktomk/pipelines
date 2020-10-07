@@ -69,7 +69,7 @@ PIPELINES_PARENT_CONTAINER_NAME \
                            a pipeline, if docker client is available) \
                            otherwise not set.
 PIPELINES_PIP_CONTAINER_NAME \
-                           pipelines variable: inception related, set to the
+                           pipelines variable: inception related, set to the \
                            initial (first) container name.
 PIPELINES_PROJECT_PATH \
                            pipelines variable: inception related, set to the \
