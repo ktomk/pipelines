@@ -163,10 +163,11 @@ class LibFs
             return;
         }
 
-        $dirs = array();
-        $dirs[] = $dir;
-        for ($i = 0; isset($dirs[$i]); $i++) {
-            $current = $dirs[$i];
+        $stack = array();
+        $stack[] = $dir;
+
+        for ($i = 0; isset($stack[$i]); $i++) {
+            $current = $stack[$i];
             $result = @scandir($current);
             if (false === $result) {
                 throw new UnexpectedValueException(sprintf('Failed to open directory: %s', $current));
@@ -175,16 +176,16 @@ class LibFs
             foreach ($files as $file) {
                 $path = "${current}/${file}";
                 if (is_dir($path)) {
-                    $dirs[] = $path;
+                    $stack[] = $path;
                 } elseif (is_file($path)) {
                     self::rm($path);
                 }
             }
         }
 
-        while (null !== ($pop = array_pop($dirs))) {
+        for ($i = count($stack); isset($stack[--$i]);) {
             /* @scrutinizer ignore-unhandled */
-            @rmdir($pop);
+            @rmdir($stack[$i]);
         }
     }
 
