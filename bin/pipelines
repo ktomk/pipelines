@@ -11,7 +11,10 @@
 
 use Ktomk\Pipelines\Utility\App;
 
-if (PHP_SAPI !== 'cli') printf(
+defined('STDERR') || define('STDERR', fopen('php://stderr', 'wb'));
+
+if (PHP_SAPI !== 'cli') fprintf(
+        STDERR,
     'warn: pipelines should be invoked via the CLI version of PHP, ' .
     "not the '%s' SAPI\n",
     PHP_SAPI

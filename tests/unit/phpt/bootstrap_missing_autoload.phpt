@@ -5,6 +5,9 @@ check bootstrap path w/ missing vendor/autoload.php
 if (file_exists('vendor/autoload.php')) {
     rename('vendor/autoload.php', 'vendor/autoload.php.phpt~');
 }
+
+defined('STDERR') || define('STDERR', fopen('php://stderr', 'wb'));
+
 require __DIR__ . '/../../../src/bootstrap.php';
 ?>
 --EXPECT--
