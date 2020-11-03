@@ -27,4 +27,6 @@ if (function_exists('init_set')) {
 
 require __DIR__ . '/../src/bootstrap.php';
 
+@include(__DIR__ . '/dev/xdebug.php'); // only in source version, not in phar
+
 exit(App::create()->main($argv));

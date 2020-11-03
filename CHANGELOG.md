@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [unreleased]
 ### Added
+- (source only) pipelines `--xdebug` option to run within php with
+  xdebug extension and config for CLI (server-name is `pipelines-cli`)
 - Composer script descriptions
 - More pipeline example YAML files
 ### Changed
