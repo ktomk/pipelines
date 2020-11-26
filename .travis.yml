@@ -1,10 +1,18 @@
 os: linux
 dist: xenial
+
 language: php
+
+## Cache pipelines and composer
 cache:
   directories:
     - $HOME/.cache/pipelines
+    # Cache directory for older Composer versions.
+    - $HOME/.composer/cache/files
+    # Cache directory for more recent Composer versions.
+    - $HOME/.cache/composer/files
 
+## Pipelines needs docker
 services:
   - docker
 
@@ -14,59 +22,92 @@ git:
 php:
   - '7.4'
   - 'nightly'
+  - '8.0snapshot'
+  - '8.0'
   - '5.6'
   - '7.3'
   - '7.2'
   - '7.1'
   - '7.0'
   - 'master'
-  - '7.4snapshot'
-  - '7.3snapshot'
-  - '7.2snapshot'
-  - '7.1snapshot'
-  - '7.0snapshot'
+  #- '7.4snapshot'
+  #- '7.3snapshot'
+  #- '7.2snapshot'
+  #- '7.1snapshot'
+  #- '7.0snapshot'
 
 jobs:
+  fast_finish: true
   allow_failures:
+    - php: '8.0snapshot' # xdebug 3.0.0 segfault/core dumps in unit tests
+    - php: '8.0' # php 8.0 missing on travis <https://travis-ci.community/t/php-8-0-missing/10132>
+    - php: '7.4' # xdebug 3.0.0 segfault/core dumps in unit tests
+    - php: '7.3' # xdebug 3.0.0 segfault/core dumps in unit tests
     - php: 'master'
     - php: 'nightly'
+    - php: '7.4snapshot'
+    - php: '7.3snapshot'
+    - php: '7.2snapshot'
+    - php: '7.1snapshot'
+    - php: '7.0snapshot'
 
 before_install:
   - openssl aes-256-cbc -K "$encrypted_a90e500b3cd1_key" -iv "$encrypted_a90e500b3cd1_iv" -in ktomk-phive-sign.gpg.enc -out ktomk-phive-sign.gpg -d
   - gpg --import ktomk-phive-sign.gpg
   - rm ktomk-phive-sign.gpg
-  - composer self-update 1.10.1
+  - composer self-update 1.10.17 # pin composer version for whole build
 
+## Install fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
 install:
   - echo "${TRAVIS_PHP_VERSION}"
-  - if [[ "${TRAVIS_PHP_VERSION}" == "master" ]]; then IGNORE_PLATFORM_REQS="--ignore-platform-reqs"; fi
+  - ppconf() { ./lib/scripts/ppconf.sh "$@"; }; ppconf self-test
   - |
-    if [[ "${TRAVIS_PHP_VERSION}" == "nightly" ]]; then
-      IGNORE_PLATFORM_REQS="--ignore-platform-reqs";
-      composer self-update 1.10.13;
-      composer -n require --dev phpunit/phpunit ^9 --update-with-dependencies --no-suggest;
-      tests/shell/run.sh ./test-php74.sh 2;
+    if [[ "${TRAVIS_PHP_VERSION}" == 8.0*    ]] \
+    || [[ "${TRAVIS_PHP_VERSION}" == nightly ]] \
+    || [[ "${TRAVIS_PHP_VERSION}" == master  ]]; then
+      # PHP-CS-Fixer n/a for PHP 8.0 yet, needs php version fake
+      # Hat-tip: Composer 1.10 and PHP 8 #9523 <https://github.com/composer/composer/issues/9523>
+      IGNORE_PLATFORM_REQS=--ignore-platform-reqs
     fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == 7.4* ]]; then tests/shell/run.sh ./test-php74.sh 1 2; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == 7.[01]* ]]; then composer remove --dev kubawerlos/php-cs-fixer-custom-fixers; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == "5.6" ]]; then composer remove --dev friendsofphp/php-cs-fixer kubawerlos/php-cs-fixer-custom-fixers phpunit/phpunit; composer require --dev phpunit/phpunit ^5 --update-with-dependencies --no-suggest; fi
+  - |
+    if [[ "${TRAVIS_PHP_VERSION}" == 7.4*    ]] \
+    || [[ "${TRAVIS_PHP_VERSION}" == 7.3*    ]]; then ppconf patch-phpunit-tests phpunit ^8; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.2*    ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf phpunit ^7; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.[01]* ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^6; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 5.6     ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^5; fi
+  - echo "IGNORE_PLATFORM_REQS=${IGNORE_PLATFORM_REQS-}"
   - composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-}
-  - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
+  - vendor/bin/phpunit --version
+  # - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
 
+## Script
+#  [1]  phpunit (src)
+#  [2]  phar-build (src, clean)
+#  [3]  pipelines self-tests (src)
+#  [4]  default/custom pipelines (src)
+#  [5]  shell tests (src)
 script:
+  #  [1]  phpunit (src)
   - composer phpunit
-  - git reset --hard HEAD
+  #  [2]  phar-build (src, clean)
+  - git stash # stash build configuration changes
+  - git reset --hard HEAD # reset for phar build
   - composer build
   - echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
   - ls -al build/pipelines.phar.asc
+  - git stash pop && composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-} # restore build configuration changes
+  #  [3]  pipelines self-tests (src)
   - bin/pipelines --version
-  - bin/pipelines
   - bin/pipelines --verbose --debug --show
+  - bin/pipelines --verbose --validate # validate project pipelines.yml file
+  #  [4]  default/custom pipelines (src)
+  - bin/pipelines
   - bin/pipelines --pipeline custom/docker
   - bin/pipelines --pipeline custom/unit-tests
   - travis_retry docker pull php:5.3 | grep 'php:5.3' || true # prefetch
   - bin/pipelines --deploy mount --pipeline custom/lint-php
-  - bin/pipelines --deploy copy --pipeline custom/unit-tests-php-5.3
+  - bin/pipelines --pipeline custom/unit-tests-php-5.3
+  #  [5]  shell tests (src)
   - tests/shell/run.sh
 
 notifications:
