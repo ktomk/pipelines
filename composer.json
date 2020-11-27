@@ -75,6 +75,9 @@
       "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
       "@php -f lib/build/coverage-checker.php -- build/log/clover.xml"
     ],
+    "ppconf": [
+      "lib/scripts/ppconf.sh"
+    ],
     "which": [
       "echo ${COMPOSER_BINARY}"
     ],
@@ -101,6 +104,7 @@
     "phpunit": "Phpunit script stub",
     "phpunit-test": "Run all phpunit tests",
     "unit-test": "Run unit-tests",
+    "ppconf": "PHP Project configuration script",
     "which": "Locate composer command",
     "which-php": "Locate php command"
   },

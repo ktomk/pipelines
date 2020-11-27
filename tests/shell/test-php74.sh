@@ -29,13 +29,12 @@ case ${1-0} in
       ;;
   2 ) echo "# 2: patch for phpunit 8"
       cd "${PROJECT_DIR}"
-      sed -i \
-        -e '/protected function create.*Mock/ s/)$/): MockObject/' \
-        -e '/public static function assert.*/ s/)$/): void/' \
-        -e '/public function expect.*/ s/)$/): void/' \
-        tests/TestCase.php
-      find tests -type f -name '*Test*.php' \
-        -exec sed -i -e '/ setUp(/ s/)$/): void/' -e '/ tearDown(/ s/)$/): void/' {} \;
+      ./lib/scripts/ppconf.sh patch-phpunit-tests
+      exit
+      ;;
+ -2 ) echo "# -2: patch from phpunit 8"
+      cd "${PROJECT_DIR}"
+      ./lib/scripts/ppconf.sh downpatch-phpunit-tests
       exit
       ;;
   3 ) echo "# 3: run phpunit tests"

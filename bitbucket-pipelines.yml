@@ -15,6 +15,7 @@ pipelines:
       - step: &lint-php53
           image: php:5.3
           script:
+            - lib/scripts/ppconf.sh downpatch-phpunit-tests
             - lib/pipelines/lint.sh
     unit-tests-php-5.3:
       - step:
@@ -24,39 +25,33 @@ pipelines:
             - composer
           script:
             - command -v composer || lib/pipelines/composer-install.sh
-            - composer config secure-http false && composer config disable-tls true
-            - composer show -i phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p'
-            - |
-              composer show -i --name-only phpunit/phpunit 2>/dev/null| head -n 4 | sed -n -e 's/versions.*\* //p' | grep -q '^4.' \
-                || { \
-                  composer remove --dev \
-                    friendsofphp/php-cs-fixer \
-                    kubawerlos/php-cs-fixer-custom-fixers \
-                    phpunit/phpunit \
-                  ; \
-                  composer require --no-suggest --dev phpunit/phpunit ^4; \
-              }
+            - lib/scripts/ppconf.sh self-test disable-tls remove-dev all downpatch-phpunit-tests phpunit ^4
             - composer install
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
           services:
             - docker
+    unit-tests-php-7.0:
+      - step: &unit-tests-php70
+          image: ktomk/pipelines:php7.0
+          caches:
+            - build-http-cache
+            - composer
+          script:
+            - command -v composer || lib/pipelines/composer-install.sh
+            - lib/scripts/ppconf.sh self-test remove-dev all downpatch-phpunit-tests phpunit ^6
+            - vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
     lint-php-7.4:
       - step: &lint-php74
-          <<: *lint-php53
           image: php:7.4
+          script:
+            - lib/pipelines/lint.sh
     lint-php:
       - step: *lint-php53
       - step: *lint-php74
     unit-tests: # run phpunit suite
-      - step:
-          image: php:7.0
-          caches:
-            - build-http-cache
-          script:
-            - command -v composer || lib/pipelines/composer-install.sh
-            - vendor/bin/phpunit --testsuite unit,integration
-          services:
-            - docker
+      - step: *unit-tests-php70
     artifact-tests: # run phpunit suite w/ artifact
       - step:
           image: php:7.0
