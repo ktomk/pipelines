@@ -137,6 +137,6 @@ class AbstractionLayerImplTest extends TestCase
     private function expectDalException()
     {
         $this->expectException('RuntimeException');
-        $this->expectExceptionMessageRegExp('~^Failed to execute\n\n  ~');
+        $this->expectExceptionMessageMatches('~^Failed to execute\n\n  ~');
     }
 }

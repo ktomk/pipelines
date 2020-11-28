@@ -16,6 +16,14 @@ use PHPUnit\Util\InvalidArgumentHelper;
  * Base test case for pipelines test-suite, basically a shim
  * for older/newer phpunit versions.
  *
+ * @method assertDirectoryNotExists - deprecated in phpunit 9
+ * @method assertDirectoryNotExist
+ * @method assertFileNotExists - deprecated in phpunit 9
+ * @method assertFileNotExist
+ * @method assertRegExp - deprecated in phpunit 9
+ *
+ * @see TestCase::assertMatchesRegularExpression
+ *
  * @coversNothing
  */
 class TestCase extends PhpunitTestCase
@@ -90,6 +98,24 @@ class TestCase extends PhpunitTestCase
     }
 
     /**
+     * Asserts that a string matches a given regular expression.
+     *
+     * @param string $pattern
+     * @param string $string
+     * @param string $message
+     */
+    public static function assertMatchesRegularExpression($pattern, $string, $message = '')
+    {
+        if (is_callable('parent::' . __FUNCTION__)) {
+            parent::assertMatchesRegularExpression($pattern, $string, $message);
+
+            return;
+        }
+
+        self::assertRegExp($pattern, $string, $message);
+    }
+
+    /**
      * assertContains() with string haystacks >>> assertStringContainsString
      *
      * assertStringContainsString was added in Phpunit 8 to lighten up usage
@@ -149,6 +175,7 @@ class TestCase extends PhpunitTestCase
 
                 return;
             case 'assertDirectoryNotExists':
+            case 'assertDirectoryNotExist':
                 list($directory, $message) = $arguments + array(1 => '');
                 $this->shimAssertDirectoryNotExists($directory, $message);
 
@@ -159,6 +186,7 @@ class TestCase extends PhpunitTestCase
 
                 return;
             case 'assertFileNotExists':
+            case 'assertFileNotExist':
                 list($filename, $message) = $arguments + array(1 => '');
                 $this->shimAssertFileNotExists($filename, $message);
 
@@ -185,13 +213,14 @@ class TestCase extends PhpunitTestCase
      */
     public function expectException($exception)
     {
+        $this->expectedException = $exception;
+
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::expectException($exception);
 
             return;
         }
 
-        $this->expectedException = $exception;
         $this->setExpectedException($exception);
     }
 
@@ -263,6 +292,9 @@ class TestCase extends PhpunitTestCase
 
     /**
      * @param string $messageRegExp
+     *
+     * @deprecated In phpunit 8. Use expectExceptionMessageMatches() instead
+     * @see expectExceptionMessageMatches
      *
      * @return void
      */

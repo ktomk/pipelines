@@ -67,11 +67,11 @@ class LibFsTest extends TestCase
         # clean up
         $result = rmdir($testDir);
         self::assertTrue($result);
-        self::assertDirectoryNotExists($testDir);
+        self::assertDirectoryNotExist($testDir);
 
         $result = rmdir($baseDir);
         self::assertTrue($result);
-        self::assertDirectoryNotExists($baseDir);
+        self::assertDirectoryNotExist($baseDir);
     }
 
     public function testRename()
@@ -84,7 +84,7 @@ class LibFsTest extends TestCase
         self::assertFileExists($file);
 
         LibFs::rename($file, $file . '.new');
-        self::assertFileNotExists($file);
+        self::assertFileNotExist($file);
         self::assertFileExists($file . '.new');
         LibFs::rm($file . '.new');
 
@@ -102,10 +102,10 @@ class LibFsTest extends TestCase
         file_put_contents($file, 'DATA');
         self::assertFileExists($file);
         $result = LibFs::rm($file);
-        self::assertFileNotExists($file);
+        self::assertFileNotExist($file);
         self::assertSame($file, $result);
         $result = LibFs::rm($file);
-        self::assertFileNotExists($file);
+        self::assertFileNotExist($file);
         self::assertSame($file, $result);
     }
 
@@ -122,7 +122,7 @@ class LibFsTest extends TestCase
         $dir = LibFsPath::normalizeSegments($subDir . '/..');
         self::assertDirectoryExists($dir);
         LibFs::rmDir($dir);
-        self::assertDirectoryNotExists($dir);
+        self::assertDirectoryNotExist($dir);
     }
 
     /**
@@ -131,7 +131,7 @@ class LibFsTest extends TestCase
     public function testRmDirOnNonExistingDirectory()
     {
         $dir = LibTmp::tmpDir('pipelines-fs-rmdir-test.') . '/not-existing';
-        self::assertDirectoryNotExists($dir);
+        self::assertDirectoryNotExist($dir);
         LibFs::rmDir($dir);
         $this->addToAssertionCount(1);
 
@@ -139,7 +139,7 @@ class LibFsTest extends TestCase
         $dirname = dirname($dir);
         self::assertDirectoryExists($dirname);
         LibFs::rmDir($dirname);
-        self::assertDirectoryNotExists($dirname);
+        self::assertDirectoryNotExist($dirname);
         LibFs::rmDir($dirname);
         $this->addToAssertionCount(1);
     }
@@ -154,7 +154,7 @@ class LibFsTest extends TestCase
         self::assertDirectoryExists($dir);
         $subDir = $dir . '/test';
         file_put_contents($subDir, 'DATA');
-        self::assertDirectoryNotExists($subDir);
+        self::assertDirectoryNotExist($subDir);
         $this->expectException('UnexpectedValueException');
         $this->expectExceptionMessage('Failed to open directory');
         LibFs::rmDir($subDir);
@@ -166,7 +166,7 @@ class LibFsTest extends TestCase
         $testDir = $baseDir . '/test';
         $link = $baseDir . '/link';
         LibFs::unlink($link);
-        self::assertFileNotExists($link);
+        self::assertFileNotExist($link);
 
         LibFs::mkDir($testDir);
         LibFs::symlink($testDir, $link);
@@ -175,13 +175,13 @@ class LibFsTest extends TestCase
         self::assertFileExists($link);
 
         LibFs::unlink($link);
-        self::assertFileNotExists($link);
+        self::assertFileNotExist($link);
 
         # clean up
         rmdir($testDir);
         rmdir($baseDir);
-        self::assertDirectoryNotExists($testDir);
-        self::assertDirectoryNotExists($baseDir);
+        self::assertDirectoryNotExist($testDir);
+        self::assertDirectoryNotExist($baseDir);
     }
 
     public function testFileLookUpSelf()

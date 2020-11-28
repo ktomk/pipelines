@@ -32,7 +32,7 @@ class LibTmpTest extends TestCase
         list($handle, $file) = LibTmp::tmpFile();
         self::assertFileExists($file);
         unset($handle);
-        self::assertFileNotExists($file);
+        self::assertFileNotExist($file);
     }
 
     /**
@@ -45,6 +45,6 @@ class LibTmpTest extends TestCase
         $actual = file_get_contents($file);
         LibFs::rm($file);
         self::assertSame('FOO', $actual);
-        self::assertFileNotExists($file);
+        self::assertFileNotExist($file);
     }
 }

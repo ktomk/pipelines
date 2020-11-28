@@ -35,7 +35,7 @@ class DestructibleStringTest extends TestCase
         );
         self::assertDirectoryExists((string)$dir);
         $dir->__destruct();
-        self::assertDirectoryNotExists((string)$dir);
+        self::assertDirectoryNotExist((string)$dir);
     }
 
     public function testRm()
@@ -44,7 +44,7 @@ class DestructibleStringTest extends TestCase
         $file = DestructibleString::rm($tmpFile);
         self::assertFileExists((string)$file);
         $file->__destruct();
-        self::assertFileNotExists((string)$file);
+        self::assertFileNotExist((string)$file);
         unset($handle);
     }
 
@@ -57,6 +57,6 @@ class DestructibleStringTest extends TestCase
     {
         $path = (string)$tempDir;
         $tempDir->__destruct();
-        self::assertDirectoryNotExists($path);
+        self::assertDirectoryNotExist($path);
     }
 }

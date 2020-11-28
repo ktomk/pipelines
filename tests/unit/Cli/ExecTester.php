@@ -211,7 +211,7 @@ class ExecTester extends Exec
         );
 
         if ('' !== $expectedCommand && '~' === $expectedCommand[0]) {
-            $testCase::assertRegExp(
+            $testCase::assertMatchesRegularExpression(
                 $expectedCommand,
                 $command,
                 sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // ${message}" : '')

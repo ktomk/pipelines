@@ -209,7 +209,7 @@ class EnvTest extends TestCase
         self::assertTrue($result);
         $actual = $env->getValue('PIPELINES_IDS');
         self::assertNotNull($actual);
-        self::assertRegExp('~^([a-z0-9]+) \1$~', $actual, 'list of hashes');
+        self::assertMatchesRegularExpression('~^([a-z0-9]+) \1$~', $actual, 'list of hashes');
     }
 
     public function testSetPipelinesProjectPath()

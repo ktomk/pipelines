@@ -39,7 +39,7 @@ class LibTest extends TestCase
         $actual = Lib::generateUuid();
         $pattern = '/^\{?[0-9a-f]{8}\-?[0-9a-f]{4}\-?[0-9a-f]{4}\-?'
             . '[0-9a-f]{4}\-?[0-9a-f]{12}\}?$/i';
-        self::assertRegExp($pattern, $actual);
+        self::assertMatchesRegularExpression($pattern, $actual);
     }
 
     public function testCmd()

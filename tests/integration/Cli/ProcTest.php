@@ -43,7 +43,7 @@ class ProcTest extends TestCase
         $status = $proc->run();
         self::assertSame(126, $status);
         $errorBuffer = $proc->getStandardError();
-        self::assertRegExp(
+        self::assertMatchesRegularExpression(
             '~^.*/dev/null.*Permission denied.*\\n$~i',
             $errorBuffer
         );
