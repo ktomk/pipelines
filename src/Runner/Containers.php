@@ -100,6 +100,7 @@ class Containers
      * @param callable $resolver
      * @param string $prefix
      * @param string $project
+     * @param array $labels
      *
      * @return array
      */
