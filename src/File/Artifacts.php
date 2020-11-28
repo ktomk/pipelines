@@ -9,7 +9,7 @@ namespace Ktomk\Pipelines\File;
  *
  * @package Ktomk\Pipelines\File\File
  */
-class Artifacts
+class Artifacts implements \Countable
 {
     /**
      * @var array|string[]
@@ -23,7 +23,7 @@ class Artifacts
      *
      * @throws ParseException
      */
-    public function __construct($artifacts)
+    public function __construct(array $artifacts)
     {
         $this->parse($artifacts);
     }
@@ -37,13 +37,21 @@ class Artifacts
     }
 
     /**
+     * @return int
+     */
+    public function count()
+    {
+        return count($this->artifacts);
+    }
+
+    /**
      * @param array|string[] $artifacts
      *
      * @throws ParseException
      *
      * @return void
      */
-    private function parse($artifacts)
+    private function parse(array $artifacts)
     {
         // quick validation: requires a list of strings
         if (!count($artifacts)) {

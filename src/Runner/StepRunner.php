@@ -149,7 +149,7 @@ class StepRunner
 
         $artifacts = $step->getArtifacts();
 
-        if (null === $artifacts) {
+        if (null === $artifacts || 0 === count($artifacts)) {
             return;
         }
 

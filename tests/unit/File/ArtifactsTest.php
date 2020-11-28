@@ -25,12 +25,12 @@ class ArtifactsTest extends TestCase
 
     /**
      */
-    public function testCreationWithNonArray()
+    public function testCreationWithEmptyArray()
     {
         $this->expectException('Ktomk\Pipelines\File\ParseException');
         $this->expectExceptionMessage('\'artifacts\' requires a list');
 
-        new Artifacts(null);
+        new Artifacts(array());
     }
 
     /**
@@ -49,5 +49,12 @@ class ArtifactsTest extends TestCase
         $artifacts = new Artifacts($array);
         $actual = $artifacts->getPatterns();
         self::assertSame($array, $actual);
+    }
+
+    public function testCount()
+    {
+        $array = array('build/html/testdox.html');
+        $artifacts = new Artifacts($array);
+        self::assertCount(1, $artifacts);
     }
 }
