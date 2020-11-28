@@ -42,14 +42,70 @@ pipelines:
             - vendor/bin/phpunit --testsuite unit,integration
           services:
             - docker
+    unit-tests-php-7.1:
+      - step:
+          image: ktomk/pipelines:php7.1
+          caches:
+            - build-http-cache
+            - composer
+          script:
+            - command -v composer || lib/pipelines/composer-install.sh
+            - lib/scripts/ppconf.sh self-test remove-dev all downpatch-phpunit-tests phpunit ^6
+            - vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
+    unit-tests-php-7.2:
+      - step:
+          image: ktomk/pipelines:php7.2
+          caches:
+            - build-http-cache
+            - composer
+          script:
+            - command -v composer || lib/pipelines/composer-install.sh
+            - lib/scripts/ppconf.sh self-test phpunit ^7
+            - vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
     lint-php-7.4:
       - step: &lint-php74
           image: php:7.4
           script:
             - lib/pipelines/lint.sh
+    unit-tests-php-7.4:
+      - step:
+          image: ktomk/pipelines:php7.4
+          caches:
+            - build-http-cache
+            - composer
+          script:
+            - command -v composer || lib/pipelines/composer-install.sh
+            - lib/scripts/ppconf.sh self-test phpunit ^7
+            - vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
+    lint-php-8.0:
+      - step: &lint-php80
+          image: php:8.0
+          script:
+            - lib/pipelines/lint.sh
+    unit-tests-php-8.0:
+      - step:
+          image: ktomk/pipelines:php8.0
+          caches:
+            - build-http-cache
+            - composer
+          script:
+            - command -v composer || lib/pipelines/composer-install.sh
+            - composer -n require --dev phpunit/phpunit ^9 --update-with-dependencies --no-suggest --ignore-platform-reqs
+            - ./lib/scripts/ppconf.sh patch-phpunit-tests
+            - vendor/bin/phpunit --migrate-configuration
+            - vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
     lint-php:
       - step: *lint-php53
       - step: *lint-php74
+      - step: *lint-php80
     unit-tests: # run phpunit suite
       - step: *unit-tests-php70
     artifact-tests: # run phpunit suite w/ artifact

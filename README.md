@@ -691,6 +691,13 @@ Check the version by invoking it:
     $ build/pipelines.phar --version
     pipelines version 0.0.19-1-gbba5a43
 
+##### Php Compatibility and Undefined Behaviour
+
+The pipelines project aims to support php 5.3.3 up to php 8.0.
+
+Using any of its functions or methods with named parameters is
+considered undefined behaviour.
+
 ##### Reproducible Phar Builds
 
 The pipelines project practices reproducible builds since it's first
