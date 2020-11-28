@@ -143,7 +143,7 @@ class Lib
 
         foreach ($arrays as $key => $value) {
             if (!is_array($value)) {
-                $arrays[$key] = (array)$value;
+                $arrays[$key] = null === $value ? array() : array($value);
             }
         }
 
