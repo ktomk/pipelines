@@ -59,6 +59,9 @@
     "test": [
       "@composer validate --strict",
       "@phpunit-test",
+      "@shell-test"
+    ],
+    "shell-test": [
       "tests/shell/run.sh"
     ],
     "unit-test": [
@@ -86,6 +89,7 @@
     ],
     "ci": [
       "@composer validate --strict",
+      "tests/shell/run.sh test-smoke.sh",
       "@cs-check",
       "@php -f bin/pipelines -- --verbatim --pipeline custom/lint-php",
       "@build",
@@ -103,6 +107,7 @@
     "test": "Run all tests",
     "phpunit": "Phpunit script stub",
     "phpunit-test": "Run all phpunit tests",
+    "shell-test": "Run shell tests",
     "unit-test": "Run unit-tests",
     "ppconf": "PHP Project configuration script",
     "which": "Locate composer command",

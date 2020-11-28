@@ -23,13 +23,13 @@ case ${1-0} in
   1 ) echo "# 1: build pipelines phar"
       cd "${PROJECT_DIR}"
       rm -f build/pipelines.phar
-      php -d phar.readonly=0 -f lib/build/build.php | grep 'signature:'
+      "${PHP_BINARY-php}" -d phar.readonly=0 -f lib/build/build.php | grep 'signature:'
       build/pipelines.phar --version
       exit
       ;;
   2 ) echo "# 2: check last file by checksum"
       cd "${PROJECT_DIR}"
-    <<'EOD' php -f /dev/stdin -- \
+    <<'EOD' "${PHP_BINARY-php}" -f /dev/stdin -- \
           build/pipelines.phar \
           vendor/symfony/yaml/Symfony/Component/Yaml/Yaml.php
 <?php

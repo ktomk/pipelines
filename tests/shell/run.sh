@@ -39,6 +39,7 @@ if [[ "$#" -gt 1 ]]; then
   exit 1
 fi
 
+./test-smoke.sh
 ./test-artifacts.sh
 ./test-schema-validate.sh
 ./test-services.sh 1 2

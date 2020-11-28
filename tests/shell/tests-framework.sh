@@ -16,7 +16,7 @@ assert() {
   local php_file
   php_file="${1}"
   shift 1
-  php -dphar.readonly=0 -dzend.assertions=1 -dassert.exception=1 -f "${php_file}" -- "${@}"
+  "${PHP_BINARY-php}" -dphar.readonly=0 -dzend.assertions=1 -dassert.exception=1 -f "${php_file}" -- "${@}"
 }
 
 ####

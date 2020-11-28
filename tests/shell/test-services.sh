@@ -28,7 +28,7 @@ case ${1-0} in
       ;;
   2 ) echo "# 2: redis service (clean)"
       "${PROJECT_DIR}/bin/pipelines" --pipeline custom/redis-service --verbatim | grep PONG
-      "${PROJECT_DIR}/bin/pipelines" --docker-list | wc -l | grep '^1$'
+      "${PROJECT_DIR}/bin/pipelines" --docker-list | grep -v pipelines-1.redis-service.custom-redis-service.pipelines
       exit
       ;;
   3 ) echo "# 3: mysql service"

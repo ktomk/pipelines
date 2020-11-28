@@ -24,7 +24,7 @@ case ${1-0} in
   1 ) echo "# 1: build pipelines phar (validate with phar)"
       cd "${PROJECT_DIR}"
       rm -f build/pipelines.phar
-      php -d phar.readonly=0 -f lib/build/build.php | grep 'signature:'
+      "${PHP_BINARY-php}" -d phar.readonly=0 -f lib/build/build.php | grep 'signature:'
       build/pipelines.phar --version
       exit
       ;;
