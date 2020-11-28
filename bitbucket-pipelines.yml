@@ -160,7 +160,7 @@ pipelines:
             - build/pipelines.phar --no-keep
     recursion:
       - step:
-          image: php:7.0
+          image: php:7.4
           script:
             - 'docker version --format "client: {{.Client.Version}} / server: {{.Server.Version}}"'
             - docker cp --help
@@ -169,11 +169,11 @@ pipelines:
             - docker
     recursion/middle:
       - step:
-          image: php:7.0
+          image: php:7.4
           script:
             - php --version
       - step:
-          image: php:7.0
+          image: php:7.4
           script:
             - 'docker version --format "client: {{.Client.Version}} / server: {{.Server.Version}}"'
             - bin/pipelines --pipeline custom/recursion --dry-run # must fail
@@ -181,7 +181,7 @@ pipelines:
             - docker
     recursion-pip-happy:
       - step:
-          image: php:7.0
+          image: php:7.4
           script:
             - 'docker version --format "client: {{.Client.Version}} / server: {{.Server.Version}}"'
             - docker cp --help
@@ -190,7 +190,7 @@ pipelines:
             - docker
     recursion-pip-happy/end:
       - step:
-          image: php:7.0
+          image: php:7.4
           script:
             - ':'
     private/docker-hub:
