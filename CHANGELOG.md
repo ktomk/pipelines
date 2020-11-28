@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Composer script descriptions
 - More pipeline example YAML files
 ### Changed
+- Testsuite for PHP 8 changes
 - Updated [documentation about working offline][Offline-PL]
 ### Fixed
 - Unintended object to array conversion, supports PHP 8

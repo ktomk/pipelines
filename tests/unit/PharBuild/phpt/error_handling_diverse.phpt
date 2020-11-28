@@ -36,14 +36,14 @@ printf("build errors: %d\n", count($builder->errors()));
 
 __HALT_COMPILER(); ?>
 --EXPECTF--
-Warning: file_get_contents(stub2.php): failed to open stream: No such file or directory in %s on line %d
+Warning: file_get_contents(stub2.php): %cailed to open stream: No such file or directory in %s on line %d
 error reading stubfile: stub2.php
 *.gitignore: ineffective alias:%s
 ineffective pattern: *.gitignore
 invalid directory: --
 build/.gitignore: invalid callback return for pattern 'build/.*': 'wrong'
 
-Warning: fopen(--): failed to open stream: No such file or directory in %s on line %d
+Warning: fopen(--): %cailed to open stream: No such file or directory in %s on line %d
 failed to open for reading: --
 fatal: build has errors, not building
 no such file: build/test.phar
