@@ -2,6 +2,7 @@
 builder can not unlink existing phar file
 --INI--
 phar.readonly=0
+xdebug.default_enable=0
 --FILE--
 <?php
 

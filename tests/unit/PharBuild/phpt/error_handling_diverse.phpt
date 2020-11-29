@@ -2,6 +2,7 @@
 diverse error handling checks
 --INI--
 phar.readonly=0
+xdebug.default_enable=0
 --FILE--
 <?php
 
