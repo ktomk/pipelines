@@ -27,7 +27,9 @@ class ReferenceTypes
      *
      * @var array
      */
-    private static $sections = array(self::REF_BRANCHES, self::REF_TAGS, self::REF_BOOKMARKS, self::REF_PULL_REQUESTS, 'custom');
+    private static $sections = array(
+        self::REF_BRANCHES, self::REF_TAGS, self::REF_BOOKMARKS, self::REF_PULL_REQUESTS, 'custom',
+    );
 
     /**
      * @param string $id
@@ -36,7 +38,10 @@ class ReferenceTypes
      */
     public static function isValidId($id)
     {
-        return (bool)preg_match('~^(default|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~', $id);
+        return (bool)preg_match(
+            '~^(default|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~',
+            $id
+        );
     }
 
     /**

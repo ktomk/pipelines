@@ -173,7 +173,10 @@ class FileShower extends FileShowerAbstract
         foreach ($step->getServices()->getServiceNames() as $serviceName) {
             /** @var Service $service */
             $service = $step->getFile()->getDefinitions()->getServices()->getByName($serviceName);
-            $table->addFlaggedRow($service, array($id, $stepNumber, $service ? $service->getImage() : 'ERROR', 'service:' . $serviceName));
+            $table->addFlaggedRow(
+                $service,
+                array($id, $stepNumber, $service ? $service->getImage() : 'ERROR', 'service:' . $serviceName)
+            );
         }
     }
 

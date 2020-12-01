@@ -3,6 +3,7 @@
 /* this file is part of pipelines */
 
 namespace Ktomk\Pipelines\Cli;
+
 use RuntimeException;
 
 /**

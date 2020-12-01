@@ -8,7 +8,7 @@
 #
 set -eu
 
-# check composer install --no-dev flag, only install fixutres with --dev
+# check composer install --no-dev flag, only install fixtures with --dev
 if [ "${COMPOSER_DEV_MODE-1}" -eq 0 ]; then
   exit
 fi

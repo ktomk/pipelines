@@ -56,7 +56,10 @@ class RepositoryTest extends TestCase
         LibFs::mkDir($homeDir);
 
         $exec = new Exec();
-        $repository = Repository::create($exec, new Directories(array('HOME' => $homeDir), DirectoriesTest::getTestProject()));
+        $repository = Repository::create(
+            $exec,
+            new Directories(array('HOME' => $homeDir), DirectoriesTest::getTestProject())
+        );
         $repository->resolve(Repository::PKG_INTEGRATE);
         $containerId = '424242-so-long-and-thanks-for-all-the-fish';
         list($status, $message) = $repository->inject($containerId);

@@ -30,14 +30,18 @@ class CachesTest extends TestCase
     public function testParseErrorOnInvalidCachePath()
     {
         $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage("file parse error: cache 'foo' should be a string value (it is currently null or empty)");
+        $this->expectExceptionMessage(
+            "file parse error: cache 'foo' should be a string value (it is currently null or empty)"
+        );
         new Caches(array('foo' => null, 'name' => 'path'));
     }
 
     public function testParseErrorOnInvalidCacheDefinition()
     {
         $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage("file parse error: cache 'foo' should be a string (it is currently defined as a boolean)");
+        $this->expectExceptionMessage(
+            "file parse error: cache 'foo' should be a string (it is currently defined as a boolean)"
+        );
         new Caches(array('foo' => false, 'name' => 'path'));
     }
 

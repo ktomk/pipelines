@@ -31,7 +31,7 @@ class OptionIteratorTest extends TestCase
 
     public function testInvalidateCurrent()
     {
-        $args = new ArgsTester;
+        $args = new ArgsTester();
         $args->arguments = array('--foo', 'bar', '-f', 'b', '--', 'parameter');
         $iterator = new OptionIterator($args);
         self::assertSame('--foo', $iterator->current());

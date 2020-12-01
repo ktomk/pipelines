@@ -34,7 +34,7 @@ dependencies. For example Composer packages, Node
 modules etc. and make use of caches as well for
 your very own specific build requirements as well.
 
-### Predefined Caches
+## Predefined Caches
 
 All predefined caches are supported as documented
 in [Bitbucket Pipelines file-format][BBPL-CACHES]
@@ -59,7 +59,7 @@ by adding them to the `caches` entry in the
 `defintions` section of `bitbucket-pipelines.yml`
 file.
 
-### Example of Caches in a Pipelines Step
+## Example of Caches in a Pipelines Step
 
 The following example shows a custom pipeline that
 is using a very dated PHP version (5.3) to run

@@ -376,7 +376,8 @@ class Env
      */
     private function setFirstPipelineVariable($name, $value)
     {
-        if (isset($this->vars[$name])
+        if (
+            isset($this->vars[$name])
             || !isset($this->vars['PIPELINES_ID'], $this->vars['PIPELINES_IDS'])
             || $this->vars['PIPELINES_IDS'] !== md5($this->vars['PIPELINES_ID'])
         ) {

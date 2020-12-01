@@ -79,7 +79,9 @@ class HelpTest extends TestCase
      */
     public function testRunVersion(Help $help)
     {
-        $this->expectOutputRegex("{^pipelines version (@\\.@\\.@|[a-f0-9]{7}|\\d+\\.\\d+\\.\\d+)(-\\d+-g[a-f0-9]{7})?\\+?\n}");
+        $this->expectOutputRegex(
+            "{^pipelines version (@\\.@\\.@|[a-f0-9]{7}|\\d+\\.\\d+\\.\\d+)(-\\d+-g[a-f0-9]{7})?\\+?\n}"
+        );
         $args = new Args(array('cmd', '--version'));
 
         try {

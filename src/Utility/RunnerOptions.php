@@ -184,7 +184,8 @@ class RunnerOptions
             try {
                 $repository->resolve($binaryClient);
             } catch (\InvalidArgumentException $ex) {
-                $message = "--docker-client needs a valid package name, file or docker client binary path; '${binaryClient}' given";
+                $message = '--docker-client needs a valid package name, file or docker client binary path;';
+                $message .= " '${binaryClient}' given";
                 $message .= "\n  docker client binary packages shipping w/ pipelines:";
                 $message .= "\n    - " . implode("\n    - ", $repository->listPackages());
 

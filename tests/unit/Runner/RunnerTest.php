@@ -42,7 +42,7 @@ class RunnerTest extends RunnerTestCase
             RunOpts::create('pipelinesunittest'),
             new Directories($_SERVER, $this->getTestProject()),
             $exec,
-            new Flags,
+            new Flags(),
             Env::createEx(),
             new Streams(null, null, 'php://output')
         );
@@ -156,7 +156,9 @@ class RunnerTest extends RunnerTestCase
         $file = new File($array);
         $pipeline = $file->getDefault();
 
-        $this->expectOutputRegex('~^pipelines: step #4 is manual. use `--steps 4-` to continue or `--no-manual` to override$~m');
+        $this->expectOutputRegex(
+            '~^pipelines: step #4 is manual. use `--steps 4-` to continue or `--no-manual` to override$~m'
+        );
         self::assertSame(0, $runner->run($pipeline));
     }
 

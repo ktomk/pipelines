@@ -41,7 +41,10 @@ class UnpackagerTest extends TestCase
         $testHome = LibFs::mkDir($testDir . '/home');
 
         $exec = new Exec();
-        $directories = new Directories(Lib::env(array('HOME' => $testHome) + $_SERVER), DirectoriesTest::getTestProject());
+        $directories = new Directories(
+            Lib::env(array('HOME' => $testHome) + $_SERVER),
+            DirectoriesTest::getTestProject()
+        );
         $packageDirectory = $directories->getBaseDirectory('XDG_CACHE_HOME', 'package-docker');
         $binariesDirectory = $directories->getBaseDirectory('XDG_DATA_HOME', 'static-docker');
 

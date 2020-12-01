@@ -18,16 +18,16 @@ class LibFsTest extends TestCase
     {
         return array(
             array('', false),
-            arraY('-', false),
-            arraY('a', true),
-            arraY('a-', true),
-            arraY('-a', false),
-            arraY('rm -rf', false),
-            arraY('rm-rf', true),
-            arraY('-rf', false),
-            arraY('0', true),
-            arraY('00000', true),
-            arraY('_-....', true),
+            array('-', false),
+            array('a', true),
+            array('a-', true),
+            array('-a', false),
+            array('rm -rf', false),
+            array('rm-rf', true),
+            array('-rf', false),
+            array('0', true),
+            array('00000', true),
+            array('_-....', true),
         );
     }
 

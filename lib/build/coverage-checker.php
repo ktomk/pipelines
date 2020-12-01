@@ -1,6 +1,19 @@
 <?php
 
 /*
+ * Code coverage checker. Analyzes a given `clover.xml` report produced
+ * by PHPUnit and checks if coverage fits expected ratio.
+ *
+ * Usage:
+ *     php coverage-checker <path-to-clover> [<pass-percentage>]
+ *
+ * @author Marco Pivetta <ocramius@gmail.com>
+ *
+ * Thanks @ocramius !
+ *
+ * @see https://github.com/Ocramius/VersionEyeModule/blob/master/coverage-checker.php
+ * @see http://ocramius.github.io/blog/automated-code-coverage-check-for-github-pull-requests-with-travis/
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
@@ -16,20 +29,7 @@
  * This software consists of voluntary contributions made by many individuals
  * and is licensed under the MIT license.
  */
-/**
- * Code coverage checker. Analyzes a given `clover.xml` report produced
- * by PHPUnit and checks if coverage fits expected ratio.
- *
- * Usage:
- *     php coverage-checker <path-to-clover> [<pass-percentage>]
- *
- * @author Marco Pivetta <ocramius@gmail.com>
- *
- * Thanks @ocramius !
- *
- * @see https://github.com/Ocramius/VersionEyeModule/blob/master/coverage-checker.php
- * @see http://ocramius.github.io/blog/automated-code-coverage-check-for-github-pull-requests-with-travis/
- */
+
 list($util, $clover, $percentage) = $argv + array(null, null, 100);
 
 /** @noinspection SimpleXmlLoadFileUsageInspection */

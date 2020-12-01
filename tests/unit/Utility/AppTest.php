@@ -22,7 +22,9 @@ class AppTest extends TestCase
     public function testMainExceptionHandlingArgsException()
     {
         $app = new App(new Streams(null, null, 'php://output'));
-        $this->expectOutputRegex('{^pipelines: option --prefix requires an argument\npipelines: version .*\n--------\nclass....:}');
+        $this->expectOutputRegex(
+            '{^pipelines: option --prefix requires an argument\npipelines: version .*\n--------\nclass....:}'
+        );
         $actual = $app->main(array('cmd', '--debug', '--prefix'));
         self::assertNotSame(0, $actual);
     }
@@ -102,7 +104,9 @@ class AppTest extends TestCase
     {
         Yaml::$classes = array('');
 
-        $this->expectOutputRegex(sprintf('{^info: reading pipelines from stdin\npipelines: fatal: No YAML parser available$}m'));
+        $this->expectOutputRegex(
+            sprintf('{^info: reading pipelines from stdin\npipelines: fatal: No YAML parser available$}m')
+        );
         $app = new App(new Streams(null, 'php://output', 'php://output'));
         $actual = $app->main(array('cmd', '--verbose', '--file', '-'));
         self::assertSame(2, $actual);

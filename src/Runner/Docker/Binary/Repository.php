@@ -99,7 +99,10 @@ class Repository implements PackageInterface
     {
         $status = $this->exec->capture(
             sprintf('2>&1 < %s docker', lib::quoteArg($path)),
-            array('exec', '-i', $containerId, '/bin/sh', '-c', 'mkdir -p /usr/bin && cat - > /usr/bin/docker; chmod +x /usr/bin/docker; docker --version'),
+            array(
+                'exec', '-i', $containerId, '/bin/sh', '-c',
+                'mkdir -p /usr/bin && cat - > /usr/bin/docker; chmod +x /usr/bin/docker; docker --version',
+            ),
             $out
         );
 

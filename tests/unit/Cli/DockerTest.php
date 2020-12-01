@@ -1,6 +1,8 @@
-<?php /** @noinspection ALL */
+<?php
 
 /* this file is part of pipelines */
+
+/** @noinspection ALL */
 
 namespace Ktomk\Pipelines\Cli;
 

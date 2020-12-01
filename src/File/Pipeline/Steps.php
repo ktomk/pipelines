@@ -205,7 +205,9 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
             $keys = array_keys($node);
             $name = $keys[0];
             if (!in_array($name, array('step', 'parallel'), true)) {
-                throw new ParseException(sprintf("Unexpected pipeline property '%s', expected 'step' or 'parallel'", $name));
+                throw new ParseException(
+                    sprintf("Unexpected pipeline property '%s', expected 'step' or 'parallel'", $name)
+                );
             }
 
             $this->parseNode($node, $name);

@@ -144,7 +144,12 @@ class StepExpression
      */
     private static function parseSegments($buffer)
     {
-        $normalized = preg_replace(array('~\s+~', '~(\d+)\s+(-)~', '~(-)\s+(\d+)+~'), array(' ', '\\1\\2', '\\1\\2'), $buffer);
+        $normalized = preg_replace(
+            array('~\s+~', '~(\d+)\s+(-)~', '~(-)\s+(\d+)+~'),
+            array(' ', '\\1\\2', '\\1\\2'),
+            $buffer
+        );
+
         if (empty($normalized)) {
             throw new \InvalidArgumentException(sprintf('No steps: "%s"', $buffer));
         }
@@ -182,7 +187,9 @@ class StepExpression
         if (false === $result || 0 === $result || '-' === $segment) {
             if ($buffer !== $segment) {
                 // @codeCoverageIgnoreStart
-                throw new \InvalidArgumentException(sprintf('Can not parse step segment for "%s" (from "%s")', $segment, $buffer));
+                throw new \InvalidArgumentException(
+                    sprintf('Can not parse step segment for "%s" (from "%s")', $segment, $buffer)
+                );
                 // @codeCoverageIgnoreEnd
             }
 

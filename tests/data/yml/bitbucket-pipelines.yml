@@ -62,11 +62,11 @@ pipelines:
             - echo "tag v1.0.0"
 
   bookmarks: # (Mercurial)
-      v1.0.0:
-        - step:
-            script:
-              - echo "bookmark v1.0.0"
-              -
+    v1.0.0:
+      - step:
+          script:
+            - echo "bookmark v1.0.0"
+
   pull-requests:
     '**':
       - step:

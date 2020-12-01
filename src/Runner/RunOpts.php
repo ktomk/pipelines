@@ -76,8 +76,13 @@ class RunOpts
      * @param null|string $user [optional] user option, non-null (string) if set
      * @param null|true $ssh [optional] ssh support for runner, null for none, true for support of ssh agent
      */
-    public function __construct($prefix = null, Options $options = null, $binaryPackage = null, $user = null, $ssh = null)
-    {
+    public function __construct(
+        $prefix = null,
+        Options $options = null,
+        $binaryPackage = null,
+        $user = null,
+        $ssh = null
+    ) {
         $this->setPrefix($prefix);
         $this->options = $options;
         $this->binaryPackage = $binaryPackage;
