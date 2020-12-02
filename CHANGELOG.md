@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for PHP 8
 - Support for Composer 2
+- [Documentation about development][Dev-Doc]
 - (source only) pipelines `--xdebug` option to run within php with
   xdebug extension and config for CLI (server-name is `pipelines-cli`)
 - Composer script descriptions
@@ -22,6 +23,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   "validate done" since 0.0.44
 - Detecting readable local streams wrong for non-local remote streams
 - Shell test for artifacts, missing in 0.0.50
+
+[Dev-Doc]: doc/DEVELOPMENT.md
 
 ## [0.0.50] - 2020-09-14
 ### Added
