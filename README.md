@@ -2,7 +2,7 @@
 
 ## Run Bitbucket Pipelines Wherever They Dock
 
-[![Build Status](https://api.travis-ci.org/ktomk/pipelines.svg?branch=master)](https://travis-ci.org/ktomk/pipelines)
+[![Build Status](https://api.travis-ci.com/ktomk/pipelines.svg?branch=master)](https://travis-ci.com/ktomk/pipelines)
 [![Code Coverage](https://scrutinizer-ci.com/g/ktomk/pipelines/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/ktomk/pipelines/)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ktomk/pipelines/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ktomk/pipelines/?branch=master)
 
