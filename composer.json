@@ -115,6 +115,7 @@
   },
   "config": {
     "autoloader-suffix": "pipelines",
+    "platform-check": false,
     "sort-packages": true
   }
 }
