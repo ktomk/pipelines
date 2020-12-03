@@ -22,7 +22,7 @@ fi
 
 cd tests/data/package >/dev/null
 
-tar czf docker-test-stub.tgz docker-test-stub
+GZIP=-n tar czf docker-test-stub.tgz --owner=0 --group=0 --mtime='UTC 1970-01-01' docker-test-stub
 
 bin_hash="$(php -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub)"
 tar_hash="$(php -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub.tgz)"
