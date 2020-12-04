@@ -17,9 +17,18 @@ CHANGELOG="$(
   | sed -n -e 's/^## \[\([0-9.]*\)\].*$/\1/p'
 )"
 
+# process --go flag
+GO=false
+if [[ "--go" = "${1-}" ]]; then
+  GO=true
+  shift
+fi
+
 TAG="${1-${CHANGELOG}}"
 
 echo "tag and publish: ${TAG}"
+echo "  branch: $(git rev-parse --abbrev-ref HEAD)"
+echo "  commit: $(git log --oneline -1)"
 
 # check not unreleased (not digits and dots, no semver checker here)
 if [[ "${TAG}" = "" ]]; then
@@ -42,12 +51,29 @@ if ! git diff --exit-code CHANGELOG.md; then
   exit 1
 fi
 
-# run of the mill
+# check that help section in read-me is up to date (and read-me committed)
+php -f lib/build/usage.php
+if ! git diff --exit-code README.md; then
+  >&2 echo "fatal: README.md has uncommitted changes"
+  exit 1
+fi
+
+# no push by default
+if [[ "${GO}" != "true" ]]; then
+  echo "would tag & push now, but no --go, exiting."
+  exit
+fi
+
+# run-of-the-mill
 
 git tag -a "${TAG}" -m "${TAG}"
 
+echo "pushing tag ${TAG}"
 git push origin "${TAG}"
 
 git checkout master && git merge --ff-only "${TAG}"
 
+echo "pushing master"
 git push origin master:master
+
+git checkout -
