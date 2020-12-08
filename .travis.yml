@@ -3,6 +3,11 @@ dist: xenial
 
 language: php
 
+# blocklist
+branches:
+  except:
+    - github-actions
+
 ## Cache pipelines and composer
 cache:
   directories:
@@ -20,16 +25,16 @@ git:
   depth: 3
 
 php:
-  - '7.4'
-  - 'nightly'
-  - '8.0snapshot'
-  - '8.0'
-  - '5.6'
-  - '7.3'
+  # - '7.4'
+  # - 'nightly'
+  # - '8.0snapshot'
+  # - '8.0'
+  # - '5.6'
+  # - '7.3'
   - '7.2'
-  - '7.1'
-  - '7.0'
-  - 'master'
+  # - '7.1'
+  # - '7.0'
+  # - 'master'
   #- '7.4snapshot'
   #- '7.3snapshot'
   #- '7.2snapshot'
@@ -52,9 +57,12 @@ jobs:
     - php: '7.0snapshot'
 
 before_install:
-  - openssl aes-256-cbc -K "$encrypted_a90e500b3cd1_key" -iv "$encrypted_a90e500b3cd1_iv" -in ktomk-phive-sign.gpg.enc -out ktomk-phive-sign.gpg -d
-  - gpg --import ktomk-phive-sign.gpg
-  - rm ktomk-phive-sign.gpg
+  - |
+    if [[ -n "$encrypted_a90e500b3cd1_key" ]]; then
+      openssl aes-256-cbc -K "$encrypted_a90e500b3cd1_key" -iv "$encrypted_a90e500b3cd1_iv" -in ktomk-phive-sign.gpg.enc -out ktomk-phive-sign.gpg -d
+      gpg --import ktomk-phive-sign.gpg
+      rm ktomk-phive-sign.gpg
+    fi
   - composer self-update 1.10.17 # pin composer version for whole build
 
 ## Install fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
@@ -62,12 +70,14 @@ install:
   - echo "${TRAVIS_PHP_VERSION}"
   - ppconf() { ./lib/scripts/ppconf.sh "$@"; }; ppconf self-test
   - |
-    if [[ "${TRAVIS_PHP_VERSION}" == 8.0*    ]] \
+    if [[ "${TRAVIS_PHP_VERSION}" == 8.1*    ]] \
+    || [[ "${TRAVIS_PHP_VERSION}" == 8.0*    ]] \
     || [[ "${TRAVIS_PHP_VERSION}" == nightly ]] \
     || [[ "${TRAVIS_PHP_VERSION}" == master  ]]; then
       # PHP-CS-Fixer n/a for PHP 8.0 yet, needs php version fake
       # Hat-tip: Composer 1.10 and PHP 8 #9523 <https://github.com/composer/composer/issues/9523>
       IGNORE_PLATFORM_REQS=--ignore-platform-reqs
+      ppconf xdebug3
     fi
   - |
     if [[ "${TRAVIS_PHP_VERSION}" == 7.4*    ]] \
@@ -93,8 +103,13 @@ script:
   - git stash # stash build configuration changes
   - git reset --hard HEAD # reset for phar build
   - composer build
-  - echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
-  - ls -al build/pipelines.phar.asc
+  - |
+    if [[ -z "${SIGNPHRASE-}" ]]; then
+      echo "no SIGNPHRASE, no build/pipelines.phar.asc"
+    else
+      echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
+      ls -al build/pipelines.phar.asc
+    fi
   - git stash pop && composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-} # restore build configuration changes
   #  [3]  pipelines self-tests (src)
   - bin/pipelines --version

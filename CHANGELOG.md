@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Support for PHP 8
 - Support for Composer 2
+- [Migration from Travis-CI to Github-Actions][Run-Travis-Yml]
 - [Documentation about development][Dev-Doc]
 - (source only) pipelines `--xdebug` option to run within php with
   xdebug extension and config for CLI (server-name is `pipelines-cli`)
@@ -25,6 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Shell test for artifacts, missing in 0.0.50
 
 [Dev-Doc]: doc/DEVELOPMENT.md
+[Run-Travis-Yml]: https://github.com/marketplace/actions/run-travis-yml
 
 ## [0.0.50] - 2020-09-14
 ### Added

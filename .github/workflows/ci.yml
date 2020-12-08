@@ -1,0 +1,51 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ci:
+    name: .travis.yml / PHP ${{ matrix.php-version }} / ${{ matrix.machine }}
+    runs-on: ${{ matrix.machine }}
+    continue-on-error: ${{ matrix.experimental }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        machine: ['ubuntu-18.04']
+        php-version: ['8.1', '8.0', '7.4', '7.3', '7.2', '7.1', '7.0', '5.6']
+        experimental: [false]
+        include:
+          - machine: macos-10.15
+            php-version: '7.4'
+            experimental: true
+          - machine: windows-2019
+            php-version: '7.4'
+            experimental: true
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: xdebug
+
+      - id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ hashFiles('**/composer.lock') }}-${{ runner.os }}
+          restore-keys: |
+            composer-${{ hashFiles('**/composer.lock') }}-
+            composer-
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pipelines
+          key: pipelines-${{ runner.os }}
+          restore-keys: pipelines-
+
+      - uses: ktomk/run-travis-yml@v1
+        env:
+          TRAVIS_PHP_VERSION: ${{ matrix.php-version }}
