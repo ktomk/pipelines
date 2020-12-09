@@ -1,0 +1,19 @@
+---
+# this file is part of pipelines
+#
+# Example pipelines file caching remote files (here installing composer)
+#
+pipelines:
+  default:
+    - step:
+        image: php:7.3-alpine
+        name: individual http cache example (installing composer)
+        caches:
+          - build-http-cache
+          # - composer
+        script:
+          - command -v composer || lib/pipelines/composer-install.sh
+          - # ...
+definitions:
+  caches:
+    build-http-cache: ~/.cache/build-http-cache

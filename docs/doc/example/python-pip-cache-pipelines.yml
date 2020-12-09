@@ -1,0 +1,29 @@
+---
+# this file is part of pipelines
+#
+# Example pipelines file caching PIP packages for/in a Python container
+definitions:
+  caches:
+    pip-site-packages: ~/.local/lib/python3.8/site-packages
+    localbin: ~/.local/bin/
+pipelines:
+  default:
+    - step:
+        name:  python pip cache example (via mkdocs-material)
+        image: squidfunk/mkdocs-material
+        caches:
+          - pip
+          - pip-site-packages # for pip installed packages
+          - localbin # for pip installed commands
+        script:
+          - >
+            echo "python: $(python --version) ($(which python))"
+          - ping -c 1 pypi.python.org || true # no ping if offline
+          - pip install --user pip==20.2.3
+          - python -m pip cache info
+          - python -m site --user-site
+          - pip install --user ghp-import
+          - >
+            ! ghp-import --help # even installed, not in path
+          - PATH="$HOME/.local/bin:$PATH" # add pip --user path to PATH
+          - ghp-import --help

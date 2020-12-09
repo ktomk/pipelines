@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns="http://www.w3.org/2000/svg"
+   id="pipelines"
+   version="1.1"
+   viewBox="0 0 96 96"
+   height="96em"
+   width="96em">
+  <metadata id="metadata3095">
+    <rdf:RDF>
+      <cc:Work rdf:about="Design by Tom Klingenberg for Pipelines">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <path id="pipelines-logo"
+     style="opacity:1;vector-effect:none;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:0;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+     d="m 48.001503,8 c -3.067868,0 -6.135869,1.17553 -8.486698,3.52617 L 11.526141,39.51326 c -4.7015212,4.70127 -4.7015212,12.27021 0,16.97135 l 17.024333,17.02351 9.563268,-29.42914 a 6.6334399,6.6329078 0 0 1 0.151061,-0.49991 6.6334399,6.6329078 0 0 1 0.169254,-0.48603 L 49.792552,8.13582 C 49.199219,8.04692 48.600226,8 48.001503,8 Z m 13.110599,8.14969 -5.941417,18.28527 h 24.228283 z m -9.951098,31.52579 a 6.6334399,6.6329078 0 0 1 -0.284874,0.0135 6.6334399,6.6329078 0 0 1 -0.169255,0.4847 l -11.647547,35.84504 0.455477,0.45544 c 4.701656,4.70116 12.271874,4.70116 16.973395,0 L 84.477538,56.48694 c 2.433434,-2.43311 3.60366,-5.63438 3.518089,-8.80901 z" />
+</svg>

@@ -1,0 +1,24 @@
+---
+# this file is part of pipelines
+#
+# Example pipelines file with minio service
+#
+pipelines:
+  default:
+    - step:
+        name: minio service example
+        image: minio/mc:latest
+        script:
+          - mc config host rm local
+          - mc config host add --api s3v4 local http://127.0.0.1:9000 minio minio123
+          - mc rb --force local/ciip-support/ || true
+          - mc mb local/ciip-support/
+        services:
+          - minio
+definitions:
+  services:
+    minio:
+      image: ktomk/pipelines:minio-server # from minio/minio:edge
+      variables:
+        MINIO_ACCESS_KEY: minio
+        MINIO_SECRET_KEY: minio123

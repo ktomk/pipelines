@@ -1,0 +1,27 @@
+/* hide github stars and forks - requires javascript anyway */
+header .md-source__facts {display: none}
+
+/* scroll higher code blocks (21 em) */
+div.codehilite,
+div.highlight
+    {}
+
+    div.codehilite pre,
+    div.highlight pre
+        {max-height: 21em; overflow-y: auto;}
+
+        div.codehilite pre button.md-clipboard.md-icon,
+        div.highlight pre button.md-clipboard.md-icon
+            {
+                display: inline-block;
+                margin-left: -1.5em;
+                float: right;
+                position: sticky;
+                background: var(--md-code-bg-color);
+            }
+
+/* make overview tables width-snappy (docs/DEVELOPMENT.md) */
+.md-typeset table:not([class]) th {min-width: 0}
+
+/* give material for mkdocs icon more room */
+a.md-footer-social__link:last-of-type {margin-left: 1em;}
