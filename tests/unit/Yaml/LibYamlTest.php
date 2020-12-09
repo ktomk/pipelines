@@ -12,7 +12,7 @@ use Ktomk\Pipelines\Yaml\YamlTester;
  */
 class LibYamlTest extends TestCase
 {
-    protected function setUp()
+    protected function doSetUp()
     {
         if (!extension_loaded('yaml')) {
             self::markTestSkipped(

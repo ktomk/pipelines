@@ -28,14 +28,14 @@ class BuilderTest extends TestCase
      */
     private $builder;
 
-    public function setUp()
+    public function doSetUp()
     {
-        parent::setUp();
+        parent::doSetUp();
         $this->file = sys_get_temp_dir() . '/ptst.phar';
         $this->oldPw = getcwd();
     }
 
-    public function tearDown()
+    public function doTearDown()
     {
         if (file_exists($this->file)) {
             unlink($this->file);
@@ -44,7 +44,7 @@ class BuilderTest extends TestCase
             chdir($this->oldPw);
         }
 
-        parent::tearDown();
+        parent::doTearDown();
     }
 
     public function testCreation()

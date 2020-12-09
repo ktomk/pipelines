@@ -19,9 +19,9 @@ class ReferenceSearchTest extends TestCase
      */
     private $pipelines;
 
-    protected function setUp()
+    protected function doSetUp()
     {
-        parent::setUp();
+        parent::doSetUp();
         $this->pipelines = File::createFromFile(__DIR__ . '/../../data/yml/bitbucket-pipelines.yml')->getPipelines();
     }
 

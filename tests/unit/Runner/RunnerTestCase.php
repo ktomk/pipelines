@@ -22,7 +22,7 @@ class RunnerTestCase extends TestCase
     /**
      * @var string fixture of command for deploy mode copy
      *
-     * @see setUp for initialization
+     * @see doSetUp for initialization
      */
     protected $deploy_copy_cmd;
     protected $deploy_copy_cmd_2;
@@ -37,9 +37,9 @@ class RunnerTestCase extends TestCase
      */
     private $testProject;
 
-    protected function setUp()
+    protected function doSetUp()
     {
-        parent::setUp();
+        parent::doSetUp();
 
         // create container target directory "/app" by tar
         $this->deploy_copy_cmd = '~cd ' . sys_get_temp_dir() . '/pipelines-cp\.[^/]+/\. '

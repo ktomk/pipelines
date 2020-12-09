@@ -42,7 +42,7 @@ class TestCase extends PhpunitTestCase
      * @param $actual
      * @param string $message
      */
-    public static function assertIsArray($actual, $message = '')
+    public static function assertIsArray($actual, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertIsArray($actual, $message);
@@ -53,7 +53,7 @@ class TestCase extends PhpunitTestCase
         self::assertInternalType('array', $actual, $message);
     }
 
-    public static function assertIsBool($actual, $message = '')
+    public static function assertIsBool($actual, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertIsBool($actual, $message);
@@ -64,7 +64,7 @@ class TestCase extends PhpunitTestCase
         self::assertInternalType('bool', $actual, $message);
     }
 
-    public static function assertIsCallable($actual, $message = '')
+    public static function assertIsCallable($actual, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertIsCallable($actual, $message);
@@ -75,7 +75,7 @@ class TestCase extends PhpunitTestCase
         self::assertInternalType('callable', $actual, $message);
     }
 
-    public static function assertIsInt($actual, $message = '')
+    public static function assertIsInt($actual, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertIsInt($actual, $message);
@@ -86,7 +86,7 @@ class TestCase extends PhpunitTestCase
         self::assertInternalType('integer', $actual, $message);
     }
 
-    public static function assertIsString($actual, $message = '')
+    public static function assertIsString($actual, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertIsString($actual, $message);
@@ -104,7 +104,7 @@ class TestCase extends PhpunitTestCase
      * @param string $string
      * @param string $message
      */
-    public static function assertMatchesRegularExpression($pattern, $string, $message = '')
+    public static function assertMatchesRegularExpression($pattern, $string, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertMatchesRegularExpression($pattern, $string, $message);
@@ -125,7 +125,7 @@ class TestCase extends PhpunitTestCase
      * @param string $haystack
      * @param string $message
      */
-    public static function assertStringContainsString($needle, $haystack, $message = '')
+    public static function assertStringContainsString($needle, $haystack, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertStringContainsString($needle, $haystack, $message);
@@ -148,7 +148,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return void
      */
-    public static function assertStringNotContainsString($needle, $haystack, $message = '')
+    public static function assertStringNotContainsString($needle, $haystack, $message = ''): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::assertStringNotContainsString($needle, $haystack, $message);
@@ -198,20 +198,55 @@ class TestCase extends PhpunitTestCase
         );
     }
 
-    /* exceptions */
+    /* setUp / tearDown phpunit compat overrides */
 
-    protected function setUp()
+    /**
+     * @deprecated phpunit compat shim, use doSetUp() downstream
+     * @see doSetUp
+     */
+    protected function setUp(): void
+    {
+        $this->doSetUp();
+    }
+
+    /**
+     * phpunit compat shim
+     *
+     * @see setUp
+     */
+    protected function doSetUp()
     {
         $this->expectedException = null;
         $this->expectedExceptionMessage = null;
     }
 
     /**
+     * @deprecated phpunit compat shim, use doTearDown() downstream
+     * @see doTearDown
+     */
+    protected function tearDown(): void
+    {
+        $this->doTearDown();
+    }
+
+    /**
+     * phpunit compat shim
+     *
+     * @see tearDown
+     */
+    protected function doTearDown()
+    {
+        parent::tearDown();
+    }
+
+    /* exceptions */
+
+    /**
      * @param string $exception
      *
      * @return void
      */
-    public function expectException($exception)
+    public function expectException($exception): void
     {
         $this->expectedException = $exception;
 
@@ -231,7 +266,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return void
      */
-    public function expectExceptionMessage($message)
+    public function expectExceptionMessage($message): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::expectExceptionMessage($message);
@@ -254,7 +289,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return void
      */
-    public function expectExceptionCode($code)
+    public function expectExceptionCode($code): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::expectExceptionCode($code);
@@ -279,7 +314,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return void
      */
-    public function expectExceptionMessageMatches($messageRegExp)
+    public function expectExceptionMessageMatches($messageRegExp): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::expectExceptionMessageMatches($messageRegExp);
@@ -298,7 +333,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return void
      */
-    public function expectExceptionMessageRegExp($messageRegExp)
+    public function expectExceptionMessageRegExp($messageRegExp): void
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             parent::expectExceptionMessageRegExp($messageRegExp);
@@ -381,7 +416,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return MockObject
      */
-    protected function createMock($originalClassName)
+    protected function createMock($originalClassName): MockObject
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             return parent::createMock($originalClassName);
@@ -407,7 +442,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return MockObject
      */
-    protected function createConfiguredMock($originalClassName, array $configuration)
+    protected function createConfiguredMock($originalClassName, array $configuration): MockObject
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             return parent::createConfiguredMock($originalClassName, $configuration);
@@ -433,7 +468,7 @@ class TestCase extends PhpunitTestCase
      *
      * @return MockObject
      */
-    protected function createPartialMock($originalClassName, array $methods)
+    protected function createPartialMock($originalClassName, array $methods): MockObject
     {
         if (is_callable('parent::' . __FUNCTION__)) {
             return parent::createPartialMock($originalClassName, $methods);

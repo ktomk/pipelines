@@ -15,9 +15,9 @@ class StreamsTest extends TestCase
 {
     private $closeHandles;
 
-    protected function tearDown()
+    protected function doTearDown()
     {
-        parent::tearDown();
+        parent::doTearDown();
 
         foreach ((array)$this->closeHandles as $resource) {
             if (is_resource($resource)) {

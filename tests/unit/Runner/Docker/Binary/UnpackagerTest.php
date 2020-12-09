@@ -47,13 +47,13 @@ class UnpackagerTest extends TestCase
         );
     }
 
-    protected function tearDown()
+    protected function doTearDown()
     {
         foreach ($this->removeDirectories as $dir) {
             LibFs::rmDir($dir);
         }
 
-        parent::tearDown();
+        parent::doTearDown();
     }
 
     public function testCreation()

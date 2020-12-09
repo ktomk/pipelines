@@ -11,10 +11,10 @@ use Ktomk\Pipelines\TestCase;
  */
 class YamlTest extends TestCase
 {
-    protected function tearDown()
+    protected function doTearDown()
     {
         Yaml::$classes = array();
-        parent::tearDown();
+        parent::doTearDown();
     }
 
     public function testFileParsing()
