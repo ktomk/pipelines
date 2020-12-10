@@ -39,7 +39,7 @@ before_install:
 ## Install fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
 install:
   - echo "${TRAVIS_PHP_VERSION}"
-  - ppconf() { ./lib/scripts/ppconf.sh "$@"; }; ppconf self-test
+  - ppconf() { ./lib/script/ppconf.sh "$@"; }; ppconf self-test
   - |
     if [[ "${TRAVIS_PHP_VERSION}" == 8.1*    ]] \
     || [[ "${TRAVIS_PHP_VERSION}" == 8.0*    ]] \
@@ -94,7 +94,7 @@ script:
   - bin/pipelines --deploy mount --pipeline custom/lint-php
   - bin/pipelines --pipeline custom/unit-tests-php-5.3
   #  [5]  shell tests (src)
-  - tests/shell/run.sh
+  - test/shell/run.sh
 
 notifications:
   email: false

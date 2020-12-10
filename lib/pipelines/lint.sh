@@ -13,7 +13,7 @@ IFS="$(printf '\n\t ')"
 php -v | head -n 1
 find --version | head -n 1
 
-find bin src tests \
+find bin src test \
   -xdev -type f \
   \( -name 'pipelines' -o -name '*.php' -o -name '*.phtml' \) -print0 \
   | 2>/dev/null xargs -0 -n1 -P8 php -d short_open_tag=0 -l \

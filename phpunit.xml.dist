@@ -14,12 +14,12 @@
     </php>
     <testsuites>
         <testsuite name="unit">
-            <directory>tests/unit</directory>
-            <directory suffix=".phpt" phpVersion="5.4.0" phpVersionOperator=">=">tests/unit/PharBuild/phpt</directory>
-            <directory suffix=".phpt" phpVersion="5.4.0" phpVersionOperator=">=">tests/unit/phpt</directory>
+            <directory>test/unit</directory>
+            <directory suffix=".phpt" phpVersion="5.4.0" phpVersionOperator=">=">test/unit/PharBuild/phpt</directory>
+            <directory suffix=".phpt" phpVersion="5.4.0" phpVersionOperator=">=">test/unit/phpt</directory>
         </testsuite>
         <testsuite name="integration">
-            <directory>tests/integration</directory>
+            <directory>test/integration</directory>
         </testsuite>
     </testsuites>
     <filter>

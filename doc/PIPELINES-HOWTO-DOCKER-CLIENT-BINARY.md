@@ -303,7 +303,7 @@ development:
 
 ```bash
 $ bin/pipelines --pipeline custom/docker \
-	--docker-client tests/data/package/docker-test-stub
+	--docker-client test/data/package/docker-test-stub
 [...]
  +++ docker client install...: 42.42.1 ( --version )
 

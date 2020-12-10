@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 ### Changed
 - Continue [migration from Travis-CI to Github-Actions][Run-Travis-Yml]
+- Rename tests folder to test to streamline directory names.
 
 ## [0.0.51] - 2020-12-09
 ### Added

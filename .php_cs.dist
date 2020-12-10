@@ -68,7 +68,7 @@ $config = PhpCsFixer\Config::create()
     ->setFinder(
         PhpCsFixer\Finder::create()
             ->notPath('PharBuild/Timestamps.php')
-            ->in(array('src', 'tests'))
+            ->in(array('src', 'test'))
     )
 ;
 

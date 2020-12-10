@@ -19,13 +19,13 @@
     "psr-4": {"Ktomk\\Pipelines\\": "src/"}
   },
   "autoload-dev": {
-    "classmap": ["tests/TestCase.php"],
+    "classmap": ["test/TestCase.php"],
     "psr-4": {
-      "Ktomk\\Pipelines\\Integration\\": "tests/integration",
-      "Ktomk\\Pipelines\\": "tests/unit"
+      "Ktomk\\Pipelines\\Integration\\": "test/integration",
+      "Ktomk\\Pipelines\\": "test/unit"
     },
     "files": [
-      "tests/phpunit_class_aliases.php"
+      "test/phpunit_class_aliases.php"
     ]
   },
   "require": {
@@ -52,7 +52,7 @@
       "@unit-test"
     ],
     "pre-install-cmd": [
-      "tests/data/package/make-test-stub-package.sh"
+      "test/data/package/make-test-stub-package.sh"
     ],
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
     "test": [
@@ -61,24 +61,24 @@
       "@shell-test"
     ],
     "shell-test": [
-      "tests/shell/run.sh"
+      "test/shell/run.sh"
     ],
     "unit-test": [
-      "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests/unit",
+      "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml test/unit",
       "@php -f lib/build/coverage-checker.php -- build/log/clover.xml"
     ],
     "integration-test": [
-      "@phpunit tests/integration"
+      "@phpunit test/integration"
     ],
     "phpunit": [
       "@php -d phar.readonly=0 -d error_reporting=-1 -d error_log= -d log_errors=1 -d display_errors=0 -f vendor/phpunit/phpunit/phpunit -- -v"
     ],
     "phpunit-test": [
-      "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",
+      "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml test",
       "@php -f lib/build/coverage-checker.php -- build/log/clover.xml"
     ],
     "ppconf": [
-      "lib/scripts/ppconf.sh"
+      "lib/script/ppconf.sh"
     ],
     "which": [
       "echo ${COMPOSER_BINARY}"
@@ -88,7 +88,7 @@
     ],
     "ci": [
       "@composer validate --strict",
-      "tests/shell/run.sh test-smoke.sh",
+      "test/shell/run.sh test-smoke.sh",
       "@cs-check",
       "@php -f bin/pipelines -- --verbatim --pipeline custom/lint-php",
       "@build",

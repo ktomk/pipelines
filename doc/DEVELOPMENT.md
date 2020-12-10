@@ -124,7 +124,7 @@ The shell tests and many other scripts when using PHP are respecting the
 `PHP_BINARY` environment variable:
 
 ~~~
-$ PHP_BINARY=php5.6 lib/scripts/ppconf.sh self-test
+$ PHP_BINARY=php5.6 lib/script/ppconf.sh self-test
 ppconf self-test
 bash....: /bin/bash                       	GNU bash, version 4.4.20(1)-release (x86_64-pc-linux-gnu)
 composer: /home/user/bin/composer          	Composer version 1.10.17 2020-10-30 22:31:58 (/home/user/bin/composer.phar)
