@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Continue [migration from Travis-CI to Github-Actions][Run-Travis-Yml]
 - Rename tests folder to test to streamline directory names.
 ### Fixed
+- Quoting new-line character at the end of argument, since 0.0.1
 - Phpunit test-case shim for invalid-argument-helper since Phpunit
   6.x, missing in 0.0.51
 

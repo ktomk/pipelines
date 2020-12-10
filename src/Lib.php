@@ -99,7 +99,7 @@ class Lib
         $buffer = '';
         foreach ($parts as $index => $part) {
             $index && $buffer .= "\\'";
-            $safe = preg_match('~^[a-zA-Z0-9,._+@%/-]*$~', $part);
+            $safe = preg_match('~^[a-zA-Z0-9,._+@%/-]*$~D', $part);
             $buffer .= $safe ? $part : "'${part}'";
         }
 

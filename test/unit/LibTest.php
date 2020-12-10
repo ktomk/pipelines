@@ -66,6 +66,7 @@ class LibTest extends TestCase
             array("''", "\\'\\'"),
             array("sally's o'hara", "sally\\''s o'\\'hara"),
             array('', "''"),
+            array("\n", "'\n'"),
         );
     }
 
