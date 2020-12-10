@@ -29,6 +29,7 @@ $builder
     // FIXME ;!pattern
     ->remove('src/Cli/Vcs**') # vcs integration stub (unused)
     ->remove('src/PharBuild/*') # phar build
+    ->remove('src/Composer.php') # composer scripts
     // Composer autoloader has a flaw and requires a full install w/ --no-dev
     // for the non-dev autoloader used in the phar file
     ->phpExec('composer -n -q install --ignore-platform-reqs --no-dev')

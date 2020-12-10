@@ -81,10 +81,10 @@
       "lib/script/ppconf.sh"
     ],
     "which": [
-      "echo ${COMPOSER_BINARY}"
+      "Ktomk\\Pipelines\\Composer::which"
     ],
     "which-php": [
-      "echo ${PHP_BINARY}"
+      "Ktomk\\Pipelines\\Composer::whichPhp"
     ],
     "ci": [
       "@composer validate --strict",

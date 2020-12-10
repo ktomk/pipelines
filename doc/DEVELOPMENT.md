@@ -9,13 +9,10 @@ is mostly important for the phar build as it is not reproducible
 otherwise. In general any version of composer is supported.
 
 ??? note "Composer 2 Support"
-    Early versions of composer 2 had an issue with the projects'
-    `composer which` command. This has been addressed and fixed quickly
-    (see [composer/comopser#9454](https://github.com/composer/composer/issues/9454)
-    for details) and it is safe to use composer 2 from version 2.0.7 on.
+    Composer 2 can be used with the Pipelines project.
 
-    The composer.lock file should be written with the pinned composer
-    version.
+    Just note that the composer.lock file should be written with the
+    pinned composer version.
 
 Currently the `composer.lock` targets a PHP 7.4 system with Phpunit 9
 for development.
@@ -70,7 +67,7 @@ incl. remarks:
 | xdebug 3 *5  |     |     |     |     |     |     | X&nbsp;*6| X   | X   | X   |
 
 ???+ info "Remarks"
-    1. Composer 1 and 2 are supported, composer 2 from 2.0.7 on.
+    1. Composer 1 and 2 are supported.
     2. Configuration expected to work but undefined in (local) CI. See
        as well [Phpunit/PHP version compatibility matrix][PHPUNIT]
        \[PHPUNIT], e.g. it is possible to run PHP 8 with Phpunit 8

@@ -28,6 +28,7 @@ case ${1-0} in
   2 ) echo "# 2: composer which"
       # composer which script must work, there was a regression using composer 2 (Nov 2020)
       # fixed in composer 2.0.7 <https://github.com/composer/composer/issues/9454>
+      # fixed in pipelines 0.0.52
       cd "${PROJECT_DIR}"
       echo "--$(composer which 2>/dev/null)--" | grep -qv -- '----' >/dev/null
       exit
