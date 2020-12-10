@@ -3,10 +3,11 @@ dist: xenial
 
 language: php
 
-# blocklist
+## Blocklist, allow tags only (for .travis.yml builds on Travis-CI)
 branches:
-  except:
-    - github-actions
+  only:
+    - /^0\.\d+\.\d+$/ # Only 0.x.x versions, naming scheme of tags
+    - travis-ci
 
 ## Cache pipelines and composer
 cache:
@@ -24,37 +25,7 @@ services:
 git:
   depth: 3
 
-php:
-  # - '7.4'
-  # - 'nightly'
-  # - '8.0snapshot'
-  # - '8.0'
-  # - '5.6'
-  # - '7.3'
-  - '7.2'
-  # - '7.1'
-  # - '7.0'
-  # - 'master'
-  #- '7.4snapshot'
-  #- '7.3snapshot'
-  #- '7.2snapshot'
-  #- '7.1snapshot'
-  #- '7.0snapshot'
-
-jobs:
-  fast_finish: true
-  allow_failures:
-    - php: '8.0snapshot' # xdebug 3.0.0 segfault/core dumps in unit tests
-    - php: '8.0' # php 8.0 missing on travis <https://travis-ci.community/t/php-8-0-missing/10132>
-    - php: '7.4' # xdebug 3.0.0 segfault/core dumps in unit tests
-    - php: '7.3' # xdebug 3.0.0 segfault/core dumps in unit tests
-    - php: 'master'
-    - php: 'nightly'
-    - php: '7.4snapshot'
-    - php: '7.3snapshot'
-    - php: '7.2snapshot'
-    - php: '7.1snapshot'
-    - php: '7.0snapshot'
+php: 7.2
 
 before_install:
   - |
