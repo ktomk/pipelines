@@ -69,7 +69,7 @@ while [ $# -gt 0 ]; do
       printf "sh......: %-32s\t%s\n"      "$(which sh           )" "$(realpath "$(which sh)")"
       printf "tar.....: %-32s\t%s\n"      "$(which tar          )" "$(tar           --version 2>/dev/null | head -1)"
       printf "unzip...: %-32s\t%s\n"      "$(which unzip        )" "$(unzip -v                2>&1        | head -1)"
-      printf "xdebug..: %s\n"             "$(php -n -derror_reporting=-1 -r 'echo phpversion("xdebug") ?: "no", "\n";')"
+      printf "xdebug..: %s\n"             "$(php -derror_reporting=-1 -r 'echo phpversion("xdebug") ?: "no", "\n";')"
 
       shift
       ;;
