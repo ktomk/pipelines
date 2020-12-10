@@ -8,7 +8,6 @@ use BadMethodCallException;
 use PHPUnit\Framework\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase as PhpunitTestCase;
-use PHPUnit\Util\InvalidArgumentHelper;
 
 /**
  * UnitTestCase
@@ -495,7 +494,7 @@ class TestCase extends PhpunitTestCase
     private function shimAssertDirectoryExists($directory, $message = '')
     {
         if (!\is_string($directory)) {
-            throw InvalidArgumentHelper::factory(1, 'string');
+            throw new \InvalidArgumentException('$directory is not a string');
         }
 
         /** @noinspection PhpUnitTestsInspection */
@@ -513,7 +512,7 @@ class TestCase extends PhpunitTestCase
     private function shimAssertDirectoryNotExists($directory, $message = '')
     {
         if (!\is_string($directory)) {
-            throw InvalidArgumentHelper::factory(1, 'string');
+            throw new \InvalidArgumentException('$directory is not a string');
         }
 
         /** @noinspection PhpUnitTestsInspection */
@@ -531,7 +530,7 @@ class TestCase extends PhpunitTestCase
     private function shimAssertFileExists($filename, $message = '')
     {
         if (!\is_string($filename)) {
-            throw InvalidArgumentHelper::factory(1, 'string');
+            throw new \InvalidArgumentException('$filename is not a string');
         }
 
         /** @noinspection PhpUnitTestsInspection */
@@ -549,7 +548,7 @@ class TestCase extends PhpunitTestCase
     private function shimAssertFileNotExists($filename, $message = '')
     {
         if (!\is_string($filename)) {
-            throw InvalidArgumentHelper::factory(1, 'string');
+            throw new \InvalidArgumentException('$filename is not a string');
         }
 
         /** @noinspection PhpUnitTestsInspection */
