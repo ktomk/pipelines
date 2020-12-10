@@ -27,6 +27,12 @@ jobs:
             experimental: true
 
     steps:
+      - uses: docker-practice/actions-setup-docker@master
+        if: ${{ runner.os == 'macOS' }}
+
+      - shell: bash
+        run: 'docker version --format "client: {{.Client.Version}} / server: {{.Server.Version}}"'
+
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
         with:
