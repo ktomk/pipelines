@@ -103,8 +103,8 @@ Or just run for a more shy clean-up:
 to kill and remove all pipeline containers (w/o showing a list)
 first. "zap" is pipelines "make clean" equivalent for `--keep`.
 
-All containers run by `pipelines` are labeled as well to ease
-maintaining them.
+All containers run by `pipelines` are labeled to ease maintaining
+them.
 
 Validate your `bitbucket-pipelines.yml` file with `--show` which
 highlights errors found.
@@ -114,18 +114,18 @@ might show errors that are not an issue when executing a pipeline
 (`--show` and/or `--dry-run` is better for that) but validates
 against a schema which is aligned with the one that Atlassian/
 Bitbucket provides (the schema is more lax compared to upstream
-for the cases known to us to offer a better practical experience).
-E.g. use it for checks in your CI pipeline or linting files before
-push in a pre-commit hook or your local build.
+for the cases known to offer a better practical experience). E.g.
+use it for checks in your CI pipeline or linting files before push
+in a pre-commit hook or your local build.
 
 Inspect your pipeline with `--dry-run` which will process the
-pipeline but not execute anything. Combine with `-v`, `--verbose`
+pipeline but not execute anything. Combine with `-v` (, `--verbose`)
 to show the commands which would have run verbatim which allows
 to better understand how `pipelines` actually works. Nothing to
 hide here.
 
 Use `--no-run` to not run the pipeline at all, this can be used
-to test the utilities options.
+to test the utilities' options.
 
 Pipeline environment variables can be passed/exported to or set
 for your pipeline by name or file with `-e`, `--env` and
@@ -133,7 +133,7 @@ for your pipeline by name or file with `-e`, `--env` and
 
 Environment variables are also loaded from dot env files named
 `.env.dist` and `.env` and processed in that order before the
-environment options. Use of `--no-dot-env-files` prevents such
+environment options. Use of `--no-dot-env-files` prevents
 automatic loading, `--no-dot-env-dot-dist` for the `.env.dist`
 file only.
 
@@ -196,7 +196,9 @@ Pipeline runner options
                           pr:<branch-name>[:<destination-branch>]
                           determines the pipeline to run
     --pipeline <id>       run pipeline with <id>, use --list for a list
-                          of all pipeline ids available
+                          of all pipeline ids available. overrides
+                          --trigger for the pipeline while keeping
+                          environment from --trigger.
     --step, --steps <steps>
                           execute not all but this/these <steps>. all
                           duplicates and orderings allowed, <steps> are
@@ -211,8 +213,8 @@ Pipeline runner options
                           currently executes, which image is in use ...
     --working-dir <path>  run as if pipelines was started in <path>
     --no-run              do not run the pipeline
-    --prefix <prefix>     use a different prefix for container
-                          names, default is 'pipelines'
+    --prefix <prefix>     use a different prefix for container names,
+                          default is 'pipelines'
     --no-cache            disable step caches; docker always caches
 
 File information options
@@ -227,23 +229,23 @@ File information options
     --show-services       show all defined services in use by pipeline
                           steps and exit
     --validate[=<path>]   schema-validate file, shows errors if any,
-                          exits; can be used more than once,
-                          exit status is non-zero on error
+                          exits; can be used more than once, exit status
+                          is non-zero on error
 
 Environment control options
     -e, --env <variable>  pass or set an environment <variable> for the
-                          docker container, just like docker run, the
-                          variable can be the name of a variable which
-                          adds the variable to the container if exported
+                          docker container, just like a docker run,
+                          <variable> can be the name of a variable which
+                          adds the variable to the container as export
                           or a variable definition with the name of the
                           variable, the equal sign "=" and the value,
-                          e.g. --env NAME=value
+                          e.g. --env NAME=<value>
     --env-file <path>     pass variables from environment file to the
                           docker container
     --no-dot-env-files    do not pass .env.dist and .env files as
                           environment files to docker
     --no-dot-env-dot-dist dot not pass .env.dist as environment file to
-                          docker
+                          docker only
 
 Keep options
     --keep                always keep docker containers
@@ -260,18 +262,21 @@ Container runner options
                           pipeline step container to the mount point.
     --user[=<name|uid>[:<group|gid>]]
                           run pipeline step container as current or
-                          given user/group; overrides default container
-                          user
+                          given <user>/<group>; overrides container
+                          default <user> - often root, (better) run
+                          rootless by default.
 
 Service runner options
-    --service <service>   run <service> attached to the current shell
+    --service <service>   runs <service> attached to the current shell
                           and waits until the service exits, exit status
-                          is the one of the docker run service container
+                          is the one of the docker run service
+                          container; for testing services, run in a
+                          shell of its own or background
 
 Docker service options
     --docker-client <package>
                           which docker client binary to use for the
-                          pipeline service 'docker' defaults to
+                          pipeline service 'docker' defaults to the
                           'docker-19.03.1-linux-static-x86_64' package
     --docker-client-pkgs  list all docker client packages that ship with
                           pipelines and exit
@@ -281,26 +286,27 @@ Docker container maintenance options
       a running pipeline step or by keeping the running containers
       (--keep, --error-keep)
 
-      pipelines uses a prefix followed by '-' and a compound name based
-      on step-number, step-name, pipeline id and image name for
-      container names. the prefix is either 'pipelines' or the one set
-      by --prefix <prefix>
+      pipelines uses a <prefix> 'pipelines' by default, followed by '-'
+      and a compound name based on step-number, step-name, pipeline id
+      and image name for container names. the prefix can be set by the
+      --prefix <prefix> option and argument.
 
       three options are built-in to monitor and interact with leftovers,
       if one or more of these are given, the following operations are
       executed in the order from top to down:
-
     --docker-list         list prefixed containers
     --docker-kill         kills prefixed containers
     --docker-clean        remove (non-running) containers with
                           pipelines prefix
 
-    --docker-zap          kill and remove all prefixed containers in one
-                          go
+      for ease of use:
+    --docker-zap          kill and remove all prefixed containers at
+                          once; no show/listing
 
 Less common options
-    --debug               flag for trouble-shooting fatal errors,
-                          errors, warnings, notices and strict warnings
+    --debug               flag for trouble-shooting (fatal) errors,
+                          warnings, notices and strict warnings; useful
+                          for trouble-shooting and bug-reports
 ```
 
 ### Usage Scenario
@@ -344,7 +350,7 @@ changing the working directory (`--working-dir <path>`).
 
 If a pipeline step fails, the steps container can be kept for
 further inspection on error with the `--error-keep` option. The
-container id is shown which makes it easy to spawn a shell
+container id is shown then which makes it easy to spawn a shell
 inside:
 
 ```bash
@@ -353,37 +359,42 @@ $ docker exec -it $ID /bin/sh
 
 Containers can be always kept for debugging and manual testing
 of a pipeline with `--keep` and with the said `--error-keep` on
-error only.
+error only. Kept containers are re-used by their name regardless
+of any `--keep` (, `--error-keep`) option.
 
 Continue on a (failed) step with the `--steps <steps>` argument,
 the `<steps>` option can be any step number or sequence (`1-3`),
 separate multiple with comma (`3-,1-2`), you can even repeat steps
 or reverse order (`4,3,2,1`).
 
-For example, if the second step failed, to continue use
-`--steps 2-` to re-run the second and all following steps.
+For example, if the second step failed, continue with use of
+`--steps 2-` to re-run the second and all following steps
+(`--steps 2` or `--step 2` will run only the next step; to do a
+step-by-step approach).
 
 Afterwards manage left overs with `--docker-list|kill|clean` or
 clean up with `--docker-zap`.
 
-Debugging options to dream for.
+Debugging options to dream for; benefit from the local build, the
+pipeline container.
 
 #### Container Isolation
 
 There is one container per step, like it is on Bitbucket.
 
-The files are isolated by being copied into the container before
+Files are isolated by being copied into the container before
 the pipeline step script is executed (implicit `--deploy copy`).
 
 Alternatively files can be mounted into the container instead
-with `--deploy mount` which normally is faster, but the working
-tree might become changed by the container script which can be a
-problem when Docker runs system-wide as containers do not
-isolate users (e.g. root is root).
+with `--deploy mount` which normally is faster on Linux, but the
+working tree might become changed by the container script which
+causes side-effect that may be unwanted. Docker runs system-wide
+and containers do not isolate users (e.g. root is root).
 
-Better with `--deploy mount` is using Docker in rootless mode
-where files manipulated in the container pipeline are accessible
-to the own user account (like root is user).
+Better with `--deploy mount` (and peace of mind) is using Docker
+in rootless mode where files manipulated in the pipeline container
+are accessible to the own user account (like root is your user
+automatically mapped).
 
 * Further reading: [*How-To Rootless Pipelines*](doc/PIPELINES-HOWTO-ROOTLESS.md)
 
@@ -394,8 +405,13 @@ are copied back into the working tree while in (implicit)
 `--deploy copy` mode. Artifacts' files are always created by the
 user running pipelines. This also (near) perfectly emulates the
 file format `artifacts` section with the benefit/downside that
-you might want to prepare a clean build in a pipeline step
-script while you can keep artifacts from pipelines locally.
+you might want to prepare a clean build in a pipeline step script
+while you can keep artifacts from pipelines locally. This is a
+trade-off that has turned out to be acceptable over the years.
+
+wrap `pipelines` in a script for clean checkouts or wait for
+future options to stage first (*git-deployment* feature). In any
+case, control your build first of all.
 
 #### Ready for Offline
 
@@ -404,20 +420,22 @@ remote location with broken net? Coding while abroad? Or just
 Bitbucket down again?
 
 Before going into offline mode, read about [*Working Offline*](doc/PIPELINES-OFFLINE.md)
+you'll love it.
 
 #### Services? Check!
 
-The local pipeline runner runs all the service containers on your local
-box/system (that is your piplelines' host). This is similar to
+The local pipeline runner runs service containers on your local
+box/system (that is your pipelines' host). This is similar to
 [use services and databases in Bitbucket Pipelines][BBPL-SRV]
 \[BBPL-SRV].
 
 Even before any pipeline step makes use of a service,
 a service definition can already be tested with the `--service`
 option turning setting up services in pipelines into a new
-experience.
+experience. A good way to test service definitions and to get
+an impression on additional resources being consumed.
 
-  * Further reading: [*Working with Pipeline
+* Further reading: [*Working with Pipeline
     Services*](doc/PIPELINES-SERVICES.md)
 
 #### Default Image
@@ -431,23 +449,24 @@ of the box, but keep in mind it has roughly 1.4 GB.
 As a special feature and by default pipelines mounts the docker
 socket into each container (on systems where the socket is
 available).
-That allows to launch pipelines from a pipeline as long as the
-Docker client is available in the pipeline's container.
-Pipelines will take care to have the Docker client as
-`/usr/bin/docker` when the pipeline has the `docker` service
-(`services: \n - docker`).
+This allows to launch pipelines from a pipeline as long as
+`pipelines` and the Docker client is available in the
+pipelines' container.  `pipelines` will take care of the Docker
+client as `/usr/bin/docker` as long as the pipeline has the
+`docker` service (`services: \n - docker`).
+
 This feature is similar to [run Docker commands in Bitbucket
 Pipelines][BBPL-DCK] \[BBPL-DCK].
 
-The pipelines inside pipeline feature serves pipelines itself
-well for integration testing the projects build on Travis. In
-combination with `--deploy mount`, the original working-directory
-gets mounted from the host again. Additional protection against
-endless loops by recursion is implemented to prevent accidental
+The pipelines inside pipeline feature serves `pipelines` itself
+well for integration testing the projects build. In combination
+with `--deploy mount`, the original working-directory is mounted
+from the host (again). Additional protection against endless
+loops by recursion is implemented to prevent accidental
 pipelines inside pipeline invocations that would be endlessly
-on going.
+on-going.
 
-  * Further reading: [*How-To Docker Client Binary Packages for
+* Further reading: [*How-To Docker Client Binary Packages for
     Pipelines*](doc/PIPELINES-HOWTO-DOCKER-CLIENT-BINARY.md)
 
 ## Environment
@@ -489,21 +508,21 @@ introspection:
 * `PIPELINES_PARENT_CONTAINER_NAME` - name of the container name
     if it was already set when the pipeline started (pipelines
     inside pipeline "pip").
-* `PIPELINES_PIP_CONTAINER_NAME` - name of the first (initial) pipeline
-    container. Used by pipelines inside pipelines ("pip").
+* `PIPELINES_PIP_CONTAINER_NAME` - name of the first (initial)
+    pipeline container. Used by pipelines inside pipelines ("pip").
 * `PIPELINES_PROJECT_PATH` - path of the original project as if
     it would be used for `--deploy`  with `copy` or `mount` so
     that it is possible inside a pipeline to do `--deploy mount`
     when the current container did not mount. A mount always
     requires the path of the project directory on the system
     running pipelines. With no existing mount (e.g. `--deploy
-    copy`) it would otherwise be unknown. Manipulating this parameter
-    within a pipeline leads to undefined behaviour and can have
-    system security implications.
+    copy`) it would otherwise be unknown. Manipulating this
+    parameter within a pipeline leads to undefined behaviour and
+    can have system security implications.
 
-These environment variables are managed by pipelines itself. Some of
-them can be injected which can lead to undefined behaviour and can have
-system security implications.
+These environment variables are managed by pipelines itself.
+Some of them can be injected which can lead to undefined
+behaviour and can have system security implications as well.
 
 Next to these special purpose environment variables, any other
 environment variable can be imported into or set in the container
@@ -512,9 +531,9 @@ exactly as documented for the [`docker run` command][DCK-RN]
 \[DCK-RN].
 
 Instead of specifying custom environment parameters for each
-invocation, pipelines by default automatically uses the `.env.dist`
-and `.env` files from each project supporting the same file-format
-for environment variables as docker.
+invocation, pipelines by default automatically uses the
+`.env.dist` and `.env` files from each project supporting the
+same file-format for environment variables as docker.
 
 ## Exit Status
 
@@ -522,11 +541,12 @@ Exit status on success is 0 (zero).
 
 A non zero exit status denotes an error:
 
-- 1  : An argument supplied (also a missing one) caused the error.
-- 2  : An error is caused by the system not being able to fulfill
-       the command (e.g. a file can not be read).
-- 127: Running pipelines inside pipelines failed due to detecting
-       an endless loop.
+- 1  : An argument supplied (also a missing one) caused the
+       error.
+- 2  : An error is caused by the system not being able to
+       fulfill the command (e.g. a file could not be read).
+- 127: Running pipelines inside pipelines failed detecting an
+       endless loop.
 
 ### Example
 
@@ -551,14 +571,17 @@ Docker needs to be available locally as `docker` command as it is
 used to run the pipelines. Rootless Docker is supported.
 
 A recent PHP version is favored, the `pipelines` command needs
-it to run. It should work with PHP 5.3+, the phar build requires
-PHP 5.4+. A development environment should have PHP 7, this is
-especially suggested for future releases.
+PHP to run. It should work with PHP 5.3.3+, the phar build
+requires  PHP 5.4+. A development environment should be PHP 7+,
+this is especially suggested for future releases. PHP 8 is
+supported as well.
 
 Installing the [PHP YAML extension][PHP-YAML] \[PHP-YAML] is
 highly recommended as it does greatly improve parsing the
 pipelines file which is otherwise with a YAML parser on it's
-own.
+own as a fall-back and is not bad at all. There are subtle
+differences between these parsers, so why not have both at
+hand?
 
 ### User Tests
 
@@ -612,14 +635,14 @@ Rename the phar file to just "`pipelines`", set the executable
 bit and move it into a directory where executables are found.
 
 Downloads from Github are available since version 0.0.4. All
-releases are listed on the website:
+releases are listed on the following website:
 
     https://github.com/ktomk/pipelines/releases
 
 #### Install with Composer
 
 Suggested is to install it globally (and to have the global
-composer vendor/bin in PATH) so that it can be called with ease
+composer vendor/bin in $PATH) so that it can be called with ease
 and there are no dependencies in a local project:
 
     $ composer global require ktomk/pipelines
@@ -638,7 +661,8 @@ To uninstall remove the package:
 Take a look at [Composer from *`getcomposer.org`*][COMPOSER]
 \[COMPOSER], a *Dependency Manager for PHP*. Pipelines has
 support for composer based installations, which might include
-upstream patches.
+upstream patches (composer 2 is supported, incl. upstream
+patches).
 
 #### Install with Phive
 
@@ -659,7 +683,7 @@ support for the *phive* utility including upstream patches.
 
 To install from source, checkout the source repository and
 symlink the executable file `bin/pipelines` into a segment of
-PATH, e.g. your HOME/bin directory or similar. Verify the
+$PATH, e.g. your $HOME/bin directory or similar. Verify the
 installation by invoking pipelines and output the version:
 
     $ pipelines --version
@@ -691,13 +715,14 @@ Check the version by invoking it:
 
     $ build/pipelines.phar --version
     pipelines version 0.0.19-1-gbba5a43
+    # NOTE: the version is exemplary
 
 ##### Php Compatibility and Undefined Behaviour
 
 The pipelines project aims to support php 5.3.3 up to php 8.0.
 
-Using any of its functions or methods with named parameters is
-considered undefined behaviour.
+Using any of its PHP functions or methods with named parameters
+falls into undefined behaviour.
 
 ##### Reproducible Phar Builds
 
@@ -727,7 +752,7 @@ is the same as the Composer project does (see
 Additionally in the pipelines project that file is used to change the
 access permissions of the files in the phar. That is because across PHP
 versions the behaviour has changed so the build is kept backwards and
-forwards compatible. As this has been noticed later in the project
+forwards compatible. As this has been noticed later in the projects'
 history, the build might show different binaries depending on which PHP
 version is used (see [PHP #77022](https://bugs.php.net/bug.php?id=77022)
 and [PHP #79082](https://bugs.php.net/bug.php?id=79082)) and the patch
@@ -783,36 +808,40 @@ to use the development version for `pipelines`.
       / host.docker.internal hostname within pipelines
 - [ ] Count `BITBUCKET_BUILD_NUMBER` on a per project basis (*build-number*
       feature)
-- [ ] Option to not mount docker.sock
+- [ ] Option to *not* mount docker.sock
+- [ ] Limit projects' paths below `$HOME`, excluding dot `.` directory
+      children.
 - [ ] More accessible offline preparation (e.g.
-      `--docker-pull-images`, `--go-offline`)
+      `--docker-pull-images`, `--go-offline` or similar)
 - [ ] Check Docker existence before running a pipeline
 - [ ] Pipes support (*pipe* feature)
     - [X] Show scripts with pipe/s
     - [X] Fake run script with pipe/s showing information
     - [ ] Create test/demo pipe
     - [ ] Run script with pipe/s
-- [ ] Write section about the file format support/limitations
-- [ ] Pipeline file properties support
+- [ ] Write about differences from Bitbucket Pipelines
+- [ ] Write about the file format support/limitations
+- [ ] Pipeline file properties support:
     - [X] step.trigger (`--steps` / `--no-manual` options)
     - [X] step.caches (to disable use `--no-cache` option)
     - [ ] clone (*git-deployment* feature)
     - [X] definitions
         - [X] services (*services* feature)
         - [X] caches (*caches* feature)
-    - [ ] max-time (never needed this)
+    - [ ] max-time (never needed this for local run)
     - [ ] size (likely neglected for local run, limited support for
       [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))
     - [X] step.after-script (*after-script* feature)
 - [ ] Get VCS revision from working directory (*git-deployment* feature)
 - [ ] Use a different project directory `--project-dir <path>` to
   specify the root path to deploy into the container, which
-  currently is the working directory (`--working-dir <path>`)
+  currently is the working directory (`--working-dir <path>` works
+  already)
 - [ ] Run on a specific revision, reference it (`--revision <ref>`);
-  needs a clean VCS checkout in a temporary folder which then
+  needs a clean VCS checkout into a temporary folder which then
   should be copied into the container (*git-deployment* feature)
 - [ ] Override the default image name (`--default-image <name>`; never
-  needed this)
+  needed this for local run)
 
 ## References
 

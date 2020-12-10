@@ -20,17 +20,15 @@ printf("building %s ...\n", $version);
 $builder = Builder::create('build/pipelines.phar');
 $builder
     ->stubfile(__DIR__ . '/stub.php')
-    ->add('bin/pipelines', $builder->dropFirstLine())
+    ->add('bin/pipelines', $builder->dropFirstLine()) # utility executable
     ->add('COPYING')
-    ->add('src/**/*.php')
-    ->add('src/Utility/App.php', $builder->replace('@.@.@', $version))
-    ->add('lib/package/*.yml')
-    ->remove('lib/package/docker-42.42.1-binsh-test-stub.yml')
+    ->add('src/**/*.php') # utility php files
+    ->add('src/Utility/App.php', $builder->replace('@.@.@', $version)) # set version
+    ->add('lib/package/*.yml') # docker client packages
+    ->remove('lib/package/docker-42.42.1-binsh-test-stub.yml') # test fixture
     // FIXME ;!pattern
-    // clean up a bit of mess
-    ->remove('src/Cli/Vcs**')
-    // exclude phar build
-    ->remove('src/PharBuild/*')
+    ->remove('src/Cli/Vcs**') # vcs integration stub (unused)
+    ->remove('src/PharBuild/*') # phar build
     // Composer autoloader has a flaw and requires a full install w/ --no-dev
     // for the non-dev autoloader used in the phar file
     ->phpExec('composer -n -q install --ignore-platform-reqs --no-dev')

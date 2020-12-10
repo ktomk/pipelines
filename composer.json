@@ -52,8 +52,7 @@
       "@unit-test"
     ],
     "pre-install-cmd": [
-      "tests/data/package/make-test-stub-package.sh",
-      "# fixture creation done."
+      "tests/data/package/make-test-stub-package.sh"
     ],
     "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install --no-suggest",
     "test": [
@@ -72,7 +71,7 @@
       "@phpunit tests/integration"
     ],
     "phpunit": [
-      "@php -d phar.readonly=0 -d error_reporting=-1 -d error_log= -d log_errors=1 -d display_errors=0 -f vendor/bin/phpunit -- -v"
+      "@php -d phar.readonly=0 -d error_reporting=-1 -d error_log= -d log_errors=1 -d display_errors=0 -f vendor/phpunit/phpunit/phpunit -- -v"
     ],
     "phpunit-test": [
       "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml tests",

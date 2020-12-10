@@ -55,14 +55,14 @@ while [ $# -gt 0 ]; do
       printf "ppconf %s\n" "$1"
       printf "bash....: %-32s\t%s\n"      "$(which bash         )" "$(bash          --version 2>/dev/null | head -1)"
       printf "composer: %-32s\t%s (%s)\n" "$(which composer     )" "$(composer      --version 2>/dev/null | head -1)" \
-                                                                   "$(composer      which              2>/dev/null)"
+                                                                   "$(composer      which               2>/dev/null)"
       printf "find....: %-32s\t%s\n"      "$(which find         )" "$(find          --version 2>&1        | head -1)"
       printf "gpg.....: %-32s\t%s\n"      "$(which gpg          )" "$(gpg           --version 2>/dev/null | head -1)"
       printf "make....: %-32s\t%s\n"      "$(which make         )" "$(make          --version 2>/dev/null | head -1)"
       printf "openssl.: %-32s\t%s\n"      "$(which openssl      )" "$(openssl         version 2>/dev/null | head -1)"
       (cat /etc/os-release || cat /etc/issue) 2>/dev/null   | head -n 3 | sed 's/^/os......: /'
       printf "php.....: %-32s\t%s (%s)\n" "$(which "$PHP_BINARY")" "$("$PHP_BINARY" --version 2>&1        | head -1)" \
-                                                                   "$(realpath "$(which "$PHP_BINARY")" 2>/dev/null)"
+                                                                   "$(composer      which-php           2>/dev/null)"
       printf "python..: %-32s\t%s\n"      "$(which python       )" "$(python        --version 2>&1        | head -1)"
       printf "python3.: %-32s\t%s\n"      "$(which python3      )" "$(python3       --version 2>/dev/null | head -1)"
       printf "sed.....: %-32s\t%s\n"      "$(which sed          )" "$(sed           --version 2>&1        | head -1)"

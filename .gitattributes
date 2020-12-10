@@ -10,9 +10,14 @@
 *.md filter=space-removal-at-eol
 
 
-#  When merging changes that document per theirs commits in the
+#   When merging changes that document per theirs commits in the
 # change-log, there are often conflicts in that file despite these
 # conflicts are trivial for a human eye. Tom has been reading
 # online that the union merge strategy should levitate this issue.
 
 CHANGELOG.md merge=union
+
+
+#   eol=lf all things text
+* text eol=lf
+*.png -text
