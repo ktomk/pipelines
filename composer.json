@@ -58,6 +58,7 @@
     "test": [
       "@composer validate --strict",
       "@phpunit-test",
+      "@php -f bin/pipelines -- --verbatim --pipeline custom/unit-tests-php-5.3",
       "@shell-test"
     ],
     "shell-test": [
