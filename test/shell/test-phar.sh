@@ -16,22 +16,22 @@ IFS=$'\n\t'
 PROJECT_DIR=../..
 
 case ${1-0} in
-  0 ) echo "# 0: ${0} run"
-      run_test "${0}" 1 2
+  0 ) echo "# 0: $0 run"
+      run_test "$0" 1 2
       exit
       ;;
   1 ) echo "# 1: build pipelines phar"
-      cd "${PROJECT_DIR}"
+      cd "$PROJECT_DIR"
       rm -f build/pipelines.phar
       "${PHP_BINARY-php}" -d phar.readonly=0 -f lib/build/build.php | grep 'signature:'
       build/pipelines.phar --version
       exit
       ;;
   2 ) echo "# 2: check last file by checksum"
-      cd "${PROJECT_DIR}"
+      cd "$PROJECT_DIR"
     <<'EOD' "${PHP_BINARY-php}" -f /dev/stdin -- \
           build/pipelines.phar \
-          vendor/symfony/yaml/Symfony/Component/Yaml/Yaml.php
+          vendor/ktomk/symfony-yaml/Symfony/Component/Yaml/Yaml.php
 <?php
 $pharFile = $argv[1];
 $path = $argv[2];
@@ -40,7 +40,7 @@ function chk_file($label, $path) {
   $buffer = file_get_contents($path);
   $lenBuffer = strlen($buffer);
   $fileSize = filesize($path);
-  printf("  %'.-4s: %d %d %s %s\n"
+  printf("  %'.-4s: %d %d %s \"%s\"\n"
     , $label, $fileSize, $lenBuffer, md5_file($path)
     , addcslashes(substr($buffer, -1), "\0..\37!@\177..\377")
   );
@@ -52,7 +52,7 @@ chk_file('phar', $phar);
 EOD
       exit
       ;;
-  * ) >&2 echo "unknown step ${1}"
+  * ) >&2 echo "unknown step $1"
       exit 1
       ;;
 esac

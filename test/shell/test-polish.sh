@@ -15,8 +15,8 @@ IFS=$'\n\t'
 #
 
 case ${1-0} in
-  0 ) echo "# 0: ${0} run"
-      run_test "${0}" 3 2 1
+  0 ) echo "# 0: $0 run"
+      run_test "$0" 3 2 1
       exit
       ;;
   1 ) echo "# 1: run w/ script generation and verbose output"
@@ -39,7 +39,7 @@ case ${1-0} in
       docker ps | grep -v 'pipelines-1.pipeline-features-and-introspection.default.pipelines'
       exit
       ;;
-  * ) >&2 echo "unknown step ${1}"
+  * ) >&2 echo "unknown step $1"
       exit 1
       ;;
 esac

@@ -13,7 +13,7 @@
 #                  the test-case/drivers' test-plan, any number greater
 #                  than zero runs that test number of the driver
 #
-# example: ./test/shell/run.sh test-phar.sh 1 2
+# example: ./test/shell/run.sh phar 1 2
 #
 set -euo pipefail
 IFS=$'\n\t'
@@ -21,26 +21,35 @@ IFS=$'\n\t'
 cd "${0%/*}"
 
 ##
-# optional: <case> (test-*.sh) [<test>..] as positional parameters
-if [[ -f "./${1:-}" ]] && [[ -x "./${1:-}" ]]; then
-  test="./${1}"
-  if [[ "$#" -eq 1 ]]; then
-    "${test}"
-    exit
+# run <case> (test->>*<<.sh) [<test>..] as positional parameters
+run() {
+  local test
+  test="./test-${1:-}.sh"
+  if [[ -f "$test" ]] && [[ -x "$test" ]]; then
+    if [[ "$#" -eq 1 ]]; then
+      "$test"
+      return
+    fi
+    while [[ "$#" -gt 1 ]]; do
+      shift 1
+      echo "## $test $1"
+      "$test" "$1"
+    done
+    return
   fi
-  while [[ "$#" -gt 1 ]]; do
-    shift 1
-    "${test}" "${1}"
-  done
+  if [[ "$#" -gt 1 ]]; then
+    >&2 echo "fatal: not a test-case: '$1'"
+    retrun 1
+  fi
+}
+
+if [ $# -gt 0 ]; then
+  run "$@"
   exit
 fi
-if [[ "$#" -gt 1 ]]; then
-  >&2 echo "fatal: not a test-case: '${1}'"
-  exit 1
-fi
 
-./test-smoke.sh
-./test-artifacts.sh
-./test-schema-validate.sh
-./test-services.sh 1 2
-./test-pip.sh
+run smoke
+run artifacts
+run schema-validate
+run services 1 2
+run pip

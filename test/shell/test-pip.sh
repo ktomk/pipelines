@@ -21,13 +21,13 @@ IFS=$'\n\t'
 #
 
 case ${1-0} in
-  0 ) echo "# 0: ${0} run"
-      run_test "${0}" 8 1 6 5 4 2 3 7
+  0 ) echo "# 0: $0 run"
+      run_test "$0" 8 1 6 5 4 2 3 7
       exit
       ;;
   1 ) echo "# 1: build pipelines phar"
       prj=../..
-      cd "${prj}" \
+      cd "$prj" \
         ; assert lib/build/build.php | grep 'signature:' \
         ; build/pipelines.phar --version \
         ; cd -
@@ -88,7 +88,7 @@ case ${1-0} in
       ../../bin/pipelines --pipeline custom/recursion-pip-happy
       exit
       ;;
-  * ) >&2 echo "unknown step ${1}"
+  * ) >&2 echo "unknown step $1"
       exit 1
       ;;
 esac

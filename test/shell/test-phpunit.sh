@@ -14,8 +14,8 @@ IFS=$'\n\t'
 #
 
 case ${1-0} in
-  0 ) echo "# 0: ${0} run"
-      run_test "${0}" 1 2
+  0 ) echo "# 0: $0 run"
+      run_test "$0" 1 2
       exit
       ;;
   1 ) echo "# 1: phpunit on php 7.0"
@@ -28,7 +28,7 @@ case ${1-0} in
       ../../bin/pipelines --pipeline custom/unit-tests-php-5.3
       exit
       ;;
-  * ) >&2 echo "unknown step ${1}"
+  * ) >&2 echo "unknown step $1"
       exit 1
       ;;
 esac
