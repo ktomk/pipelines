@@ -25,8 +25,8 @@ pipelines:
             - composer
           script:
             - command -v composer || lib/pipelines/composer-install.sh
-            - lib/script/ppconf.sh self-test disable-tls remove-dev all downpatch-phpunit-tests phpunit ^4
-            - composer install
+            - lib/script/ppconf.sh self-test disable-tls remove-dev optional downpatch-phpunit-tests
+            - composer update
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
           services:
             - docker

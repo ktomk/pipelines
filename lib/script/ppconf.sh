@@ -135,8 +135,12 @@ while [ $# -gt 0 ]; do
         deps="friendsofphp/php-cs-fixer kubawerlos/php-cs-fixer-custom-fixers phpunit/phpunit"
         printf "       %s: %s\n" "$1" "$deps"
       fi
+      if [ "$deps" = "optional" ]; then
+        deps="friendsofphp/php-cs-fixer kubawerlos/php-cs-fixer-custom-fixers"
+        printf "       %s: %s\n" "$1" "$deps"
+      fi
       # shellcheck disable=SC2086 # unquoted $deps (from $2) intended
-      f_composer --quiet remove --dev $deps
+      f_composer --quiet remove --dev --ignore-platform-reqs $deps
       shift 2
       ;;
 
