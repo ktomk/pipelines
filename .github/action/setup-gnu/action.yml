@@ -1,0 +1,49 @@
+name: Set up GNU Utilities on macos machine
+description: Action to set up GNU Utilities on macos machine
+
+inputs:
+  formula:
+    description: '(white-)space separated list of brew gnu formula names'
+    default: findutils gnu-tar gnu-sed
+    required: false
+
+runs:
+  using: composite
+
+  steps:
+    - name: 'Set up GNU utilities on macos machine'
+      shell: bash
+      run: |
+        : brew install ${{ inputs.formula }}
+        # exit early if machine is not macos
+        if [ "${{ runner.os }}" != 'macOS' ]; then
+          printf '\033[34m%s\033[0m\n' "different machine type, skipping: ${{ runner.os }}"
+          exit 0
+        fi
+        #####
+        # gnuwery - brew install w/ PATH for GNU (Core) Utilities
+        # <brew-package>...
+        gnuwery() {
+          local bin_path
+          while [ $# -gt 0 ]; do
+            printf '::group::%s\n' "brew install $1"
+            if ! brew install "$1"; then
+              printf '::error ::gnuwery: %s: brew install failure\n' "$1"
+            fi
+            bin_path="/usr/local/opt/$1/libexec/gnubin"
+            if [ ! -d "$bin_path" ]; then
+              printf '::error ::gnuwery: %s: no such path: "%s"\n' "$1" "$bin_path"
+            else
+              printf '\033[34m%s\033[0m\n' "$1: PATH setup ($bin_path)"
+              PATH="$bin_path:$PATH"
+              echo "$bin_path" >> $GITHUB_PATH
+            fi
+            printf '::endgroup::\n'
+            shift
+          done;
+        }
+        printf '::group::%s\n' "configure brew"
+        printf '\033[34m%s\033[0m\n' "set brew analytics off"
+        brew analytics off || :
+        printf '::endgroup::\n'
+        gnuwery ${{ inputs.formula }}

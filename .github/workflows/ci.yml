@@ -27,13 +27,19 @@ jobs:
             experimental: true
 
     steps:
-      - uses: docker-practice/actions-setup-docker@master
-        if: ${{ runner.os == 'macOS' }}
-
-      - shell: bash
-        run: 'docker version --format "client: {{.Client.Version}} / server: {{.Server.Version}}"'
-
       - uses: actions/checkout@v2
+      - if: ${{ runner.os == 'macOS' }}
+        uses: ./.github/action/setup-gnu
+
+      - if: ${{ runner.os == 'macOS' }}
+        uses: docker-practice/actions-setup-docker@master
+        with:
+          docker_channel: stable
+          docker_version: 19.03
+          docker_buildx: false
+          docker_cli_experimental: disabled
+          docker_daemon_json: '{}'
+
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}

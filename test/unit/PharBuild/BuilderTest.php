@@ -58,7 +58,7 @@ class BuilderTest extends TestCase
     public function testIllegalStub()
     {
         $this->expectException('PharException');
-        $this->expectExceptionMessageMatches('~^illegal stub for phar "/[a-zA-Z0-9/.]+\\.phar"$~');
+        $this->expectExceptionMessageMatches('~^illegal stub for phar "/[a-zA-Z0-9/._]+\\.phar"$~');
 
         $this->needsPharWriteAccess();
 
@@ -125,13 +125,13 @@ class BuilderTest extends TestCase
     public function testPhpExec()
     {
         $testCase = $this;
-        $expected = sprintf('%s -f /usr/bin/test -- ', Lib::phpBinary());
+        $expected = sprintf('~^%s -f (?:/usr)?/bin/test -- $~', preg_quote(Lib::phpBinary(), '~'));
 
         $builder = $this->createPartialMock('Ktomk\Pipelines\PharBuild\Builder', array('exec'));
         $builder
             ->method('exec')
             ->willReturnCallback(function ($command, &$return) use ($testCase, $expected, $builder) {
-                $testCase::assertSame($expected, $command);
+                $testCase::assertMatchesRegularExpression($expected, $command);
                 $return = 'OK';
 
                 return $builder;
