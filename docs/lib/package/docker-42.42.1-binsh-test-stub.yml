@@ -11,7 +11,7 @@ name: docker-42.42.1-binsh-test-stub
 
 # 'uri': url/path to .tgz package (here fake special notation to have it as a
 #         file relative to the package definition file, "relative" URI)
-uri: ../../tests/data/package/docker-test-stub.tgz
+uri: ../../test/data/package/docker-test-stub.tgz
 
 # 'sha256': hash of the .tgz package file
 sha256: 05fae3996a533dd04b6b5e09b10a24a93bae1ba13341bf619b1cec7266f8c044
