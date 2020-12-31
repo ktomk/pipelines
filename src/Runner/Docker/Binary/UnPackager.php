@@ -120,14 +120,12 @@ class UnPackager
         $pkgBase = sprintf('%s/%s', $cache, basename($package['uri']));
         $binBase = sprintf('%s/%s', $share, $package['name']);
 
-        $package['prep'] = array(
-            'cache' => $cache,
-            'pkg_base' => $pkgBase,
-            'pkg_local' => sprintf('%s.%s', $pkgBase, $package['sha256']),
-            'share' => $share,
-            'bin_base' => $binBase,
-            'bin_local' => sprintf('%s.%s', $binBase, $package['binary_sha256']),
-        );
+        $package['prep']['cache'] = $cache;
+        $package['prep']['pkg_base'] = $pkgBase;
+        $package['prep']['pkg_local'] = sprintf('%s.%s', $pkgBase, $package['sha256']);
+        $package['prep']['share'] = $share;
+        $package['prep']['bin_base'] = $binBase;
+        $package['prep']['bin_local'] = sprintf('%s.%s', $binBase, $package['binary_sha256']);
 
         return $package;
     }

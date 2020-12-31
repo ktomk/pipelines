@@ -262,11 +262,7 @@ class Pipelines implements Dom\FileNode
             throw new ParseException("'${default}' requires a list of steps");
         }
 
-        $references[$default] = array(
-            $default,
-            null,
-            &$array[$default],
-        );
+        $references[$default] = array($default, null, &$array[$default]);
 
         return $references;
     }

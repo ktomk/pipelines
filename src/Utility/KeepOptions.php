@@ -54,8 +54,7 @@ class KeepOptions
      */
     public function run()
     {
-        list($this->errorKeep, $this->keep)
-            = $this->parse($this->args);
+        list($this->errorKeep, $this->keep) = $this->parse($this->args);
 
         return $this;
     }

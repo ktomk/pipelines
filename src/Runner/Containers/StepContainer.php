@@ -92,8 +92,9 @@ class StepContainer
      */
     public function getServiceContainers()
     {
-        return $this->serviceContainers
-            = $this->serviceContainers ?: new StepServiceContainers($this->step, $this->runner);
+        $this->serviceContainers = $this->serviceContainers ?: new StepServiceContainers($this->step, $this->runner);
+
+        return $this->serviceContainers;
     }
 
     /**

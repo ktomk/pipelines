@@ -48,7 +48,6 @@ install:
       # PHP-CS-Fixer n/a for PHP 8.0 yet, needs php version fake
       # Hat-tip: Composer 1.10 and PHP 8 #9523 <https://github.com/composer/composer/issues/9523>
       IGNORE_PLATFORM_REQS=--ignore-platform-reqs
-      ppconf xdebug3
     fi
   - |
     if [[ "${TRAVIS_PHP_VERSION}" == 7.4*    ]] \
@@ -58,6 +57,7 @@ install:
   - if [[ "${TRAVIS_PHP_VERSION}" == 5.6     ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^5; fi
   - echo "IGNORE_PLATFORM_REQS=${IGNORE_PLATFORM_REQS-}"
   - composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-}
+  - ppconf self-test | grep ^xdebug | cut -d\  -f 2 | grep '^2\.' && ppconf xdebug2 || true
   - vendor/bin/phpunit --version
   # - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
 
