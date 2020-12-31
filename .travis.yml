@@ -71,7 +71,6 @@ script:
   #  [1]  phpunit (src)
   - composer phpunit
   #  [2]  phar-build (src, clean)
-  - git stash # stash build configuration changes
   - git reset --hard HEAD # reset for phar build
   - composer build
   - |
@@ -81,7 +80,7 @@ script:
       echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
       ls -al build/pipelines.phar.asc
     fi
-  - git stash pop && composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-} # restore build configuration changes
+  - composer install --no-dev --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-} # after phar build
   #  [3]  pipelines self-tests (src)
   - bin/pipelines --version
   - bin/pipelines --verbose --debug --show
