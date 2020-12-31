@@ -5,8 +5,10 @@ documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+## [0.0.52]  2020-12-31
 ### Changed
+- Tests expect Xdebug 3 by default, run `$ composer ppconf xdebug2`
+  for Xdebug 2 compatibility.
 - Continue [migration from Travis-CI to Github-Actions][Run-Travis-Yml]
 - Rename tests folder to test to streamline directory names.
 ### Fixed
@@ -519,4 +521,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [0.0.49]: https://github.com/ktomk/pipelines/releases/tag/0.0.49
 [0.0.50]: https://github.com/ktomk/pipelines/releases/tag/0.0.50
 [0.0.51]: https://github.com/ktomk/pipelines/releases/tag/0.0.51
+[0.0.52]: https://github.com/ktomk/pipelines/releases/tag/0.0.52
 [unreleased]: https://github.com/ktomk/pipelines
