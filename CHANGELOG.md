@@ -5,7 +5,11 @@ documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.0.52]  2020-12-31
+## [unreleased]
+### Fixed
+- Changelog missing dash "-" in last revision headline
+
+## [0.0.52] - 2020-12-31
 ### Changed
 - Tests expect Xdebug 3 by default, run `$ composer ppconf xdebug2`
   for Xdebug 2 compatibility.
