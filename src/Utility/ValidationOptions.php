@@ -79,7 +79,7 @@ class ValidationOptions implements Runnable
         $didValidate = false;
         $allValid = true;
 
-        while ($verify = $this->args->getOptionOptionalArgument('validate', true)) {
+        while (null !== $verify = $this->args->getOptionOptionalArgument('validate', true)) {
             $didValidate = true;
             list($isValid) = $this->validate($verify);
             $isValid || $allValid = false;

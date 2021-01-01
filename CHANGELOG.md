@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Change
 - Reduce of past-tense in change log headlines
 ### Fix
+- Validating w/ empty file-name (`--validate=`), since
+  [0.0.44](#0044---2020-07-06)
 - Changelog missing links to "since x.x.x" revisions
 - Changelog missing dash "-" in last revision headline
 
