@@ -33,6 +33,13 @@ class File
     private $pipelines;
 
     /**
+     * @var null|string path to file (the visual one to re-present it back to the user)
+     *
+     * @see File::createFromFile()
+     */
+    private $path;
+
+    /**
      * @param string $path
      *
      * @throws ParseException
@@ -46,7 +53,10 @@ class File
             throw new ParseException(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
         }
 
-        return new self($result);
+        $file = new self($result);
+        $file->path = $path;
+
+        return $file;
     }
 
     /**
@@ -156,6 +166,20 @@ class File
     public function getArray()
     {
         return $this->array;
+    }
+
+    /**
+     * path to the file, null if created from array, string if created from file
+     *
+     * in its original form, e.g. '-' could represent from stdin
+     *
+     * @return null|string
+     *
+     * @see File::createFromFile()
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**

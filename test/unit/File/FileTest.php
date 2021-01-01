@@ -48,6 +48,8 @@ class FileTest extends TestCase
     {
         $file = File::createFromFile($path);
         self::assertNotNull($file);
+        self::assertNotNull($file->getPath());
+        self::assertSame($path, $file->getPath());
     }
 
     public function testCreateFromPipeFile()
@@ -55,6 +57,7 @@ class FileTest extends TestCase
         $path = __DIR__ . '/../../data/yml/pipe.yml';
         $file = File::createFromFile($path);
         self::assertNotNull($file);
+        self::assertSame($path, $file->getPath());
 
         $default = $file->getById('branches/develop');
         self::assertNotNull($default);
