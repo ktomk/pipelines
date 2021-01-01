@@ -1,28 +1,34 @@
 # Change Log
-All notable changes to Pipelines will be
-documented in this file.
+All notable changes to Pipelines will be documented in this file.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+The format is based on [Keep a Changelog] and Pipelines adheres to
+[Semantic Versioning].
+
+[Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
+[Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
-### Fixed
+### Change
+- Reduce of past-tense in change log headlines
+### Fix
+- Changelog missing links to "since x.x.x" revisions
 - Changelog missing dash "-" in last revision headline
 
 ## [0.0.52] - 2020-12-31
-### Changed
+### Change
 - Tests expect Xdebug 3 by default, run `$ composer ppconf xdebug2`
   for Xdebug 2 compatibility.
 - Continue [migration from Travis-CI to Github-Actions][Run-Travis-Yml]
 - Rename tests folder to test to streamline directory names.
-### Fixed
+### Fix
 - Composer which script compatibility with composer 2 < 2.0.7.
-- Quoting new-line character at the end of argument, since 0.0.1
+- Quoting new-line character at the end of argument, since
+  [0.0.1](#001---2018-01-10)
 - Phpunit test-case shim for invalid-argument-helper since Phpunit
-  6.x, missing in 0.0.51
+  6.x, missing in [0.0.51](#0051---2020-12-09)
 
 ## [0.0.51] - 2020-12-09
-### Added
+### Add
 - Support for PHP 8
 - Support for Composer 2
 - [Migration from Travis-CI to Github-Actions][Run-Travis-Yml]
@@ -31,62 +37,62 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   xdebug extension and config for CLI (server-name is `pipelines-cli`)
 - Composer script descriptions
 - More pipeline example YAML files
-### Changed
+### Change
 - Testsuite for PHP 8 changes
 - Updated [documentation about working offline][Offline-PL]
-### Fixed
+### Fix
 - Unintended object to array conversion, supports PHP 8
 - Done message for `--validate` saying "verify done" instead of
-  "validate done" since 0.0.44
+  "validate done" since [0.0.44](#0044---2020-07-06)
 - Detecting readable local streams wrong for non-local remote streams
-- Shell test for artifacts, missing in 0.0.50
+- Shell test for artifacts, missing in [0.0.50]
 
 [Dev-Doc]: doc/DEVELOPMENT.md
 [Run-Travis-Yml]: https://github.com/marketplace/actions/run-travis-yml
 
 ## [0.0.50] - 2020-09-14
-### Added
+### Add
 - [Documentation about working offline][Offline-PL] incl. pipelines
   example yaml files
 - Shell test for artifacts
-### Changed
+### Change
 - Updated readme
-### Fixed
-- Artifacts. Broken since 0.0.43
+### Fix
+- Artifacts. Broken since [0.0.43](#0043---2020-07-05)
 
 [Offline-PL]: doc/PIPELINES-OFFLINE.md
 
 ## [0.0.49] - 2020-08-10
-### Added
+### Add
 - `--show` step caches
 - step caches validation against cache definitions (broken name,
   undefined custom cache) when parsing step caches (`--show`, running a
   pipeline step etc.).
 - php cs-fixer custom fixers (thanks [Kuba Werlos])
-### Changed
+### Change
 - improve [pipeline cache docs](doc/PIPELINES-CACHES.md)
 
 [Kuba Werlos]: https://github.com/kubawerlos
 
 ## [0.0.48] - 2020-07-31
-### Added
+### Add
 - dependency caches and `--no-cache` for previous behavior, [caches
   documentation](doc/PIPELINES-CACHES.md)
-### Fixed
+### Fix
 - Integration test polluting `$HOME` for docker client stub
 
 ## [0.0.47] - 2020-07-23
-### Added
+### Add
 - version info to `--debug` above the stacktrace/s (thanks [Andreas Sundqvist])
 
 [Andreas Sundqvist]: https://github.com/sunkan
 
 ## [0.0.46] - 2020-07-10
-### Fixed
-- Regression of missing labels for step containers since 0.0.43
+### Fix
+- Regression of missing labels for step containers since [0.0.43]
 
 ## [0.0.45] - 2020-07-09
-### Added
+### Add
 - `step.clone-path` configuration parameter for the path inside the step
   container to deploy the project files, defaults to `/app`
 - Schema for new `<pipeline>.step.condition` directives Jun 2020 ([Peter Plewa])
@@ -97,86 +103,86 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [Peter Plewa]: https://bitbucket.org/blog/author/pplewa
 
 ## [0.0.44] - 2020-07-06
-### Added
+### Add
 - `--validate[=<path>]` option to schema-validate a `bitbucket-pipelines.yml`;
   can be used multiple times; validates and exists, non-zero if one or
   multiple files do not validate
 
 ## [0.0.43] - 2020-07-05
-### Added
+### Add
 - Labels for step and service containers
-### Changed
+### Change
 - Re-arrange help section for more specific runner options
-### Fixed
+### Fix
 - Regression identifying pipelines service container (`--docker-list` etc.)
-  since 0.0.42
+  since [0.0.42](#0042---2020-06-25)
 
 ## [0.0.42] - 2020-06-25
-### Added
+### Add
 - `script.exit-early` bool configuration parameter to exit early in step
   scripts on error more strictly. defaults to false.
 - `--ssh` option to mount `$SSH_AUTH_SOCK` into the pipeline/step container,
   SSH agent forwarding (#6)
 - `--user[=<uid>:<gid>]` option to run pipeline/step container as current
   or specific user (and group) (#6)
-### Changed
+### Change
 - Improved container names, service containers names start with
   `pipelines.<service>` instead of `pipelines-<service>`.
 
 ## [0.0.41] - 2020-06-21
-### Added
+### Add
 - Add `-c <name>=<value>` option to pass a configuration parameter to the
   command.
 - Support for `BITBUCKET_STEP_RUN_NUMBER` environment parameter: defaults
   to `1` and set to `1` after first successful step.
 
 ## [0.0.40] - 2020-06-17
-### Fixed
+### Fix
 - Wording of pipe scripts comments
 - Tmp cleanup in tests
 - Parsing a pipe in after-script
 - Parsing a pipeline with variables keyword
 
 ## [0.0.39] - 2020-06-02
-### Added
+### Add
 - Service documentation
 - `--service <service>` run `<service>` attached  for trouble  shooting a
    service configuration or watch logs while the service is running
 - `--file` accepts the special file-name `-` to read pipelines from standard
   input
-### Fixed
+### Fix
 - Parsing empty step
 
 ## [0.0.38] - 2020-06-01
-### Added
+### Add
 - `--show` each step and step services
 - `--images` shows service images
 - `--show-pipelines` for old `--show` format/ behaviour
 - `--show-services` to show services in use of pipeline steps
 
-### Changed
+### Change
 - Improve parse error reporting of variables in
   service definitions
 
 ## [0.0.37] - 2020-05-30
-### Added
+### Add
 - Pipeline services other than docker (redis,
   mysql, ...)
-### Fixed
+### Fix
 - Comment formatting in `.env.dist` (minor)
 
 ## [0.0.36] - 2020-05-28
-### Added
+### Add
 - Help section w/ help message from src in readme
-### Fixed
+### Fix
 - Pipeline default variables command line arguments parsing
 - Help message on trigger destination branch name
 - Remove static calls to throw a status exception
 
 ## [0.0.35] - 2020-05-24
-### Changed
+### Change
 - Updated readme for instructions
-### Fixed
+### Fix
 - Shell test runner run on invalid test-case/driver
 - Type-handling in code and dead/superfluous code
 - Remove static calls to throw a parse exception
@@ -189,26 +195,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Change log two release links
 
 ## [0.0.34] - 2020-05-13
-### Fixed
+### Fix
 - Show and fake run pipelines with a pipe (#5)
 
 ## [0.0.33] - 2020-04-26
-### Changed
+### Change
 - Readme for container re-use
-### Fixed
+### Fix
 - Build for Phpunit 7.5+
 - Diverse lower-level code issues
 
 ## [0.0.32] - 2020-04-11
-### Added
+### Add
 - Travis PHP 7.4 build
 - Composer script `phpunit` for use in diverse test scripts using the
   same configuration
 - Composer scripts `which` and `which-php` to obtain the path to composer
   and php in use
-### Changed
+### Change
 - Test-case forward compatibility for Phpunit 8 (for PHP 7.4 build)
-### Fixed
+### Fix
 - Deprecation warning when running pipelines w/ PHP 7.4 w/o the yaml
   extension
 - Code coverage w/ PHP 7.4 / Xdebug 2.9.3
@@ -218,45 +224,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Do not hide errors in Phpunit test-suite
 
 ## [0.0.31] - 2020-04-06
-### Fixed
+### Fix
 - Patch fstat permission bits after PHP bug #79082 & #77022 fix to restore
   reproducible phar build
 - Correct missing link in Change Log
 
 ## [0.0.30] - 2020-04-05
-### Added
+### Add
 - Support for `after-script:` incl. `BITBUCKET_EXIT_CODE` environment parameter.
-### Fixed
+### Fix
 - Corrections in Read Me and Change Log
 
 ## [0.0.29] - 2020-04-04
-### Changed
+### Change
 - Pin composer version in phar build; show which composer version in use
 - Add destination to pull request --trigger pr:<source>:<destination>
 
 ## [0.0.28] - 2020-03-16
-### Changed
+### Change
 - Phar build: Do not require platform dependencies for composer install
 - Travis build: Handle GPG key import before install completely
-### Fixed
-- Tainted phar build on Travis since 0.0.25 (adding "+" to versions in
-  error)
+### Fix
+- Tainted phar build on Travis (adding "+" to versions in error), since
+  [0.0.25](#0025---2019-12-30)
 
 ## [0.0.27] - 2020-03-15
-### Added
+### Add
 - `--no-manual` option to not stop at manual step(s). The new default is
   to stop at steps marked manual `trigger: manual`. The first step of a
   pipeline can not be manual, and the first step executed with `--steps`
   will never stop even if it has a `trigger: manual`.
-### Fixed
+### Fix
 - Base unit-test-case missing shim createConfiguredMock method
 
 ## [0.0.26] - 2020-03-09
-### Added
+### Add
 - `--steps` option to specify which step(s) of a pipeline to run. Same as
   `--step` and to reserve both. `1` as well as `1,2,3`, `1-3` or `-2,3-`
   are valid
-### Fixed
+### Fix
 - Base unit-test-case exception expectation optional message parameter
 - Travis build pulling php:5.3
 - Read Me and Change Log fixes for links, WS fixes and typo for other
@@ -267,7 +273,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   reproducible phar build
 
 ## [0.0.25] - 2019-12-30
-### Added
+### Add
 - Support of Docker in rootless mode and a How-To in the docs folder.
 - Support of `DOCKER_HOST` parameter for `unix://` sockets (Docker Service)
 - `--docker-client-pkgs` option to list available docker client binary
@@ -276,173 +282,173 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   to use (Docker Service)
 - Docker Service in YAML injects Linux X86_64 docker client
   binary (Docker Service)
-### Changed
+### Change
 - Internal improvements of the step runner
 
 ## [0.0.24] - 2019-12-21
-### Added
+### Add
 - `PIPELINES_PROJECT_PATH` parameter
-### Changed
+### Change
 - More readable step scripts
-### Fixed
+### Fix
 - Pipelines w/ `--deploy mount` inside a pipeline of `--deploy copy`,
   the current default.
 - Busybox on Atlassian Bitbucket Cloud
 
 ## [0.0.23] - 2019-12-17
-### Changed
+### Change
 - Improve `--help` display
 - Show scripts with `-v` and drop temporary files for scripts
-### Fixed
+### Fix
 - Exec tester unintentionally override of phpunit test case
   results
 
 ## [0.0.22] - 2019-10-12
-### Changed
+### Change
 - Use Symfony YAML as fall-back parser, replaces
   Mustangostang Spyc (#4)
 
 ## [0.0.21] - 2019-09-23
-### Fixed
+### Fix
 - Unintended output of "\x1D" on some container systems
 
 ## [0.0.20] - 2019-09-20
-### Added
+### Add
 - File format support to check if a step has services
 - Test case base class fall-back to Phpunit create* mock
   functions
-### Changed
+### Change
 - Execute script as a single script instead of executing line by
   line
-### Fixed
+### Fix
 - Container exited while running script (136, broken pipe on socket etc.)
 - Remove PHP internal variables like $argv from the environment
   variable maps in containers
 
 ## [0.0.19] - 2019-04-02
-### Added
+### Add
 - Suggestion to install the PHP YAML extension
 - Kept containers are automatically re-used if they still exist
 - Support for pull request pipelines
-### Changed
+### Change
 - Reduce artifact chunk size from fixed number 1792 to string
   length based
-### Fixed
+### Fix
 - Patch fstat permission bits after PHP bug #77022 fix to restore
   reproducible phar build
 
 ## [0.0.18] - 2018-08-07
-### Added
+### Add
 - Add `--docker-zap` flag kill and clean all pipeline docker
   containers at once
 - Fallback for readable file check for systems w/ ACLs where a
   file is not readable by permission but can be read (#1)
-### Changed
+### Change
 - Pipeline step specific container names instead of random UUIDs
   so that keeping pipelines (and only if in mind) makes this all
   much more predictable
 
 ## [0.0.17] - 2018-05-29
-### Changed
+### Change
 - Reduce artifact chunk size from 2048 to 1792
-### Fixed
+### Fix
 - Symbolic links in artifacts
 - Read me file has some errors and inconsistencies. Again.
 
 ## [0.0.16] - 2018-05-04
-### Added
+### Add
 - Support for PHP YAML extension, is preferred over Spyc lib if
   available; highly recommended
-### Fixed
+### Fix
   - All uppercase hexits in builder phar info
 
 ## [0.0.15] - 2018-04-23
-### Added
+### Add
 - Add `--no-dot-env-files` and `--no-dot-env-dot-dist` flags to
   not pass `.env.dist` and `.env` files to docker as
   `--env-file` arguments
 
 ## [0.0.14] - 2018-04-18
-### Added
+### Add
 - Tag script to make releases
-### Changed
+### Change
 - More useful default BITBUCKET_REPO_SLUG value
-### Fixed
+### Fix
 - Coverage checker script precision
 - Duplicate output of non-zero exit code information
 
 ## [0.0.13] - 2018-03-20
-### Fixed
+### Fix
 - Fix `--error-keep` keeping containers
 
 ## [0.0.12] - 2018-03-19
-### Added
+### Add
 - Utility status exception
-### Changed
+### Change
 - Streamline of file parse error handling
 - Streamline of utility option and argument errors
 - Parsing of utility options and arguments in run routine
-### Fixed
+### Fix
 - Code coverage for unit tests
 
 ## [0.0.11] - 2018-03-13
-### Added
+### Add
 - Keep container on error option: `--error-keep`
-### Changed
+### Change
 - Do not keep containers by default, not even on error
-### Fixed
+### Fix
 - Code style
 
 ## [0.0.10] - 2018-03-12
-### Added
+### Add
 - Coverage check
-### Changed
+### Change
 - Code style
 - Readme for corrections and coverage
-### Fixed
+### Fix
 - Resolution of environment variables (esp. w/ numbers in name)
 
 ## [0.0.9] - 2018-02-28
-### Added
+### Add
 - Traverse upwards for pipelines file
-### Fixed
+### Fix
 - Phive release signing
 - App coverage for deploy copy mode
 
 ## [0.0.8] - 2018-02-27
-### Added
+### Add
 - Phive release signing
-### Fixed
+### Fix
 - Hardencoded /tmp directory
 
 ## [0.0.7] - 2018-02-27
-### Fixed
+### Fix
 - Describe missing `--trigger` in help text
 - Build directory owner and attributes for deploy copy mode
 - Do not capture artifacts files after failed step
 
 ## [0.0.6] - 2018-02-14
-### Added
+### Add
 - Support for .env / .env.dist file(s)
 - Support for Docker Hub private repositories incl. providing
   credentials via `--env` or `--env-file` environment variables
-### Changed
+### Change
 - Readme for corrections and coverage
-### Fixed
+### Fix
 - Support for large number of artifacts files
 - Crash with image `run-as-user` property in pipelines file
 - Deploy copy mode fail-safe against copying errors (e.g.
   permission denied on a file to copy)
 
 ## [0.0.5] - 2018-01-29
-### Added
+### Add
 - Docker environment variables options: `-e`, `--env` for
   variables and `--env-file` for files
 - Composer "ci" script to integrate continuously
 - `--no-keep` option to never keep containers, even on error
-### Changed
+### Change
 - Default `--deploy` mode is now `copy`, was `mount` previously
-### Fixed
+### Fix
 - Image name validation
 - Image as a section
 - Show same image name only once
@@ -451,27 +457,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error messages now show the utility name
 
 ## [0.0.4] - 2018-01-16
-### Added
+### Add
 - Release phar files on Github
-### Changed
+### Change
 - Various code style improvements
 - Readme for corrections and coverage
 
 ## [0.0.3] - 2018-01-14
-### Added
+### Add
 - Keep container on pipeline step failure automatically
 - `--verbatim` option to only output from pipeline, not pipelines
-### Changed
+### Change
 - --help information
 - Various code style improvements
 
 ## [0.0.2] - 2018-01-11
-### Added
+### Add
 - Brace glob pattern in pipelines
 - Change log
 
 ## [0.0.1] - 2018-01-10
-### Added
+### Add
 - Initial release
 
 [0.0.1]: https://github.com/ktomk/pipelines/releases/tag/0.0.1
