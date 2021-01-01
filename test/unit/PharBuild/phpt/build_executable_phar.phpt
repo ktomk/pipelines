@@ -33,9 +33,9 @@ __HALT_COMPILER(); ?>
 echo a hello from test.php
 file.....: build/test.phar
 size.....: 639 bytes
-SHA-1....: FC75D09CC614E35D10ACF19E53C1B3FA986C8F8D
-SHA-256..: 477F1CB68398D847EDC9EAB91CEE7E30FEA51BA3C44C76243FD89C4CF6D7AF77
-file.....: %d.%d.%d
+SHA-1....: fc75d09cc614e35d10acf19e53c1b3fa986c8f8d
+SHA-256..: 477f1cb68398d847edc9eab91cee7e30fea51ba3c44c76243fd89c4cf6d7af77
+file-ver.: %d.%d.%d
 api......: %d.%d.%d
 extension: %d.%d.%s
 php......: %d.%d.%s

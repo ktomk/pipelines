@@ -390,11 +390,11 @@ class Builder
 
         printf("file.....: %s\n", $filename);
         printf("size.....: %s bytes\n", number_format(filesize($filename), 0, '.', ' '));
-        printf("SHA-1....: %s\n", strtoupper(sha1_file($filename)));
-        printf("SHA-256..: %s\n", strtoupper(hash_file('sha256', $filename)));
+        printf("SHA-1....: %s\n", sha1_file($filename));
+        printf("SHA-256..: %s\n", hash_file('sha256', $filename));
 
         $pinfo = new Phar($filename);
-        printf("file.....: %s\n", $pinfo->getVersion());
+        printf("file-ver.: %s\n", $pinfo->getVersion());
         printf("api......: %s\n", $pinfo::apiVersion());
         printf("extension: %s\n", phpversion('phar'));
         printf("php......: %s\n", PHP_VERSION);
