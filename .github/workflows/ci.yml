@@ -18,28 +18,9 @@ jobs:
         machine: ['ubuntu-18.04']
         php-version: ['8.1', '8.0', '7.4', '7.3', '7.2', '7.1', '7.0', '5.6']
         experimental: [false]
-        include:
-          - machine: macos-10.15
-            php-version: '7.4'
-            experimental: true
-          - machine: windows-2019
-            php-version: '7.4'
-            experimental: true
 
     steps:
       - uses: actions/checkout@v2
-      - if: ${{ runner.os == 'macOS' }}
-        uses: ./.github/action/setup-gnu
-
-      - if: ${{ runner.os == 'macOS' }}
-        uses: docker-practice/actions-setup-docker@master
-        with:
-          docker_channel: stable
-          docker_version: 19.03
-          docker_buildx: false
-          docker_cli_experimental: disabled
-          docker_daemon_json: '{}'
-
       - uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php-version }}
@@ -63,5 +44,7 @@ jobs:
           restore-keys: pipelines-
 
       - uses: ktomk/run-travis-yml@v1
+        with:
+          allow_failure: ${{ matrix.experimental }}
         env:
           TRAVIS_PHP_VERSION: ${{ matrix.php-version }}
