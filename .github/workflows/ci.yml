@@ -26,22 +26,21 @@ jobs:
           php-version: ${{ matrix.php-version }}
           coverage: xdebug
 
-      - id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
       - uses: actions/cache@v2
         with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: composer-${{ hashFiles('**/composer.lock') }}-${{ runner.os }}
+          path: |
+            ~/.cache/composer
+            ~/.cache/pipelines
+            vendor
+          key: pipelines-${{ hashFiles('**/bitbucket-pipelines.yml') }}-${{ hashFiles('**/composer.lock') }}-${{ matrix.php-version }}-${{ runner.os }}
           restore-keys: |
+            composer-${{ hashFiles('**/composer.lock') }}-${{ runner.os }}
             composer-${{ hashFiles('**/composer.lock') }}-
             composer-
-
-      - uses: actions/cache@v2
-        with:
-          path: ~/.cache/pipelines
-          key: pipelines-${{ runner.os }}
-          restore-keys: pipelines-
+            pipelines-${{ hashFiles('**/bitbucket-pipelines.yml') }}-${{ hashFiles('**/composer.lock') }}-${{ matrix.php-version }}-
+            pipelines-${{ hashFiles('**/bitbucket-pipelines.yml') }}-${{ hashFiles('**/composer.lock') }}-
+            pipelines-${{ hashFiles('**/bitbucket-pipelines.yml') }}-
+            pipelines-
 
       - uses: ktomk/run-travis-yml@v1
         with:
