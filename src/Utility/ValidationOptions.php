@@ -6,7 +6,6 @@ namespace Ktomk\Pipelines\Utility;
 
 use InvalidArgumentException;
 use JsonSchema\Constraints\Constraint;
-use JsonSchema\Validator;
 use Ktomk\Pipelines\Cli\Args;
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\File;
@@ -78,11 +77,16 @@ class ValidationOptions implements Runnable
     {
         $didValidate = false;
         $allValid = true;
+        $checked = array();
 
         while (null !== $verify = $this->args->getOptionOptionalArgument('validate', true)) {
+            if (isset($checked[$verify])) {
+                continue;
+            }
             $didValidate = true;
-            list($isValid) = $this->validate($verify);
+            list($isValid, $path) = $this->validate($verify);
             $isValid || $allValid = false;
+            $checked[$verify] = $checked[$path] = true;
         };
 
         if ($didValidate) {
@@ -103,31 +107,30 @@ class ValidationOptions implements Runnable
     private function validate($verify)
     {
         if (true === $verify) {
+            $path = $this->file->getPath();
             $data = $this->file->getArray();
         } else {
-            $data = Yaml::file($verify);
-            if (null === $data) {
-                throw new \UnexpectedValueException(sprintf('not a yaml file: %s', $verify));
+            $path = $verify;
+            if (null === $data = Yaml::file($path)) {
+                throw new \UnexpectedValueException(sprintf('not a yaml file: %s', $path));
             }
         }
+        $output = $this->output;
 
+        $output(sprintf('validate: %s', $path));
         list($isValid, $validator) = $this->validateData($data);
-
-        if (!$isValid) {
-            foreach ($validator->getErrors(Validator::ERROR_DOCUMENT_VALIDATION) as $error) {
-                call_user_func(
-                    $this->output,
-                    sprintf(
-                        '%s[%s] %s',
-                        true === $verify ? '' : sprintf('%s: ', $verify),
-                        $error['property'],
-                        $error['message']
-                    )
-                );
-            }
+        $result = array($isValid, $path);
+        if ($isValid) {
+            return $result;
         }
 
-        return array($isValid, $validator);
+        foreach ($validator->getErrors($validator::ERROR_DOCUMENT_VALIDATION) as $error) {
+            $output(
+                sprintf('%s: [%s] %s', $path, $error['property'], $error['message'])
+            );
+        }
+
+        return $result;
     }
 
     /**

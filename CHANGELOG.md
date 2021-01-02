@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- show `--validate` file-name/ -path
 ### Change
 - Reduce of past-tense in change log headlines
 ### Fix
