@@ -72,7 +72,7 @@ script:
   - composer phpunit
   #  [2]  phar-build (src, clean)
   - git reset --hard HEAD # reset for phar build
-  - composer build
+  - ( set -o pipefail; composer build 2>&1 | tee build/build-pipelines-phar.log; )
   - |
     if [[ -z "${SIGNPHRASE-}" ]]; then
       echo "no SIGNPHRASE, no build/pipelines.phar.asc"

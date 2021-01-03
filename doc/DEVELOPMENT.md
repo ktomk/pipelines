@@ -91,7 +91,8 @@ incl. remarks:
     6. Xdebug 3 support for PHP 7.2 is limited to security support. Same
        applies to Xdebug 2.9 for PHP 7.2. No other Xdebug version next
        to 3.0 or 2.9 is supported at all for PHP 7.2. See _Xdebug 3
-       Support_ above.
+       Support_ above. Currently the test-suite does not work for PHP
+       7.2 and Xdebug 3 running on Phpunit 7.
 
 ## PHP Version and Reproducible PHAR Build
 
