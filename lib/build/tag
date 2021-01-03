@@ -32,17 +32,29 @@ echo "  commit: $(git log --oneline -1)"
 
 # check not unreleased (not digits and dots, no semver checker here)
 if [[ "${TAG}" = "" ]]; then
-  >&2 echo "fatal: not a version tag '${TAG}' - [unreleased] ?"
-  exit 1
+  if ! grep '^## \[unreleased\]' CHANGELOG.md; then
+    >&2 echo "fatal: not a version tag '${TAG}' and not unreleased"
+    exit 1
+  fi
+
+  NEXT_TAG="$(git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=1; print $0}')"
+  sed -i -e 's/^## \[unreleased\].*$/## ['"$NEXT_TAG"'] - '"$(date --utc +%F)"'/' CHANGELOG.md
+  git add CHANGELOG.md
+  git commit -m "prepare $NEXT_TAG release"
+  # git tag is auto-created later
+  >&2 echo "info: prepared for tag '${NEXT_TAG}' now, prepare commit added"
+  TAG="$NEXT_TAG"
 fi
 
 # check it is linked (links are at the bottom of the CHANGELOG.md)
 # [0.0.35]: https://github.com/ktomk/pipelines/releases/tag/0.0.35
 if ! grep -qP '^\Q['"${TAG}"']\E: https://' CHANGELOG.md; then
-  >&2 echo "fatal: no link for version tag '${TAG}'"
+  >&2 echo "bumpers: no link for version tag '${TAG}', adding it to last commit"
   >&2 echo "       [${TAG}]: https://github.com/ktomk/pipelines/releases/tag/${TAG}"
   sed -i -e '$i'"[${TAG}]: https://github.com/ktomk/pipelines/releases/tag/${TAG}" CHANGELOG.md
-  exit 1
+  git add CHANGELOG.md
+  git commit --amend -C HEAD
+  >&2 echo "info: added link for tag '${TAG}' to CHANGELOG.md and committed"
 fi
 
 # check that changelog file is not changed (committed)
