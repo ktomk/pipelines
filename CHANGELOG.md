@@ -13,6 +13,12 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Change
 - Reduce of past-tense in change log headlines
 ### Fix
+- Phar uploads for the releases 0.0.52 and 0.0.51 on Github as they
+  did not match the original signatures from date of release due to an
+  error in the build re-building them within a dirty repo (old files
+  show "+" at the end of their version number (0.0.52+; 0.0.51+),
+  correct phar files do not.
+- Shell tests in CI taint phar build, since [0.0.51](#0051---2020-12-09)
 - Validating w/ empty file-name (`--validate=`), since
   [0.0.44](#0044---2020-07-06)
 - Changelog missing links to "since x.x.x" revisions

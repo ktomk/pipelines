@@ -13,11 +13,13 @@ use Ktomk\Pipelines\PharBuild\Builder;
 
 require __DIR__ . '/../../src/bootstrap.php';
 
+list(, $file) = $argv + array(null, 'build/pipelines.phar');
+
 $version = exec('git describe --tags --always --first-parent --dirty=+');
 
 printf("building %s ...\n", $version);
 
-$builder = Builder::create('build/pipelines.phar');
+$builder = Builder::create($file);
 $builder
     ->stubfile(__DIR__ . '/stub.php')
     ->add('bin/pipelines', $builder->dropFirstLine()) # utility executable
