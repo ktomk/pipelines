@@ -25,6 +25,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           coverage: xdebug
+          extensions: yaml
 
       - uses: actions/cache@v2
         with:
