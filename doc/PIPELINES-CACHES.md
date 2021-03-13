@@ -462,12 +462,12 @@ less isolation (just say `--no-cache` with
 
 As kept containers are with all the changes to the
 file-system, this effectively caches all build
-dependencies on the fly out of the box w/o
-specifying/defining caches first.
+dependencies on the fly w/o specifying/defining
+caches first.
 
 As artifacts are copied back into the project
 directory (at least at a successful last step)
-making use of artifacts also add some options.
+making use of artifacts also adds some options.
 
 ## References
 

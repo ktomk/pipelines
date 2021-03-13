@@ -23,12 +23,12 @@ fashion (façon).
 | --------------------------------------- |----------------------------|
 | `CI`                                    | *all* options; always set to "`true`" |
 | `BITBUCKET_BOOKMARK`                    | `--trigger <ref>` where `<ref>` is `bookmark:<name>`; for Mercurial projects |
-| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>`, `pr:<name>`, `pr:<source>:<destination>`; source branch |
+| `BITBUCKET_BRANCH`                      | `--trigger <ref>` where `<ref>` is `branch:<name>`, `pr:<name>`, `pr:<source>:<destination>`; (source) branch |
 | `BITBUCKET_BUILD_NUMBER`                | *all* options; always set to "`0`" |
 | `BITBUCKET_CLONE_DIR`                   | *all* options; set by pipelines, it is the deploy directory inside the container (not clone directory) as pipelines has more options than cloning (it currently actually never clones) |
 | `BITBUCKET_COMMIT`                      | *all* options; always set to "`0000000000000000000000000000000000000000`" |
 | `BITBUCKET_DEPLOYMENT_ENVIRONMENT`      | -/-; currently unsupported |
-| `BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID` | -/-; currently unsupported |
+| <nobr>`BITBUCKET_DEPLOYMENT_ENVIRONMENT_UUID`</nobr> | -/-; currently unsupported |
 | `BITBUCKET_EXIT_CODE`                   | *all* options; set to the exit status of the `script` for use in the `after-script` |
 | `BITBUCKET_GIT_HTTP_ORIGIN`             | -/-; currently unsupported |
 | `BITBUCKET_GIT_SSH_ORIGIN`              | -/-; currently unsupported |
