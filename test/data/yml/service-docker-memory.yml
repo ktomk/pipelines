@@ -1,0 +1,18 @@
+# this file is part of pipelines
+#
+# fixture file for docker service definition with memory setting
+# docker is an ignored service in pipelines as always available
+
+pipelines:
+  default:
+    - step:
+        image: ktomk/pipelines:busybox
+        script:
+          - echo "done."
+        services:
+          - docker
+
+definitions:
+  services:
+    docker:
+      memory: 3072

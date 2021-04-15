@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ## [unreleased]
 ### Add
 - Support changed docker remove behaviour (Docker 20.10)
+### Fix
+- Exit on docker service definition, since [0.0.37](#0037---2020-05-30)  (#10) (thanks [Manuel])
+
+[Manuel]: https://github.com/ortizman
 
 ## [0.0.53] - 2021-01-03
 ### Add

@@ -82,6 +82,10 @@ class Services implements Countable
             if (!is_array($service)) {
                 throw new ParseException(sprintf('Invalid service definition "%s"', $name));
             }
+            // docker service is internal, for pipelines no need here to handle it
+            if ('docker' === $name) {
+                continue;
+            }
             $this->services[$name] = $this->parseNamedService($name, $service);
         }
     }

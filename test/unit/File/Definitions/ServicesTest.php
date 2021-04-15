@@ -66,6 +66,25 @@ class ServicesTest extends TestCase
     }
 
     /**
+     * docker service is different as it does not need an image.
+     *
+     * @return void
+     */
+    public function testParseDockerService()
+    {
+        $array = Yaml::file(__DIR__ . '/../../../data/yml/service-docker-memory.yml');
+        self::assertArrayHasKey('definitions', $array, 'fixture complete 1');
+        self::assertIsArray($array['definitions'], 'fixture complete 2');
+        self::assertArrayHasKey('services', $array['definitions'], 'fixture complete 3');
+        self::assertIsArray($array['definitions']['services'], 'fixture complete 4');
+
+        $services = new Services($array['definitions']['services']);
+        self::assertInstanceOf('Ktomk\Pipelines\File\Definitions\Services', $services);
+
+        self::assertCount(0, $services);
+    }
+
+    /**
      * @return void
      */
     public function testParseInvalidServiceName()
