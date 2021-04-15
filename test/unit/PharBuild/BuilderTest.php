@@ -58,7 +58,7 @@ class BuilderTest extends TestCase
     public function testIllegalStub()
     {
         $this->expectException('PharException');
-        $this->expectExceptionMessageMatches('~^illegal stub for phar "/[a-zA-Z0-9/._]+\\.phar"$~');
+        $this->expectExceptionMessageMatches('~^illegal stub for phar "/[a-zA-Z0-9/._]+\\.phar"(|\Q (__HALT_COMPILER\E\Q(); is missing)\E)$~');
 
         $this->needsPharWriteAccess();
 
