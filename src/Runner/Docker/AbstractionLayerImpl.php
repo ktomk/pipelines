@@ -132,7 +132,15 @@ class AbstractionLayerImpl implements AbstractionLayer
             return null;
         }
 
-        return rtrim($out);
+        $buffer = rtrim($out);
+
+        // idempotent removal for return behaviour, removing an nonexistent is not an exception, never
+        // later docker exits 0, no out and err is that no such container to remove
+        if ('' === $buffer && '' !== $err) {
+            return null;
+        }
+
+        return $buffer;
     }
 
     public function start($image, array $arguments, array $runArguments = array())

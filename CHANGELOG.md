@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- Support changed docker remove behaviour (Docker 20.10)
 
 ## [0.0.53] - 2021-01-03
 ### Add
