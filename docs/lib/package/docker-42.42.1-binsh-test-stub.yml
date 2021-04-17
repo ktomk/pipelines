@@ -14,7 +14,7 @@ name: docker-42.42.1-binsh-test-stub
 uri: ../../test/data/package/docker-test-stub.tgz
 
 # 'sha256': hash of the .tgz package file
-sha256: 05fae3996a533dd04b6b5e09b10a24a93bae1ba13341bf619b1cec7266f8c044
+sha256: e2f72b2de05d941067d2407482e035bf3d8591cff73bba47640347bc2dbed528
 
 # 'binary': file name (path) of the binary inside the .tgz package, used to
 #           extract from the tar file.
