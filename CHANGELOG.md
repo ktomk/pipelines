@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.54] - 2021-04-17
 ### Add
 - Support changed docker remove behaviour (Docker 20.10)
 ### Fix
@@ -551,4 +551,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.51]: https://github.com/ktomk/pipelines/releases/tag/0.0.51
 [0.0.52]: https://github.com/ktomk/pipelines/releases/tag/0.0.52
 [0.0.53]: https://github.com/ktomk/pipelines/releases/tag/0.0.53
+[0.0.54]: https://github.com/ktomk/pipelines/releases/tag/0.0.54
 [unreleased]: https://github.com/ktomk/pipelines
