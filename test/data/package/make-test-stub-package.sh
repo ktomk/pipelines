@@ -22,9 +22,9 @@ fi
 
 cd test/data/package >/dev/null
 
-if ! GZIP=-n tar czf docker-test-stub.tgz --owner=0 --group=0 --mtime='UTC 1970-01-01' docker-test-stub; then
+if ! tar cf docker-test-stub.tgz -I 'gzip -n9' --owner=0 --group=0 --mtime='UTC 1970-01-01' docker-test-stub; then
   >&2 echo "/!\\ install build degraded: version of tar is less compatible. upgrade with gnu-tar. /!\\"
-  GZIP=-n tar czf docker-test-stub.tgz docker-test-stub
+  tar cf docker-test-stub.tgz --use-compress-program='gzip -n9' docker-test-stub
 fi
 
 bin_hash="$(php -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub)"
