@@ -23,7 +23,7 @@ fi
 cd test/data/package >/dev/null
 
 if ! GZIP=-n tar czf docker-test-stub.tgz --owner=0 --group=0 --mtime='UTC 1970-01-01' docker-test-stub; then
-  echo "/!\\ install build degraded: version of tar is incompatible. upgrade with gnu-tar. /!\\"
+  >&2 echo "/!\\ install build degraded: version of tar is less compatible. upgrade with gnu-tar. /!\\"
   GZIP=-n tar czf docker-test-stub.tgz docker-test-stub
 fi
 
