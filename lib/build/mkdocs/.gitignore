@@ -16,3 +16,9 @@
 # makefile targets
 /mkdocs-install
 /mkdocs.yml.*
+
+# python VIRTUAL_ENV (recommended)
+#
+# $ python3 -m venv venv && . venv/bin/activate
+#
+/venv

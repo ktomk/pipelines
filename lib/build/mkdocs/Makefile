@@ -15,6 +15,7 @@ html_dir = $(addsuffix /$@,$(build_dir))
 # python command
 python ?= python3
 # mkdocs command, e.g. to use src version: mkdocs="PYTHONPATH=~/workspace/mkdocs python3 -m mkdocs" make ...
+#				  note: use VIRTUAL_ENV (recommended) see ./.gitignore
 mkdocs ?= mkdocs
 
 .PHONY: html-docs # mkdocs build for static html files (html-docs)
@@ -105,16 +106,32 @@ $(source)/lib/package/docker-42.42.1-binsh-test-stub.yml:
 .PHONY: clean
 clean: ; git clean -qffdx -- "include" "docs" "site"
 
-mkdocs-install: requirements.txt # install mkdocs requirements
-	$(python) -m pip install -q --user -r $(<) \
-		&& touch $(@)
+# python (mkdocs) requirements
+# note: use VIRTUAL_ENV (recommended) otherwise --user instead of system
+
+pip = $(python) -m pip --disable-pip-version-check
+pip_user = $(if $(VIRTUAL_ENV),,--user)
+pip_less = | sed '/^Requirement already satisfied: /d;/^\#\#/,$$ d'
+stash_install = test -f mkdocs-install && cp -v mkdocs-install .mkdocs-install/mkdocs-install.~$$(md5sum mkdocs-install | cut -d' ' -f1) || :
+pip_venv = $(if $(VIRTUAL_ENV),$(pip) install -U pip wheel setuptools $(pip_less),:)
+
+mkdocs-install: requirements.txt # install and stash (mkdocs) requirements
+	$(pip_venv)
+	$(stash_install)
+	$(pip) install $(pip_user) -r $< $(pip_less)
+	$(pip) freeze -r requirements.txt --all | tee $@ $(pip_less)
+	$(stash_install)
 
 .PHONY: mkdocs-uninstall # remove mkdocs requirements
-mkdocs-uninstall:
-	$(python) -m pip uninstall -y -r requirements.txt \
-		&& rm mkdocs-install
+mkdocs-uninstall: requirements.txt
+	$(stash_install)
+	$(pip) freeze $(pip_user) -r $< 2>/dev/null | sed '/^##/,$$d' | xargs -r $(pip) uninstall -y
+	rm -f mkdocs-install
 
-.PHONY: mkdocs-update # update mkdocs requirements
-mkdocs-update:
-	$(python) -m pip install --user -U -r requirements.txt \
-		&& touch mkdocs-install
+.PHONY: mkdocs-update # update and freeze (mkdocs) requirements
+mkdocs-update: requirements.txt
+	$(pip_venv)
+	$(stash_install)
+	$(pip) install $(pip_user) -U -r $< $(pip_less)
+	$(pip) freeze -r $< --all | tee mkdocs-install $(pip_less)
+	$(stash_install)
