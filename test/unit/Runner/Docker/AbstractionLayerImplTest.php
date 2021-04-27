@@ -79,6 +79,14 @@ class AbstractionLayerImplTest extends TestCase
         $result = $dal->remove('foo', false);
         self::assertNull($result, 'remove happy path of non-existent container (not enforced)');
 
+        $exec->expect('capture', 'docker rm foo', function ($command, $arguments, &$out, &$err) {
+            $err = "Error: No such container: foo\n";
+
+            return 0;
+        });
+        $result = $dal->remove('foo', false);
+        self::assertNull($result, 'remove happy path of non-existent container (not enforced, docker 20.10.5, build 55c4c88)');
+
         // remove (while not throwing; tests!) and some general error
         $exec->expect('capture', 'docker rm -f foo', 42);
         $dal->throws(false);
