@@ -72,7 +72,7 @@
       "@phpunit test/integration"
     ],
     "phpunit": [
-      "@php -d phar.readonly=0 -d error_reporting=-1 -d error_log= -d log_errors=1 -d display_errors=0 -f vendor/phpunit/phpunit/phpunit -- -v"
+      "XDEBUG_MODE=coverage \"$PHP_BINARY\" -d phar.readonly=0 -d error_reporting=-1 -d error_log= -d log_errors=1 -d display_errors=0 -f vendor/phpunit/phpunit/phpunit -- -v"
     ],
     "phpunit-test": [
       "@phpunit --log-junit build/log/junit.xml --coverage-clover build/log/clover.xml test",
