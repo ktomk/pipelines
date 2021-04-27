@@ -38,7 +38,7 @@ tar_file="pipelines-tmp-snapshot.tar"
 # number of entries, oldest and newest information and total size
 #
 # 1: type "d" or "f" (or anything on find -type)
-# 2: pattern, e.g. "pipelines-cp.*"
+# 2: pattern, e.g. "pipelines-cp.*" (by find -name)
 #
 print_summary() {
   local type="$1"
@@ -61,8 +61,7 @@ if [[ "${1:-}" = "--snapshot" ]]; then
     >&2 printf 'cowardly refusing to snapshot as the tar version looks incompatible (needs GNU tar)\n'
     exit 1
   fi
-
-  printf "tar snapshot %s from %s ...\n" "$tar_file" "$TMP_DIR"
+  printf 'tar snapshot "%s" from %s ...\n' "$tar_file" "$TMP_DIR"
   if [[ -f "$tar_file" ]]; then
     cp -vf --backup=numbered "$tar_file" "$tar_file"
     rm "$tar_file"

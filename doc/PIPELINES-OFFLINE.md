@@ -268,7 +268,6 @@ definitions:
 Once the apk cache is populated, the pipeline runs
 offline despite the `bash` package is installed in
 the pipeline script.
-
 This first of all works without further ado, after
 some time, `apk` tries to re-connect for getting
 a fresh package index. This will cost some 2-3
@@ -287,7 +286,17 @@ ERROR: http://dl-cdn.alpinelinux.org/alpine/v3.12/community: temporary error (tr
 ...
 ```
 
-Tested with alpine release 3.12.0.
+???- caution "The `--no-cache` Option"
+    Do not use `apk add` with the `--no-cache`
+    argument. It effectively prevents storing the
+    files into the cache. Then, when offline, `apk(1)`
+    can not select the package and gives an error
+    message showing that apk failed to select the
+    package. This is different to a Dockerfile
+    that keeps a layer size down. This is normally
+    _not_ the case within a pipeline.
+
+Tested with alpine releases 3.12.0 and 3.13.5.
 
 References:
 

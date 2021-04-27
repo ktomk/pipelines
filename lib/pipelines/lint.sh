@@ -8,7 +8,7 @@ set -u
 IFS="$(printf '\n\t ')"
 
 # alpine busybox compat: findutils: used for parallel linting of php scripts
-[ -x "$(command -v apk)" ] && apk add --no-cache findutils
+[ -x "$(command -v apk)" ] && (apk add --no-network findutils || apk add findutils)
 
 php -v | head -n 1
 find --version | head -n 1

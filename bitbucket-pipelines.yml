@@ -102,10 +102,37 @@ pipelines:
             - vendor/bin/phpunit --testsuite unit,integration
           services:
             - docker
+    lint-php-8.0-alpine:
+      - step: &lint-php80-alpine
+          image: ktomk/pipelines:php8.0-alpine
+          caches: [apk]
+          script:
+            - lib/pipelines/lint.sh
+    unit-tests-php-8.0-alpine:
+      - step:
+          image: ktomk/pipelines:php8.0-alpine
+          caches:
+            - composer
+          script:
+            - composer -n require --no-progress --dev phpunit/phpunit ^9 --update-with-dependencies --ignore-platform-reqs
+            - ./lib/script/ppconf.sh patch-phpunit-tests
+            - vendor/bin/phpunit --migrate-configuration
+            - XDEBUG_MODE=coverage vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
+    ci-php-8.0-alpine:
+      - step:
+          image: ktomk/pipelines:php8.0-alpine
+          caches: [composer, vendor-php80]
+          script:
+            - composer -n install --no-progress
+            - composer ci
+          services: [docker]
     lint-php:
       - step: *lint-php53
       - step: *lint-php74
       - step: *lint-php80
+      - step: *lint-php80-alpine
     unit-tests: # run phpunit suite
       - step: *unit-tests-php70
     artifact-tests: # run phpunit suite w/ artifact
@@ -284,6 +311,8 @@ pipelines:
 definitions:
   caches:
     build-http-cache: ~/.cache/build-http-cache
+    apk: /etc/apk/cache
+    vendor-php80: vendor
   services:
     redis:
       image: redis:6.0.4-alpine
