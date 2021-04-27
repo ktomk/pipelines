@@ -123,7 +123,7 @@ while [ $# -gt 0 ]; do
     phpunit | phpunit-version ) ### composer require specific phpunit version
       printf "ppconf %s: %s\n" "$1" "$2"
       if ! f_composer show -i --name-only phpunit/phpunit 2>/dev/null | head -n 4 | sed -n -e 's/versions.*\* //p' | grep -q "$2"'\.'; then
-        f_composer --quiet require --dev --no-suggest --update-with-dependencies phpunit/phpunit:"$2"
+        f_composer --quiet require --dev --update-with-dependencies phpunit/phpunit:"$2"
       fi
       shift 2
       ;;

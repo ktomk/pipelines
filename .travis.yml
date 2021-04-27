@@ -9,14 +9,10 @@ branches:
     - /^0\.\d+\.\d+$/ # Only 0.x.x versions, naming scheme of tags
     - travis-ci
 
-## Cache pipelines and composer
 cache:
   directories:
+    - $HOME/.cache/composer
     - $HOME/.cache/pipelines
-    # Cache directory for older Composer versions.
-    - $HOME/.composer/cache/files
-    # Cache directory for more recent Composer versions.
-    - $HOME/.cache/composer/files
 
 ## Pipelines needs docker
 services:
@@ -34,7 +30,7 @@ before_install:
       gpg --import ktomk-phive-sign.gpg
       rm ktomk-phive-sign.gpg
     fi
-  - composer self-update 1.10.17 # pin composer version for whole build
+  - composer self-update 2.0.13 # pin composer version for whole build
 
 ## Install fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
 install:
@@ -56,7 +52,7 @@ install:
   - if [[ "${TRAVIS_PHP_VERSION}" == 7.[01]* ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^6; fi
   - if [[ "${TRAVIS_PHP_VERSION}" == 5.6     ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^5; fi
   - echo "IGNORE_PLATFORM_REQS=${IGNORE_PLATFORM_REQS-}"
-  - composer install --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-}
+  - composer install --no-interaction --no-progress ${IGNORE_PLATFORM_REQS-}
   - ppconf self-test | grep ^xdebug | cut -d\  -f 2 | grep '^2\.' && ppconf xdebug2 || true
   - vendor/bin/phpunit --version
   # - bin/pipelines --images | while read -r image; do docker image pull "$image"; done; true;
@@ -80,7 +76,7 @@ script:
       echo "$SIGNPHRASE" | gpg --passphrase-fd 0 --output build/pipelines.phar.asc --detach-sig build/pipelines.phar
       ls -al build/pipelines.phar.asc
     fi
-  - composer install --no-dev --no-interaction --no-suggest --no-progress ${IGNORE_PLATFORM_REQS-} # after phar build
+  - composer install --no-dev --no-interaction --no-progress ${IGNORE_PLATFORM_REQS-} # after phar build
   #  [3]  pipelines self-tests (src)
   - bin/pipelines --version
   - bin/pipelines --verbose --debug --show

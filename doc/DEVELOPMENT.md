@@ -4,24 +4,25 @@ Pipelines is a command-line utility written in [PHP][PHP] \[PHP] and
 developed as a [composer][COMPOSER] \[COMPOSER] package with a [phar
 file build][PHAR] \[PHAR].
 
-The currently pinned composer version is `1.10.17`, pinning the version
+The currently pinned composer version is `2.0.13`, pinning the version
 is mostly important for the phar build as it is not reproducible
 otherwise. In general any version of composer is supported.
 
 ??? note "Composer 2 Support"
-    Composer 2 can be used with the Pipelines project.
+    Composer 2 is the standard in the Pipelines project. Previously it
+    was Composer 1.
 
     Just note that the composer.lock file should be written with the
     pinned composer version.
 
 Currently the `composer.lock` targets a PHP 7.4 system with Phpunit 9
-for development.
+for development. It should be similar for PHP 8.0.
 
 ??? note "Xdebug 3 Support"
     [Xdebug 3.0.0][XDEBUG] \[XDEBUG] is supported but _may_ make some
-    tests, especially the PHPT tests, fail (segmentation faults). Check
-    you have got the latest Xdebug 3 version then. As a fall-back Xdebug
-    2 can be used for any PHP version below PHP 8.0.
+    tests, especially the PHPT tests, fail (segmentation faults). If so
+    then check you have got the latest Xdebug 3 version. As a fall-back
+    Xdebug 2 can be used for any PHP version below PHP 8.0.
     See [Supported Versions and Compatibility](https://xdebug.org/docs/compat)
     also [for older Xdebug and PHP versions](https://2.xdebug.org/docs/compat)
     .
@@ -32,7 +33,7 @@ required, the shell tests require bash. Use `composer run-script --list`
 to get a list of all composer scripts.
 
 `composer ci` should run through after checkout and before committing
-any changes.
+any changes. while developing, `composer dev` is a good intermediate.
 
 ??? tip "PHP Backwards Compatibility"
     Even the pipelines project accepts issues/PRs with pseudo-code,

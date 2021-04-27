@@ -24,7 +24,7 @@ case ${1-0} in
       ;;
   1 ) echo "# 1: require phpunit 8"
       cd "$PROJECT_DIR"
-      "${PHP_BIN-php}" -f "$(composer which 2>/dev/null)" -- -n require --dev phpunit/phpunit ^8 --update-with-dependencies --no-suggest
+      "${PHP_BIN-php}" -f "$(composer which 2>/dev/null)" -- -n require --dev phpunit/phpunit ^8 --update-with-dependencies
       exit
       ;;
   2 ) echo "# 2: patch for phpunit 8"

@@ -88,7 +88,7 @@ pipelines:
           script:
             - command -v composer || lib/pipelines/composer-install.sh
             - composer remove --dev friendsofphp/php-cs-fixer phpunit/phpunit
-            - composer require --no-suggest --dev phpunit/phpunit ^4
+            - composer require --dev phpunit/phpunit ^4
             - composer install
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
 definitions:

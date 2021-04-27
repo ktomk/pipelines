@@ -9,7 +9,7 @@ IFS="$(printf '\n\t ')"
 
 package="composer.phar"
 cache="${HOME}/.cache/build-http-cache"
-version="${1-1.10.17}"
+version="${1-2.0.13}"
 
 mkdir -p -- "${cache}"
 cd "${cache}" || exit 2

@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Change
+- Build with Composer 2; pin composer version to 2.0.13 (from 1.10.17)
 
 ## [0.0.54] - 2021-04-17
 ### Add
