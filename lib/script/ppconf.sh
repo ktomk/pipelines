@@ -63,7 +63,8 @@ while [ $# -gt 0 ]; do
       (cat /etc/os-release || cat /etc/issue) 2>/dev/null   | head -n 3 | sed 's/^/os......: /'
       printf "php.....: %-32s\t%s (%s)\n" "$(which "$PHP_BINARY")" "$("$PHP_BINARY" --version 2>&1        | head -1)" \
                                                                    "$(composer      which-php           2>/dev/null)"
-      printf "python..: %-32s\t%s\n"      "$(which python       )" "$(python        --version 2>&1        | head -1)"
+      printf "python..: %-32s\t%s\n"      "$(which python       )" "$(hash python 2>/dev/null &&                      \
+                                                                      python        --version 2>&1        | head -1)"
       printf "python3.: %-32s\t%s\n"      "$(which python3      )" "$(python3       --version 2>/dev/null | head -1)"
       printf "sed.....: %-32s\t%s\n"      "$(which sed          )" "$(sed           --version 2>&1        | head -1)"
       printf "sh......: %-32s\t%s\n"      "$(which sh           )" "$(realpath "$(which sh)")"
