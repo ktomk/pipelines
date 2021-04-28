@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Change
 - Build with Composer 2; pin composer version to 2.0.13 (from 1.10.17)
 ### Fix
+- `$PHP_BINARY` support while making test stub packages, since
+  [0.0.25](#0025---2019-12-30)
 - PHP-Binary detection in meagre environments, since [0.0.19](#0019---2019-04-02)
 
 ## [0.0.54] - 2021-04-17

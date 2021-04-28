@@ -8,6 +8,8 @@
 #
 set -eu
 
+PHP_BINARY="${PHP_BINARY-php}"
+
 # check composer install --no-dev flag, only install fixtures with --dev
 if [ "${COMPOSER_DEV_MODE-1}" -eq 0 ]; then
   exit
@@ -27,8 +29,8 @@ if ! tar cf docker-test-stub.tgz -I 'gzip -n9' --owner=0 --group=0 --mtime='UTC 
   tar cf docker-test-stub.tgz --use-compress-program='gzip -n9' docker-test-stub
 fi
 
-bin_hash="$(php -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub)"
-tar_hash="$(php -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub.tgz)"
+bin_hash="$("$PHP_BINARY" -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub)"
+tar_hash="$("$PHP_BINARY" -r 'echo hash_file("sha256", $argv[1]);' -- docker-test-stub.tgz)"
 
 <<YAML_PACKAGE > ../../../lib/package/docker-42.42.1-binsh-test-stub.yml cat
 ---
