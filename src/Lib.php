@@ -227,11 +227,14 @@ class Lib
     /**
      * fallback for the php 5.3 version which does not have PHP_BINARY.
      *
+     * fallback for the php 5.4-8.0 versions which do have an empty
+     * PHP_BINARY when executed w/o absolute path in argv[0]
+     *
      * @return string
      */
     public static function phpBinary()
     {
-        return defined('PHP_BINARY') ? constant('PHP_BINARY') : PHP_BINDIR . '/php';
+        return defined('PHP_BINARY') && '' !== constant('PHP_BINARY') ? constant('PHP_BINARY') : PHP_BINDIR . '/php';
     }
 
     /**

@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ## [unreleased]
 ### Change
 - Build with Composer 2; pin composer version to 2.0.13 (from 1.10.17)
+### Fix
+- PHP-Binary detection in meagre environments, since [0.0.19](#0019---2019-04-02)
 
 ## [0.0.54] - 2021-04-17
 ### Add
