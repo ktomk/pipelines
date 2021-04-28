@@ -571,10 +571,9 @@ Docker needs to be available locally as `docker` command as it is
 used to run the pipelines. Rootless Docker is supported.
 
 A recent PHP version is favored, the `pipelines` command needs
-PHP to run. It should work with PHP 5.3.3+, the phar build
-requires  PHP 5.4+. A development environment should be PHP 7+,
-this is especially suggested for future releases. PHP 8 is
-supported as well.
+PHP to run. It should work with PHP 5.3.3+. A development
+environment should be PHP 7+, this is especially suggested for
+future releases. PHP 8+ is supported as well.
 
 Installing the [PHP YAML extension][PHP-YAML] \[PHP-YAML] is
 highly recommended as it does greatly improve parsing the

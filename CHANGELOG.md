@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- Build the phar file with PHP 5.3 (as well, all 5.3-8.1 reproducible)
 ### Change
 - Fail early if git command is n/a in phar build
 ### Fix

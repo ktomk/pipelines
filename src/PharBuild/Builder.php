@@ -55,7 +55,7 @@ class Builder
     private $double;
 
     /**
-     * @var array keep file path (as key) do be unlinked on __destruct() (housekeeping)
+     * @var array keep file path (as key) to be unlinked on __destruct() (housekeeping)
      */
     private $unlink = array();
 
@@ -176,10 +176,13 @@ class Builder
      */
     public function snapShot()
     {
-        return function ($file) {
+        $self = $this;
+        $unlink = &$this->unlink;
+
+        return function ($file) use ($self, &$unlink) {
             $source = fopen($file, 'rb');
             if (false === $source) {
-                $this->err(sprintf('failed to open for reading: %s', $file));
+                $self->err(sprintf('failed to open for reading: %s', $file));
 
                 return null;
             }
@@ -188,7 +191,7 @@ class Builder
             if (false === $target) {
                 // @codeCoverageIgnoreStart
                 fclose($source);
-                $this->err(sprintf('failed to open temp file for writing'));
+                $self->err(sprintf('failed to open temp file for writing'));
 
                 return null;
                 // @codeCoverageIgnoreEnd
@@ -199,7 +202,7 @@ class Builder
 
             if (false === (bool)stream_copy_to_stream($source, $target)) {
                 // @codeCoverageIgnoreStart
-                $this->err(sprintf('stream copy error: %s', $file));
+                $self->err(sprintf('stream copy error: %s', $file));
                 fclose($source);
                 fclose($target);
                 unlink($snapShotFile);
@@ -210,7 +213,7 @@ class Builder
             fclose($source);
 
             # preserve file from deletion until later cleanup
-            $this->unlink[$snapShotFile] = $target;
+            $unlink[$snapShotFile] = $target;
 
             return array('fil', $snapShotFile);
         };
@@ -226,10 +229,12 @@ class Builder
      */
     public function dropFirstLine()
     {
-        return function ($file) {
+        $self = $this;
+
+        return function ($file) use ($self) {
             $lines = file($file);
             if (false === $lines) {
-                $this->err(sprintf('error reading file: %s', $file));
+                $self->err(sprintf('error reading file: %s', $file));
 
                 return null;
             }
@@ -519,6 +524,19 @@ class Builder
     }
 
     /**
+     * @param string $message
+     *
+     * @throws \RuntimeException
+     *
+     * @return void
+     */
+    public function err($message)
+    {
+        $this->errors[] = $message;
+        $this->errOut($message);
+    }
+
+    /**
      * @param string $fphar
      *
      * @return void
@@ -742,19 +760,6 @@ class Builder
         $this->unlink[$temp] = 1;
 
         return $temp;
-    }
-
-    /**
-     * @param string $message
-     *
-     * @throws \RuntimeException
-     *
-     * @return void
-     */
-    private function err($message)
-    {
-        $this->errors[] = $message;
-        $this->errOut($message);
     }
 
     /**

@@ -63,7 +63,7 @@ incl. remarks:
 |--------------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
 | composer *1  | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
 | phpunit (version) | X (4)   | X (4&nbsp;*2) | X (4&nbsp;*2) | X (5)   | X (6)   | X (6)   | X (7)   | X (8)   | X (8/ 9&nbsp;*3) | X (8&nbsp;*2/ 9)   | X (8&nbsp;*2/ 9)   |
-| phar-build   |     | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
+| phar-build   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
 | php-cs-fixer |     |     |     |     |     |     | X   | X   | X   | X   | X *4|
 | xdebug 3 *5  |     |     |     |     |     |     | X&nbsp;*6| X   | X   | X   | X   |
 
