@@ -54,7 +54,7 @@
     "pre-install-cmd": [
       "test/data/package/make-test-stub-package.sh"
     ],
-    "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer install",
+    "reset": "git checkout -- composer.json composer.lock && rm -r vendor/ && composer -q install -n --no-progress",
     "test": [
       "@composer validate --strict",
       "@phpunit-test",
