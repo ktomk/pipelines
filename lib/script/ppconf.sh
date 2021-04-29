@@ -56,6 +56,7 @@ while [ $# -gt 0 ]; do
       printf "bash....: %-32s\t%s\n"      "$(which bash         )" "$(bash          --version 2>/dev/null | head -1)"
       printf "composer: %-32s\t%s (%s)\n" "$(which composer     )" "$(composer      --version 2>/dev/null | head -1)" \
                                                                    "$(composer      which               2>/dev/null)"
+      printf "docker..: %-32s\t%s\n"      "$(which docker       )" "$(docker        --version 2>/dev/null | head -1)"
       printf "find....: %-32s\t%s\n"      "$(which find         )" "$(find          --version 2>&1        | head -1)"
       printf "gpg.....: %-32s\t%s\n"      "$(which gpg          )" "$(gpg           --version 2>/dev/null | head -1)"
       printf "make....: %-32s\t%s\n"      "$(which make         )" "$(make          --version 2>/dev/null | head -1)"
