@@ -24,7 +24,7 @@ case ${1-0} in
       ;;
   1 ) echo "# 1: require phpunit 8"
       cd "$PROJECT_DIR"
-      "${PHP_BIN-php}" -f "$(composer which 2>/dev/null)" -- -n require --dev phpunit/phpunit ^8 --update-with-dependencies
+      "${PHP_BINARY-php}" -f "$(composer which 2>/dev/null)" -- -n require --dev phpunit/phpunit ^8 --update-with-dependencies
       exit
       ;;
   2 ) echo "# 2: patch for phpunit 8"
@@ -39,13 +39,13 @@ case ${1-0} in
       ;;
   3 ) echo "# 3: run phpunit tests"
       cd "$PROJECT_DIR"
-      "${PHP_BIN-php}" -f "$(composer which 2>/dev/null)" -- phpunit-test
+      "${PHP_BINARY-php}" -f "$(composer which 2>/dev/null)" -- phpunit-test
       exit
       ;;
   4 ) echo "# 4: reset phpunit to project baseline, checkout test-suite"
       cd "$PROJECT_DIR"
       git checkout -- composer.* test/TestCase.php test/unit
-      "${PHP_BIN-php}" -f "$(composer which 2>/dev/null)" -- install
+      "${PHP_BINARY-php}" -f "$(composer which 2>/dev/null)" -- install
       exit
       ;;
   * ) >&2 echo "unknown step $1"
