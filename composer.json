@@ -48,8 +48,10 @@
     "cs-check": "@php -f vendor/bin/php-cs-fixer -- fix --dry-run",
     "cs-fix": "@php -f vendor/bin/php-cs-fixer -- fix",
     "dev": [
+      "lib/script/tmp-test.sh",
       "@cs-fix",
-      "@unit-test"
+      "@unit-test",
+      "lib/script/tmp-test.sh"
     ],
     "pre-install-cmd": [
       "test/data/package/make-test-stub-package.sh"
@@ -88,12 +90,14 @@
       "Ktomk\\Pipelines\\Composer::whichPhp"
     ],
     "ci": [
+      "lib/script/tmp-test.sh",
       "@composer validate --strict",
       "test/shell/run.sh test-smoke.sh",
       "@cs-check",
       "@php -f bin/pipelines -- --verbatim --pipeline custom/lint-php",
       "@build",
-      "@test"
+      "@test",
+      "lib/script/tmp-test.sh"
     ]
   },
   "scripts-descriptions": {

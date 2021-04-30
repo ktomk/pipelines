@@ -262,6 +262,7 @@ class StepRunner
         if (0 !== $status) {
             return $status;
         }
+        LibFs::rmDir($tmpDir);
 
         return null;
     }
