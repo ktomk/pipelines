@@ -15,7 +15,12 @@ require __DIR__ . '/../../src/bootstrap.php';
 
 list(, $file) = $argv + array(null, 'build/pipelines.phar');
 
-$version = exec('git describe --tags --always --first-parent --dirty=+');
+$version = exec('git describe --tags --always --first-parent --dirty=+', $output, $status);
+unset($output);
+if (0 !== $status) {
+    fprintf(STDERR, "fatal: version by git non-zero exit status: %d\n", $status);
+    exit(1);
+}
 
 printf("building %s ...\n", $version);
 

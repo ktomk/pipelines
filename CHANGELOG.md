@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Change
+- Fail early if git command is n/a in phar build
 ### Fix
 - Fix phar build error in bare and isolated repository on removing
   non-existing development package stub, since [0.0.1](#001---2018-01-10)
