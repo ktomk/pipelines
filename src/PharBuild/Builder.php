@@ -412,12 +412,11 @@ class Builder
      * remove from collected files based on pattern
      *
      * @param $pattern
-     *
-     * @throws \RuntimeException
+     * @param bool $error [optional] with no pattern match
      *
      * @return $this
      */
-    public function remove($pattern)
+    public function remove($pattern, $error = true)
     {
         if (empty($this->files)) {
             $this->err(sprintf("can not remove from no files (pattern: '%s')", $pattern));
@@ -435,7 +434,10 @@ class Builder
         }
 
         if (count($result) === count($this->files)) {
-            $this->err(sprintf("ineffective removal pattern: '%s'", $pattern));
+            call_user_func(
+                $error ?  array($this, 'err') : array($this, 'errOut'),
+                sprintf("ineffective removal pattern: '%s'", $pattern)
+            );
         } else {
             $this->files = $result;
         }
@@ -745,13 +747,31 @@ class Builder
      */
     private function err($message)
     {
+        $this->errors[] = $message;
+        $this->errOut($message);
+    }
+
+    /**
+     * output message on stderr
+     *
+     * not counting as error, use $this->err($message) to make $message a build error
+     *
+     * stderr for Builder is $this->errHandle
+     *
+     * @param string $message
+     *
+     * @throws \RuntimeException
+     *
+     * @return void
+     */
+    private function errOut($message)
+    {
         // fallback to global static: if STDIN is used for PHP
         // process, the default constants aren't ignored.
         if (null === $this->errHandle) {
             $this->errHandle = $this->errHandleFromEnvironment();
         }
 
-        $this->errors[] = $message;
         is_resource($this->errHandle) && fprintf($this->errHandle, "%s\n", $message);
     }
 

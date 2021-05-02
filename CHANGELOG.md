@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Fix
+- Fix phar build error in bare and isolated repository on removing
+  non-existing development package stub, since [0.0.1](#001---2018-01-10)
 - Fix Phpstorm meta for the phpunit based testsuite (mocks, [WI-60242])
 
 [WI-60242]: https://youtrack.jetbrains.com/issue/WI-60242
