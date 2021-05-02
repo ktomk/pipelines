@@ -33,6 +33,7 @@ case ${1-0} in
         assert lib/build/build.php build/test.phar | grep 'signature:'
       else
         cp -- build/pipelines.phar build/test.phar
+        "${PHP_BINARY-php}" -d phar.readonly=1 -r '$p = new Phar($argv[1]); vprintf("signature: %2\$s: %1\$s\n", $p->getSignature());' -- build/test.phar
       fi
       build/test.phar --version
       exit

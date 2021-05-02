@@ -22,7 +22,7 @@ case ${1-0} in
       ;;
   1 ) echo "# 1: composer 1 must not have written lock"
       cd "$PROJECT_DIR"
-      if grep -cq '"plugin-api-version": "1\..*"' composer.lock; then exit 1; fi;
+      if grep -q '"plugin-api-version": "1\..*"' composer.lock; then exit 1; fi;
       exit
       ;;
   2 ) echo "# 2: composer which"

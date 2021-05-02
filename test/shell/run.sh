@@ -17,6 +17,8 @@
 #
 set -euo pipefail
 IFS=$'\n\t'
+CDPATH=""
+export CDPATH
 
 cd "${0%/*}"
 
