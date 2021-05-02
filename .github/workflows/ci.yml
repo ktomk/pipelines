@@ -67,9 +67,38 @@ jobs:
             build/build-pipelines-phar.log
             build/pipelines.phar
 
+  ci-phar53:
+    runs-on: 'ubuntu-20.04'
+    name: php53-phar / ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pipelines
+          key: pipelines-ci-phar53-${{ hashFiles('**/*.yml') }}
+          restore-keys: |
+            pipelines-ci-phar53-
+
+      - name: Build phar with php 5.3
+        uses: ./.github/action/pipeline
+        with:
+          pipeline: bitbucket-pipelines.yml --pipeline custom/build-phar-php-5.3
+
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: phar-build-${{ runner.os }}-5.3
+          retention-days: 1
+          path: |
+            build/build-pipelines-phar.log
+            build/pipelines.phar
+
   collect:
     runs-on: 'ubuntu-18.04'
-    needs: ci
+    needs: [ci, ci-phar53]
     steps:
       - uses: actions/checkout@v2
         with:
