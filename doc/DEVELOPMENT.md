@@ -59,13 +59,13 @@ and building `pipelines` may differ.
 Please see the following table for a break-down based on PHP versions
 incl. remarks:
 
-| CAPABILITY   | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 | 7.4 | 8.0 |
-|--------------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-| composer *1  | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
-| phpunit (version) | X (4)   | X (4&nbsp;*2) | X (4&nbsp;*2) | X (5)   | X (6)   | X (6)   | X (7)   | X (8)   | X (8/ 9&nbsp;*3) | X (8&nbsp;*2/ 9)   |
-| phar-build   |     | X   | X   | X   | X   | X   | X   | X   | X   | X   |
-| php-cs-fixer |     |     |     |     |     |     | X   | X   | X   | X *4|
-| xdebug 3 *5  |     |     |     |     |     |     | X&nbsp;*6| X   | X   | X   |
+| CAPABILITY   | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 | 7.4 | 8.0 | 8.1 |
+|--------------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| composer *1  | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
+| phpunit (version) | X (4)   | X (4&nbsp;*2) | X (4&nbsp;*2) | X (5)   | X (6)   | X (6)   | X (7)   | X (8)   | X (8/ 9&nbsp;*3) | X (8&nbsp;*2/ 9)   | X (8&nbsp;*2/ 9)   |
+| phar-build   |     | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
+| php-cs-fixer |     |     |     |     |     |     | X   | X   | X   | X   | X *4|
+| xdebug 3 *5  |     |     |     |     |     |     | X&nbsp;*6| X   | X   | X   | X   |
 
 ???+ info "Remarks"
     1. Composer 1 and 2 are supported.
@@ -79,15 +79,13 @@ incl. remarks:
     4. [PHP-CS-Fixer][PHP-CS-FIXER] is used in `pipelines` to control
        the code style, so relatively central in the CI pipeline.
        Unfortunately, it does (did) not cover all the PHP versions that
-       `pipelines` supports. Especially with PHP 8 it refuses to install
-       with composer. This require(d) to fake the PHP version (e.g. as
+       `pipelines` supports. Especially with PHP 8.1 it refuses to install
+       with composer. This requires to fake the PHP version (e.g. as
        7.4.99) or to use the `--ignore-platform-reqs` option of composer
-       to install with PHP 8 (Note: very recent PHP-CS-Fixer versions
-       are told to not have that problem any longer).
+       to install with PHP 8.1.
     5. Xdebug 3 is required for PHP 8 and in tests for all PHP versions
-       it supports. It is very new, segfaults may have been spotted in
-       (local) CI. Check the version then an upgrade. Pipelines uses
-       Xdebug in development for code-coverage and step-debugging. See
+       it supports. It is somewhat new, segfaults may have been spotted in
+       CI runs (local, on Scrutiziner). Check the version then an upgrade. Pipelines uses Xdebug in development for code-coverage and step-debugging. See
        _Xdebug 3 Support_ above.
     6. Xdebug 3 support for PHP 7.2 is limited to security support. Same
        applies to Xdebug 2.9 for PHP 7.2. No other Xdebug version next
