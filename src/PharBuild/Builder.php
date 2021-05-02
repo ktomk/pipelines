@@ -361,6 +361,12 @@ class Builder
 
             return $this;
         }
+
+        // operating based on UTC, squelches PHP date.timezone errors
+        if (function_exists('date_default_timezone_set')) {
+            date_default_timezone_set('UTC');
+        }
+
         require_once __DIR__ . '/Timestamps.php';
         $ts = new Timestamps($file);
         $ts->updateTimestamps($timestamp);
