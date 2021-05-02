@@ -1,6 +1,3 @@
-/* hide github stars and forks - requires javascript anyway */
-header .md-source__facts {display: none}
-
 /* scroll higher code blocks (21 em) */
 div.codehilite,
 div.highlight
@@ -23,5 +20,11 @@ div.highlight
 /* make overview tables width-snappy (docs/DEVELOPMENT.md) */
 .md-typeset table:not([class]) th {min-width: 0}
 
-/* give material for mkdocs icon more room */
+/* make material for mkdocs icon stand out */
 a.md-footer-social__link:last-of-type {margin-left: 1em;}
+
+/* take fonts if installed, not from remote */
+:root {
+    --md-text-font-family: "Roboto";
+    --md-code-font-family: "Roboto Mono";
+}

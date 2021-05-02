@@ -4,21 +4,24 @@
 # binary docker client package format
 #
 
-# 'name': name of the docker client represented by this package, used for
-#         the binary name after extraction, sufficed with a dot "." and the
-#         binary_sha256 hex-encoded hash
-name: docker-42.42.1-binsh-test-stub
+# name of the docker client represented by this package, used for the
+# binary (utility) name after extraction, sufficed with a dot "." and
+# the binary_sha256 hex-encoded hash
+name:    docker-42.42.1-binsh-test-stub
 
-# 'uri': url/path to .tgz package (here fake special notation to have it as a
-#         file relative to the package definition file, "relative" URI)
-uri: ../../test/data/package/docker-test-stub.tgz
+# url/path to .tgz package (here fake special notation as a file
+# relative to the package definition file, a "relative" url)
+#
+# commonly a https url of a .tgz package (see lib/package folder)
+uri:     ../../test/data/package/docker-test-stub.tgz
 
-# 'sha256': hash of the .tgz package file
-sha256: e2f72b2de05d941067d2407482e035bf3d8591cff73bba47640347bc2dbed528
+#  hash of the .tgz package file
+sha256:  21dbb246038ca544dd1de4ca4ad2186a4cd4e976c7a8ffa8685e66aecb0d2d4a
 
-# 'binary': file name (path) of the binary inside the .tgz package, used to
-#           extract from the tar file.
-binary: docker-test-stub
+# file name (path) of the binary inside the .tgz package, used to
+# extract from the tar file.
+binary:  docker-test-stub
 
-# 'binary_sha256': hash of the binary file
-binary_sha256: 2e1f9bbdc7d18cf7c8319ae7f53eadef3f8ec45e5417f71eaa798f7f53415f88
+# hash of the binary (utility) file
+binary_sha256: 14e64680ff283acb7ab6ee8fc99e21ba4da3f0c5a41a92877e362f3d0afdc546
+

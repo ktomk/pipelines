@@ -9,14 +9,17 @@ IFS="$(printf '\n\t ')"
 
 package="composer.phar"
 cache="${HOME}/.cache/build-http-cache"
-version="${1-1.10.17}"
+version="${1-2.0.13}"
 
 mkdir -p -- "${cache}"
 cd "${cache}" || exit 2
 
 # self-update if already available/cached (pinned version cache invalidation)
-if [ -f "./${package}" ]; then
-  "./${package}" self-update "$version"
+if [ -f "${package}" ]; then
+  package_version="$("./${package}" --version | sed -E 's/^Composer version ([^ ]+).*$/\1/')"
+  if [ "$package_version" != "$version" ]; then
+    "./${package}" self-update "$version"
+  fi
 fi
 
 RESULT=0
@@ -26,7 +29,7 @@ if [ ! -f "${package}" ] || [ -n "${1-}" ]; then
   ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');")
 
   if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]; then
-    >&2 echo "$(basename "${0}"): Invalid installer signature: $ACTUAL_SIGNATURE"
+    >&2 printf "%s: Invalid installer signature: %s\n" "$(basename "${0}")" "$ACTUAL_SIGNATURE"
     rm -f composer-setup.php
     exit 1
   fi
@@ -39,7 +42,7 @@ if [ ! -f "${package}" ] || [ -n "${1-}" ]; then
 fi
 
 mkdir -p /opt/composer/
-cp composer.phar /opt/composer/composer.phar
+cp "${package}" /opt/composer/composer.phar
 ln -sT /opt/composer/composer.phar /usr/local/bin/composer
 chmod 0755 /opt/composer/composer.phar
 composer --version
