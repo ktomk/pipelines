@@ -4,6 +4,6 @@
 # number for testing and some information
 #
 echo "42.42.1 (" "${@}" ")"
-echo "  DOCKER_HOST..: ${DOCKER_HOST-"*unset*"}"
-echo "  DOCKER_CONFIG: ${DOCKER_CONFIG-"*unset*"}"
-echo "  DOCKER_TMP...: ${DOCKER_TMP-"*unset*"}"
+printf "42.42.1: DOCKER_HOST..: %s\n" "${DOCKER_HOST-"*unset*"}"
+printf "42.42.1: DOCKER_CONFIG: %s\n" "${DOCKER_CONFIG-"*unset*"}"
+printf "42.42.1: DOCKER_TMP...: %s\n" "${DOCKER_TMP-"*unset*"}"

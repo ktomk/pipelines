@@ -43,7 +43,7 @@ class UnpackagerTest extends TestCase
             # 'binary': basename of the extracted binary file
             'binary' => 'docker-test-stub',
             # 'binary_sha256': hash of the binary file
-            'binary_sha256' => '2e1f9bbdc7d18cf7c8319ae7f53eadef3f8ec45e5417f71eaa798f7f53415f88',
+            'binary_sha256' => '14e64680ff283acb7ab6ee8fc99e21ba4da3f0c5a41a92877e362f3d0afdc546',
         );
     }
 

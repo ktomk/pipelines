@@ -1,4 +1,5 @@
 #!/bin/sh
+# this file is part of pipelines
 #
 # create docker-test-stub.tgz binary blob from sources
 #
@@ -39,22 +40,25 @@ tar_hash="$("$PHP_BINARY" -r 'echo hash_file("sha256", $argv[1]);' -- docker-tes
 # binary docker client package format
 #
 
-# 'name': name of the docker client represented by this package, used for
-#         the binary name after extraction, sufficed with a dot "." and the
-#         binary_sha256 hex-encoded hash
-name: docker-42.42.1-binsh-test-stub
+# name of the docker client represented by this package, used for the
+# binary (utility) name after extraction, sufficed with a dot "." and
+# the binary_sha256 hex-encoded hash
+name:    docker-42.42.1-binsh-test-stub
 
-# 'uri': url/path to .tgz package (here fake special notation to have it as a
-#         file relative to the package definition file, "relative" URI)
-uri: ../../test/data/package/docker-test-stub.tgz
+# url/path to .tgz package (here fake special notation as a file
+# relative to the package definition file, a "relative" url)
+#
+# commonly a https url of a .tgz package (see lib/package folder)
+uri:     ../../test/data/package/docker-test-stub.tgz
 
-# 'sha256': hash of the .tgz package file
-sha256: ${tar_hash}
+#  hash of the .tgz package file
+sha256:  ${tar_hash}
 
-# 'binary': file name (path) of the binary inside the .tgz package, used to
-#           extract from the tar file.
-binary: docker-test-stub
+# file name (path) of the binary inside the .tgz package, used to
+# extract from the tar file.
+binary:  docker-test-stub
 
-# 'binary_sha256': hash of the binary file
+# hash of the binary (utility) file
 binary_sha256: ${bin_hash}
+
 YAML_PACKAGE

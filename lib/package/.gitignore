@@ -1,2 +1,5 @@
+# docker client yml packages directory
+
 # test package file, generated in development
+# see: test/data/package/make-test-stub-package.sh
 /docker-42.42.1-binsh-test-stub.yml
