@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Fix
+- Fix Phpstorm meta for the phpunit based testsuite (mocks, [WI-60242])
+
+[WI-60242]: https://youtrack.jetbrains.com/issue/WI-60242
 
 ## [0.0.55] - 2021-05-02
 ### Change
