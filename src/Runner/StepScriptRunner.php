@@ -68,11 +68,9 @@ class StepScriptRunner
         $exec = $this->runner->getExec();
         $name = $this->name;
 
-        $buffer = "# this /bin/sh script is generated from a pipeline script\n";
-        $buffer .= "set -e\n";
-        $buffer .= $this->generateScript(
+        $buffer = StepScriptWriter::writeStepScript(
             $step->getScript(),
-            $this->getAfterCommand($this->runner->getRunOpts()->getBoolOption('script.exit-early'))
+            $this->runner->getRunOpts()->getBoolOption('script.exit-early')
         );
 
         $status = $this->execScript($buffer, $exec, $name);
@@ -86,11 +84,7 @@ class StepScriptRunner
 
         $streams->out("After script:\n");
 
-        $buffer = "# this /bin/sh script is generated from a pipeline after-script\n";
-        $buffer .= "set -e\n";
-        $buffer .= sprintf("BITBUCKET_EXIT_CODE=%d\n", $status);
-        $buffer .= "export BITBUCKET_EXIT_CODE\n";
-        $buffer .= $this->generateScript($script);
+        $buffer = StepScriptWriter::writeAfterScript($script, $status);
 
         $afterStatus = $this->execScript($buffer, $exec, $name);
         if (0 !== $afterStatus) {
@@ -98,23 +92,6 @@ class StepScriptRunner
         }
 
         return $status;
-    }
-
-    /**
-     * after command
-     *
-     * optional command after each line in a step script to more strictly
-     * check the last step script command exit status.
-     *
-     * for debugging purposes.
-     *
-     * @param bool $strict
-     *
-     * @return null|string
-     */
-    private function getAfterCommand($strict)
-    {
-        return $strict ? '( r=$?; if [ $r -ne 0 ]; then exit $r; fi; ) || exit' . "\n" : null;
     }
 
     /**
@@ -134,55 +111,5 @@ class StepScriptRunner
         $buffer .= "SCRIPT\n";
 
         return $exec->pass($buffer, array());
-    }
-
-    /**
-     * @param array|string[] $script
-     * @param null|string $afterCommand
-     *
-     * @return string
-     */
-    private function generateScript(array $script, $afterCommand = null)
-    {
-        $buffer = '';
-        foreach ($script as $index => $line) {
-            $command = $this->generateCommand($line);
-            $line && $buffer .= 'printf \'\\n\'' . "\n";
-            $buffer .= 'printf \'\\035+ %s\\n\' ' . Lib::quoteArg($command) . "\n";
-            $buffer .= $command . "\n";
-            null !== $afterCommand && $buffer .= $afterCommand;
-        }
-
-        return $buffer;
-    }
-
-    /**
-     * @param array|string $line
-     *
-     * @return string
-     */
-    private function generateCommand($line)
-    {
-        $standard = is_scalar($line) || null === $line;
-        $pipe = is_array($line) && isset($line['pipe']) && is_string($line['pipe']);
-
-        if ($standard) {
-            /** @var null|float|int|string $line */
-            return (string)$line;
-        }
-
-        $line = (array)$line;
-        $buffer = '';
-
-        if ($pipe) {
-            $buffer .= "echo \"pipe: {$line['pipe']} (pending feature)\" # pipe feature is pending\n";
-            if (isset($line['variables']) && is_array($line['variables'])) {
-                foreach ($line['variables'] as $name => $value) {
-                    $buffer .= "echo '  ${name} (${value}):' ${value}\n";
-                }
-            }
-        }
-
-        return $buffer;
     }
 }
