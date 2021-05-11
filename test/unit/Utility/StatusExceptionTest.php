@@ -80,6 +80,8 @@ class StatusExceptionTest extends TestCase
 
     /**
      * This is less a test but more a demonstration
+     *
+     * @throws StatusException
      */
     public function testStatusThrowUsage()
     {
@@ -88,5 +90,41 @@ class StatusExceptionTest extends TestCase
         $this->expectExceptionCode(22);
 
         throw new StatusException('Foo Le Bar', 22);
+    }
+
+    /**
+     * @throws StatusException
+     */
+    public function testFatalThrow()
+    {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('very bad');
+        $this->expectExceptionCode(1);
+
+        StatusException::fatal('very bad');
+    }
+
+    /**
+     * @throws StatusException
+     */
+    public function testBareFatalThrow()
+    {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('fatal abort');
+        $this->expectExceptionCode(1);
+
+        StatusException::fatal();
+    }
+
+    /**
+     * @throws StatusException
+     */
+    public function testOkThrow()
+    {
+        $this->expectException('Ktomk\Pipelines\Utility\StatusException');
+        $this->expectExceptionMessage('');
+        $this->expectExceptionCode(0);
+
+        StatusException::ok();
     }
 }
