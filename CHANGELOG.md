@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+
 ## [0.0.55] - 2021-05-02
 ### Change
 - Build with Composer 2; pin composer version to 2.0.13 (from 1.10.17)

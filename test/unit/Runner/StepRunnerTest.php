@@ -23,8 +23,6 @@ use PHPUnit\Framework\MockObject\MockObject;
  */
 class StepRunnerTest extends RunnerTestCase
 {
-    private $removeDirectories = array();
-
     public function testCreation()
     {
         $stepRunner = new StepRunner(

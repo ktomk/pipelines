@@ -37,7 +37,7 @@ class CollectorTest extends TestCase
 
     public function testGetArgs()
     {
-        $collector = new Collector($args = new ArgsTester());
+        $collector = new Collector(new ArgsTester());
         $expected = array();
         $actual = $collector->getArgs();
         self::assertSame($expected, $actual);

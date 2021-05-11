@@ -165,7 +165,7 @@ class ExecTester extends Exec
                 $context,
                 $message
                 ) = $current;
-            $messages[] = sprintf("%s: %s%s", $expectedMethod, $expectedCommand, $message ? " // ${message}" : '');
+            $messages[] = sprintf('%s: %s%s', $expectedMethod, $expectedCommand, $message ? " // ${message}" : '');
         }
 
         return $messages;

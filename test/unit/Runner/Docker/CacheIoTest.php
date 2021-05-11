@@ -141,7 +141,7 @@ class CacheIoTest extends TestCase
             $id,
             null,
             $this->createMock('Ktomk\Pipelines\Cli\Streams'),
-            $exec = null === $this->execTester
+            null === $this->execTester
                 ? $this->createMock('Ktomk\Pipelines\Cli\Exec')
                 : $this->execTester,
             $noCache
@@ -155,7 +155,7 @@ class CacheIoTest extends TestCase
     {
         $runner = $this->createMock('Ktomk\Pipelines\Runner\Runner');
         $runner->method('getDirectories')->willReturn(
-            $directories = $this->createPartialMock('Ktomk\Pipelines\Runner\Directories', array())
+            $this->createPartialMock('Ktomk\Pipelines\Runner\Directories', array())
         );
         $runner->method('getProject')->willReturn('test-project');
         $runner->method('getRunOpts')->willReturn(RunOpts::create());
@@ -171,7 +171,7 @@ class CacheIoTest extends TestCase
         $runner->method('getExec')->willReturn($exec);
 
         $runner->method('getFlags')->willReturn(
-            $flags = $this->createMock('Ktomk\Pipelines\Runner\Flags')
+            $this->createMock('Ktomk\Pipelines\Runner\Flags')
         );
 
         return $runner;

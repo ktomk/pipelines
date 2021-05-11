@@ -41,7 +41,7 @@ run() {
   fi
   if [[ "$#" -gt 1 ]]; then
     >&2 echo "fatal: not a test-case: '$1'"
-    retrun 1
+    return 1
   fi
 }
 

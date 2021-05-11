@@ -86,7 +86,7 @@ class StepScriptRunner
 
         $streams->out("After script:\n");
 
-        $buffer = "#  this /bin/sh script is generated from a pipeline after-script\n";
+        $buffer = "# this /bin/sh script is generated from a pipeline after-script\n";
         $buffer .= "set -e\n";
         $buffer .= sprintf("BITBUCKET_EXIT_CODE=%d\n", $status);
         $buffer .= "export BITBUCKET_EXIT_CODE\n";

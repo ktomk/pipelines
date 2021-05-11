@@ -12,13 +12,6 @@ namespace Ktomk\Pipelines;
  */
 class LibFsPathTest extends TestCase
 {
-    /**
-     * Cleanup after test (regardless if succeeded or failed)
-     *
-     * @var array
-     */
-    private $cleaners = array();
-
     public function provideAbsolutePaths()
     {
         return array(

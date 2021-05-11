@@ -90,7 +90,7 @@ class FileOptions implements Runnable
     }
 
     /**
-     * @param $pipelines
+     * @param File $pipelines
      *
      * @return int
      */

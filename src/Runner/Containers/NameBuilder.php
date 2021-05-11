@@ -41,10 +41,8 @@ abstract class NameBuilder
         $buffer = trim($buffer, '_.-');
 
         // not starting with a number
-        $buffer = preg_replace('(^\d+([_.-]\d+)*)', (string)$replacement, $buffer);
-
         // multiple separator(s) after each other -> one replacement (which is normally a separator)
-        $buffer = preg_replace('(([_.-])[_.-]+)', (string)$replacement, $buffer);
+        $buffer = preg_replace(array('(^\d+([_.-]\d+)*)', '(([_.-])[_.-]+)'), (string)$replacement, $buffer);
 
         // not starting nor ending with a separator
         $buffer = trim($buffer, '_.-');
