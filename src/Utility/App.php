@@ -138,6 +138,8 @@ class App implements StatusRunnable
 
         $fileOptions = FileOptions::bind($args, $this->streams, $pipelines)->run();
 
+        StepScriptOption::bind($args, $this->streams, $pipelines, $runOpts)->run();
+
         $reference = $this->parseReference();
 
         $env = EnvParser::create($this->arguments)

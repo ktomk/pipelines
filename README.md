@@ -161,6 +161,7 @@ usage: pipelines [<options>] --version | -h | --help
        pipelines [<options>] --service <service>
        pipelines [<options>] --list | --show | --images
                  | --show-pipelines | --show-services
+                 | --step-script[=(<id> | <step>[:<id>])]
                  | --validate[=<path>]
        pipelines [<options>] --docker-client-pkgs
        pipelines [<options>] [--docker-list] [--docker-kill]
@@ -231,6 +232,9 @@ File information options
     --validate[=<path>]   schema-validate file, shows errors if any,
                           exits; can be used more than once, exit status
                           is non-zero on error
+    --step-script[=(<id> | <step>[:<id>])]
+                          write the step-script of pipeline <id> and
+                          <step> to standard output and exit
 
 Environment control options
     -e, --env <variable>  pass or set an environment <variable> for the

@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Add
+- Show `--step-script`, optionally by `<id>` and `<step>`
 - Build the phar file with PHP 5.3 (as well, all 5.3-8.1 reproducible)
 ### Change
 - Fail early if git command is n/a in phar build
