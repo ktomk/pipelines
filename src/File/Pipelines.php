@@ -252,7 +252,7 @@ class Pipelines implements Dom\FileNode
     {
         $references = array();
 
-        $default = 'default';
+        $default = ReferenceTypes::SEG_DEFAULT;
 
         if (!isset($array[$default])) {
             return $references;

@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Pipeline\Step;
+use Ktomk\Pipelines\File\ReferenceTypes;
 use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\TestCase;
@@ -84,7 +85,7 @@ class RunnerTestCase extends TestCase
      *
      * @return Step
      */
-    protected function createTestStepFromFixture($file, $step = 1, $pipeline = 'default')
+    protected function createTestStepFromFixture($file, $step = 1, $pipeline = ReferenceTypes::SEG_DEFAULT)
     {
         $path = __DIR__ . '/../../data/yml/' . $file;
         $array = Yaml::file($path);

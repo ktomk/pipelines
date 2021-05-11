@@ -59,7 +59,7 @@ abstract class PipelinesReferences extends Pipelines
      */
     protected static function idDefault(Pipelines $pipelines)
     {
-        $id = 'default';
+        $id = ReferenceTypes::SEG_DEFAULT;
 
         if (!isset($pipelines->references[$id])) {
             return null;

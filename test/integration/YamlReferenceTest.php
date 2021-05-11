@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Integration;
 
 use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\File\ReferenceTypes;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -16,8 +17,8 @@ class YamlReferenceTest extends TestCase
     {
         $file = File::createFromFile(__DIR__ . '/../data/yml/alias.yml');
         $actual = $file->getPipelines()->getPipelineIds();
-        $idDefault = 'default';
-        $idAlias = 'branches/feature/*';
+        $idDefault = ReferenceTypes::SEG_DEFAULT;
+        $idAlias = ReferenceTypes::REF_BRANCHES . '/feature/*';
         $expected = array(
             $idDefault,
             $idAlias,

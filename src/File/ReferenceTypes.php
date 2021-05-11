@@ -12,6 +12,8 @@ namespace Ktomk\Pipelines\File;
  * pipeline        : that what can be referenced (id): default, branches/**, custom/foo etc.
  * section         : branches, tags, bookmarks, pull-requests, custom
  * pattern section : a section that can match by pattern to some input (all sections but custom)
+ * segments        : constants for reference segments, default for the default pipeline and custom
+ *                   for custom pipelines. they come with no mapping to any vcs nomenclature.
  *
  * @package Ktomk\Pipelines\File
  */
@@ -22,13 +24,16 @@ class ReferenceTypes
     const REF_BOOKMARKS = 'bookmarks';
     const REF_PULL_REQUESTS = 'pull-requests';
 
+    const SEG_DEFAULT = 'default';
+    const SEG_CUSTOM = 'custom';
+
     /**
      * pipelines sections on first level that contain pipelines on second level
      *
      * @var array
      */
     private static $sections = array(
-        self::REF_BRANCHES, self::REF_TAGS, self::REF_BOOKMARKS, self::REF_PULL_REQUESTS, 'custom',
+        self::REF_BRANCHES, self::REF_TAGS, self::REF_BOOKMARKS, self::REF_PULL_REQUESTS, self::SEG_CUSTOM,
     );
 
     /**
@@ -39,7 +44,7 @@ class ReferenceTypes
     public static function isValidId($id)
     {
         return (bool)preg_match(
-            '~^(default|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~',
+            '~^(' . self::SEG_DEFAULT . '|(' . implode('|', self::$sections) . ')/[^\x00-\x1F\x7F-\xFF]*)$~',
             $id
         );
     }
