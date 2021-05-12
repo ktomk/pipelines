@@ -1,0 +1,49 @@
+name: Run Pipeline
+description: Run bitbucket-pipelines.yml as composite
+
+inputs:
+  pipeline:
+    description: 'commandline, pipelines(1) enabled'
+    default: ./bitbucket-pipelines.yml
+    required: false
+
+runs:
+  using: composite
+
+  steps:
+    - name: 'Run ${{ inputs.pipeline }}'
+      shell: bash
+      run: |
+        . "${{ github.action_path }}"/action.bash
+        #####
+        # execpl wrapper
+        #
+        #   mind github actions can have older /usr/bin/env command
+        #   (needs pipelines feature to run first positional parameter as file)
+        #
+        execpl() {
+          if [[ -x "$1" ]]; then
+              printf 'run as executable (experimental)\n'
+              core_endGroup
+            ./"$@"
+          elif [[ -f "$1" ]]; then
+              printf 'run by invoking pipelines\n'
+              core_endGroup
+            pipelines --file "$@"
+          else
+              core_endGroup
+            printf '::error::%s\n' "Error starting Pipeline" "$@"
+            exit 1
+          fi
+        }
+        core_startGroup 'Setting up Pipelines'
+          printf 'installing pipelines into %s/.local/bin\n' "$HOME"
+          printf 'from action path %s\n' "$GITHUB_ACTION_PATH"
+          printf 'running in workspace %s\n' "$GITHUB_WORKSPACE"
+          core_exec "$(command -v php)" --version
+          core_exec "$(command -v mkdir)" -p "$HOME/.local/bin"
+          core_exec "$(command -v wget)" -O "$HOME/.local/bin/pipelines" https://github.com/ktomk/pipelines/releases/latest/download/pipelines.phar
+          core_exec "$(command -v chmod)" +x "$HOME/.local/bin/pipelines"
+        core_endGroup
+        core_startGroup 'Pipeline ${{ inputs.pipeline }}'
+          core_exec "$(command -v execpl)" ${{ inputs.pipeline }}
