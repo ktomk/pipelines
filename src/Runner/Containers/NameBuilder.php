@@ -114,7 +114,7 @@ abstract class NameBuilder
                         (string)(int)max(1, $stepNumber),
                         self::slugify($stepName, '-', 'no-name'),
                         self::slugify($pipelineId, '-', 'null'),
-                        $project,
+                        self::slugify($project),
                     )
                 )
             ),
