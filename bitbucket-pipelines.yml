@@ -30,6 +30,19 @@ pipelines:
             - vendor/bin/phpunit # --testsuite unit,integration by default w/ phpunit 4.8.36
           services:
             - docker
+    build-phar-php-5.3:
+      - step:
+          image: docker.io/ktomk/pipelines:php5.3-cespi
+          caches:
+            - composer-53-build-cespi
+          script:
+            - lib/script/ppconf.sh self-test remove-dev optional downpatch-phpunit-tests
+            - composer -n -q update --no-progress
+            - git reset --hard HEAD # reset for phar build
+            - bash -c '( set -o pipefail; composer build 2>&1 | tee build/build-pipelines-phar.log; )'
+          artifacts:
+            - build/build-pipelines-phar.log
+            - build/pipelines.phar
     unit-tests-php-7.0:
       - step: &unit-tests-php70
           image: ktomk/pipelines:php7.0
@@ -310,8 +323,9 @@ pipelines:
 
 definitions:
   caches:
-    build-http-cache: ~/.cache/build-http-cache
     apk: /etc/apk/cache
+    build-http-cache: ~/.cache/build-http-cache
+    composer-53-build-cespi: ~/.composer/cache
     vendor-php80: vendor
   services:
     redis:
