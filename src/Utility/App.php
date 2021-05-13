@@ -289,7 +289,7 @@ class App implements StatusRunnable
         }
 
         if (empty($file)) {
-            throw new StatusException('file can not be empty', 1);
+            StatusException::fatal('no pipelines file found');
         }
 
         return $file;
