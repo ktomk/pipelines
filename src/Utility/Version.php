@@ -129,6 +129,14 @@ class Version
     }
 
     /**
+     * obtain the list of installed packages
+     *
+     * from composer installed.json, file format change log:
+     *
+     *  1.0.0: no installed.json
+     *  1.6.4: list of packages
+     *  2.0.0: installed struct w/ packages (and dev flag, 2.0.5 dev-packages-names list)
+     *
      * @return array of installed packages, empty array if none
      */
     public function getInstalledPackages()
@@ -138,7 +146,9 @@ class Version
             $buffer = 'null';
         }
 
-        return (array)json_decode($buffer, false);
+        $installed = json_decode($buffer, false);
+
+        return (array)(isset($installed->packages) ? $installed->packages : $installed);
     }
 
     /**

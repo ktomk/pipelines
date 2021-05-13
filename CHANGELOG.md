@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Change
 - Fail early if git command is n/a in phar build
 ### Fix
+- Fix pipelines `--version` when installed via composer with composer
+  version 2.0.0 or higher, since [0.0.51](#0051---2020-12-09)
 - Fix very rare php timezone warning in the phar build when modifying the
   timestamps, since [0.0.1](#001---2018-01-10)
 - Fix phar build error in bare and isolated repository on removing
