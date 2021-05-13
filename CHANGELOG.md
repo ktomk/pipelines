@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.56] - 2021-05-13
 ### Add
 - Show `--step-script`, optionally by `<id>` and `<step>`
 - Build the phar file with PHP 5.3 (as well, all 5.3-8.1 reproducible)
@@ -578,4 +578,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.53]: https://github.com/ktomk/pipelines/releases/tag/0.0.53
 [0.0.54]: https://github.com/ktomk/pipelines/releases/tag/0.0.54
 [0.0.55]: https://github.com/ktomk/pipelines/releases/tag/0.0.55
+[0.0.56]: https://github.com/ktomk/pipelines/releases/tag/0.0.56
 [unreleased]: https://github.com/ktomk/pipelines
