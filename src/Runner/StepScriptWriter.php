@@ -110,7 +110,11 @@ class StepScriptWriter
             $buffer .= "echo \"pipe: {$line['pipe']} (pending feature)\" # pipe feature is pending\n";
             if (isset($line['variables']) && is_array($line['variables'])) {
                 foreach ($line['variables'] as $name => $value) {
-                    $buffer .= "echo '  ${name} (${value}):' ${value}\n";
+                    $buffer .= sprintf(
+                        "printf %%s %s; printf '%%s ' %s; printf '\\n' \n",
+                        Lib::quoteArg("  ${name} (${value}): "),
+                        $value
+                    );
                 }
             }
         }
