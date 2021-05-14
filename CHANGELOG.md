@@ -11,6 +11,9 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Change
 - Phar file build from sources and pipelines running from sources now
   show the same `--version` format.
+### Fix
+- Restore build reproducibility when building the phar file with
+  composer 2, since [0.0.55](#0055---2021-05-02)
 
 ## [0.0.56] - 2021-05-13
 ### Add

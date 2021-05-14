@@ -22,6 +22,10 @@ if (null === $version) {
 }
 
 printf("building %s ...\n", $version);
+if (false === putenv(sprintf('COMPOSER_ROOT_VERSION=%s', $version))) {
+    fprintf(STDERR, "fatal: failed to put version into COMPOSER environment\n");
+    exit(1);
+}
 
 $builder = Builder::create($file);
 $builder
