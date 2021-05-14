@@ -122,4 +122,13 @@ class VersionTest extends TestCase
         $version = new Version('0.1.2', '@.@.@');
         self::assertSame('0.1.2', $version->getBuildVersion());
     }
+
+    public function testGitComposerVersionInjected()
+    {
+        self::assertSame(array('1.0.0', null), Version::gitComposerVersion('/dev/null', '1.0.0'));
+        self::assertSame(
+            array(null, 'version format mismatch: 1.0.x'),
+            Version::gitComposerVersion('/dev/null', '1.0.x')
+        );
+    }
 }

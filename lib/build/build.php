@@ -15,10 +15,9 @@ require __DIR__ . '/../../src/bootstrap.php';
 
 list(, $file) = $argv + array(null, 'build/pipelines.phar');
 
-$version = exec('git describe --tags --always --first-parent --dirty=+', $output, $status);
-unset($output);
-if (0 !== $status) {
-    fprintf(STDERR, "fatal: version by git non-zero exit status: %d\n", $status);
+list($version, $error) = \Ktomk\Pipelines\Utility\Version::gitComposerVersion();
+if (null === $version) {
+    fprintf(STDERR, "fatal: %s\n", $error);
     exit(1);
 }
 

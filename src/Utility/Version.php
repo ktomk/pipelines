@@ -44,6 +44,40 @@ class Version
     }
 
     /**
+     * obtain version from git vcs
+     *
+     * the version is a composer accepted version (incl. additions from vcs format)
+     *
+     * @param string $dir
+     * @param string $version [optional] provide version instead of obtaining from HEAD
+     *
+     * @return array($version, $error)
+     */
+    public static function gitComposerVersion($dir = '.', $version = null)
+    {
+        $status = 0;
+        $version || $version = exec(
+            sprintf(
+                'git -C %s describe --tags --always --first-parent --dirty=+dirty --match \'[0-9].[0-9]*.[0-9]*\' 2>/dev/null',
+                escapeshellarg($dir)
+            ),
+            $output,
+            $status
+        );
+        unset($output);
+
+        if (0 !== $status) {
+            return array(null, sprintf('git-describe non-zero exit status: %d', $status));
+        }
+
+        if (!preg_match('~^(\d+\.\d+\.\d+)(?:[+-](.*))?$~D', $version, $matches)) {
+            return array(null, sprintf('version format mismatch: %s', $version));
+        }
+
+        return array($matches[1] . (empty($matches[2]) ? '' : '+' . $matches[2]), null);
+    }
+
+    /**
      * Version constructor.
      *
      * @param string $version input
@@ -158,15 +192,8 @@ class Version
      */
     public function getGitVersion()
     {
-        $buffer = rtrim(exec(sprintf(
-            'cd %s 2>/dev/null && echo "$(git describe --tags --always --first-parent 2>/dev/null)$(git diff-index --quiet HEAD -- 2>/dev/null || echo +)"',
-            escapeshellarg($this->dir)
-        )));
+        list($version) = self::gitComposerVersion($this->dir);
 
-        if (false === in_array($buffer, array('+', ''), true)) {
-            return $buffer;
-        }
-
-        return null;
+        return $version;
     }
 }

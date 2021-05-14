@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Change
+- Phar file build from sources and pipelines running from sources now
+  show the same `--version` format.
 
 ## [0.0.56] - 2021-05-13
 ### Add
