@@ -24,6 +24,7 @@ use PHPUnit\Framework\TestCase as PhpunitTestCase;
  * Type hinting for PHP 5.3 language level in PhpStorm w/ Phpunit 9.5 on PHP 7.4
  * @method static assertInstanceOf(string $expected, $actual, string $message = '')
  * @method expectOutputString(string $expectedString)
+ * @method expectOutputRegex(string $expectedRegex)
  * @method getMockForAbstractClass(string $originalClassName)
  *
  * @see TestCase::assertMatchesRegularExpression
