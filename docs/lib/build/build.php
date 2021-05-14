@@ -15,9 +15,17 @@ require __DIR__ . '/../../src/bootstrap.php';
 
 list(, $file) = $argv + array(null, 'build/pipelines.phar');
 
-$version = exec('git describe --tags --always --first-parent --dirty=+');
+list($version, $error) = \Ktomk\Pipelines\Utility\Version::gitComposerVersion();
+if (null === $version) {
+    fprintf(STDERR, "fatal: %s\n", $error);
+    exit(1);
+}
 
 printf("building %s ...\n", $version);
+if (false === putenv(sprintf('COMPOSER_ROOT_VERSION=%s', $version))) {
+    fprintf(STDERR, "fatal: failed to put version into COMPOSER environment\n");
+    exit(1);
+}
 
 $builder = Builder::create($file);
 $builder
@@ -27,7 +35,7 @@ $builder
     ->add('src/**/*.php') # utility php files
     ->add('src/Utility/App.php', $builder->replace('@.@.@', $version)) # set version
     ->add('lib/package/*.yml') # docker client packages
-    ->remove('lib/package/docker-42.42.1-binsh-test-stub.yml') # test fixture
+    ->remove('lib/package/docker-42.42.1-binsh-test-stub.yml', false) # test fixture
     // FIXME ;!pattern
     ->remove('src/Cli/Vcs**') # vcs integration stub (unused)
     ->remove('src/PharBuild/*') # phar build

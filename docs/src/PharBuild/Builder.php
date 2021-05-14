@@ -55,7 +55,7 @@ class Builder
     private $double;
 
     /**
-     * @var array keep file path (as key) do be unlinked on __destruct() (housekeeping)
+     * @var array keep file path (as key) to be unlinked on __destruct() (housekeeping)
      */
     private $unlink = array();
 
@@ -176,10 +176,13 @@ class Builder
      */
     public function snapShot()
     {
-        return function ($file) {
+        $self = $this;
+        $unlink = &$this->unlink;
+
+        return function ($file) use ($self, &$unlink) {
             $source = fopen($file, 'rb');
             if (false === $source) {
-                $this->err(sprintf('failed to open for reading: %s', $file));
+                $self->err(sprintf('failed to open for reading: %s', $file));
 
                 return null;
             }
@@ -188,7 +191,7 @@ class Builder
             if (false === $target) {
                 // @codeCoverageIgnoreStart
                 fclose($source);
-                $this->err(sprintf('failed to open temp file for writing'));
+                $self->err(sprintf('failed to open temp file for writing'));
 
                 return null;
                 // @codeCoverageIgnoreEnd
@@ -199,7 +202,7 @@ class Builder
 
             if (false === (bool)stream_copy_to_stream($source, $target)) {
                 // @codeCoverageIgnoreStart
-                $this->err(sprintf('stream copy error: %s', $file));
+                $self->err(sprintf('stream copy error: %s', $file));
                 fclose($source);
                 fclose($target);
                 unlink($snapShotFile);
@@ -210,7 +213,7 @@ class Builder
             fclose($source);
 
             # preserve file from deletion until later cleanup
-            $this->unlink[$snapShotFile] = $target;
+            $unlink[$snapShotFile] = $target;
 
             return array('fil', $snapShotFile);
         };
@@ -226,10 +229,12 @@ class Builder
      */
     public function dropFirstLine()
     {
-        return function ($file) {
+        $self = $this;
+
+        return function ($file) use ($self) {
             $lines = file($file);
             if (false === $lines) {
-                $this->err(sprintf('error reading file: %s', $file));
+                $self->err(sprintf('error reading file: %s', $file));
 
                 return null;
             }
@@ -361,6 +366,12 @@ class Builder
 
             return $this;
         }
+
+        // operating based on UTC, squelches PHP date.timezone errors
+        if (function_exists('date_default_timezone_set')) {
+            date_default_timezone_set('UTC');
+        }
+
         require_once __DIR__ . '/Timestamps.php';
         $ts = new Timestamps($file);
         $ts->updateTimestamps($timestamp);
@@ -412,12 +423,11 @@ class Builder
      * remove from collected files based on pattern
      *
      * @param $pattern
-     *
-     * @throws \RuntimeException
+     * @param bool $error [optional] with no pattern match
      *
      * @return $this
      */
-    public function remove($pattern)
+    public function remove($pattern, $error = true)
     {
         if (empty($this->files)) {
             $this->err(sprintf("can not remove from no files (pattern: '%s')", $pattern));
@@ -435,7 +445,10 @@ class Builder
         }
 
         if (count($result) === count($this->files)) {
-            $this->err(sprintf("ineffective removal pattern: '%s'", $pattern));
+            call_user_func(
+                $error ?  array($this, 'err') : array($this, 'errOut'),
+                sprintf("ineffective removal pattern: '%s'", $pattern)
+            );
         } else {
             $this->files = $result;
         }
@@ -508,6 +521,19 @@ class Builder
     public function errors()
     {
         return $this->errors;
+    }
+
+    /**
+     * @param string $message
+     *
+     * @throws \RuntimeException
+     *
+     * @return void
+     */
+    public function err($message)
+    {
+        $this->errors[] = $message;
+        $this->errOut($message);
     }
 
     /**
@@ -737,13 +763,19 @@ class Builder
     }
 
     /**
+     * output message on stderr
+     *
+     * not counting as error, use $this->err($message) to make $message a build error
+     *
+     * stderr for Builder is $this->errHandle
+     *
      * @param string $message
      *
      * @throws \RuntimeException
      *
      * @return void
      */
-    private function err($message)
+    private function errOut($message)
     {
         // fallback to global static: if STDIN is used for PHP
         // process, the default constants aren't ignored.
@@ -751,7 +783,6 @@ class Builder
             $this->errHandle = $this->errHandleFromEnvironment();
         }
 
-        $this->errors[] = $message;
         is_resource($this->errHandle) && fprintf($this->errHandle, "%s\n", $message);
     }
 
