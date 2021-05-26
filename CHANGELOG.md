@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+
 ## [0.0.57] - 2021-05-14
 ### Change
 - Phar file build from sources and pipelines running from sources now
