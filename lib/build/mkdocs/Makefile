@@ -20,8 +20,9 @@ mkdocs ?= mkdocs
 
 .PHONY: html-docs # mkdocs build for static html files (html-docs)
 html-docs: mkdocs-install mkdocs.yml docs/import prebuild-offline | include
-	$(mkdocs) build --strict --site-dir $(html_dir) \
-		&& rm -v -- $(html_dir)/sitemap.xml*
+	$(mkdocs) build --strict --site-dir $(html_dir) && \
+		rm -f $(html_dir)/import && \
+		rm -v -- $(html_dir)/sitemap.xml*
 	@echo "html-docs at file://$(abspath $(html_dir))/index.html"
 $(build_dir)/html-docs.tar.gz: mtime = --mtime="$(shell git -C "$(source)" --no-pager log -1 --format=%cd --date=iso)"
 $(build_dir)/html-docs.tar.gz: html-docs
@@ -39,6 +40,7 @@ gh-pages: mkdocs-install mkdocs.yml.gh-pages.yml docs/import prebuild-online | i
 			| xargs -0 --no-run-if-empty $(python) script/mkdocs-dir-fix.py \
 				--site-dir $(site_dir) --out-dir $(html_dir)/docs -q \
 				--config-file $(word 2,$^) --prefer-index-html && \
+		rm -f $(html_dir)/docs/import && \
 		rm -f $(html_dir)/docs/sitemap.xml.gz && \
 		gzip --keep --no-name $(html_dir)/docs/sitemap.xml && \
 		cp -- include/gh-pages-README.md $(html_dir)/README.md
@@ -52,7 +54,10 @@ pub-gh-pages:
 	script/publish.sh --work-tree=$(source) --branch=$(branch) -- $(html_dir)
 
 mkdocs.yml.gh-pages.yml: mkdocs.yml # github pages mkdocs configuration
-	sed '/./{H;$$!d} ; x ; s/^# \([a-z_]\+:\)/\1/gm' $< | sed '1d' >| $@
+	sed '/./{H;$$!d} ; x ; s/^# \([a-z_]\+:\)/\1/gm' $< \
+		 | sed '1d' \
+		 | sed '/  homepage: \.\/index\.html/d' \
+		>| $@
 
 site: mkdocs-install mkdocs.yml docs/import # mkdocs build
 	$(mkdocs) build --strict

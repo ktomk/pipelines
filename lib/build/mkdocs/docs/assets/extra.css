@@ -25,3 +25,8 @@ div.highlight
 
 /* make material for mkdocs icon stand out */
 a.md-footer-social__link:last-of-type {margin-left: 1em;}
+
+/* slate theme color tweaking */
+[data-md-color-scheme="slate"] {
+    --md-hue: 232;
+}

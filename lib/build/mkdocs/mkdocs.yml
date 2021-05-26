@@ -43,10 +43,22 @@ theme:
   icon:
     repo: fontawesome/brands/github
   font: false
+  palette:               # mkdocs-material 7.1
+    - scheme: default
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - scheme: slate
+      primary: red
+      accent: red
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
 extra_css:
   - assets/extra.css
 
 extra:
+  homepage: index.html
   social:
     - icon: pipelines
       name: Pipelines homepage
