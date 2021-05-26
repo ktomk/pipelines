@@ -4,7 +4,7 @@
 /*
  * pipelines - run bitbucket pipelines wherever they dock
  *
- * Copyright 2017, 2018, 2019 Tom Klingenberg <ktomk@github.com>
+ * Copyright 2017-2021 Tom Klingenberg <ktomk@github.com>
  *
  * Licensed under GNU Affero General Public License v3.0 or later
  */
@@ -13,20 +13,26 @@ use Ktomk\Pipelines\Utility\App;
 
 defined('STDERR') || define('STDERR', fopen('php://stderr', 'wb'));
 
-if (PHP_SAPI !== 'cli') fprintf(
+if (PHP_SAPI !== 'cli') {
+    fprintf(
         STDERR,
-    'warn: pipelines should be invoked via the CLI version of PHP, ' .
-    "not the '%s' SAPI\n",
-    PHP_SAPI
-);
+        "warn: %s should be invoked via the CLI version of PHP, not the '%s' SAPI\n",
+        'pipelines',
+        PHP_SAPI
+    );
+}
 
 error_reporting(-1);
+
 if (function_exists('init_set')) {
     ini_set('display_errors', '1');
 }
 
 require __DIR__ . '/../src/bootstrap.php';
 
-@include(__DIR__ . '/dev/xdebug.php'); // only in source version, not in phar
+// --xdebug only in source version, not in phar
+if (file_exists(__DIR__ . '/dev/xdebug.php')) {
+    include(__DIR__ . '/dev/xdebug.php');
+}
 
 exit(App::create()->main($argv));
