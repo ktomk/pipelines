@@ -303,7 +303,7 @@ class StepRunner
                 $container->obtainLabelOptions(),
                 $env->getArgs('-e'),
                 ArgsBuilder::optMap('-e', $step->getEnv(), true),
-                $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=/app',
+                $mountWorkingDirectory, '-e', 'BITBUCKET_CLONE_DIR=' . $clonePath,
                 $mountDockerSock,
                 $mountDockerClient,
                 $container->obtainUserOptions(),

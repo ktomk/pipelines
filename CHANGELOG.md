@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Fix
+- Wrong `$BITBUCKET_CLONE_DIR` on non-default `step.clone-path`, since
+  [0.0.45](#0045---2020-07-09)
 - Travis changed URLs
 
 ## [0.0.57] - 2021-05-14
