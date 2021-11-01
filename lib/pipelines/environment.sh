@@ -78,6 +78,7 @@ PIPELINES_PROJECT_PATH \
                            used to mount inside a pipeline which's deployment\
                            does not provide any mount point.
 USER                       current user name, informative
+PWD                        current working directory, informative
 HOME                       current home directory, informative
 "
 
@@ -106,9 +107,6 @@ print_vars "$vars"
 >&2 echo "debug: this is on stderr"
 
 echo "directory listing of $(pwd):"
-ls | while read -r file; do
-       printf "%s " "${file}"
-     done
-echo
+ls -al
 
 echo "user/group/s info: $(id -u) ($(id -nu)) / $(id -g) ($(id -gn)) / $(id -G) ($(id -nG))"
