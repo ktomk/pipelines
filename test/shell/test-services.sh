@@ -23,12 +23,12 @@ case ${1-0} in
       ;;
   1 ) echo "# 1: redis service (kept)"
       "$PROJECT_DIR/bin/pipelines" --pipeline custom/redis-service --keep --verbatim | grep PONG
-      "$PROJECT_DIR/bin/pipelines" --docker-list | grep pipelines-1.redis-service.custom-redis-service.pipelines
+      "$PROJECT_DIR/bin/pipelines" --docker-list | grep pipelines-1.redis-service.custom-redis-service.'[a-z]\+$'
       exit
       ;;
   2 ) echo "# 2: redis service (clean)"
       "$PROJECT_DIR/bin/pipelines" --pipeline custom/redis-service --verbatim | grep PONG
-      "$PROJECT_DIR/bin/pipelines" --docker-list | grep -v pipelines-1.redis-service.custom-redis-service.pipelines
+      ! ("$PROJECT_DIR/bin/pipelines" --docker-list | grep pipelines-1.redis-service.custom-redis-service.'[a-z]\+$')
       exit
       ;;
   3 ) echo "# 3: mysql service"
