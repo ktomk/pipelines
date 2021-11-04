@@ -42,4 +42,11 @@ after *any* shell pipe with a non-zero exit status.
 Mount point / destination of the project files within a pipeline step
 container.
 
+Is the absolute path inside the container and must start with a slash
+(`/`), multiple directory components are supported, none of them must
+be relative (no `.` or `..` segments allowed). The path must not end
+with a slash.
+
 * Default: `/app`
+* Related environment parameter: `BITBUCKET_CLONE_DIR` (Compare
+[*Pipelines Environment Variable Usage*](PIPELINES-VARIABLE-REFERENCE.md))

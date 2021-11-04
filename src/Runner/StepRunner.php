@@ -24,13 +24,6 @@ use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 class StepRunner
 {
     /**
-     * list of temporary directory destructible markers
-     *
-     * @var array
-     */
-    private $temporaryDirectories = array();
-
-    /**
      * @var Runner
      */
     private $runner;
@@ -239,20 +232,20 @@ class StepRunner
 
         $streams->out("\x1D+++ copying files into container...\n");
 
-        $tmpDir = LibTmp::tmpDir('pipelines-cp.');
-        $this->temporaryDirectories[] = DestructibleString::rmDir($tmpDir);
-
         $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
 
-        LibFs::symlink($dir, $tmpDir . $clonePath);
-        $cd = Lib::cmd('cd', array($tmpDir . '/.'));
+        if ('/' !== $clonePath) {
+            // create clone-path directory inside the container with user:group of the project directory
+            $tmpDir = DestructibleString::rmDir(LibTmp::tmpDir('pipelines-cp.'));
+            LibFs::symlinkWithParents($dir, $tmpDir . $clonePath);
 
-        $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $clonePath));
-        $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
-        $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
-        LibFs::unlink($tmpDir . $clonePath);
-        if (0 !== $status) {
-            return $status;
+            $cd = Lib::cmd('cd', array($tmpDir . '/.'));
+            $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $clonePath));
+            $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
+            $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
+            if (0 !== $status) {
+                return $status;
+            }
         }
 
         $cd = Lib::cmd('cd', array($dir . '/.'));
@@ -262,7 +255,6 @@ class StepRunner
         if (0 !== $status) {
             return $status;
         }
-        LibFs::rmDir($tmpDir);
 
         return null;
     }

@@ -119,6 +119,34 @@ class LibFs
     }
 
     /**
+     * create symbolic link to a directory with parents
+     *
+     * do not create if link pathname is already a
+     * directory or targeting one (even if not the target).
+     *
+     * create parent directory/ies of link if necessary.
+     *
+     * @param string $target pathname of target directory
+     * @param string $link pathname of link
+     *
+     * @return void
+     */
+    public static function symlinkWithParents($target, $link)
+    {
+        $linkDir = Libfs::mkDir(dirname($link));
+        if (!is_dir($link)) {
+            LibFs::symlink($target, $link);
+            if (!is_link($link)) {
+                // @codeCoverageIgnoreStart
+                throw new \RuntimeException(
+                    sprintf('Link "%s" was not created', $link)
+                );
+                // @codeCoverageIgnoreEnd
+            }
+        }
+    }
+
+    /**
      * rename a file
      *
      * @param string $old

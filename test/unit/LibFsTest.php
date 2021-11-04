@@ -74,6 +74,17 @@ class LibFsTest extends TestCase
         self::assertDirectoryNotExist($baseDir);
     }
 
+    public function testMkDirSymlink()
+    {
+        $baseDir = sys_get_temp_dir() . '/pipelines-fs-tests';
+        $target = LibFs::mkDir($baseDir . '/target/dir');
+        $link = $baseDir . '/link/dir';
+        LibFs::symlinkWithParents($target, $link);
+        self::assertDirectoryExists($baseDir . '/link');
+        self::assertTrue(is_link($link));
+        LibFs::rmDir($baseDir);
+    }
+
     public function testRename()
     {
         $baseDir = sys_get_temp_dir() . '/pipelines-fs-tests';
