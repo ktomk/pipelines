@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\TestCase;
+use Ktomk\Pipelines\Utility\Option\Types;
 
 /**
  * Class OptionsTest
@@ -32,5 +33,25 @@ class OptionsTest extends TestCase
         self::assertIsString($options->get('docker.socket.path'));
         $options->define('docker.socket.path', '/var/run/super-docker.sock');
         self::assertSame('/var/run/super-docker.sock', $options->get('docker.socket.path'));
+    }
+
+    public function testVerify()
+    {
+        $options = Options::create();
+        self::assertNotNull($options->verify('', ''));
+        self::assertNull($options->verify('', null));
+    }
+
+    public function testMockVerifyTypeDefinition()
+    {
+        // without types
+        $optionsMock = OptionsMock::create();
+        $optionsMock->define('foo', 'default', 1);
+        self::assertSame('', $optionsMock->verify('foo', ''));
+
+        // with types
+        $optionsMock = OptionsMock::create(new Types());
+        $optionsMock->define('foo', 'default', 1);
+        self::assertNull($optionsMock->verify('foo', ''));
     }
 }

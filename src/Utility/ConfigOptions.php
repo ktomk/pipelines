@@ -80,6 +80,10 @@ class ConfigOptions extends Options implements Runnable
             list($name, $value) = explode('=', $setting, 2) + array('undef', null);
             /** @var string $name */
             $default = $options->get($name);
+            $result = $options->verify($name, $value);
+            if (null === $result) {
+                throw new \InvalidArgumentException(sprintf('not a %s: "%s"', $name, $value));
+            }
             $type = null === $default ? 'string' : gettype($default);
             settype($value, $type) && $options->definition[$name] = array($value);
         }
