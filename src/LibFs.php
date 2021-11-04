@@ -175,7 +175,9 @@ class LibFs
             $files = array_diff($result, array('.', '..'));
             foreach ($files as $file) {
                 $path = "${current}/${file}";
-                if (is_dir($path)) {
+                if (is_link($path)) {
+                    self::unlink($path);
+                } elseif (is_dir($path)) {
                     $stack[] = $path;
                 } elseif (is_file($path)) {
                     self::rm($path);
