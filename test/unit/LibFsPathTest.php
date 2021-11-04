@@ -106,6 +106,19 @@ class LibFsPathTest extends TestCase
             ),
             array('////prefix////./ftw/////./////./', '////prefix/ftw'),
             array('./././../././../make/it/../../fake/././it', '../../fake/it'),
+            array('/build/', '/build'),
+            array('/build/.', '/build'),
+            array('./build', 'build'),
+            array('/./build', '/build'),
+            array('/./.build', '/.build'),
+            array('././.build', '.build'),
+            array('/build/../foo/bar/../baz/../..', '/'),
+            array('/build/../foo/bar/../baz/../../..', '/..'),
+            array('./build/../foo/bar/../baz/../..', ''),
+            array('./build/../foo/bar/../baz/../../..', '..'),
+            array('../build/../foo/bar/../baz/../../..', '../..'),
+            array('/../..', '/../..'),
+            array('/../../', '/../..'),
         );
     }
 
@@ -136,6 +149,15 @@ class LibFsPathTest extends TestCase
         self::assertTrue(LibFsPath::isPortable('aaa'));
         self::assertTrue(LibFsPath::isPortable('/aaa'));
         self::assertTrue(LibFsPath::isPortable('../aaa'));
+        self::assertTrue(LibFsPath::isPortable('/b-aaa'));
+        self::assertTrue(LibFsPath::isPortable('/b--aaa'));
+
+        self::assertFalse(LibFsPath::isPortable('-aaa'));
+        self::assertFalse(LibFsPath::isPortable('--aaa'));
+        self::assertFalse(LibFsPath::isPortable('/-aaa'));
+        self::assertFalse(LibFsPath::isPortable('/--aaa'));
+        self::assertFalse(LibFsPath::isPortable('/b/-aaa'));
+        self::assertFalse(LibFsPath::isPortable('/b/--aaa'));
     }
 
     public function provideGateAblePortableExpectations()
