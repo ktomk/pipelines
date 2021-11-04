@@ -249,7 +249,7 @@ class StepRunner
 
         $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $clonePath));
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
-        $status = $exec->pass("${cd} && echo 'app' | ${tar} | ${dockerCp}", array());
+        $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
         LibFs::unlink($tmpDir . $clonePath);
         if (0 !== $status) {
             return $status;
