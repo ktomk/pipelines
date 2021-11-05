@@ -64,7 +64,7 @@ incl. remarks:
 | composer *1  | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
 | phpunit (version) | X (4)   | X (4&nbsp;*2) | X (4&nbsp;*2) | X (5)   | X (6)   | X (6)   | X (7)   | X (8)   | X (8/ 9&nbsp;*3) | X (8&nbsp;*2/ 9)   | X (8&nbsp;*2/ 9)   |
 | phar-build   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   | X   |
-| php-cs-fixer |     |     |     |     |     |     | X   | X   | X   | X   | X *4|
+| php-cs-fixer |     |     |     |     |     |     |     |     | X   | X   | X *4|
 | xdebug 3 *5  |     |     |     |     |     |     | X&nbsp;*6| X   | X   | X   | X   |
 
 ???+ info "Remarks"
@@ -81,8 +81,9 @@ incl. remarks:
        Unfortunately, it does (did) not cover all the PHP versions that
        `pipelines` supports. Especially with PHP 8.1 it refuses to install
        with composer. This requires to fake the PHP version (e.g. as
-       7.4.99) or to use the `--ignore-platform-reqs` option of composer
-       to install with PHP 8.1.
+       7.4.99) or to use the `--ignore-platform-reqs` - or more precisely
+       `--ignore-platform-req=php` - option of composer to install with
+       PHP 8.1.
     5. Xdebug 3 is required for PHP 8 and in tests for all PHP versions
        it supports. It is somewhat new, segfaults may have been spotted in
        CI runs (local, on Scrutiziner). Check the version then an upgrade. Pipelines uses Xdebug in development for code-coverage and step-debugging. See

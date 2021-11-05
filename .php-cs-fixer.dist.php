@@ -1,6 +1,6 @@
 <?php
 
-$config = PhpCsFixer\Config::create()
+$config = (new PhpCsFixer\Config())
     ->registerCustomFixers(new PhpCsFixerCustomFixers\Fixers())
     ->setCacheFile('build/cache/.php_cs.cache')
     ->setRiskyAllowed(true)
@@ -10,7 +10,7 @@ $config = PhpCsFixer\Config::create()
         PhpCsFixerCustomFixers\Fixer\NoDuplicatedArrayKeyFixer::name() => true,
         PhpCsFixerCustomFixers\Fixer\NoDuplicatedImportsFixer::name() => true,
         PhpCsFixerCustomFixers\Fixer\NoPhpStormGeneratedCommentFixer::name() => true,
-        PhpCsFixerCustomFixers\Fixer\OperatorLinebreakFixer::name() => true,
+        'operator_linebreak' => false,
         PhpCsFixerCustomFixers\Fixer\PhpdocNoSuperfluousParamFixer::name() => true,
         // problems with psalm annotations: PhpCsFixerCustomFixers\Fixer\PhpdocParamOrderFixer::name() => true,
         PhpCsFixerCustomFixers\Fixer\SingleSpaceAfterStatementFixer::name() => true,
@@ -22,7 +22,7 @@ $config = PhpCsFixer\Config::create()
         'concat_space' => array('spacing' => 'one'),
         'align_multiline_comment' => true,
         'array_syntax' => array('syntax' => 'long'),
-        'trailing_comma_in_multiline_array' => true,
+        'trailing_comma_in_multiline' => true,
         'whitespace_after_comma_in_array' => true,
         'no_trailing_comma_in_singleline_array' => true,
         'blank_line_before_statement' => true,
@@ -36,11 +36,11 @@ $config = PhpCsFixer\Config::create()
         'heredoc_to_nowdoc' => true,
         'list_syntax' => array('syntax' => 'long'),
         'method_chaining_indentation' => true,
-        'method_argument_space' => array('ensure_fully_multiline' => true),
+        'method_argument_space' => array('on_multiline' =>'ensure_fully_multiline'),
         'multiline_comment_opening_closing' => true,
         'no_extra_blank_lines' => array('tokens' => array('break', 'continue', 'extra', 'return', 'throw', 'use', 'parenthesis_brace_block', 'square_brace_block', 'curly_brace_block')),
         'no_null_property_initialization' => true,
-        'no_short_echo_tag' => true,
+        'echo_tag_syntax' => true,
         'no_superfluous_elseif' => true,
         'no_unneeded_curly_braces' => true,
         'no_unneeded_final_method' => true,

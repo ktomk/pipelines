@@ -45,10 +45,9 @@ install:
       IGNORE_PLATFORM_REQS=--ignore-platform-reqs
       composer update --ignore-platform-req=php
     fi
-  - |
-    if [[ "${TRAVIS_PHP_VERSION}" == 7.4*    ]] \
-    || [[ "${TRAVIS_PHP_VERSION}" == 7.3*    ]]; then ppconf patch-phpunit-tests phpunit ^8; fi
-  - if [[ "${TRAVIS_PHP_VERSION}" == 7.2*    ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf phpunit ^7; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.4*    ]]; then ppconf patch-phpunit-tests phpunit ^8; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.3*    ]]; then ppconf remove-dev all patch-phpunit-tests phpunit ^8; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 7.2*    ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all phpunit ^7; fi
   - if [[ "${TRAVIS_PHP_VERSION}" == 7.[01]* ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^6; fi
   - if [[ "${TRAVIS_PHP_VERSION}" == 5.6     ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^5; fi
   - echo "IGNORE_PLATFORM_REQS=${IGNORE_PLATFORM_REQS-}"
