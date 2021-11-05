@@ -43,6 +43,7 @@ install:
       # PHP-CS-Fixer n/a for PHP 8.0 yet, needs php version fake
       # Hat-tip: Composer 1.10 and PHP 8 #9523 <https://github.com/composer/composer/issues/9523>
       IGNORE_PLATFORM_REQS=--ignore-platform-reqs
+      composer update --ignore-platform-req=php
     fi
   - |
     if [[ "${TRAVIS_PHP_VERSION}" == 7.4*    ]] \
