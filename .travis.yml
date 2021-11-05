@@ -30,7 +30,7 @@ before_install:
       gpg --import ktomk-phive-sign.gpg
       rm ktomk-phive-sign.gpg
     fi
-  - composer self-update 2.0.13 # pin composer version for whole build
+  - composer self-update 2.1.11 # pin composer version for whole build
 
 ## Install fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
 install:

@@ -35,7 +35,7 @@ RUN set -ex ; \
     >&2 echo 'ERROR: Invalid installer checksum' ; \
     exit 1 ; \
   fi ; \
-  php composer-setup.php --quiet --install-dir=/usr/bin --filename=composer --version=2.0.13 ; \
+  php composer-setup.php --quiet --install-dir=/usr/bin --filename=composer --version=2.1.11 ; \
   rm composer-setup.php ; \
   :
 

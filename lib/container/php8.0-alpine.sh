@@ -28,7 +28,7 @@ ARG FROM
 FROM $FROM
 RUN set -ex ; \
   apk --no-cache add composer ; \
-  composer self-update 2.0.13 ; \
+  composer self-update 2.1.11 ; \
   :
 
 FROM $FROM

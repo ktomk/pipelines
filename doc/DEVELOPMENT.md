@@ -4,7 +4,7 @@ Pipelines is a command-line utility written in [PHP][PHP] \[PHP] and
 developed as a [composer][COMPOSER] \[COMPOSER] package with a [phar
 file build][PHAR] \[PHAR].
 
-The currently pinned composer version is `2.0.13`, pinning the version
+The currently pinned composer version is `2.1.11`, pinning the version
 is mostly important for the phar build as it is not reproducible
 otherwise. In general any version of composer is supported.
 
