@@ -135,6 +135,7 @@ class Properties implements Countable
 
     /** Countable */
 
+    #[\ReturnTypeWillChange]
     /**
      * Count elements of an object
      *

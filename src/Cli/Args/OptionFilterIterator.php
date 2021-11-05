@@ -61,6 +61,7 @@ class OptionFilterIterator extends FilterIterator
         return implode(', ', $this->options);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return bool true if the current option is one of those to be filtered
      */

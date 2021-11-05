@@ -129,6 +129,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /* @see \ArrayAccess */
 
+    #[\ReturnTypeWillChange]
     /**
      * @param $offset
      *
@@ -139,6 +140,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
         return isset($this->steps[$offset]);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @param mixed $offset
      *
@@ -149,11 +151,13 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
         return $this->steps[$offset];
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         throw new \BadMethodCallException('Steps offsets are read-only');
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         throw new \BadMethodCallException('Steps offsets are read-only');
@@ -161,6 +165,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /* @see \Countable */
 
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->steps);
@@ -168,6 +173,7 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
 
     /* @see \IteratorAggregate */
 
+    #[\ReturnTypeWillChange]
     /**
      * @return StepsIterator
      */

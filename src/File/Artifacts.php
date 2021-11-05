@@ -36,6 +36,7 @@ class Artifacts implements \Countable
         return $this->artifacts;
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return int
      */

@@ -46,6 +46,7 @@ class Iterator extends Args implements PhpIterator
 
     /* Iterator */
 
+    #[\ReturnTypeWillChange]
     /**
      * Return the current element
      *
@@ -60,6 +61,7 @@ class Iterator extends Args implements PhpIterator
         return $this->getByIndex($this->index);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * Move forward to next option
      */
@@ -72,6 +74,7 @@ class Iterator extends Args implements PhpIterator
         $this->index++;
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * Return the key of the current option
      *
@@ -82,6 +85,7 @@ class Iterator extends Args implements PhpIterator
         return $this->getArgsIndex($this->index);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * Checks if current position is valid
      *
@@ -94,6 +98,7 @@ class Iterator extends Args implements PhpIterator
         return !(null === $current);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return void Any returned value is ignored.
      */

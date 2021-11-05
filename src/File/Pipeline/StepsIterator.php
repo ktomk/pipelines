@@ -82,12 +82,14 @@ class StepsIterator implements \Iterator
 
     /** @see \Iterator * */
 
+    #[\ReturnTypeWillChange]
     public function next()
     {
         $this->index++;
         $this->inner->next();
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return int
      */
@@ -96,6 +98,7 @@ class StepsIterator implements \Iterator
         return $this->inner->key();
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return Step
      */
@@ -104,6 +107,7 @@ class StepsIterator implements \Iterator
         return $this->current = $this->inner->current();
     }
 
+    #[\ReturnTypeWillChange]
     public function valid()
     {
         if ($this->isManual()) {
@@ -113,6 +117,7 @@ class StepsIterator implements \Iterator
         return $this->inner->valid();
     }
 
+    #[\ReturnTypeWillChange]
     public function rewind()
     {
         $this->index = 0;

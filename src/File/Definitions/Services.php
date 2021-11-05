@@ -60,6 +60,7 @@ class Services implements Countable
         return array_intersect_key($this->services, array_flip($serviceNames));
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return int
      */

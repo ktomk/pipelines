@@ -79,6 +79,7 @@ class StepCaches implements FileNode, \IteratorAggregate
         return $this->step->getFile();
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return \ArrayIterator|string[]
      * @psalm-return \ArrayIterator<array-key, string>

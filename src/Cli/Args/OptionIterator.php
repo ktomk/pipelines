@@ -62,6 +62,7 @@ class OptionIterator extends IteratorIterator
 
     /* Iterator */
 
+    #[\ReturnTypeWillChange]
     /**
      * @return string
      */
@@ -75,6 +76,7 @@ class OptionIterator extends IteratorIterator
         return $current;
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * Move forward to next option
      */
@@ -84,6 +86,7 @@ class OptionIterator extends IteratorIterator
         $this->forwardToOption();
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * Checks if current position is valid
      *
@@ -100,6 +103,7 @@ class OptionIterator extends IteratorIterator
         return !('--' === $current);
     }
 
+    #[\ReturnTypeWillChange]
     /**
      * @return void Any returned value is ignored.
      */
