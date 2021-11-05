@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- PHP 8.1 compatibility, build and docker images for pipelines.
 ### Change
 - Build with Composer 2.1; pin composer version to 2.1.11 (from 2.0.13),
   since [0.0.55](#0055---2021-05-02)
