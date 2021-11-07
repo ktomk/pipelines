@@ -28,3 +28,8 @@ a.md-footer-social__link:last-of-type {margin-left: 1em;}
     --md-text-font-family: "Roboto";
     --md-code-font-family: "Roboto Mono";
 }
+
+/* slate theme color tweaking */
+[data-md-color-scheme="slate"] {
+    --md-hue: 232;
+}
