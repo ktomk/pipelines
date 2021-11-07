@@ -7,7 +7,11 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [0.0.58](#0055---2021-11-07)
+## [unreleased]
+### Fix
+- Change log 0.0.58 release date malformed
+
+## [0.0.58] - 2021-11-07
 ### Add
 - PHP 8.1 compatibility, build and docker images for pipelines.
 ### Change

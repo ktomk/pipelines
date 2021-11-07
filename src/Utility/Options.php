@@ -66,6 +66,6 @@ class Options
     {
         $type = isset($this->definition[$name][1]) ? $this->definition[$name][1] : null;
 
-        return $this->types  ? $this->types->verifyInput($value, $type) : $value;
+        return $this->types ? $this->types->verifyInput($value, $type) : $value;
     }
 }
