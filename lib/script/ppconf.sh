@@ -19,7 +19,7 @@ PHP_BINARY="${PHP_BINARY-php}"
 
 ### run composer with PHP_BINARY/php
 f_composer() {
-  "${PHP_BIN-php}" -f "$(composer which 2>/dev/null)" -- "$@"
+  "${PHP_BINARY}" -f "$(composer which 2>/dev/null)" -- "$@"
 }
 
 if [ $# -eq 0 ]; then
