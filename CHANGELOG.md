@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.59] - 2021-11-08
 ### Fix
 - Remove temporary repository for development dependencies
 - Change log 0.0.58 release date malformed
@@ -607,4 +607,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.56]: https://github.com/ktomk/pipelines/releases/tag/0.0.56
 [0.0.57]: https://github.com/ktomk/pipelines/releases/tag/0.0.57
 [0.0.58]: https://github.com/ktomk/pipelines/releases/tag/0.0.58
+[0.0.59]: https://github.com/ktomk/pipelines/releases/tag/0.0.59
 [unreleased]: https://github.com/ktomk/pipelines
