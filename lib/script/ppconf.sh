@@ -141,8 +141,6 @@ while [ $# -gt 0 ]; do
         deps="friendsofphp/php-cs-fixer kubawerlos/php-cs-fixer-custom-fixers"
         printf "       %s: %s\n" "$1" "$deps"
       fi
-      # remove temporary php-cs-fixer-custom-fixers repository
-      f_composer --quiet config --unset repositories.php-cs-fixer-custom-fixers
       # shellcheck disable=SC2086 # unquoted $deps (from $2) intended
       f_composer --quiet remove --dev --ignore-platform-reqs $deps
       shift 2

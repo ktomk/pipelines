@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "028901766d76551bfdf436db12a83f57",
+    "content-hash": "6f423e1a3273ffe7d8499c3d1521b797",
     "packages": [
         {
             "name": "justinrainbow/json-schema",
@@ -589,16 +589,16 @@
         },
         {
             "name": "kubawerlos/php-cs-fixer-custom-fixers",
-            "version": "v3.2.0.1",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ktomk/php-cs-fixer-custom-fixers.git",
-                "reference": "79c4c525eb7e7da812398952f8aac8830183eb3c"
+                "url": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers.git",
+                "reference": "541984e27bddfb13cfb330ef3e6d1f22f015f45a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ktomk/php-cs-fixer-custom-fixers/zipball/79c4c525eb7e7da812398952f8aac8830183eb3c",
-                "reference": "79c4c525eb7e7da812398952f8aac8830183eb3c",
+                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/541984e27bddfb13cfb330ef3e6d1f22f015f45a",
+                "reference": "541984e27bddfb13cfb330ef3e6d1f22f015f45a",
                 "shasum": ""
             },
             "require": {
@@ -617,39 +617,7 @@
                     "PhpCsFixerCustomFixers\\": "src"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "PhpCsFixerCustomFixersDev\\": ".dev-tools/src",
-                    "Tests\\": "tests"
-                }
-            },
-            "scripts": {
-                "analyse": [
-                    "@install-dev-tools",
-                    "php-cs-fixer fix --ansi --diff --dry-run --verbose",
-                    "@composer --working-dir=.dev-tools analyse"
-                ],
-                "fix": [
-                    "@install-dev-tools",
-                    "php-cs-fixer fix --ansi --verbose || exit 0",
-                    "@composer --working-dir=.dev-tools fix",
-                    "@php .dev-tools/readme > README.md"
-                ],
-                "infection": [
-                    "@install-dev-tools",
-                    "@composer --working-dir=.dev-tools infection"
-                ],
-                "install-dev-tools": [
-                    "@composer --working-dir=.dev-tools --quiet install"
-                ],
-                "test": [
-                    "phpunit"
-                ],
-                "verify": [
-                    "@analyse",
-                    "@test"
-                ]
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -661,9 +629,10 @@
             ],
             "description": "A set of custom fixers for PHP CS Fixer",
             "support": {
-                "source": "https://github.com/ktomk/php-cs-fixer-custom-fixers/tree/v3.2.0.1"
+                "issues": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/issues",
+                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.2.1"
             },
-            "time": "2021-11-06T21:30:39+00:00"
+            "time": "2021-11-08T06:57:00+00:00"
         },
         {
             "name": "myclabs/deep-copy",

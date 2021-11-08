@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Fix
+- Remove temporary repository for development dependencies
 - Change log 0.0.58 release date malformed
 
 ## [0.0.58] - 2021-11-07
