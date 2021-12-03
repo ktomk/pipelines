@@ -158,11 +158,12 @@ default        1       redis:6.0.4-alpine    service:redis
 
 ## Trouble-Shoot Starting Service Containers
 
-Sometimes service containers do not start properly, the service container exits
-prematurely or other bad things are happening.
+Sometimes service containers do not start properly, the service
+container exits prematurely or other unintended things are happening
+setting up a service.
 
-It is possible to start a pipelines service container manually to review the
-start sequence.
+It is possible to start a pipelines service container manually to review
+the start sequence.
 
 ### The `--service <service>` option
 

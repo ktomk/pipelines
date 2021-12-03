@@ -457,7 +457,7 @@ This allows to launch pipelines from a pipeline as long as
 `pipelines` and the Docker client is available in the
 pipelines' container.  `pipelines` will take care of the Docker
 client as `/usr/bin/docker` as long as the pipeline has the
-`docker` service (`services: \n - docker`).
+`docker` service (`services: [docker]`).
 
 This feature is similar to [run Docker commands in Bitbucket
 Pipelines][BBPL-DCK] \[BBPL-DCK].
@@ -588,21 +588,22 @@ hand?
 
 ### User Tests
 
-Successful use on Ubuntu 16.04 LTS, Ubuntu 18.04 LTS and Mac OS
+Successful use on Ubuntu 16.04 LTS, Ubuntu 18.04 LTS, Ubuntu 20.04 LTS and Mac OS
 X Sierra and High Sierra with PHP and Docker installed.
 
 ### Known Bugs
 
 - The command "`:`" in pipelines exec layer is never really
-  executed but emulated having exit status 0 and no standard or
-  error output. It is intended for pipelines testing.
+executed but emulated having exit status 0 and no standard or
+error output. It is intended for pipelines testing.
 
 - Brace expansion (used for glob patterns with braces) is known
-  to fail in some cases. This *could* affect matching pipelines,
-  collecting asset paths and *did* affect building the phar file.  \
-  For the first two, this has *never* been reported nor experienced,
-  for building the phar file the workaround was to entail the
-  larger parts of the pattern.
+to fail in some cases. This *could* affect matching pipelines,
+collecting asset paths and *did* affect building the phar file.
+
+    For the first two, this has *never* been reported nor experienced,
+for building the phar file the workaround was to entail the
+larger parts of the pattern.
 
 - The libyaml based parser does not support dots ("`.`") in anchor
   names.
@@ -614,6 +615,14 @@ X Sierra and High Sierra with PHP and Docker installed.
 - NUL bytes ("`\0`") are not supported verbatim in step-scripts due
   to defense-in-depth protection on `passthru` in the PHP-runtime to
   prevent *Null character* injection.
+
+- When the project directory is large (e.g. a couple of GBs) and copying
+it into the pipeline container, it may appear as if pipelines hangs as
+the copying operation is ongoing and taking a long time.
+
+    Pressing <kbd>ctrl</kbd> + <kbd>c</kbd> may stop pipelines but not
+the copying operation. Kill the process of the copy operation (`tar`
+pipe to `docker cp`) to stop the operation.
 
 ### Installation
 
@@ -722,7 +731,7 @@ Check the version by invoking it:
 
 ##### Php Compatibility and Undefined Behaviour
 
-The pipelines project aims to support php 5.3.3 up to php 8.0.
+The pipelines project aims to support php 5.3.3 up to php 8.1.
 
 Using any of its PHP functions or methods with named parameters
 falls into undefined behaviour.
@@ -733,9 +742,7 @@ The pipelines project practices reproducible builds since it's first
 phar build. The build is self-contained, which means that the repository
 ships with all required files to build with only little dependencies:
 
-- PHP (not 5.3+ but 5.4+ due to less portable code in
-  [`build.php`](lib/build/build.php) /
-  [`Builder.php`](src/PharBuild/Builder.php))
+- PHP (for [`build.php`](lib/build/build.php))
 - Composer
 - Git
 
@@ -825,16 +832,17 @@ to use the development version for `pipelines`.
 - [ ] Write about differences from Bitbucket Pipelines
 - [ ] Write about the file format support/limitations
 - [ ] Pipeline file properties support:
+    - [X] step.after-script (*after-script* feature)
     - [X] step.trigger (`--steps` / `--no-manual` options)
     - [X] step.caches (to disable use `--no-cache` option)
-    - [ ] clone (*git-deployment* feature)
     - [X] definitions
         - [X] services (*services* feature)
         - [X] caches (*caches* feature)
+    - [ ] step.condition ([#13])
+    - [ ] clone (*git-deployment* feature)
     - [ ] max-time (never needed this for local run)
     - [ ] size (likely neglected for local run, limited support for
       [Rootless Pipelines](doc/PIPELINES-HOWTO-ROOTLESS.md))
-    - [X] step.after-script (*after-script* feature)
 - [ ] Get VCS revision from working directory (*git-deployment* feature)
 - [ ] Use a different project directory `--project-dir <path>` to
   specify the root path to deploy into the container, which
@@ -845,6 +853,8 @@ to use the development version for `pipelines`.
   should be copied into the container (*git-deployment* feature)
 - [ ] Override the default image name (`--default-image <name>`; never
   needed this for local run)
+
+[#13]: https://github.com/ktomk/pipelines/issues/13
 
 ## References
 

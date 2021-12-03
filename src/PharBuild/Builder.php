@@ -446,7 +446,7 @@ class Builder
 
         if (count($result) === count($this->files)) {
             call_user_func(
-                $error ?  array($this, 'err') : array($this, 'errOut'),
+                $error ? array($this, 'err') : array($this, 'errOut'),
                 sprintf("ineffective removal pattern: '%s'", $pattern)
             );
         } else {

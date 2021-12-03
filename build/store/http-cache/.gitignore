@@ -9,7 +9,7 @@
 # usage example: dist/pipelines/docker-client-install.sh
 #
 # NOTE: the usage on docker-client install is outdated as the docker
-#       client is automatically instally nowadays, but since, this
+#       client is automatically installed nowadays. but since, this
 #       serves as an example for offline-compatible pipeline runs
 #       how a pipeline remote resource can be transparently cached
 #       within the project

@@ -53,8 +53,7 @@ any changes. while developing, `composer dev` is a good intermediate.
 
 ## Support of Different PHP Versions
 
-While `pipelines` runs on PHP 5.3.3+, the PHP version when developing
-and building `pipelines` may differ.
+While `pipelines` runs and builds on PHP 5.3.3+, the PHP version when developing `pipelines` may differ.
 
 Please see the following table for a break-down based on PHP versions
 incl. remarks:
@@ -86,7 +85,7 @@ incl. remarks:
        PHP 8.1.
     5. Xdebug 3 is required for PHP 8 and in tests for all PHP versions
        it supports. It is somewhat new, segfaults may have been spotted in
-       CI runs (local, on Scrutiziner). Check the version then an upgrade. Pipelines uses Xdebug in development for code-coverage and step-debugging. See
+       CI runs (local, on Scrutinizer). Check the version, and then an upgrade. Pipelines uses Xdebug in development for code-coverage and step-debugging. See
        _Xdebug 3 Support_ above.
     6. Xdebug 3 support for PHP 7.2 is limited to security support. Same
        applies to Xdebug 2.9 for PHP 7.2. No other Xdebug version next

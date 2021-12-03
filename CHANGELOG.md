@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+### Change
+- Documentation (diverse)
+
 ## [0.0.59] - 2021-11-08
 ### Fix
 - Remove temporary repository for development dependencies
