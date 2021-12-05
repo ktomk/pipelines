@@ -161,9 +161,6 @@
             "title": "Build execution unit",
             "description": "Define s a build execution unit. \n\nSteps are executed in the order that they appear in the bitbucket-pipelines.yml file. \nYou can use up to 10 steps in a pipeline.",
             "properties": {
-                "clone": {
-                    "$ref": "#/definitions/clone"
-                },
                 "condition": {
                     "type": "object",
                     "properties": {
@@ -230,6 +227,9 @@
                         "minLength": 1
                     },
                     "minItems": 1
+                },
+                "clone": {
+                    "$ref": "#/definitions/clone"
                 },
                 "services": {
                     "type": "array",
