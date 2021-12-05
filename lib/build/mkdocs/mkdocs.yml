@@ -16,6 +16,7 @@ nav:
     - README.md
     - Change Log: CHANGELOG.md
     - Copying: COPYING.md
+  - Getting Started: doc/GETTING-STARTED.md
   - Docs:
     - doc/PIPELINES-OFFLINE.md
     - doc/PIPELINES-CACHES.md

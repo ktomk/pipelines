@@ -9,11 +9,13 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Add
+- Getting Started mini tutorial, see [Getting Started with Pipelines]
 - html-docs (mkdocs build, pipeline), see as well
   [Pipelines HTML Documentation Build]
 ### Change
 - Documentation (diverse)
 
+[Getting Started with Pipelines]: doc/GETTING-STARTED.md
 [Pipelines HTML Documentation Build]: lib/build/mkdocs/README.md
 
 ## [0.0.59] - 2021-11-08
