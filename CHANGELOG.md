@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.60] - 2021-12-07
 ### Add
 - Getting Started mini tutorial, see [Getting Started with Pipelines]
 - html-docs (mkdocs build, pipeline), see as well
@@ -619,4 +619,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.57]: https://github.com/ktomk/pipelines/releases/tag/0.0.57
 [0.0.58]: https://github.com/ktomk/pipelines/releases/tag/0.0.58
 [0.0.59]: https://github.com/ktomk/pipelines/releases/tag/0.0.59
+[0.0.60]: https://github.com/ktomk/pipelines/releases/tag/0.0.60
 [unreleased]: https://github.com/ktomk/pipelines
