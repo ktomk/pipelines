@@ -7,6 +7,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+### Change
+- html-docs: Upgrade mkdocs-material to 8.1.0
+
 ## [0.0.60] - 2021-12-07
 ### Add
 - Getting Started mini tutorial, see [Getting Started with Pipelines]

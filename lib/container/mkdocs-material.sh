@@ -44,7 +44,7 @@ set -euo pipefail
 IFS=$' \n\t'
 
 docker_cmd="${1-docker}"
-from="docker.io/squidfunk/mkdocs-material"
+from="docker.io/squidfunk/mkdocs-material:8.1.0"
 tag="docker.io/ktomk/pipelines:mkdocs-material"
 
 echo "build '${tag}' from '${from}' with ${docker_cmd}..."
@@ -64,7 +64,8 @@ RUN set -xe ; \
   mkdir -p /root/.local/bin; \
   PATH="/root/.local/bin:\$PATH"; \
   python3 -m pip install --upgrade pip; \
-  python3 -m pip install -q --user "$(<lib/build/mkdocs/requirements.txt tr $'\n' ' ' | sed 's/ *$//; s/ /" "/g')"
+  python3 -m pip install -q --user "$(<lib/build/mkdocs/requirements.txt tr $'\n' ' ' | sed 's/ *$//; s/ /" "/g')" ; \
+  python3 -m pip freeze | sed '/^##/,\$d'
 ENV PATH="/root/.local/bin:\$PATH"
 DOCKERFILE
 
