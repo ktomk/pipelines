@@ -9,6 +9,9 @@
      <loc>https://ktomk.github.io/pipelines/COPYING.html</loc>
      <changefreq>daily</changefreq>
     </url><url>
+     <loc>https://ktomk.github.io/pipelines/doc/GETTING-STARTED.html</loc>
+     <changefreq>daily</changefreq>
+    </url><url>
      <loc>https://ktomk.github.io/pipelines/doc/PIPELINES-OFFLINE.html</loc>
      <changefreq>daily</changefreq>
     </url><url>
@@ -31,6 +34,9 @@
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://ktomk.github.io/pipelines/doc/DEVELOPMENT.html</loc>
+     <changefreq>daily</changefreq>
+    </url><url>
+     <loc>https://ktomk.github.io/pipelines/lib/build/mkdocs/index.html</loc>
      <changefreq>daily</changefreq>
     </url><url>
      <loc>https://ktomk.github.io/pipelines/doc/DOCKER-NAME-TAG.html</loc>

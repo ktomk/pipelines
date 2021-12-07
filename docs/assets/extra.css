@@ -1,3 +1,6 @@
+/* take fonts if installed, not from remote */
+@import "font-local.css";
+
 /* scroll higher code blocks (21 em) */
 div.codehilite,
 div.highlight
@@ -22,12 +25,6 @@ div.highlight
 
 /* make material for mkdocs icon stand out */
 a.md-footer-social__link:last-of-type {margin-left: 1em;}
-
-/* take fonts if installed, not from remote */
-:root {
-    --md-text-font-family: "Roboto";
-    --md-code-font-family: "Roboto Mono";
-}
 
 /* slate theme color tweaking */
 [data-md-color-scheme="slate"] {
