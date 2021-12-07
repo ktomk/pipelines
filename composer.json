@@ -53,6 +53,7 @@
       "@unit-test",
       "lib/script/tmp-test.sh"
     ],
+    "mkdocs": "@php -f bin/pipelines -- --verbatim --pipeline custom/html-docs",
     "pre-install-cmd": [
       "test/data/package/make-test-stub-package.sh"
     ],
@@ -97,6 +98,7 @@
       "@php -f bin/pipelines -- --verbatim --pipeline custom/lint-php",
       "@build",
       "@test",
+      "@mkdocs",
       "lib/script/tmp-test.sh"
     ]
   },
@@ -107,6 +109,7 @@
     "cs-fix": "Fix code-style",
     "dev": "Run cs-fix and unit-test",
     "integration-test": "Run integration-tests",
+    "mkdocs": "Make HTML documentation",
     "reset": "Reset composer dependencies to GIT SCM HEAD",
     "test": "Run all tests",
     "phpunit": "Phpunit script stub",
