@@ -18,7 +18,7 @@ set -euo pipefail
 IFS=$' \n\t'
 
 docker_cmd="${1-docker}"
-from="docker.io/php:8.0-alpine"
+from="docker.io/php:8.1-alpine"
 tag="docker.io/ktomk/pipelines:pipelines"
 
 echo "build '${tag}' from '${from}' with ${docker_cmd}..."
@@ -56,8 +56,8 @@ RUN set -ex ; \
   printf "extension_dir: %s\n" "$(php -r 'echo ini_get("extension_dir");')" ; \
   ls -al /usr/local/etc/php/conf.d/ ; \
   ls -al "$(php -r 'echo ini_get("extension_dir");')" ; \
-  : explodes: ldd /usr/local/lib/php/extensions/no-debug-non-zts-20200930/yaml.so ; \
-  readelf -d /usr/local/lib/php/extensions/no-debug-non-zts-20200930/yaml.so | grep 'NEEDED' ; \
+  : explodes: ldd /usr/local/lib/php/extensions/no-debug-non-zts-20210902/yaml.so ; \
+  readelf -d /usr/local/lib/php/extensions/no-debug-non-zts-20210902/yaml.so | grep 'NEEDED' ; \
   find / -name "libyaml-0.so.2*" ; \
   :
 
@@ -71,9 +71,9 @@ COPY --from=1 \
   /usr/local/etc/php/conf.d/docker-php-ext-yaml.ini \
   /usr/local/etc/php/conf.d/
 COPY --from=1 \
-  /usr/local/lib/php/extensions/no-debug-non-zts-20200930/xdebug.so \
-  /usr/local/lib/php/extensions/no-debug-non-zts-20200930/yaml.so \
-  /usr/local/lib/php/extensions/no-debug-non-zts-20200930/
+  /usr/local/lib/php/extensions/no-debug-non-zts-20210902/xdebug.so \
+  /usr/local/lib/php/extensions/no-debug-non-zts-20210902/yaml.so \
+  /usr/local/lib/php/extensions/no-debug-non-zts-20210902/
 COPY --from=1 \
   /usr/lib/libyaml-0.so.2* \
   /usr/lib/
