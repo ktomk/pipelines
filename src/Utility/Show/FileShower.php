@@ -128,7 +128,7 @@ class FileShower extends FileShowerAbstract
      */
     private function tableFileSteps($steps, $id, FileTable $table)
     {
-        foreach ($steps as $index => $step) {
+        foreach ($steps::fullIter($steps) as $index => $step) {
             $stepNumber = (int)$index + 1;
             $name = $step->getName();
             $name = null === $name ? 'no-name' : sprintf('"%s"', $name);

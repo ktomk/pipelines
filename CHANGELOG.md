@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ## [unreleased]
 ### Change
 - html-docs: Upgrade mkdocs-material to 8.1.0
+### Fix
+- Fix pipelines `--show` for steps with a manual trigger and all
+  following steps, since [0.0.38](#0038---2020-06-01)
 
 ## [0.0.60] - 2021-12-07
 ### Add
