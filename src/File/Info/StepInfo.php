@@ -15,6 +15,7 @@ final class StepInfo
 {
     const NO_NAME = 'no-name';
     const CHAR_ARTIFACTS = 'A';
+    const CHAR_CONDITION = 'C';
     const CHAR_MANUAL = 'M';
 
     /**
@@ -70,6 +71,7 @@ final class StepInfo
         $annotations = array();
 
         $this->step->getArtifacts() && $annotations[] = self::CHAR_ARTIFACTS;
+        $this->step->getCondition() && $annotations[] = self::CHAR_CONDITION;
         $this->step->isManual() && $annotations[] = self::CHAR_MANUAL;
 
         return $annotations;

@@ -118,6 +118,7 @@ class FileShowerTest extends TestCase
     public function provideHappyFilesForShowFileMethod()
     {
         $stepsFile = __DIR__ . '/../../../data/yml/steps.yml';
+        $conditionFile = __DIR__ . '/../../../data/yml/condition.yml';
 
         return array(
             'steps.manual-trigger-annotation'  => array(
@@ -138,6 +139,24 @@ TEXT
                 <<<'TEXT'
 PIPELINE ID    IMAGES                     STEPS
 default        ktomk/pipelines:busybox    4 ("step #1"; "step #2"; "step #3"; no-name *M)
+TEXT
+                ,
+            ),
+            'condition.condition-annotation' => array(
+                $conditionFile,
+                'showFile',
+                <<<'TEXT'
+PIPELINE ID    STEP    IMAGE                      NAME
+default        1 *C    ktomk/pipelines:busybox    no-name
+TEXT
+                ,
+            ),
+            'condition.condition-after-name-annotation' => array(
+                $conditionFile,
+                'showPipelines',
+                <<<'TEXT'
+PIPELINE ID    IMAGES                     STEPS
+default        ktomk/pipelines:busybox    1 (no-name *C)
 TEXT
                 ,
             ),

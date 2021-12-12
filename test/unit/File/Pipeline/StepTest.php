@@ -11,6 +11,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @covers \Ktomk\Pipelines\File\Pipeline\Step
+ * @covers \Ktomk\Pipelines\File\Pipeline\StepParser
  */
 class StepTest extends TestCase
 {
@@ -97,6 +98,12 @@ class StepTest extends TestCase
             'image' => 'php:5.6find . -name .libs -a -type d|xargs rm -rf',
             'script' => array(':'),
         ));
+    }
+
+    public function testGetConditionFallback()
+    {
+        $step = $this->createStep();
+        self::assertNull($step->getCondition());
     }
 
     public function testGetImageFallback()

@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Add
+- `--show` and `--show-pipelines`: Annotate steps' conditions with `*C`
 - Schema for `<step>.artifacts.download` and `paths` properties
   Mar 2021 ([Tina Yu])
 - Support for step artifacts with paths attribute

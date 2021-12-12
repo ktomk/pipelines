@@ -1,0 +1,27 @@
+# this file is part of pipelines
+
+image: ktomk/pipelines:busybox
+
+pipelines:
+  pull-requests:
+    '**': # runs as any branch by default
+      - step: &phpunit
+          script:
+            - phpunit
+          condition:
+            changesets:
+              includePaths:
+                - src/
+                - composer.lock
+
+      - step:
+          script:
+            - eslint
+          condition:
+            changesets:
+              includePaths:
+                - js/
+
+  branches:
+    master:
+      - step: *phpunit

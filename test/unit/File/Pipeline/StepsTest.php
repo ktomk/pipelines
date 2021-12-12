@@ -30,7 +30,7 @@ class StepsTest extends TestCase
     }
 
     /**
-     * @covers \Ktomk\Pipelines\File\Pipeline\Step
+     * @covers \Ktomk\Pipelines\File\Pipeline\StepParser
      */
     public function testParseErrors()
     {
