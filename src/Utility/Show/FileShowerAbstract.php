@@ -7,6 +7,7 @@ namespace Ktomk\Pipelines\Utility\Show;
 use InvalidArgumentException;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
+use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Pipelines;
 
 /**
@@ -56,7 +57,7 @@ class FileShowerAbstract
      * @param Pipelines $pipelines
      * @param FileTable $table
      *
-     * @return array
+     * @return array<string, Pipeline>
      */
     protected function tablePipelineIdsPipelines(Pipelines $pipelines, FileTable $table)
     {
@@ -105,7 +106,7 @@ class FileShowerAbstract
      * @param Pipelines $pipelines
      * @param string $id
      *
-     * @return array
+     * @return array{Pipeline, string}
      */
     private function getShowPipeline(Pipelines $pipelines, $id)
     {

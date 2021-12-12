@@ -6,7 +6,7 @@ namespace Ktomk\Pipelines\Utility\Show;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\File\Definitions\Service;
-use Ktomk\Pipelines\File\Definitions\Services as Services;
+use Ktomk\Pipelines\File\Definitions\Services;
 use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline\Step;
