@@ -2,29 +2,31 @@
 @import "font-local.css";
 
 /* scroll higher code blocks (21 em) */
-div.codehilite,
-div.highlight
-    {}
+@media not print {
+    div.codehilite,
+    div.highlight
+        {}
 
-    div.codehilite pre,
-    div.highlight pre
-        {max-height: 21em; overflow-y: auto;}
+        div.codehilite pre,
+        div.highlight pre
+            {max-height: 21em; overflow-y: auto;}
 
-        div.codehilite pre button.md-clipboard.md-icon,
-        div.highlight pre button.md-clipboard.md-icon
-            {
-                display: inline-block;
-                margin-left: -1.5em;
-                float: right;
-                position: sticky;
-                background: var(--md-code-bg-color);
-            }
+            div.codehilite pre button.md-clipboard.md-icon,
+            div.highlight pre button.md-clipboard.md-icon
+                {
+                    display: inline-block;
+                    margin-left: -1.5em;
+                    float: right;
+                    position: sticky;
+                    background: var(--md-code-bg-color);
+                }
+}
 
 /* make overview tables width-snappy (docs/DEVELOPMENT.md) */
 .md-typeset table:not([class]) th {min-width: 0}
 
 /* make material for mkdocs icon stand out */
-a.md-footer-social__link:last-of-type {margin-left: 1em;}
+a.md-social__link:last-of-type {margin-left: 1em;}
 
 /* slate theme color tweaking */
 [data-md-color-scheme="slate"] {

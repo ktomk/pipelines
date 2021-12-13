@@ -22,6 +22,8 @@
 :root {
     --md-text-font-family: "Roboto";
     --md-code-font-family: "Roboto Mono";
+    --md-text-font: "Roboto";
+    --md-code-font: "Roboto Mono";
 }
 
 /* roboto-300 - latin (Light 300) */
@@ -29,7 +31,7 @@
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 300;
-    src: local('Roboto Light'), local('Roboto');
+    src: local('Roboto Light'), local('Roboto-Light');
 }
 
 /* roboto-regular - latin (Regular 400) */
@@ -37,7 +39,7 @@
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 400;
-    src: local('Roboto Regular'), local('Roboto')
+    src: local('Roboto Regular'), local('Roboto-Regular');
 }
 
 /* roboto-italic - latin (Regular 400 italic) */
@@ -45,14 +47,14 @@
     font-family: 'Roboto';
     font-style: italic;
     font-weight: 400;
-    src: local('Roboto Italic'), local('Roboto');
+    src: local('Roboto Italic'), local('Roboto-Italic');
 }
 /* roboto-700 - latin (Bold 700) */
 @font-face {
     font-family: 'Roboto';
     font-style: normal;
     font-weight: 700;
-    src: local('Roboto Bold'), local('Roboto');
+    src: local('Roboto Bold'), local('Roboto-Bold');
 }
 
 /* roboto-mono-regular - latin (Regular 400) */
@@ -60,5 +62,5 @@
     font-family: 'Roboto Mono';
     font-style: normal;
     font-weight: 400;
-    src: local('Roboto Mono'), local('Roboto-Mono');
+    src: local('Roboto Mono Regular'), local('RobotoMono-Regular');
 }
