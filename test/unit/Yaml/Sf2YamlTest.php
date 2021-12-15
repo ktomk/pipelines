@@ -40,6 +40,7 @@ class Sf2YamlTest extends TestCase
      *
      * @param Sf2Yaml $parser
      * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::parseFile
+     * @covers \Ktomk\Pipelines\Yaml\Yaml::fileDelegate
      */
     public function testParseFile(Sf2Yaml $parser)
     {

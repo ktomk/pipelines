@@ -20,7 +20,7 @@ class Exec
     /**
      * @var bool
      */
-    private $active;
+    private $active = true;
 
     /**
      * Exec constructor.
@@ -30,7 +30,6 @@ class Exec
     public function __construct($debugPrinter = null)
     {
         $this->debugPrinter = $debugPrinter;
-        $this->active = true;
     }
 
     /**

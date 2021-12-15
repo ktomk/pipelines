@@ -24,7 +24,7 @@ class Sf2Yaml implements ParserInterface
      */
     public function parseFile($path)
     {
-        return $this->parseBuffer(@file_get_contents($path));
+        return Yaml::fileDelegate($path, array($this, 'parseBuffer'));
     }
 
     /**

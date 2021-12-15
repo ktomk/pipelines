@@ -208,9 +208,7 @@ class App implements StatusRunnable
      */
     private function parseBasename()
     {
-        $args = $this->arguments;
-
-        $basename = $args->getStringOptionArgument('basename', self::BBPL_BASENAME);
+        $basename = $this->arguments->getStringOptionArgument('basename', self::BBPL_BASENAME);
         if (!LibFsPath::isBasename($basename)) {
             throw new StatusException(sprintf("not a basename: '%s'", $basename), 1);
         }
@@ -227,11 +225,10 @@ class App implements StatusRunnable
      */
     private function parseDeployMode()
     {
-        $args = $this->arguments;
+        $modes = array('copy', 'mount');
+        $deployMode = $this->arguments->getStringOptionArgument('deploy', $modes[0]);
 
-        $deployMode = $args->getStringOptionArgument('deploy', 'copy');
-
-        if (!in_array($deployMode, array('mount', 'copy'), true)) {
+        if (!in_array($deployMode, $modes, true)) {
             throw new StatusException(
                 sprintf("unknown deploy mode '%s'\n", $deployMode),
                 1
@@ -248,17 +245,8 @@ class App implements StatusRunnable
      */
     private function parseExec()
     {
-        $args = $this->arguments;
-
-        $debugPrinter = null;
-        if ($this->verbose) {
-            $debugPrinter = $this->streams;
-        }
-        $exec = new Exec($debugPrinter);
-
-        if ($args->hasOption('dry-run')) {
-            $exec->setActive(false);
-        }
+        $exec = new Exec($this->verbose ? $this->streams : null);
+        $exec->setActive(!$this->arguments->hasOption('dry-run'));
 
         return $exec;
     }
@@ -275,10 +263,8 @@ class App implements StatusRunnable
      */
     private function parseFile($basename, &$workingDir)
     {
-        $args = $this->arguments;
-
         /** @var null|string $file as bitbucket-pipelines.yml to process */
-        $file = $args->getOptionArgument('file', null);
+        $file = $this->arguments->getOptionArgument('file', null);
         if (null === $file && null !== $file = LibFs::fileLookUp($basename, $workingDir)) {
             /** @var string $file */
             $buffer = dirname($file);

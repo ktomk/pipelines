@@ -114,9 +114,9 @@ class RunOpts
 
     /**
      *
-     * FIXME(tk): technically the underlying $this->options-get() can also
+     * FIXME(tk): technically the underlying $this->options->get() can also
      *            return bool, this is somewhat not fully implemented and
-     *            should perhaps be delegated.
+     *            should perhaps be delegated {@see getBoolOption()}.
      *
      * @param string $name
      *
@@ -124,15 +124,14 @@ class RunOpts
      */
     public function getOption($name)
     {
-        if (!isset($this->options)) {
-            throw new \BadMethodCallException('no options');
-        }
+        $buffer = $this->getOptionImplementation($name);
 
-        $buffer = $this->options->get($name);
-        if (null === $buffer) {
-            throw new \InvalidArgumentException(
-                sprintf("unknown option: '%s'", $name)
+        if (is_bool($buffer)) {
+            // @codeCoverageIgnoreStart
+            throw new \BadMethodCallException(
+                sprintf("use bool for option: '%s'", $name)
             );
+            // @codeCoverageIgnoreEnd
         }
 
         return $buffer;
@@ -145,7 +144,7 @@ class RunOpts
      */
     public function getBoolOption($name)
     {
-        return (bool)$this->getOption($name);
+        return (bool)$this->getOptionImplementation($name);
     }
 
     /**
@@ -242,5 +241,26 @@ class RunOpts
     public function setSsh($ssh)
     {
         $this->ssh = $ssh ? true : null;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return bool|string
+     */
+    private function getOptionImplementation($name)
+    {
+        if (!isset($this->options)) {
+            throw new \BadMethodCallException('no options');
+        }
+
+        $buffer = $this->options->get($name);
+        if (null === $buffer) {
+            throw new \InvalidArgumentException(
+                sprintf("unknown option: '%s'", $name)
+            );
+        }
+
+        return $buffer;
     }
 }

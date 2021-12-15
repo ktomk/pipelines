@@ -66,11 +66,11 @@ class Pipelines implements Dom\FileNode
     }
 
     /**
-     * @return array
+     * @return array|string[]
      */
     public function getPipelineIds()
     {
-        return array_keys($this->references);
+        return array_map('strval', array_keys($this->references));
     }
 
     /**

@@ -40,6 +40,26 @@ class Yaml
     }
 
     /**
+     * error-free (suppressed) file_get_contents()
+     *
+     * available for implementations aligned with {@see Yaml::file()}
+     * that already checks readability before getting the contents.
+     *
+     * fall-back on file-reading error is null.
+     *
+     * @param string $path
+     * @param callable $parseBuffer function(string $buffer): array|null
+     *
+     * @return null|array
+     */
+    public static function fileDelegate($path, $parseBuffer)
+    {
+        $buffer = @file_get_contents($path);
+
+        return false === $buffer ? null : call_user_func($parseBuffer, $buffer);
+    }
+
+    /**
      * @param string $buffer
      *
      * @return null|array

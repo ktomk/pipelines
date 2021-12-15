@@ -76,7 +76,7 @@ class FileShower extends FileShowerAbstract
     }
 
     /**
-     * shows summary of the file, first pipelines then pipline services
+     * shows summary of the file, first pipelines then pipeline services
      *
      * @return int 0 if there were no errors, 1 if there were errors
      */

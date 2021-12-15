@@ -29,7 +29,7 @@ class LibTmp
     /**
      * Create handle and path of a temporary file (which gets cleaned up)
      *
-     * @return array
+     * @return array [resource stream-handle, string path]
      */
     public static function tmpFile()
     {

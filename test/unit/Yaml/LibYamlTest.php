@@ -33,6 +33,11 @@ class LibYamlTest extends TestCase
         $tester->assertParser();
     }
 
+    /**
+     * @covers \Ktomk\Pipelines\Yaml\Yaml::fileDelegate
+     *
+     * @return void
+     */
     public function testFileParsing()
     {
         $path = __DIR__ . '/../../../bitbucket-pipelines.yml';

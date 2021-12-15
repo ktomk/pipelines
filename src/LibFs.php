@@ -133,9 +133,9 @@ class LibFs
      */
     public static function symlinkWithParents($target, $link)
     {
-        $linkDir = Libfs::mkDir(dirname($link));
+        self::mkDir(dirname($link));
         if (!is_dir($link)) {
-            LibFs::symlink($target, $link);
+            self::symlink($target, $link);
             if (!is_link($link)) {
                 // @codeCoverageIgnoreStart
                 throw new \RuntimeException(
@@ -200,8 +200,7 @@ class LibFs
             if (false === $result) {
                 throw new UnexpectedValueException(sprintf('Failed to open directory: %s', $current));
             }
-            $files = array_diff($result, array('.', '..'));
-            foreach ($files as $file) {
+            foreach (array_diff($result, array('.', '..')) as $file) {
                 $path = "${current}/${file}";
                 if (is_link($path)) {
                     self::unlink($path);
