@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 - `--show` and `--show-pipelines`: Annotate steps with manual triggers
   with `*M`
 ### Change
+- Verbose last error report on Phpunit test-suite shutdown if fatal,
+  improves [0.0.32](#0032---2020-04-11)
 - `--show-pipelines`: Show unnamed steps as `no-name` (like `--show`)
 ### Fix
 - Fix internal file descriptor system paths mapping flaws, since

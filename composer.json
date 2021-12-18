@@ -26,6 +26,7 @@
     },
     "files": [
       "test/phpunit_class_aliases.php"
+    , "test/phpunit_exit_report_fatals.php"
     ]
   },
   "require": {
