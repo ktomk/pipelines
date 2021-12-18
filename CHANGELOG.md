@@ -8,6 +8,9 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Fix
+- Fix internal file descriptor system paths mapping flaws, since
+  [0.0.39](#0039---2020-06-02)
 
 ## [0.0.61] - 2021-12-13
 ### Change

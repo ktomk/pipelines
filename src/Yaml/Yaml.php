@@ -27,8 +27,7 @@ class Yaml
     {
         $path = '-' === $file ? 'php://stdin' : $file;
 
-        /* @link https://bugs.php.net/bug.php?id=53465 */
-        $path = preg_replace('(^/(?:proc/self|dev)/(fd/\d+))', 'php://\1', $path);
+        $path = LibFsStream::fdToPhp($path);
 
         if (!LibFsStream::isReadable($path)) {
             throw new \InvalidArgumentException(

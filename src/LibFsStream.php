@@ -71,9 +71,22 @@ class LibFsStream
         $path = $file;
         (null !== $dashRepresent) && ('-' === $file) && $path = $dashRepresent;
 
-        /* @link https://bugs.php.net/bug.php?id=53465 */
-        $path = preg_replace('(^/(?:proc/self|dev)/(fd/\d+))', 'php://\1', $path);
+        $path = self::fdToPhp($path);
 
         return stream_is_local($path) ? $path : $file;
+    }
+
+    /**
+     * transform a file-descriptor path (/dev/fd, /proc/self/fd *linux)
+     * to php://fd for PHP user-land.
+     *
+     * @param string $path
+     *
+     * @return string
+     */
+    public static function fdToPhp($path)
+    {
+        /* @link https://bugs.php.net/bug.php?id=53465 */
+        return preg_replace('(^/(?>proc/self|dev)/(fd/(?>0|[1-9]\d{0,6})$))D', 'php://\1', $path);
     }
 }
