@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Utility\Show;
 
 use Ktomk\Pipelines\Cli\Streams;
 use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -78,6 +79,8 @@ class FileShowerTest extends TestCase
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showImages', 0),
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showServices', 0),
             array(__DIR__ . '/../../../data/yml/cache.yml', 'showFile', 0),
+            array(__DIR__ . '/../../../data/yml/steps.yml', 'showFile', 0),
+            array(__DIR__ . '/../../../data/yml/steps.yml', 'showPipelines', 0),
         );
     }
 
@@ -91,6 +94,7 @@ class FileShowerTest extends TestCase
      */
     public function testShowFileByMethod($path, $method, $expected, $parseExceptionMessage = null)
     {
+        self::assertTrue(method_exists(__NAMESPACE__ . '\FileShower', $method), "FileShower::${method}()");
         $file = File::createFromFile($path);
         $shower = new FileShower(new Streams(), $file);
 
@@ -100,5 +104,61 @@ class FileShowerTest extends TestCase
         }
 
         self::assertSame($expected, $shower->{$method}());
+    }
+
+    public function provideHappyFilesForShowFileMethod()
+    {
+        $stepsFile = __DIR__ . '/../../../data/yml/steps.yml';
+
+        return array(
+            'steps.manual-trigger-annotation'  => array(
+                $stepsFile,
+                'showFile',
+                <<<'TEXT'
+PIPELINE ID    STEP    IMAGE                      NAME
+default        1       ktomk/pipelines:busybox    "step #1"
+default        2       ktomk/pipelines:busybox    "step #2"
+default        3       ktomk/pipelines:busybox    "step #3"
+default        4 *M    ktomk/pipelines:busybox    no-name
+TEXT
+                ,
+            ),
+            'steps.manual-trigger-after-name-annotation' => array(
+                $stepsFile,
+                'showPipelines',
+                <<<'TEXT'
+PIPELINE ID    IMAGES                     STEPS
+default        ktomk/pipelines:busybox    4 ("step #1"; "step #2"; "step #3"; no-name *M)
+TEXT
+                ,
+            ),
+        );
+    }
+
+    /**
+     * @covers \Ktomk\Pipelines\File\Info\StepInfo
+     * @covers \Ktomk\Pipelines\File\Info\StepsInfo
+     * @covers \Ktomk\Pipelines\File\Info\StepsStepInfoIterator
+     *
+     * @dataProvider provideHappyFilesForShowFileMethod
+     *
+     * @param string $path
+     * @param string $method
+     * @param string $expected
+     *
+     * @return void
+     */
+    public function testShowFileByMethodHappyOutput($path, $method, $expected)
+    {
+        self::assertTrue(method_exists(__NAMESPACE__ . '\FileShower', $method), "FileShower::${method}()");
+        $expected = rtrim($expected) . "\n";
+
+        list($outHandle) = LibTmp::tmpFile();
+        $shower = new FileShower(new Streams(null, $outHandle), File::createFromFile($path));
+        self::assertSame(0, $shower->{$method}(), 'error-free');
+        rewind($outHandle);
+        $actual = stream_get_contents($outHandle);
+
+        self::assertSame($expected, $actual);
     }
 }

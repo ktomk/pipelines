@@ -20,14 +20,14 @@ use Ktomk\Pipelines\File\Pipelines;
 class FileShowerAbstract
 {
     /**
-     * @var callable
-     */
-    protected $output;
-
-    /**
      * @var File
      */
     protected $file;
+
+    /**
+     * @var callable
+     */
+    private $output;
 
     /**
      * FileInfo constructor.

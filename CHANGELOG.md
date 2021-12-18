@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- `--show` and `--show-pipelines`: Annotate steps with manual triggers
+  with `*M`
+### Change
+- `--show-pipelines`: Show unnamed steps as `no-name` (like `--show`)
 ### Fix
 - Fix internal file descriptor system paths mapping flaws, since
   [0.0.39](#0039---2020-06-02)

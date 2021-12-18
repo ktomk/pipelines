@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use Ktomk\Pipelines\File\Definitions\Service;
 use Ktomk\Pipelines\File\Definitions\Services;
 use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\File\Info\StepsInfo;
+use Ktomk\Pipelines\File\Info\StepsStepInfoIterator;
 use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\Pipeline\Steps;
@@ -47,11 +49,10 @@ class FileShower extends FileShowerAbstract
      */
     public function showPipelineIds()
     {
-        $pipelines = $this->file->getPipelines();
-
-        foreach ($pipelines->getPipelineIds() as $id) {
-            $this->info($id);
-        }
+        array_map(
+            array($this, 'info'),
+            $this->file->getPipelines()->getPipelineIds()
+        );
 
         return 0;
     }
@@ -87,12 +88,8 @@ class FileShower extends FileShowerAbstract
         $table = new FileTable(array('PIPELINE ID', 'IMAGES', 'STEPS'));
 
         foreach ($this->tablePipelineIdsPipelines($pipelines, $table) as $id => $pipeline) {
-            $steps = (null === $pipeline) ? null : $pipeline->getSteps();
-            list($images, $names) = $this->getImagesAndNames($steps);
-
-            $images = $images ? implode(', ', $images) : '';
-            $steps = sprintf('%d%s', count($steps), $names ? ' ("' . implode('"; "', $names) . '")' : '');
-            $table->addRow(array($id, $images, $steps));
+            $info = StepsInfo::fromPipeline($pipeline);
+            $table->addRow(array($id, $info->getImagesAsString(), $info->getSummary()));
         }
 
         return $this->outputTableAndReturn($table);
@@ -128,14 +125,10 @@ class FileShower extends FileShowerAbstract
      */
     private function tableFileSteps($steps, $id, FileTable $table)
     {
-        foreach ($steps::fullIter($steps) as $index => $step) {
-            $stepNumber = (int)$index + 1;
-            $name = $step->getName();
-            $name = null === $name ? 'no-name' : sprintf('"%s"', $name);
-
-            $table->addRow(array($id, $stepNumber, $step->getImage(), $name));
-            $this->tableFileStepsCaches($step, $id, $stepNumber, $table);
-            $this->tableFileStepsServices($step, $id, $stepNumber, $table);
+        foreach (new StepsStepInfoIterator($steps) as $info) {
+            $table->addRow(array($id, $info->annotate($number = $info->getStepNumber()), $info->getImage(), $info->getName()));
+            $this->tableFileStepsCaches($step = $info->getStep(), $id, $number, $table);
+            $this->tableFileStepsServices($step, $id, $number, $table);
         }
     }
 
@@ -244,29 +237,5 @@ class FileShower extends FileShowerAbstract
         }
 
         return $return;
-    }
-
-    /**
-     * @param Steps $steps
-     *
-     * @return array
-     */
-    private function getImagesAndNames(Steps $steps = null)
-    {
-        $images = array();
-        $names = array();
-
-        foreach (Steps::fullIter($steps) as $step) {
-            $image = $step->getImage()->getName();
-            if (File::DEFAULT_IMAGE !== $image) {
-                $images[] = $image;
-            }
-            $name = $step->getName();
-            (null !== $name) && $names[] = $name;
-        }
-
-        $images = array_unique($images);
-
-        return array($images, $names);
     }
 }

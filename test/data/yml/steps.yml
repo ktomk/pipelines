@@ -19,7 +19,7 @@ pipelines:
             script:
               - printenv | sort
     - step:
-        name: 'step #4'
+        # this step has no name
         trigger: manual
         script:
           - printenv | sort
