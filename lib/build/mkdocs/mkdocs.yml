@@ -41,6 +41,8 @@ theme:
   features:
     - tabs               # mkdocs-material 5
     - navigation.tabs    # mkdocs-material 6
+    - search.highlight   # mkdocs-material 7.2
+    - search.suggest     # mkdocs-material 7.2
   icon:
     repo: fontawesome/brands/github
   font: false
