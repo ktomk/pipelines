@@ -7,16 +7,14 @@ namespace Ktomk\Pipelines\Runner;
 use Ktomk\Pipelines\Cli\Docker;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\Lib;
-use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibFsPath;
-use Ktomk\Pipelines\LibTmp;
 use Ktomk\Pipelines\Runner\Containers\StepContainer;
 use Ktomk\Pipelines\Runner\Docker\ArgsBuilder;
 use Ktomk\Pipelines\Runner\Docker\ArtifactSource;
 use Ktomk\Pipelines\Runner\Docker\Binary\Repository;
 use Ktomk\Pipelines\Runner\Docker\CacheIo;
 use Ktomk\Pipelines\Runner\Docker\ImageLogin;
-use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
+use Ktomk\Pipelines\Runner\Docker\Provision\TarCopier;
 
 /**
  * Runner for a single step of a pipeline
@@ -234,24 +232,7 @@ class StepRunner
 
         $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
 
-        if ('/' !== $clonePath) {
-            // create clone-path directory inside the container with user:group of the project directory
-            $tmpDir = DestructibleString::rmDir(LibTmp::tmpDir('pipelines-cp.'));
-            LibFs::symlinkWithParents($dir, $tmpDir . $clonePath);
-
-            $cd = Lib::cmd('cd', array($tmpDir . '/.'));
-            $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $clonePath));
-            $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
-            $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
-            if (0 !== $status) {
-                return $status;
-            }
-        }
-
-        $cd = Lib::cmd('cd', array($dir . '/.'));
-        $tar = Lib::cmd('tar', array('c', '-f', '-', '.'));
-        $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':' . $clonePath));
-        $status = $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
+        $status = TarCopier::extDeployDirectory($exec, $id, $dir, $clonePath);
         if (0 !== $status) {
             return $status;
         }

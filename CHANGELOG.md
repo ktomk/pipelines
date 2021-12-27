@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Add
 - PHP 7.4 Alpine based build container
 ### Change
+- Extract tar-copier for copy deploy-mode
 - PHP 8.1 Alpine based build container upgrade from RC to stable
 - html-docs: Upgrade mkdocs-material to 8.2.9
 
