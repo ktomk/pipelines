@@ -67,7 +67,11 @@ if [[ "${1:-}" = "--snapshot" ]]; then
     rm "$tar_file"
   fi
   tar -cf - -C "$TMP_DIR" --remove-files -b1 --verbatim-files-from -T <(
-    find "$TMP_DIR" -maxdepth 1 \( -name "pipelines-cp.*" -o -name "pipelines-test-suite.*" -o -name "php*" \) -printf "%P\n"
+    find "$TMP_DIR" -maxdepth 1 \( -false \
+      -o -name "pipelines-cp.*" \
+      -o -name "pipelines-test-suite.*" \
+      -o -name "php*" \
+    \) -printf "%P\n"
   ) | tee >(head -c-1k > "$tar_file") | tar -tvf -
   ls -al "$tar_file"
   echo "done."
@@ -84,6 +88,6 @@ print_summary "d" "pipelines-test-suite.*"
 print_summary "f" "php*"
 
 if [[ $non_empty_buckets_counter -gt 0 ]]; then
-  >&2 printf 'tmp-test: failed. run with --snapshot to clean and archive as "%s".\n' "$tar_file"
+  >&2 printf 'tmp-test: failed. run %s to clean and archive as "%s".\n' "'$0 --snapshot'" "$tar_file"
   exit 1
 fi

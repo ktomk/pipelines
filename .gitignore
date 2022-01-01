@@ -8,3 +8,6 @@
 # Phpunit
 /phpunit.*xml*
 !/phpunit.xml.dist
+
+# tmp-test.sh
+pipelines-tmp-snapshot.tar*
