@@ -15,11 +15,12 @@ use PHPUnit\Framework\TestCase as PhpunitTestCase;
  * Base test case for pipelines test-suite, basically a shim
  * for older/newer phpunit versions.
  *
- * @method assertDirectoryNotExists - deprecated in phpunit 9
- * @method assertDirectoryNotExist
- * @method assertFileNotExists - deprecated in phpunit 9
- * @method assertFileNotExist
- * @method assertRegExp - deprecated in phpunit 9
+ * @method static assertDirectoryNotExists(string $directory, string $message = '') - deprecated in phpunit 9
+ * @method static assertDirectoryNotExist(string $directory, string $message = '')
+ * @method static assertFileNotExists(string $filename, string $message = '') - deprecated in phpunit 9
+ * @method static assertFileNotExist(string $filename, string $message = '')
+ * @method static assertRegExp(string $pattern, string $string, string $message = '') - deprecated in phpunit 9
+ * {@see TestCase::assertMatchesRegularExpression}
  *
  * Type hinting for PHP 5.3 language level in PhpStorm w/ Phpunit 9.5 on PHP 7.4
  * @method static assertInstanceOf(string $expected, $actual, string $message = '')
