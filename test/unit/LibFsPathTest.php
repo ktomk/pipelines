@@ -141,23 +141,35 @@ class LibFsPathTest extends TestCase
         self::assertFalse(LibFsPath::containsRelativeSegment('/foo'));
     }
 
-    /**
-     *
-     */
-    public function testIsPortable()
+    public function provideIsPortableExpectations()
     {
-        self::assertTrue(LibFsPath::isPortable('aaa'));
-        self::assertTrue(LibFsPath::isPortable('/aaa'));
-        self::assertTrue(LibFsPath::isPortable('../aaa'));
-        self::assertTrue(LibFsPath::isPortable('/b-aaa'));
-        self::assertTrue(LibFsPath::isPortable('/b--aaa'));
+        return array(
+            array(true, 'aaa'),
+            array(true, '.aaa'),
+            array(true, '/aaa'),
+            array(true, '../aaa'),
+            array(true, '/b-aaa'),
+            array(true, '/b--aaa'),
 
-        self::assertFalse(LibFsPath::isPortable('-aaa'));
-        self::assertFalse(LibFsPath::isPortable('--aaa'));
-        self::assertFalse(LibFsPath::isPortable('/-aaa'));
-        self::assertFalse(LibFsPath::isPortable('/--aaa'));
-        self::assertFalse(LibFsPath::isPortable('/b/-aaa'));
-        self::assertFalse(LibFsPath::isPortable('/b/--aaa'));
+            array(false, ".aaa\n"),
+            array(false, '-aaa'),
+            array(false, '--aaa'),
+            array(false, '/-aaa'),
+            array(false, '/--aaa'),
+            array(false, '/b/-aaa'),
+            array(false, '/b/--aaa'),
+        );
+    }
+
+    /**
+     * @dataProvider provideIsPortableExpectations
+     *
+     * @param bool $expected
+     * @param string $path
+     */
+    public function testIsPortable($expected, $path)
+    {
+        self::assertSame($expected, LibFsPath::isPortable($path), addcslashes($path, "\0..\40\\\"\177..\377"));
     }
 
     public function provideGateAblePortableExpectations()

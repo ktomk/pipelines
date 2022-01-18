@@ -10,6 +10,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ## [unreleased]
 ### Change
 - html-docs: Upgrade mkdocs-material to 8.1.3
+### Fix
+- Fix portable path check, since [0.0.42](#0042---2020-06-25)
 
 ## [0.0.62] - 2021-12-19
 ### Add

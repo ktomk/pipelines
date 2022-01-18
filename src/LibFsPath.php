@@ -158,7 +158,7 @@ class LibFsPath
      */
     public static function isPortable($path)
     {
-        return 1 === Preg::match('(^(?>/?(?!-)[A-Za-z0-9._-]+)+$)', $path);
+        return 1 === Preg::match('(^(?>/?(?!-)[A-Za-z0-9._-]+)+$)D', $path);
     }
 
     /**
