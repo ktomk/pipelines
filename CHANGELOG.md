@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.63] - 2022-04-14
 ### Change
 - Enrich YAML parse error information (#14) (thanks [Adrian Cederberg])
 - html-docs: Upgrade mkdocs-material to 8.1.3
@@ -652,4 +652,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.60]: https://github.com/ktomk/pipelines/releases/tag/0.0.60
 [0.0.61]: https://github.com/ktomk/pipelines/releases/tag/0.0.61
 [0.0.62]: https://github.com/ktomk/pipelines/releases/tag/0.0.62
+[0.0.63]: https://github.com/ktomk/pipelines/releases/tag/0.0.63
 [unreleased]: https://github.com/ktomk/pipelines
