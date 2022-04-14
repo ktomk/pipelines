@@ -39,12 +39,17 @@ class Sf2YamlTest extends TestCase
      * @depends testCreation
      *
      * @param Sf2Yaml $parser
-     * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::parseFile
+     *
+     * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::tryParseFile
      * @covers \Ktomk\Pipelines\Yaml\Yaml::fileDelegate
      */
     public function testParseFile(Sf2Yaml $parser)
     {
         $path = __DIR__ . '/../../../bitbucket-pipelines.yml';
+
+        $struct = $parser->tryParseFile($path);
+
+        self::assertIsArray($struct);
 
         $struct = $parser->parseFile($path);
 
@@ -59,14 +64,18 @@ class Sf2YamlTest extends TestCase
      * @depends testCreation
      *
      * @param Sf2Yaml $parser
-     * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::parseBuffer
+     * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::tryParseBuffer
      */
     public function testParseFileError(Sf2Yaml $parser)
     {
-        $path = __DIR__ . '/../../data/yml/error.yml';
+        $path = __DIR__ . '/../../data/yml/yaml/error.yml';
 
-        $struct = $parser->parseFile($path);
+        $struct = $parser->tryParseFile($path);
 
         self::assertNull($struct);
+
+        $this->expectException(__NAMESPACE__ . '\ParseException');
+        $this->expectExceptionMessage('Sf2Yaml invalid YAML parsing');
+        $parser->parseFile($path);
     }
 }

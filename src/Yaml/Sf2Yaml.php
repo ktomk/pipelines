@@ -4,7 +4,7 @@
 
 namespace Ktomk\Pipelines\Yaml;
 
-use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Exception\ParseException as SymfonyParseException;
 use Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
 class Sf2Yaml implements ParserInterface
@@ -18,9 +18,11 @@ class Sf2Yaml implements ParserInterface
     }
 
     /**
-     * @param string $path
+     * @param $path
      *
-     * @return null|array
+     * @throws ParseException
+     *
+     * @return array
      */
     public function parseFile($path)
     {
@@ -28,20 +30,48 @@ class Sf2Yaml implements ParserInterface
     }
 
     /**
-     * @param string $buffer
+     * @param string $path
      *
      * @return null|array
+     */
+    public function tryParseFile($path)
+    {
+        return Yaml::fileDelegate($path, array($this, 'tryParseBuffer'));
+    }
+
+    /**
+     * @param $buffer
+     *
+     * @throws ParseException
+     *
+     * @return array
      */
     public function parseBuffer($buffer)
     {
         try {
             $result = SymfonyYaml::parse($buffer);
-        } catch (ParseException $ex) {
-            return null;
+        } catch (SymfonyParseException $ex) {
+            throw new ParseException($ex->getMessage(), 0, $ex);
         }
 
         # catch sf2 invalid yaml parsing
         if (array(':') === $result) {
+            throw new ParseException('Sf2Yaml invalid YAML parsing', 0);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $buffer
+     *
+     * @return null|array
+     */
+    public function tryParseBuffer($buffer)
+    {
+        try {
+            $result = $this->parseBuffer($buffer);
+        } catch (ParseException $ex) {
             return null;
         }
 

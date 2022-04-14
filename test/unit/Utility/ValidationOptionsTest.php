@@ -47,7 +47,7 @@ class ValidationOptionsTest extends TestCase
             array(array('--validate=' . __DIR__ . '/../../../bitbucket-pipelines.yml'), 0),
             array(array('--validate=' . __DIR__ . '/../../data/yml/invalid-service-definitions.yml'), 1),
             array(array('--validate=' . __DIR__ . '/../../data/yml/invalid-pipeline-step.yml'), 1),
-            array(array('--validate=' . __DIR__ . '/../../data/yml/error.yml'), 0),
+            array(array('--validate=' . __DIR__ . '/../../data/yml/yaml/error.yml'), 0),
         );
     }
 

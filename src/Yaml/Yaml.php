@@ -19,9 +19,10 @@ class Yaml
     /**
      * @param string $file
      *
+     * @throws ParseException
      * @throws \InvalidArgumentException
      *
-     * @return null|array on error
+     * @return array
      */
     public static function file($file)
     {
@@ -36,6 +37,22 @@ class Yaml
         }
 
         return self::parser()->parseFile($path);
+    }
+
+    /**
+     * @param string $file
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @return null|array
+     */
+    public static function tryFile($file)
+    {
+        try {
+            return self::file($file);
+        } catch (ParseException $ex) {
+            return null;
+        }
     }
 
     /**
@@ -65,7 +82,7 @@ class Yaml
      */
     public static function buffer($buffer)
     {
-        return self::parser()->parseBuffer($buffer);
+        return self::parser()->tryParseBuffer($buffer);
     }
 
     /**

@@ -52,12 +52,23 @@ class ErrorCatcher
     }
 
     /**
+     * @return null|string
+     */
+    public function getLastErrorMessage()
+    {
+        $error = $this->last !== $this->previous;
+
+        return $error ? $this->last['message'] : null;
+    }
+
+    /**
      * start catching session (is auto-started on create)
      *
      * @return void
      */
     private function start()
     {
+        @$void;
         $this->previous = error_get_last();
         $this->level = error_reporting();
         error_reporting(0);

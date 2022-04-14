@@ -41,7 +41,7 @@ class YamlTest extends TestCase
      */
     public function testNonYamlFile()
     {
-        $array = Yaml::file(__FILE__);
+        $array = Yaml::tryFile(__FILE__);
 
         self::assertNull($array);
     }

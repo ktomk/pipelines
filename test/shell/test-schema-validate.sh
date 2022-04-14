@@ -41,7 +41,7 @@ case ${1-0} in
       ;;
   3 ) echo "# 3: validate on syntax error file"
       cd "$PROJECT_DIR"
-      { 2>&1 build/test.phar --validate --file test/data/yml/error.yml || true; } | grep 'YAML error:'
+      { 2>&1 build/test.phar --validate --file test/data/yml/yaml/error.yml || true; } | grep 'YAML error:'
       exit
       ;;
   * ) >&2 echo "unknown step $1"

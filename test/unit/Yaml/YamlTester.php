@@ -32,10 +32,10 @@ class YamlTester
 
         $testCase::assertIsBool($parser::isAvailable(), 'static availability returns bool');
 
-        $testCase::assertNull($parser->parseFile('xxx'), 'non existing file returns NULL');
+        $testCase::assertNull($parser->tryParseFile('xxx'), 'non existing file returns NULL');
 
-        $testCase::assertNull($parser->parseFile('data://text/plain,'), 'empty YAML stream returns NULL');
+        $testCase::assertNull($parser->tryParseFile('data://text/plain,'), 'empty YAML stream returns NULL');
 
-        $testCase::assertNull($parser->parseFile(__FILE__), 'non YAML file returns NULL');
+        $testCase::assertNull($parser->tryParseFile(__FILE__), 'non YAML file returns NULL');
     }
 }

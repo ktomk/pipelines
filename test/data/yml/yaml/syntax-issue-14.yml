@@ -1,0 +1,121 @@
+definitions:
+  services:
+    mysql:
+      image: mysql
+      variables:
+        MYSQL_DATABASE: pipelines_sqlalchemy_tests
+        MYSQL_PASSWORD: somepassword
+        MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+        MYSQL_USER: someuser
+  steps:
+    - step:
+        artifacts:
+          - .env.test
+          - fetchers/.cloud.env
+        name: Create .env.test for testing since this file should never be commited.
+        script:
+          - export ENV_TEST_PATH=".env.test"
+          - touch $ENV_TEST_PATH
+          - echo 'mysql_database="pipelines_sqlalchemy_tests"' >> $ENV_TEST_PATH
+          - echo 'mysql_host=127.0.0.1' >> $ENV_TEST_PATH
+          - echo 'mysql_port=3306' >> $ENV_TEST_PATH
+          - echo 'mysql_username="someuser"' >> $ENV_TEST_PATH
+          - echo 'mysql_password="somepassword"' >> $ENV_TEST_PATH
+          - echo 'mysql_drivername="mysql+asyncmy"' >> $ENV_TEST_PATH
+          - echo 'uvicorn_host="0.0.0.0"' >> $ENV_TEST_PATH
+          - echo 'uvicorn_port=8000' >> $ENV_TEST_PATH
+          - export ENV_TEST_FETCHERS=./api/fetchers/.fetchers.env
+          - touch $ENV_TEST_FETCHERS
+          - echo "cloud_key=$CLOUD_KEY" >> $ENV_TEST_FETCHERS
+image: python:3.10
+options:
+  docker: true
+pipelines:
+  custom:
+    build_pipeline_service:
+      - step:
+          artifacts:
+            - .env.test
+            - fetchers/.cloud.env
+          name: Create .env.test for testing since this file should never be commited.
+          script:
+            - export ENV_TEST_PATH=".env.test"
+            - touch $ENV_TEST_PATH
+            - echo 'mysql_database="pipelines_sqlalchemy_tests"' >> $ENV_TEST_PATH
+            - echo 'mysql_host=127.0.0.1' >> $ENV_TEST_PATH
+            - echo 'mysql_port=3306' >> $ENV_TEST_PATH
+            - echo 'mysql_username="someuser"' >> $ENV_TEST_PATH
+            - echo 'mysql_password="somepassword"' >> $ENV_TEST_PATH
+            - echo 'mysql_drivername="mysql+asyncmy"' >> $ENV_TEST_PATH
+            - echo 'uvicorn_host="0.0.0.0"' >> $ENV_TEST_PATH
+            - echo 'uvicorn_port=8000' >> $ENV_TEST_PATH
+            - export ENV_TEST_FETCHERS=./api/fetchers/.fetchers.env
+            - touch $ENV_TEST_FETCHERS
+            - echo "cloud_key=$CLOUD_KEY" >> $ENV_TEST_FETCHERS
+      - step:
+          name: "Building an api image to be used in other pipelines using development\
+          \ container multistage build. \nThis includes the .env file constructed\
+          \ here.\n"
+          script:
+            - cp .env.test .env
+            - export IMAGE_NAME="$DOCKERHUB_USERNAME/$DOCKERHUB_REPOSITORY"
+            - export IMAGE_PIPELINE_SERVICE="$IMAGE_NAME:api_pipeline_service_$BITBUCKET_COMMIT"
+            - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+            - docker build -t "$IMAGE_PIPELINE_SERVICE" -f "Dockerfile" .
+            - docker run --name test2 --detach "$IMAGE_PIPELINE_SERVICE"
+            - sleep 15
+            - docker stop test2
+            - docker push $IMAGE_NAME
+  default:
+    - step:
+        caches:
+          - pip
+        name: Install all dependencies.
+        script:
+          - pip install -r requirements.txt
+          - pip install -r requirements.dev.txt
+    - step:
+        artifacts:
+          - .env.test
+          - fetchers/.cloud.env
+        name: Create .env.test for testing since this file should never be commited.
+        script:
+          - export ENV_TEST_PATH=".env.test"
+          - touch $ENV_TEST_PATH
+          - echo 'mysql_database="pipelines_sqlalchemy_tests"' >> $ENV_TEST_PATH
+          - echo 'mysql_host=127.0.0.1' >> $ENV_TEST_PATH
+          - echo 'mysql_port=3306' >> $ENV_TEST_PATH
+          - echo 'mysql_username="someuser"' >> $ENV_TEST_PATH
+          - echo 'mysql_password="somepassword"' >> $ENV_TEST_PATH
+          - echo 'mysql_drivername="mysql+asyncmy"' >> $ENV_TEST_PATH
+          - echo 'uvicorn_host="0.0.0.0"' >> $ENV_TEST_PATH
+          - echo 'uvicorn_port=8000' >> $ENV_TEST_PATH
+          - export ENV_TEST_FETCHERS=./api/fetchers/.fetchers.env
+          - touch $ENV_TEST_FETCHERS
+          - echo "cloud_key=$CLOUD_KEY" >> $ENV_TEST_FETCHERS
+    - step:
+        caches:
+          - pip
+        name: Test
+        script:
+          - pip install -r requirements.txt
+          - pip install -r requirements.dev.txt
+          - python -m pytest .
+        services:
+          - mysql
+    - step:
+        caches:
+          - pip
+        name: Building prod and fetchers docker images (without enironment files)
+        script:
+          - export IMAGE_NAME="$DOCKERHUB_USERNAME/$DOCKERHUB_REPOSITORY"
+          - export IMAGE_API="$IMAGE_NAME:api_$BITBUCKET_COMMIT"
+          - export IMAGE_FETCHERS="$IMAGE_NAME:fetchers_$BITBUCKET_COMMIT"
+          - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASSWORD
+          - docker build -t "$IMAGE_API" -f "Dockerfile.prod" --target "prod" .
+          - docker build -t "$IMAGE_FETCHERS" -f "Dockerfile.prod" --target "fetcher_runner"
+            .
+          - docker run --name example-test-1 --detach "$IMAGE_API"
+          - sleep 30
+          - docker stop example-test-1
+          - docker push $IMAGE_NAME

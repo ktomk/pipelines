@@ -111,7 +111,7 @@ class ValidationOptions implements Runnable
             $data = $this->file->getArray();
         } else {
             $path = $verify;
-            if (null === $data = Yaml::file($path)) {
+            if (null === $data = Yaml::tryFile($path)) {
                 throw new \UnexpectedValueException(sprintf('not a yaml file: %s', $path));
             }
         }

@@ -2,10 +2,9 @@
 
 /* this file is part of pipelines */
 
-namespace Ktomk\Pipelines;
+namespace Ktomk\Pipelines\Yaml;
 
-use Ktomk\Pipelines\Yaml\LibYaml;
-use Ktomk\Pipelines\Yaml\YamlTester;
+use Ktomk\Pipelines\TestCase;
 
 /**
  * @covers \Ktomk\Pipelines\Yaml\LibYaml
@@ -42,6 +41,10 @@ class LibYamlTest extends TestCase
     {
         $path = __DIR__ . '/../../../bitbucket-pipelines.yml';
 
+        $struct = $this->createParser()->tryParseFile($path);
+
+        self::assertIsArray($struct);
+
         $struct = $this->createParser()->parseFile($path);
 
         self::assertIsArray($struct);
@@ -52,14 +55,18 @@ class LibYamlTest extends TestCase
      */
     public function testNonYamlFile()
     {
-        $array = $this->createParser()->parseFile(__FILE__);
+        $array = $this->createParser()->tryParseFile(__FILE__);
 
         self::assertNull($array);
+
+        $this->expectException(__NAMESPACE__ . '\ParseException');
+        $this->expectExceptionMessage('yaml_parse(): scanning error encountered during parsing: mapping values are not allowed in this context (line 63, column 52)');
+        $this->createParser()->parseFile(__FILE__);
     }
 
     public function testYamlNull()
     {
-        $array = $this->createParser()->parseBuffer('first: ~');
+        $array = $this->createParser()->tryParseBuffer('first: ~');
 
         self::assertArrayHasKey('first', $array);
         self::assertNull($array['first']);

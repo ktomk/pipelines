@@ -70,7 +70,7 @@ class FileTest extends TestCase
         $this->expectException('Ktomk\Pipelines\File\ParseException');
         $this->expectExceptionMessage('/error.yml; verify the file contains valid YAML');
 
-        $path = __DIR__ . '/../../data/yml/error.yml';
+        $path = __DIR__ . '/../../data/yml/yaml/error.yml';
 
         File::createFromFile($path);
     }

@@ -1,0 +1,34 @@
+image : python:3.10
+
+options : { docker : true }
+
+definitions :
+  services :
+    mongodb :
+      environment :
+        MONGO_INITDB_ROOT_USERNAME : someuser
+        MONGO_INITDB_ROOT_PASSWORD : somepassword
+        MONGO_INITDB_DATABASE : tests
+      image : mongo
+  steps :
+    - step : &create_config
+        name : "Create '.env'."
+        script :
+          - export ENV_PATH="$PWD/.env"
+          - touch $ENV_PATH
+          - echo "mongodb_host='pipelines_db'" >> $ENV_PATH
+          - echo "mongodb_port=27017" >> $ENV_PATH
+          - echo "mongodb_user='someuser'" >> $ENV_PATH
+          - echo "mongodb_password='somepassword'" >> $ENV_PATH
+          - echo "mongodb_use_atlas='False'" >> $ENV_PATH
+          - echo "uvicorn_port=8001" >> $ENV_PATH
+          - echo "uvicorn_host='localhost'" >> $ENV_PATH
+          - echo "uvicorn_reload='True'" >> $ENV_PATH
+          - realpath $ENV_PATH
+        artifacts :
+          - .env
+
+pipelines :
+  default :
+    - step :
+        <<: *create_config

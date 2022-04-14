@@ -24,6 +24,7 @@ class ErrorCatcherTest extends TestCase
     {
         $catcher = new ErrorCatcher();
         self::assertFalse($catcher->end());
+        self::assertNull($catcher->getLastErrorMessage());
     }
 
     public function testEndWithError()
@@ -31,5 +32,6 @@ class ErrorCatcherTest extends TestCase
         $catcher = new ErrorCatcher();
         trigger_error('test');
         self::assertTrue($catcher->end());
+        self::assertIsString($catcher->getLastErrorMessage());
     }
 }

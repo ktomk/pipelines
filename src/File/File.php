@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\File;
 
 use InvalidArgumentException;
 use Ktomk\Pipelines\Runner\Reference;
+use Ktomk\Pipelines\Yaml\ParseException as YamlParseException;
 use Ktomk\Pipelines\Yaml\Yaml;
 
 /**
@@ -48,9 +49,17 @@ class File
      */
     public static function createFromFile($path)
     {
-        $result = Yaml::file($path);
+        $result = null;
+        $message = sprintf('YAML error: %s; verify the file contains valid YAML', $path);
+
+        try {
+            $result = Yaml::file($path);
+        } catch (YamlParseException $parseException) {
+            $message .= ': ' . $parseException->getMessage();
+        }
+
         if (null === $result) {
-            throw new ParseException(sprintf('YAML error: %s; verify the file contains valid YAML', $path));
+            throw new ParseException($message);
         }
 
         $file = new self($result);
