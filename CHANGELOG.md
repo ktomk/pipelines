@@ -11,6 +11,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Change
 - html-docs: Upgrade mkdocs-material to 8.1.3
 ### Fix
+- Fix composer version in phar build info for PHP 5.3 (and up sometimes),
+  since [0.0.51](#0051---2020-12-09)
 - Fix portable path check, since [0.0.42](#0042---2020-06-25)
 
 ## [0.0.62] - 2021-12-19

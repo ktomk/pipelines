@@ -409,7 +409,7 @@ class Builder
         printf("api......: %s\n", $pinfo::apiVersion());
         printf("extension: %s\n", phpversion('phar'));
         printf("php......: %s\n", PHP_VERSION);
-        $composer = ($buf = getenv('COMPOSER_BINARY')) ? sprintf('%s -f %s --', PHP_BINARY, escapeshellarg($buf)) : 'composer';
+        $composer = ($buf = getenv('COMPOSER_BINARY')) ? sprintf('%s -f %s --', defined('PHP_BINARY') ? constant('PHP_BINARY') : 'php', escapeshellarg($buf)) : 'composer';
         printf("composer.: %s\n", exec($composer . ' -n --version 2>/dev/null'));
         printf("uname....: %s\n", php_uname('a'));
         printf("count....: %d file(s)\n", $pinfo->count());
