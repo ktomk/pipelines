@@ -46,7 +46,10 @@ class File(str):
     return self.site_dir_file and self.site_dir_file.name == 'index.html'
   def is_directory_url(self):
     """for the homepage index.html this is not distinguishable, therefore always false"""
-    return self.is_index_html and not "" == self.site_dir_file.parent.name
+    """for other index.html the parent directory name must not be lower case"""
+    if not self.is_index_html: return False
+    parentName = self.site_dir_file.parent.name
+    return not parentName.lower() == parentName
 
   def exists(self):
     """exists and is a file"""
