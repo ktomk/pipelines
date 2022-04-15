@@ -18,7 +18,7 @@ set -euo pipefail
 IFS=$' \n\t'
 
 docker_cmd="${1-docker}"
-from="docker.io/php:8.1.0RC5-alpine"
+from="docker.io/php:8.1-alpine"
 tag="docker.io/ktomk/pipelines:php8.1-alpine"
 
 echo "build '${tag}' from '${from}' with ${docker_cmd}..."
@@ -27,8 +27,10 @@ echo "build '${tag}' from '${from}' with ${docker_cmd}..."
 ARG FROM
 FROM $FROM
 RUN set -ex ; \
-  apk --no-cache add composer ; \
-  composer self-update 2.1.11 ; \
+  wget -O /usr/bin/composer https://getcomposer.org/download/2.1.11/composer.phar ; \
+  printf "fdb587131f8a11fcd475c9949ca340cc58a4b50cce6833caa8118b759a4ad1a3  /usr/bin/composer\n" | sha256sum -c - ; \
+  chmod +x /usr/bin/composer ; \
+  composer --version ; \
   :
 
 FROM $FROM

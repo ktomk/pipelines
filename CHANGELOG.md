@@ -8,7 +8,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- PHP 7.4 Alpine based build container
 ### Change
+- PHP 8.1 Alpine based build container upgrade from RC to stable
 - html-docs: Upgrade mkdocs-material to 8.2.9
 
 ## [0.0.63] - 2022-04-14
