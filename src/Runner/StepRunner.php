@@ -297,7 +297,7 @@ class StepRunner
      */
     private function obtainDockerClientMount(Step $step)
     {
-        if (!$step->getServices()->has('docker')) {
+        if (!$step->getServices()->has('docker') && !$step->getFile()->getOptions()->getDocker()) {
             return array();
         }
 

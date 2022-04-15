@@ -1,0 +1,14 @@
+# this file is part of pipelines
+#
+# fixture bitbucket-pipelines.yml w/ global docker option enabled
+image: ktomk/pipelines:busybox
+
+options:
+  docker: true
+
+pipelines:
+  default:
+    - step:
+        name: docker version
+        script:
+          - docker --version

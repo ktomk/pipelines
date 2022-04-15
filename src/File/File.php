@@ -170,6 +170,17 @@ class File
     }
 
     /**
+     * @return Options
+     */
+    public function getOptions()
+    {
+        return new Options(
+            isset($this->array['options'])
+                ? $this->array['options'] : array()
+        );
+    }
+
+    /**
      * @return array
      */
     public function getArray()

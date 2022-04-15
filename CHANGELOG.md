@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Add
+- Support global docker option (#15) (thanks [Adrian Cederberg])
 - PHP 7.4 Alpine based build container
 ### Change
 - Extract tar-copier for copy deploy-mode
