@@ -138,5 +138,7 @@ mkdocs-update: requirements.txt
 	$(pip_venv)
 	$(stash_install)
 	$(pip) install $(pip_user) -U -r $< $(pip_less)
-	$(pip) freeze -r $< --all | tee mkdocs-install $(pip_less)
+	$(pip) freeze -r $< --all | tee mkdocs-install $(pip_less) | tee $<.update
 	$(stash_install)
+	mv $<.update $<
+	sed -i '/^from=/s/:.*"$$/:'"$$(grep -oP '(?<=^mkdocs-material==).*$$' $<)"'"/' ../../container/mkdocs-material.sh

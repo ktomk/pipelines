@@ -44,7 +44,7 @@ set -euo pipefail
 IFS=$' \n\t'
 
 docker_cmd="${1-docker}"
-from="docker.io/squidfunk/mkdocs-material:8.1.0"
+from="docker.io/squidfunk/mkdocs-material:8.2.9"
 tag="docker.io/ktomk/pipelines:mkdocs-material"
 
 echo "build '${tag}' from '${from}' with ${docker_cmd}..."

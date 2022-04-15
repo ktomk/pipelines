@@ -17,6 +17,9 @@
 /mkdocs-install
 /mkdocs.yml.*
 
+# makefile mkdocs-update target intermediate
+/requirements.txt.update
+
 # python VIRTUAL_ENV (recommended)
 #
 # $ python3 -m venv venv && . venv/bin/activate
