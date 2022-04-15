@@ -605,6 +605,9 @@ collecting asset paths and *did* affect building the phar file.
 for building the phar file the workaround was to entail the
 larger parts of the pattern.
 
+- The sf2yaml based parser does not support the backslash at the end
+  of a line to fold without a space with _double quoted strings_.
+
 - The libyaml based parser does not support dots ("`.`") in anchor
   names.
 

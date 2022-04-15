@@ -1,0 +1,3 @@
+- "Building an api image to be used in other pipelines using development\
+  \ container multistage build. \nThis includes the .env file constructed\
+  \ here.\n"

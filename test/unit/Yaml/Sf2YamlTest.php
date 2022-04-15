@@ -78,4 +78,27 @@ class Sf2YamlTest extends TestCase
         $this->expectExceptionMessage('Sf2Yaml invalid YAML parsing');
         $parser->parseFile($path);
     }
+
+    /**
+     * Symfony YAML based YAML parser needs to return NULL on
+     * invalid yaml file which it does not so needs patching
+     * tested for.
+     *
+     * @depends testCreation
+     *
+     * @param Sf2Yaml $parser
+     * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::tryParseBuffer
+     */
+    public function testParseFileError2(Sf2Yaml $parser)
+    {
+        $path = __DIR__ . '/../../data/yml/yaml/error-double-quote-string-line-continuation.yml';
+
+        $struct = $parser->tryParseFile($path);
+
+        self::assertNull($struct);
+
+        $this->expectException(__NAMESPACE__ . '\ParseException');
+        $this->expectExceptionMessage('Malformed inline YAML string ');
+        $parser->parseFile($path);
+    }
 }

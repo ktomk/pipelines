@@ -16,7 +16,7 @@ interface ParserInterface
      *
      * @throws ParseException
      *
-     * @return array
+     * @return null|array
      */
     public function parseFile($path);
 

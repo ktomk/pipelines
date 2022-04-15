@@ -22,7 +22,7 @@ class Yaml
      * @throws ParseException
      * @throws \InvalidArgumentException
      *
-     * @return array
+     * @return null|array
      */
     public static function file($file)
     {

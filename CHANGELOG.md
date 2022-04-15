@@ -7,6 +7,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+
 ## [0.0.63] - 2022-04-14
 ### Change
 - Enrich YAML parse error information (#14) (thanks [Adrian Cederberg])

@@ -34,7 +34,7 @@ class RunnerTestCase extends TestCase
     protected $cleaners = array();
 
     /**
-     * @var null|string
+     * @var Project
      */
     private $testProject;
 
@@ -99,11 +99,11 @@ class RunnerTestCase extends TestCase
     }
 
     /**
-     * @param string $dir
+     * @param Project $project
      */
-    protected function setTestProject($dir)
+    protected function setTestProject(Project $project)
     {
-        $this->testProject = $dir;
+        $this->testProject = $project;
     }
 
     protected function getTestProject()
