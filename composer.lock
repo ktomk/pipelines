@@ -78,17 +78,16 @@
         },
         {
             "name": "ktomk/symfony-yaml",
-            "version": "v2.6.13.3",
-            "target-dir": "Symfony/Component/Yaml",
+            "version": "v2.6.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ktomk/yaml.git",
-                "reference": "0826a33e50a6120156d60c60c29658d38875acf4"
+                "reference": "e62aeffbf80b50040aff9978808f0a68c33dc8aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ktomk/yaml/zipball/0826a33e50a6120156d60c60c29658d38875acf4",
-                "reference": "0826a33e50a6120156d60c60c29658d38875acf4",
+                "url": "https://api.github.com/repos/ktomk/yaml/zipball/e62aeffbf80b50040aff9978808f0a68c33dc8aa",
+                "reference": "e62aeffbf80b50040aff9978808f0a68c33dc8aa",
                 "shasum": ""
             },
             "require": {
@@ -104,8 +103,8 @@
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Symfony\\Component\\Yaml\\": ""
+                "psr-4": {
+                    "Ktomk\\Symfony\\Component\\Yaml\\": ""
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -125,9 +124,9 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/ktomk/yaml/tree/v2.6.13.3"
+                "source": "https://github.com/ktomk/yaml/tree/v2.6.13.4"
             },
-            "time": "2021-05-02T14:12:21+00:00"
+            "time": "2022-04-17T19:27:35+00:00"
         }
     ],
     "packages-dev": [

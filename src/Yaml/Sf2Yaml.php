@@ -4,8 +4,8 @@
 
 namespace Ktomk\Pipelines\Yaml;
 
-use Symfony\Component\Yaml\Exception\ParseException as SymfonyParseException;
-use Symfony\Component\Yaml\Yaml as SymfonyYaml;
+use Ktomk\Symfony\Component\Yaml\Exception\ParseException as SymfonyParseException;
+use Ktomk\Symfony\Component\Yaml\Yaml as SymfonyYaml;
 
 class Sf2Yaml implements ParserInterface
 {
