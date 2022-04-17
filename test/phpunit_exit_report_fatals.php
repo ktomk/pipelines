@@ -19,9 +19,10 @@ call_user_func(function () {
     register_shutdown_function(function () use (&$lastReported) {
         /* catch fatal error and report it if it was not yet reported */
         $data = error_get_last();
-        if (is_array($data) && E_ERROR === $data['type'] && $lastReported !== $data) {
+        $types = array(E_ERROR => 'Fatal', E_COMPILE_ERROR => 'Compile');
+        if ($lastReported !== $data && is_array($data) && isset($types[$data['type']])) {
             fwrite(STDERR, "*shutdown-with-fatal*\n");
-            fprintf(STDERR, "PHP Fatal error:  %s in %s:%d\n", $data['message'], $data['file'], $data['line']);
+            fprintf(STDERR, "PHP %s error:  %s in %s:%d\n", $types[$data['type']], $data['message'], $data['file'], $data['line']);
         }
     });
 });
