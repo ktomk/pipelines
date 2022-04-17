@@ -5,8 +5,6 @@
 namespace Ktomk\Pipelines\File\Pipeline;
 
 use Ktomk\Pipelines\File\Definitions\Service;
-use Ktomk\Pipelines\File\Dom\FileNode;
-use Ktomk\Pipelines\File\File;
 use Ktomk\Pipelines\File\ParseException;
 
 /**
@@ -16,7 +14,7 @@ use Ktomk\Pipelines\File\ParseException;
  *
  * @package Ktomk\Pipelines\File\File
  */
-class StepServices implements FileNode
+class StepServices
 {
     /**
      * @var Step
@@ -61,17 +59,13 @@ class StepServices implements FileNode
      *
      * get all service definitions of the step services, docker is not
      * of interest here as only looking for standard services, might
-     * be subject to change.
+     * be subject to change {@see getServiceNames()}.
      *
      * @return Service[]
      */
     public function getDefinitions()
     {
-        if (null === $file = $this->getFile()) {
-            return array();
-        }
-
-        return $file->getDefinitions()->getServices()->getByNames($this->getServiceNames());
+        return $this->step->getFile()->getDefinitions()->getServices()->getByNames($this->getServiceNames());
     }
 
     /**
@@ -83,14 +77,6 @@ class StepServices implements FileNode
         unset($standard['docker']);
 
         return array_keys($standard);
-    }
-
-    /**
-     * @return null|File
-     */
-    public function getFile()
-    {
-        return $this->step->getFile();
     }
 
     /**

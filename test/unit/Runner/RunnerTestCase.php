@@ -5,7 +5,6 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\File\File;
-use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Pipeline\Step;
 use Ktomk\Pipelines\File\ReferenceTypes;
 use Ktomk\Pipelines\LibTmp;
@@ -13,21 +12,12 @@ use Ktomk\Pipelines\Project;
 use Ktomk\Pipelines\TestCase;
 use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 use Ktomk\Pipelines\Yaml\Yaml;
-use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversNothing
  */
 class RunnerTestCase extends TestCase
 {
-    /**
-     * @var string fixture of command for deploy mode copy
-     *
-     * @see doSetUp for initialization
-     */
-    protected $deploy_copy_cmd;
-    protected $deploy_copy_cmd_2;
-
     /**
      * @var array
      */
@@ -38,21 +28,6 @@ class RunnerTestCase extends TestCase
      */
     private $testProject;
 
-    protected function doSetUp()
-    {
-        parent::doSetUp();
-
-        // create container target directory "/app" by tar
-        $this->deploy_copy_cmd = '~cd ' . sys_get_temp_dir() . '/pipelines-cp\.[^/]+/\. '
-            . "&& echo 'app' | tar c -h -f - --no-recursion app "
-            . "| docker  cp - '\\*dry-run\\*:/\\.'~";
-
-        // copy over project files into container "/app" directory by tar
-        $this->deploy_copy_cmd_2 = '~cd ' . sys_get_temp_dir() . '/pipelines-test-suite[^/]*/\. '
-            . '&& tar c -f - . '
-            . "| docker  cp - '\\*dry-run\\*:/app'~";
-    }
-
     /**
      * @param null|array $extra
      *
@@ -60,22 +35,18 @@ class RunnerTestCase extends TestCase
      */
     protected function createTestStep(array $extra = null)
     {
-        /** @var MockObject|Pipeline $pipeline */
-        $pipeline = $this->createMock('Ktomk\Pipelines\File\Pipeline');
-
-        $stepArray = ((array)$extra) + array(
-                'image' => 'foo/bar:latest',
-                'script' => array(':'),
-            );
-
-        $pipeline->method('getSteps')->willReturn(
-            new Pipeline\Steps($pipeline, array(array('step' => $stepArray)))
+        $struct = array(
+            'image' => 'foo/bar:latest',
+            'pipelines' => array(
+                'default' => array(
+                    array('step' => ((array)$extra) + array('script' => array(':'))),
+                ),
+            ),
         );
-        $pipelineSteps = $pipeline->getSteps();
-        $step = $pipelineSteps[0];
-        self::assertInstanceOf('Ktomk\Pipelines\File\Pipeline\Step', $step, 'creating the test step failed');
 
-        return $step;
+        $file = new File($struct);
+
+        return $file->getById('default')->getSteps()->offsetGet(0);
     }
 
     /**
