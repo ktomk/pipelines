@@ -15,8 +15,10 @@ class ImageName
     private $name;
 
     /**
-     * Is a Docker image name (optionally with a tag) syntactically
-     * valid?
+     * validate image name
+     *
+     * Is a Docker image name (optionally with a tag or digest)
+     * syntactically valid?
      *
      * @see doc/DOCKER-NAME-TAG.md
      *
@@ -28,9 +30,9 @@ class ImageName
     {
         $pattern
             = '{^'
-            . '([a-zA-Z0-9.-]+(:[0-9]+)?/)?' # <prefix>
-            . '([a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)(/[a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)*' # <name-components>
-            . '(:[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127})?' # <tag-name>
+            . '([a-zA-Z0-9.-]+(:[0-9]+)?/)?' # prefix
+            . '([a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)(/[a-z0-9]+(?:(?:\.|__?|-+)[a-z0-9]+)*)*' # name-components
+            . '(:[a-zA-Z0-9_][a-zA-Z0-9_.-]{0,127}|@[a-z0-9]+([+._-][a-z0-9]+)*:[a-zA-Z0-9=_-]+)?' # ":" tag-name | "@" digest
             . '$}';
 
         $result = preg_match($pattern, $name);

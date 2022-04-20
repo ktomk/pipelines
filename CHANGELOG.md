@@ -9,12 +9,16 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Add
+- Support digests as an alternative to tags for container images in
+  pipeline steps, see [Digest]
 - Support global docker option (#15) (thanks [Adrian Cederberg])
 - PHP 7.4 Alpine based build container
 ### Change
 - Extract tar-copier for copy deploy-mode
 - PHP 8.1 Alpine based build container upgrade from RC to stable
 - html-docs: Upgrade mkdocs-material to 8.2.9
+
+[Digest]: doc/DOCKER-NAME-TAG.md#digest
 
 ## [0.0.63] - 2022-04-14
 ### Change

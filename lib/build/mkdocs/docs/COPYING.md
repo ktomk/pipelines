@@ -46,13 +46,16 @@ with the upstream projects.
 
 Affected files follow with a description and their license:
 
-### Docker (Apache License Version 2.0)
+### Docker/Open Container Initiative (Apache License Version 2.0)
 
 The file [`doc/DOCKER-NAME-TAG.md`](doc/DOCKER-NAME-TAG.md) is derived
-from [Docker documentation][1-DDC] and used under the *Apache License Version
-2.0*.
+from [Docker documentation][1-DDC] (Copyright 2013-2017 Docker, Inc.) and
+[Open Container Initiative (OCI) Image Format Specification][2-OCI]
+(Copyright 2016 The Linux Foundation); both used under the
+*Apache License Version 2.0*.
 
 [1-DDC]: https://docs.docker.com/engine/reference/commandline/tag/
+[2-OCI]: https://github.com/opencontainers/image-spec/blob/main/descriptor.md
 
     --8<-- "doc/LICENSE-2.0.txt"
 

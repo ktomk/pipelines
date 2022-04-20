@@ -4,7 +4,7 @@ clone:
 pipelines:
   default:
     - step:
-        image: ktomk/pipelines:busybox
+        image: ktomk/pipelines@sha256:2ef9a59041a7c4f36001abaec4fe7c10c26c1ead4da11515ba2af346fe60ddac
         name: pipeline features and introspection
         script:
           - echo "test" || true
