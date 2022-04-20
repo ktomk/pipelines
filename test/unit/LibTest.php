@@ -104,6 +104,11 @@ class LibTest extends TestCase
         self::assertSame(array(), Lib::merge());
     }
 
+    public function testMergeArrayEmpty()
+    {
+        self::assertSame(array(), Lib::mergeArray(array()));
+    }
+
     public function testPhpBinary()
     {
         self::assertIsString(Lib::phpBinary());

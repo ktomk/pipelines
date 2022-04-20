@@ -75,7 +75,7 @@ class Lib
     {
         $buffer = $command;
 
-        $arguments = call_user_func_array('self::merge', $arguments);
+        $arguments = self::mergeArray($arguments);
 
         foreach ($arguments as $argument) {
             $buffer .= ' ' . self::quoteArg($argument);
@@ -131,23 +131,59 @@ class Lib
     }
 
     /**
-     * merge n parameters, if a scalar, turned into array, otherwise must be an array
+     * merge n array parameters
+     *
+     * all parameters should be of type array. if a parameter ist not
+     * an array it is promoted to one as the following:
+     *
+     *   - null => []             # null is an empty array
+     *   - skalar => [skalar]     # skalar is an array with itself as single value
+     *   - resource => [resource] # same as skalar
+     *   - object => [object]     # same as skalar
+     *
+     * to produce a merged array of all these arrays.
+     *
+     * examples:
+     *
+     *     (null, null) => []
+     *     ([null], [null]) => [null, null]
+     *     (1, 2, 3) => [1, 2, 3]
+     *     ([1, 2], 3) => [1, 2, 3]
+     *     ([1, 2], ['a', 'b']) => [1, 2, 'a', 'b']
      *
      * @return array
      */
     public static function merge()
     {
-        if (!$arrays = func_get_args()) {
+        $arrays = func_get_args();
+
+        if (empty($arrays)) {
             return $arrays;
         }
 
-        foreach ($arrays as $key => $value) {
+        return self::mergeArray($arrays);
+    }
+
+    /**
+     * merge n array parameters
+     *
+     * {@see Lib::merge} with a single parameter
+     *
+     * @return array of merged parameters
+     */
+    public static function mergeArray(array $parameters)
+    {
+        if (empty($parameters)) {
+            return $parameters;
+        }
+
+        foreach ($parameters as $key => $value) {
             if (!is_array($value)) {
-                $arrays[$key] = null === $value ? array() : array($value);
+                $parameters[$key] = null === $value ? array() : array($value);
             }
         }
 
-        return call_user_func_array('array_merge', $arrays);
+        return call_user_func_array('array_merge', $parameters);
     }
 
     /**

@@ -31,7 +31,8 @@ abstract class PipelinesReferences extends Pipelines
             throw new InvalidArgumentException(sprintf("Invalid id '%s'", $id));
         }
 
-        if (!isset($pipelines->references[$id], $pipelines->file)) {
+        $file = $pipelines->file;
+        if (!isset($pipelines->references[$id], $file)) {
             return null;
         }
 
@@ -44,7 +45,7 @@ abstract class PipelinesReferences extends Pipelines
         if (!is_array($ref[2])) {
             throw new ParseException(sprintf('%s: named pipeline required', $id));
         }
-        $pipeline = new Pipeline($pipelines->file, $ref[2]);
+        $pipeline = new Pipeline($file, $ref[2]);
         $ref[2] = $pipeline;
 
         return $pipeline;

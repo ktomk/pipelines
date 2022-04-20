@@ -106,18 +106,19 @@ class FileShowerAbstract
      * @param Pipelines $pipelines
      * @param string $id
      *
-     * @return array{Pipeline, string}
+     * @return array{0: Pipeline, 1: string}
      */
     private function getShowPipeline(Pipelines $pipelines, $id)
     {
-        $pipeline = null;
         $message = null;
 
         try {
             $pipeline = $pipelines->getById($id);
         } catch (ParseException $exception) {
+            $pipeline = null;
             $message = $exception->getParseMessage();
         } catch (InvalidArgumentException $exception) {
+            $pipeline = null;
             $message = $exception->getMessage();
         }
 

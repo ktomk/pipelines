@@ -1,3 +1,5 @@
+# this file is part of pipelines
+
 clone:
   depth: 1
   lfs: true

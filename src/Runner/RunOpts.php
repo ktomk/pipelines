@@ -250,11 +250,12 @@ class RunOpts
      */
     private function getOptionImplementation($name)
     {
-        if (!isset($this->options)) {
+        $options = $this->options;
+        if (!isset($options)) {
             throw new \BadMethodCallException('no options');
         }
 
-        $buffer = $this->options->get($name);
+        $buffer = $options->get($name);
         if (null === $buffer) {
             throw new \InvalidArgumentException(
                 sprintf("unknown option: '%s'", $name)

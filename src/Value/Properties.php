@@ -6,6 +6,7 @@ namespace Ktomk\Pipelines\Value;
 
 use Countable;
 use InvalidArgumentException;
+use Ktomk\Pipelines\Lib;
 
 /**
  * Properties value object (named set)
@@ -91,10 +92,7 @@ class Properties implements Countable
     public function has($keys)
     {
         $args = func_get_args();
-        $allKeys = call_user_func_array(
-            array('Ktomk\Pipelines\Lib', 'merge'),
-            $args
-        );
+        $allKeys = Lib::mergeArray($args);
 
         foreach ($allKeys as $key) {
             if (!array_key_exists($key, $this->properties)) {

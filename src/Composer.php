@@ -38,6 +38,8 @@ class Composer
             $phpPath = $finder->find(false);
         }
         isset($phpPath) || (defined('PHP_BINARY') && $phpPath = constant('PHP_BINARY'));
+        $phpEnv = getenv('PHP_BINARY') ?: rtrim(shell_exec("which php 2>/dev/null"));
+        empty($phpPath) && $phpPath = $phpEnv;
         echo $phpPath, "\n";
     }
 }

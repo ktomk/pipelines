@@ -433,8 +433,6 @@ class App implements StatusRunnable
     {
         $this->verbose(sprintf("info: running pipeline '%s'", $pipelineId));
 
-        $pipeline = null;
-
         try {
             $pipeline = $pipelines->getById($pipelineId);
         } catch (ParseException $e) {

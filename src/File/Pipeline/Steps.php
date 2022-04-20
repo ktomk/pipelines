@@ -179,15 +179,14 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      */
     public function getIterator()
     {
-        if (is_callable($this->getIteratorFunctor)) {
-            return new StepsIterator(
-                call_user_func($this->getIteratorFunctor, $this)
-            );
+        $iteratorFunctor = $this->getIteratorFunctor;
+        if (isset($iteratorFunctor)) {
+            $iterator = call_user_func($iteratorFunctor, $this);
+        } else {
+            $iterator = new \ArrayIterator($this->steps);
         }
 
-        return new StepsIterator(
-            new \ArrayIterator($this->steps)
-        );
+        return new StepsIterator($iterator);
     }
 
     /**

@@ -49,12 +49,12 @@ class File
      */
     public static function createFromFile($path)
     {
-        $result = null;
         $message = sprintf('YAML error: %s; verify the file contains valid YAML', $path);
 
         try {
             $result = Yaml::file($path);
         } catch (YamlParseException $parseException) {
+            $result = null;
             $message .= ': ' . $parseException->getMessage();
         }
 

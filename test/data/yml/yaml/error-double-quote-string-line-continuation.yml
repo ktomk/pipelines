@@ -1,3 +1,7 @@
+# this file is part of pipelines
+#
+# fixture file for Sf2Yaml based parser regression on line continuation
+# in a double-quoted string
 - "Building an api image to be used in other pipelines using development\
   \ container multistage build. \nThis includes the .env file constructed\
   \ here.\n"

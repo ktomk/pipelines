@@ -1,3 +1,7 @@
+# this file is part of pipelines
+#
+# fixture file for yaml parser testing w/ merge-key, from issue #14,
+# for regression testing
 definitions:
   services:
     mysql:
