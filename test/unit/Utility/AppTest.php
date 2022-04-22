@@ -33,7 +33,7 @@ class AppTest extends TestCase
     {
         $app = new App(new Streams());
         $actual = $app->main(array(
-            'cmd', '--file', 'test/data/yml/invalid-pipeline.yml',
+            'cmd', '--file', 'test/data/yml/invalid/pipeline.yml',
             '--pipeline', 'custom/unit-tests',
         ));
         self::assertSame(2, $actual);
@@ -143,7 +143,7 @@ class AppTest extends TestCase
     {
         $this->expectOutputRegex('{ERROR\s+\'image\' invalid Docker image}');
         $app = new App(new Streams(null, 'php://output'));
-        $actual = $app->main(array('cmd', '--file', 'test/data/yml/invalid-pipeline.yml', '--show'));
+        $actual = $app->main(array('cmd', '--file', 'test/data/yml/invalid/pipeline.yml', '--show'));
         self::assertSame(1, $actual);
     }
 
@@ -170,6 +170,7 @@ class AppTest extends TestCase
             array(array('--version')),
             array(array('--help')),
             array(array('--show')),
+            array(array('--show-pipelines')),
             array(array('--images')),
             array(array('--list')),
             array(array('--dry-run')),

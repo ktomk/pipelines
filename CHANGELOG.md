@@ -8,6 +8,16 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- Schema for `<step>.artifacts.download` and `paths` properties
+  Mar 2021 ([Tina Yu])
+- Support for step artifacts with paths attribute
+- `--show` and `--show-pipelines`: Annotate steps' artifacts with `*A`
+### Fix
+- `--show` and `--show-pipelines`: Handle parse errors with step
+  annotations, since [0.0.62](#0062---2021-12-19)
+
+[Tina Yu]: https://bitbucket.org/blog/author/tyu
 
 ## [0.0.64] - 2022-04-20
 ### Add
@@ -35,8 +45,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [0.0.62] - 2021-12-19
 ### Add
-- `--show` and `--show-pipelines`: Annotate steps with manual triggers
-  with `*M`
+- `--show` and `--show-pipelines`: Annotate steps' manual triggers with
+  `*M`
 ### Change
 - Verbose last error report on Phpunit test-suite shutdown if fatal,
   improves [0.0.32](#0032---2020-04-11)

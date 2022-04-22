@@ -14,7 +14,7 @@ class Artifacts implements \Countable
     /**
      * @var array|string[]
      */
-    private $artifacts;
+    private $paths;
 
     /**
      * Artifacts constructor.
@@ -31,9 +31,9 @@ class Artifacts implements \Countable
     /**
      * @return array|string[]
      */
-    public function getPatterns()
+    public function getPaths()
     {
-        return $this->artifacts;
+        return $this->paths;
     }
 
     #[\ReturnTypeWillChange]
@@ -42,11 +42,10 @@ class Artifacts implements \Countable
      */
     public function count()
     {
-        return count($this->artifacts);
+        return count($this->paths);
     }
 
     /**
-     * @param array|string[] $artifacts
      *
      * @throws ParseException
      *
@@ -54,7 +53,12 @@ class Artifacts implements \Countable
      */
     private function parse(array $artifacts)
     {
-        // quick validation: requires a list of strings
+        // quick validation: if an "object" and it has the "paths" attribute, this is the list
+        if (isset($artifacts['paths']) && is_array($artifacts['paths'])) {
+            $artifacts = $artifacts['paths'];
+        }
+
+        // quick validation: requires a list of strings which must not be empty (can't in YAML anyway)
         if (!count($artifacts)) {
             throw new ParseException("'artifacts' requires a list");
         }
@@ -62,12 +66,12 @@ class Artifacts implements \Countable
         foreach ($artifacts as $index => $string) {
             if (!is_string($string)) {
                 throw new ParseException(sprintf(
-                    "'artifacts' requires a list of strings, #%d is not a string",
+                    "'artifacts' requires a list of paths",
                     $index
                 ));
             }
         }
 
-        $this->artifacts = $artifacts;
+        $this->paths = $artifacts;
     }
 }

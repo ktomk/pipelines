@@ -33,7 +33,7 @@ class ValidationTest extends TestCase
     public function testInvalidPipelinesFile()
     {
         list($data, $validator) = $this->validatorByFixture(
-            __DIR__ . '/../../data/yml/invalid-pipeline-step.yml',
+            __DIR__ . '/../../data/yml/invalid/pipeline-step.yml',
             __DIR__ . '/../../../lib/pipelines/schema/pipelines-schema.json',
             Constraint::CHECK_MODE_DISABLE_FORMAT
         );

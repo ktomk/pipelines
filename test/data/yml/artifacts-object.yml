@@ -1,0 +1,22 @@
+# this file is part of pipelines
+#
+# artifacts are normally considered a list of paths, however
+# they can be an object with the list at "paths" property.
+image: ktomk/pipelines:busybox
+
+pipelines:
+  default:
+    - step:
+        name: artifacts list
+        artifacts: &paths # path list
+          - build/artifacts-test/result.txt
+        script: &script
+          - mkdir -p build/artifacts-test
+          - printf "$(date -Iseconds) operation successful!\n" >> build/artifacts-test/result.txt
+
+    - step:
+        name: artifacts object
+        artifacts:
+          download: false # no artifacts download for step
+          paths: *paths
+        script: *script

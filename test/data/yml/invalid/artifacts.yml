@@ -1,0 +1,11 @@
+# this file is part of pipelines
+
+image: ktomk/pipelines:busybox
+
+pipelines:
+  default:
+    - step:
+        name: artifacts list
+        artifacts:
+          - []
+        script: [':']

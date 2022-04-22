@@ -312,7 +312,7 @@ class PipelinesTest extends TestCase
      */
     public function testGetPipelinesWithInvalidIdParseError()
     {
-        $path = __DIR__ . '/../../data/yml/invalid-pipeline-id.yml';
+        $path = __DIR__ . '/../../data/yml/invalid/pipeline-id.yml';
 
         $file = File::createFromFile($path);
 

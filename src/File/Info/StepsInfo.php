@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\File\Info;
 
+use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline;
 use Ktomk\Pipelines\File\Pipeline\Steps;
 
@@ -54,9 +55,17 @@ final class StepsInfo implements \Countable
         return $images ? implode($separator, $images) : '';
     }
 
-    public function getSummary()
+    public function getSummary(&$errorFree)
     {
-        list($names, $annotations) = $this->getNamesAndAnnotations();
+        $errorFree = true;
+
+        try {
+            list($names, $annotations) = $this->getNamesAndAnnotations();
+        } catch (ParseException $parseException) {
+            $errorFree = false;
+
+            return sprintf('%d ERROR %s', $this->count(), $parseException->getParseMessage());
+        }
 
         return sprintf(
             '%d%s',

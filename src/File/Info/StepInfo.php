@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\File\Info;
 
 use Ktomk\Pipelines\File\File;
+use Ktomk\Pipelines\File\ParseException;
 use Ktomk\Pipelines\File\Pipeline\Step;
 
 /**
@@ -13,6 +14,7 @@ use Ktomk\Pipelines\File\Pipeline\Step;
 final class StepInfo
 {
     const NO_NAME = 'no-name';
+    const CHAR_ARTIFACTS = 'A';
     const CHAR_MANUAL = 'M';
 
     /**
@@ -34,13 +36,25 @@ final class StepInfo
     /**
      * @param string $string
      * @param string $separator [optional]
+     * @param mixed $errorFree
      *
      * @return string
      */
-    public function annotate($string, $separator = ' *')
+    public function annotate($string, $separator = null, &$errorFree = null)
     {
+        null === $separator && $separator = ' *';
+        $errorFree = true;
+
         $buffer = (string)$string;
-        $annotations = $this->getAnnotations();
+
+        try {
+            $annotations = $this->getAnnotations();
+        } catch (ParseException $parseException) {
+            $errorFree = false;
+
+            return $buffer . ' ERROR ' . $parseException->getParseMessage();
+        }
+
         if ($annotations) {
             $buffer .= $separator . implode('', $annotations);
         }
@@ -55,6 +69,7 @@ final class StepInfo
     {
         $annotations = array();
 
+        $this->step->getArtifacts() && $annotations[] = self::CHAR_ARTIFACTS;
         $this->step->isManual() && $annotations[] = self::CHAR_MANUAL;
 
         return $annotations;

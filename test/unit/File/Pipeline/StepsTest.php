@@ -226,7 +226,7 @@ class StepsTest extends TestCase
 
     public function testTestParseEmptyStep()
     {
-        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid-pipeline-step.yml');
+        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid/pipeline-step.yml');
 
         $this->expectException('Ktomk\Pipelines\File\ParseException');
         $this->expectExceptionMessage('file parse error: step requires a script');

@@ -48,14 +48,14 @@ class FileShowerTest extends TestCase
 
     public function testShowPipelinesWithInvalidId()
     {
-        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid-pipeline-id.yml');
+        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid/pipeline-id.yml');
         $shower = new FileShower(new Streams(), $file);
         self::assertSame(1, $shower->showPipelines());
     }
 
     public function testShowPipelinesWithErrors()
     {
-        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid-pipeline.yml');
+        $file = File::createFromFile(__DIR__ . '/../../../data/yml/invalid/pipeline.yml');
         $this->expectOutputRegex('~custom/unit-tests    ERROR     \'image\' invalid Docker image name: \'invalid image\'~');
         $shower = new FileShower(new Streams(null, 'php://output'), $file);
         self::assertSame(1, $shower->showPipelines());
@@ -67,14 +67,16 @@ class FileShowerTest extends TestCase
     public function provideFileForMethod()
     {
         return array(
-            array(__DIR__ . '/../../../data/yml/invalid-caches.yml', 'showFile', 1, "file parse error: cache 'borked' must reference a custom or default cache definition"),
-            array(__DIR__ . '/../../../data/yml/invalid-pipeline.yml', 'showPipelines', 1),
-            array(__DIR__ . '/../../../data/yml/invalid-pipeline.yml', 'showFile', 1),
-            array(__DIR__ . '/../../../data/yml/invalid-service-definitions.yml', 'showPipelines', 0),
-            array(__DIR__ . '/../../../data/yml/invalid-service-definitions.yml', 'showServices', 1),
-            array(__DIR__ . '/../../../data/yml/invalid-services.yml', 'showServices', 1),
-            array(__DIR__ . '/../../../data/yml/missing-service-definitions.yml', 'showServices', 1),
-            array(__DIR__ . '/../../../data/yml/invalid-pipeline.yml', 'showServices', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/artifacts.yml', 'showPipelines', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/artifacts.yml', 'showFile', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/caches.yml', 'showFile', 1, "file parse error: cache 'borked' must reference a custom or default cache definition"),
+            array(__DIR__ . '/../../../data/yml/invalid/pipeline.yml', 'showPipelines', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/pipeline.yml', 'showFile', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/service-definitions.yml', 'showPipelines', 0),
+            array(__DIR__ . '/../../../data/yml/invalid/service-definitions.yml', 'showServices', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/services.yml', 'showServices', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/service-definitions-missing.yml', 'showServices', 1),
+            array(__DIR__ . '/../../../data/yml/invalid/pipeline.yml', 'showServices', 1),
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showFile', 0),
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showImages', 0),
             array(__DIR__ . '/../../../../bitbucket-pipelines.yml', 'showServices', 0),
@@ -86,6 +88,9 @@ class FileShowerTest extends TestCase
 
     /**
      * @dataProvider provideFileForMethod
+     *
+     * @covers \Ktomk\Pipelines\File\Info\StepInfo::annotate
+     * @covers \Ktomk\Pipelines\File\Info\StepsInfo::getSummary
      *
      * @param string $path
      * @param string $method file-shower method name
@@ -103,6 +108,10 @@ class FileShowerTest extends TestCase
             $this->expectExceptionMessage($parseExceptionMessage);
         }
 
+        /** @see FileShower::showPipelines */
+        /** @see FileShower::showFile */
+        /** @see FileShower::showServices */
+        /** @see FileShower::showImages */
         self::assertSame($expected, $shower->{$method}());
     }
 

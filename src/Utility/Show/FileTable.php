@@ -34,14 +34,14 @@ class FileTable
     }
 
     /**
-     * @param mixed $falsyIsError
+     * @param mixed $noError
      * @param array $row
      *
      * @return $this
      */
-    public function addFlaggedRow($falsyIsError, array $row)
+    public function addFlaggedRow($noError, array $row)
     {
-        if (!$falsyIsError) {
+        if (!$noError) {
             $this->errors++;
         }
 

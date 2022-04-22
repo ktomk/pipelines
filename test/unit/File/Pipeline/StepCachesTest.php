@@ -60,7 +60,7 @@ class StepCachesTest extends TestCase
             "file parse error: cache 'borked' must reference a custom or default cache definition"
         );
 
-        $file = new File(Yaml::file(__DIR__ . '/../../../data/yml/invalid-caches.yml'));
+        $file = new File(Yaml::file(__DIR__ . '/../../../data/yml/invalid/caches.yml'));
         $file->getDefault()->getSteps()->offsetGet(0)->getCaches();
     }
 

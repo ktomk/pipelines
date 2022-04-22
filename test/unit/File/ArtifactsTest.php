@@ -38,17 +38,30 @@ class ArtifactsTest extends TestCase
     public function testCreationWithIncompleteList()
     {
         $this->expectException('Ktomk\Pipelines\File\ParseException');
-        $this->expectExceptionMessage('\'artifacts\' requires a list of strings, #0 is not a string');
+        $this->expectExceptionMessage('\'artifacts\' requires a list of paths');
 
         new Artifacts(array(null));
     }
 
-    public function testGetPatterns()
+    public function provideArtifactsArray()
     {
-        $array = array('build/html/testdox.html');
+        return array(
+            array(array('build/html/testdox.html')),
+            array(array('paths' => array('build/html/testdox.html'))),
+        );
+    }
+
+    /**
+     * @dataProvider provideArtifactsArray
+     *
+     * @param array $array
+     */
+    public function testGetPaths(array $array)
+    {
         $artifacts = new Artifacts($array);
-        $actual = $artifacts->getPatterns();
-        self::assertSame($array, $actual);
+        $actual = $artifacts->getPaths();
+        $expected = array('build/html/testdox.html');
+        self::assertSame($expected, $actual);
     }
 
     public function testCount()

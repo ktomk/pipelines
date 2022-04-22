@@ -89,7 +89,8 @@ class FileShower extends FileShowerAbstract
 
         foreach ($this->tablePipelineIdsPipelines($pipelines, $table) as $id => $pipeline) {
             $info = StepsInfo::fromPipeline($pipeline);
-            $table->addRow(array($id, $info->getImagesAsString(), $info->getSummary()));
+            $summary = $info->getSummary($hasError);
+            $table->addFlaggedRow($hasError, array($id, $info->getImagesAsString(), $summary));
         }
 
         return $this->outputTableAndReturn($table);
@@ -126,7 +127,9 @@ class FileShower extends FileShowerAbstract
     private function tableFileSteps($steps, $id, FileTable $table)
     {
         foreach (new StepsStepInfoIterator($steps) as $info) {
-            $table->addRow(array($id, $info->annotate($number = $info->getStepNumber()), $info->getImage(), $info->getName()));
+            $number = $info->getStepNumber();
+            $annotate = $info->annotate($number, null, $errorFree);
+            $table->addFlaggedRow($errorFree, array($id, $annotate, $info->getImage(), $info->getName()));
             $this->tableFileStepsCaches($step = $info->getStep(), $id, $number, $table);
             $this->tableFileStepsServices($step, $id, $number, $table);
         }

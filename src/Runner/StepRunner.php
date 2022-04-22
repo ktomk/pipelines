@@ -153,7 +153,7 @@ class StepRunner
 
         $source = new ArtifactSource($exec, $id, $clonePath);
 
-        $patterns = $artifacts->getPatterns();
+        $patterns = $artifacts->getPaths();
         foreach ($patterns as $pattern) {
             $this->captureArtifactPattern($source, $pattern, $dir);
         }
