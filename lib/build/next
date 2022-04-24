@@ -1,0 +1,22 @@
+#!/bin/bash
+#
+# bump to unreleased after release
+#
+# usage: ./lib/build/next
+#
+set -euo pipefail
+IFS=$'\n\t'
+
+# check that changelog file is tracked
+>/dev/null git ls-files --error-unmatch CHANGELOG.md
+
+# check CHANGELOG.md
+if grep -q '^## \[unreleased\]' CHANGELOG.md; then
+  echo "already unreleased, nothing to do."
+  exit
+fi
+
+sed -i -e '0,/^## \[\([0-9.]*\)\].*$/s//## [unreleased]\n\n\0/' CHANGELOG.md | less
+
+git add CHANGELOG.md
+git commit -m "polish"
