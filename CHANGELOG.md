@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.65] - 2022-04-24
 ### Add
 - `--show` and `--show-pipelines`: Annotate steps' conditions with `*C`
 - Schema for `<step>.artifacts.download` and `paths` properties
@@ -680,4 +680,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.62]: https://github.com/ktomk/pipelines/releases/tag/0.0.62
 [0.0.63]: https://github.com/ktomk/pipelines/releases/tag/0.0.63
 [0.0.64]: https://github.com/ktomk/pipelines/releases/tag/0.0.64
+[0.0.65]: https://github.com/ktomk/pipelines/releases/tag/0.0.65
 [unreleased]: https://github.com/ktomk/pipelines
