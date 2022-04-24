@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Fix
+- Fix cache and data directory creation mode, limit to user access only
 
 ## [0.0.65] - 2022-04-24
 ### Add

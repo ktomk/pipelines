@@ -114,8 +114,8 @@ class UnPackager
      */
     public function preparePackage(array $package)
     {
-        $cache = libFs::mkDir($this->packageDirectory);
-        $share = libFs::mkDir($this->binariesDirectory);
+        $cache = libFs::mkDir($this->packageDirectory, 0700);
+        $share = libFs::mkDir($this->binariesDirectory, 0700);
 
         $pkgBase = sprintf('%s/%s', $cache, basename($package['uri']));
         $binBase = sprintf('%s/%s', $share, $package['name']);

@@ -174,12 +174,14 @@ class CacheIo
 
         $streams->out("\x1D+++ updating caches from container...\n");
 
-        $cachesDirectory = LibFs::mkDir($cachesDirectory);
+        $cachesDirectory = LibFs::mkDir($cachesDirectory, 0700);
 
         foreach ($step->getCaches() as $name => $path) {
             $tarFile = sprintf('%s/%s.tar', $cachesDirectory, $name);
             $tarExists = LibFs::isReadableFile($tarFile);
             $streams->out(sprintf(" - %s %s (%s)\n", $name, $path, $tarExists ? 'update' : 'create'));
+            touch($tarFile);
+            chmod($tarFile, 0600);
 
             $containerPath = $this->mapCachePath($path);
             $this->dal->exportTar($id, $containerPath . '/.', $tarFile);
