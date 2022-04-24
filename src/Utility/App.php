@@ -387,9 +387,7 @@ class App implements StatusRunnable
      */
     private function parseWorkingDir()
     {
-        $args = $this->arguments;
-
-        $buffer = $args->getStringOptionArgument('working-dir', '');
+        $buffer = $this->arguments->getStringOptionArgument('working-dir', '');
 
         if ('' !== $buffer) {
             $this->changeWorkingDir($buffer);

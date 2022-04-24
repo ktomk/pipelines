@@ -11,7 +11,7 @@ class StepParser
 {
     public static function validate(array $step, array $env)
     {
-        $parser = new StepParser($step, $env);
+        new StepParser($step, $env);
     }
 
     private function __construct(array $step, array $env)

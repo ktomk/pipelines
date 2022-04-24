@@ -100,6 +100,43 @@ THE SOFTWARE.
 * Short Identifier: `MIT`
 * Reference: https://spdx.org/licenses/MIT.html
 
+
+### Coverage Checker (MIT License)
+
+The file `lib/build/coverage-checker.php` is based on [the
+`coverage-checker.php` script written by Marco Pivetta (ocramius)][CCP-1]
+and used under the *MIT License* per the licensing in the
+[VersionEyeModule][CCP-2] file:
+
+[CCP-1]: http://ocramius.github.io/blog/automated-code-coverage-check-for-github-pull-requests-with-travis/
+[CCP-2]: https://github.com/Ocramius/VersionEyeModule/blob/master/coverage-checker.php
+
+```
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+This software consists of voluntary contributions made by many individuals
+and is licensed under the MIT license.
+```
+
+<!-- NOTE: disclaimer is from BSD -->
+<!-- NOTE: single author in repo is Marco Pivetta -->
+
+#### SPDX
+
+* Full Name: `MIT License`
+* Short Identifier: `MIT`
+* Reference: https://spdx.org/licenses/MIT.html
+
 ### Schema (MIT License)
 
 The file [`lib/pipelines/schema/piplines-schema.json`](lib/pipelines/schema/pipelines-schema.json)

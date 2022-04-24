@@ -104,15 +104,12 @@ class LibFs
      */
     public static function mkDir($path, $mode = 0777)
     {
-        if (!is_dir($path)) {
-            /** @noinspection NestedPositiveIfStatementsInspection */
-            if (!mkdir($path, $mode, true) && !is_dir($path)) {
-                // @codeCoverageIgnoreStart
-                throw new \RuntimeException(
-                    sprintf('Directory "%s" was not created', $path)
-                );
-                // @codeCoverageIgnoreEnd
-            }
+        if (!is_dir($path) && !mkdir($path, $mode, true) && !is_dir($path)) {
+            // @codeCoverageIgnoreStart
+            throw new \RuntimeException(
+                sprintf('Directory "%s" was not created', $path)
+            );
+            // @codeCoverageIgnoreEnd
         }
 
         return $path;
