@@ -159,29 +159,10 @@
         "step": {
             "type": "object",
             "title": "Build execution unit",
-            "description": "Define s a build execution unit. \n\nSteps are executed in the order that they appear in the bitbucket-pipelines.yml file. \nYou can use up to 10 steps in a pipeline.",
+            "description": "Defines a build execution unit. \n\nSteps are executed in the order that they appear in the bitbucket-pipelines.yml file. \nYou can use up to 10 steps in a pipeline.",
             "properties": {
                 "condition": {
-                    "type": "object",
-                    "properties": {
-                        "changesets": {
-                            "type": "object",
-                            "properties": {
-                                "includePaths": {
-                                    "type": "array",
-                                    "title": " Execute a step only if one of the modified files matches the expression",
-                                    "description": "Defines files to be matched from in all commits in a pull-request, or the commit otherwise. If the files have no changes, the step is skipped and the pipeline succeeds.",
-                                    "items": {
-                                        "type": "string",
-                                        "description": "Glob pattern for files to match",
-                                        "minLength": 1
-                                    }
-                                }
-                            },
-                            "additionalProperties": false
-                        }
-                    },
-                    "additionalProperties": false
+                    "$ref": "#/definitions/condition"
                 },
                 "name": {
                     "type": "string",
@@ -208,15 +189,7 @@
                     "description": "Commands inside an after-script section will run when the step succeeds or fails. This could be useful for clean up commands, test coverage, notifications, or rollbacks you might want to run, especially if your after-script uses the value of BITBUCKET_EXIT_CODE.\n\nNote: If any commands in the after-script section fail:\n\n* we won't run any more commands in that section\n\n* it will not effect the reported status of the step."
                 },
                 "artifacts": {
-                    "type": "array",
-                    "title": "Files produced by a step to share with a following step",
-                    "description": "Defines files to be shared from one step to a later step in your pipeline. Artifacts can be defined using glob patterns.",
-                    "items": {
-                        "type": "string",
-                        "description": "Glob pattern for the path to the artifacts",
-                        "minLength": 1
-                    },
-                    "minItems": 1
+                    "$ref": "#/definitions/artifacts"
                 },
                 "caches": {
                     "type": "array",
@@ -537,6 +510,64 @@
                 },
                 {
                     "$ref": "#/definitions/awsImage"
+                }
+            ]
+        },
+        "condition": {
+            "type": "object",
+            "properties": {
+                "changesets": {
+                    "type": "object",
+                    "properties": {
+                        "includePaths": {
+                            "type": "array",
+                            "title": " Execute a step only if one of the modified files matches the expression",
+                            "description": "Defines files to be matched from in all commits in a pull-request, or the commit otherwise. If the files have no changes, the step is skipped and the pipeline succeeds.",
+                            "items": {
+                                "type": "string",
+                                "description": "Glob pattern for files to match",
+                                "minLength": 1
+                            }
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
+        "artifactsList": {
+            "type": "array",
+            "title": "Files produced by a step to share with a following step",
+            "description": "Defines files to be shared from one step to a later step in your pipeline. Artifacts can be defined using glob patterns.",
+            "items": {
+                "type": "string",
+                "description": "Glob pattern for the path to the artifacts",
+                "minLength": 1
+            },
+            "minItems": 1
+        },
+        "artifactsObject": {
+            "type": "object",
+            "title": "Artifacts",
+            "description": "Defines artifacts, files to be shared from one stop to a later step in your pipeline. On Atlassian Bitbucket Pipelines Plugin running on Atlassian Cloud it can also skip downloading of artifacts for the build execution unit.",
+            "properties": {
+                "download": {
+                    "type": "boolean",
+                    "description": "Skipping artifact downloads in Bitbucket Pipelines (Tina Yu; Mar 2021) <https://bitbucket.org/blog/skipping-artifact-downloads>",
+                    "default": true
+                },
+                "paths": {
+                    "$ref": "#/definitions/artifactsList"
+                }
+            }
+        },
+        "artifacts": {
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/artifactsList"
+                },
+                {
+                    "$ref": "#/definitions/artifactsObject"
                 }
             ]
         }
