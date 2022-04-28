@@ -18,6 +18,9 @@ python ?= python3
 #				  note: use VIRTUAL_ENV (recommended) see ./.gitignore
 mkdocs ?= mkdocs
 
+# SOURCE_DATE_EPOCH, Mkdocs build supports SOURCE_DATE_EPOCH, see https://reproducible-builds.org/specs/source-date-epoch/
+export SOURCE_DATE_EPOCH ?= $(shell git -C "$(source)" --no-pager log -1 --format=%cd --date=unix)
+
 .PHONY: html-docs # mkdocs build for static html files (html-docs)
 html-docs: mkdocs-install mkdocs.yml docs/import prebuild-offline | include
 	$(mkdocs) build --strict --site-dir $(html_dir) && \
@@ -41,8 +44,6 @@ gh-pages: mkdocs-install mkdocs.yml.gh-pages.yml docs/import prebuild-online | i
 				--site-dir $(site_dir) --out-dir $(html_dir)/docs -q \
 				--config-file $(word 2,$^) --prefer-index-html && \
 		rm -f $(html_dir)/docs/import && \
-		rm -f $(html_dir)/docs/sitemap.xml.gz && \
-		gzip --keep --no-name $(html_dir)/docs/sitemap.xml && \
 		cp -- include/gh-pages-README.md $(html_dir)/README.md
 	@echo "gh-pages at file://$(abspath $(html_dir))/docs/index.html"
 

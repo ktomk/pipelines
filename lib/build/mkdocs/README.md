@@ -171,16 +171,28 @@ publishing to Github-Pages more deterministic:
 
 #### Timestamp in `sitemap.xml.gz`
 
-The gzip version of the sitemap.xml contains the time-stamp of the
-sitemap.xml file which is generated when the docs are build.
+The gzip version of the `sitemap.xml` file contains the time-stamp of
+the `sitemap.xml` file which is generated when the docs are build.
 
 Recompressing the file without the name in post processing levitates
 this (`gzip -n` or `gzip --no-name`).
 
+This `gzip(1)` build post-processing is not necessary any longer since
+[Mkdocs Version 1.1.1 (2020-05-12)]. Mkdocs `sitemap.xml.gz` file
+timestamp has support at build time for the [`SOURCE_DATE_EPOCH`
+environment parameter] in [`fa5aa4a2` / #2100] via [`7f30f7b8` / #1010]
+and [`3e10e014` / #939].
+
+[Mkdocs Version 1.1.1 (2020-05-12)]: https://www.mkdocs.org/about/release-notes/#version-111-2020-05-12
+[`SOURCE_DATE_EPOCH` environment parameter]: https://reproducible-builds.org/specs/source-date-epoch/
+[`fa5aa4a2` / #2100]: https://github.com/mkdocs/mkdocs/commit/fa5aa4a26efc2a0dc3878b41920eaa39afc8929b
+[`7f30f7b8` / #1010]: https://github.com/mkdocs/mkdocs/pull/1010/commits/7f30f7b8343d3b241d4e7162093da5ca6642971f
+[`3e10e014` / #939]: https://github.com/mkdocs/mkdocs/commit/3e10e014b63dfcc85a30e6198da00677f7eefb24
+
 #### Superfluous `<lastmod>` elements in `sitemap.xml`
 
 On build time, each sitemap entry gets a `<lastmod>` element entry
-with the current date.
+with the current date (`YYYY-MM-DD`).
 
 Removing those `<lastmod>` elements (done in  overriding the
 `sitemap.xml` template) prevents running into this problem.
@@ -189,8 +201,16 @@ In general the `<lastmod>` element is not mandatory, and in concrete it
 has very little meaning, as it contains build time, so all last
 modification dates are the same and are therefore redundant.
 
+As an alternative to drop the `<lastmod>` element, it should be possible
+as well to make use of Mkdocs `update_date` / [`build_date_utc`] and/or
+the [mkdocs-git-revision-date-plugin] (not tested).
+
+[`build_date_utc`]: https://www.mkdocs.org/dev-guide/themes/#build_date_utc
+[mkdocs-git-revision-date-plugin]: https://github.com/zhaoterryy/mkdocs-git-revision-date-plugin
+
 * [Custom sitemap.xml template?](https://groups.google.com/forum/#!topic/mkdocs/UaXpZAa8B-Y) (Mkdocs groups.google.com)
 * [Hide empty lastmod tags in sitemap.xml #1465](https://github.com/mkdocs/mkdocs/pull/1465) (Mkdocs github.com)
+* [Add a "Last Updated" field to .md pages](https://groups.google.com/g/mkdocs/c/0iij2vNZZwE) (Mkdocs groups.google.com)
 
 #### Timestamp Github Publishing Commit
 
