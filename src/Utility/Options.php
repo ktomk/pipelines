@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Utility;
 
 use Ktomk\Pipelines\Utility\Option\Types;
+use PHPUnit\Util\Type;
 
 /**
  * application options store
@@ -29,6 +30,8 @@ class Options
         $definition = array(
             'docker.socket.path' => array('/var/run/docker.sock', null),
             'docker.client.path' => array('/usr/bin/docker', null),
+            'script.runner' => array('/bin/sh', null),
+            'script.bash-runner' => array(true, null),
             'script.exit-early' => array(false, null),
             'step.clone-path' => array('/app', Types::ABSPATH),
         );

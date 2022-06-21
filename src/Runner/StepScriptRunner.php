@@ -73,7 +73,15 @@ class StepScriptRunner
             $this->runner->getRunOpts()->getBoolOption('script.exit-early')
         );
 
-        $status = $this->execScript($buffer, $exec, $name);
+        $scriptRunner = $this->runner->getRunOpts()->getOption('script.runner');
+        if ($this->runner->getRunOpts()->getBoolOption('script.bash-runner')) {
+            $bashRunner = '/bin/bash';
+            0 === $exec->capture('docker', array(
+                'exec', $name, '/bin/sh', '-c', "test -f $bashRunner && test -x $bashRunner"
+            )) && $scriptRunner = $bashRunner;
+        }
+
+        $status = $this->execScript($buffer, $exec, $name, $scriptRunner);
         if (0 !== $status) {
             $streams->err(sprintf("script non-zero exit status: %d\n", $status));
         }
@@ -86,7 +94,7 @@ class StepScriptRunner
 
         $buffer = StepScriptWriter::writeAfterScript($script, $status);
 
-        $afterStatus = $this->execScript($buffer, $exec, $name);
+        $afterStatus = $this->execScript($buffer, $exec, $name, $scriptRunner);
         if (0 !== $afterStatus) {
             $streams->err(sprintf("after-script non-zero exit status: %d\n", $afterStatus));
         }
@@ -99,13 +107,14 @@ class StepScriptRunner
      * @param string $script "\n" terminated script lines
      * @param Exec $exec
      * @param string $name
+     * @param string $runner executable (absolute path), defaults to "/bin/sh"
      *
      * @return int
      */
-    private function execScript($script, Exec $exec, $name)
+    private function execScript($script, Exec $exec, $name, $runner = '/bin/sh')
     {
         $buffer = Lib::cmd("<<'SCRIPT' docker", array(
-                'exec', '-i', $name, '/bin/sh',
+                'exec', '-i', $name, $runner,
             )) . "\n";
         $buffer .= $script;
         $buffer .= "SCRIPT\n";

@@ -40,6 +40,20 @@ class StepScriptRunnerTest extends RunnerTestCase
         $scriptRunner = new StepScriptRunner($runner, '*test-run*');
 
         $step = $this->createTestStepFromFixture('steps.yml');
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
+        $exec->expect('pass', '~^<<\'SCRIPT\' ~');
+
+        $actual = $scriptRunner->runStepScript($step);
+        self::assertSame(0, $actual);
+    }
+
+    public function testRunStepScriptWithBinBash()
+    {
+        $runner = $this->mockRunner($exec);
+        $scriptRunner = new StepScriptRunner($runner, '*test-run*');
+
+        $step = $this->createTestStepFromFixture('steps.yml');
+        $exec->expect('capture', 'docker', 0, 'test for /bin/bash');
         $exec->expect('pass', '~^<<\'SCRIPT\' ~');
 
         $actual = $scriptRunner->runStepScript($step);
@@ -53,6 +67,7 @@ class StepScriptRunnerTest extends RunnerTestCase
 
         $step = $this->createTestStepFromFixture('after-script.yml');
 
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
         $exec->expect('pass', '~^<<\'SCRIPT\' ~', 3);
         $exec->expect('pass', '~^<<\'SCRIPT\' ~', 1);
 
@@ -72,6 +87,7 @@ after-script non-zero exit status: 1
 
         $step = $this->createTestStepFromFixture('pipe.yml', 1, 'branches/develop');
 
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
         $exec->expect('pass', '~^<<\'SCRIPT\' ~');
 
         $actual = $scriptRunner->runStepScript($step);
@@ -88,6 +104,7 @@ after-script non-zero exit status: 1
 
         $this->expectOutputString('After script:' . "\n");
 
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
         $exec->expect('pass', '~^<<\'SCRIPT\' ~', 0, 'script');
         $exec->expect('pass', '~^<<\'SCRIPT\' ~', 0, 'after-script');
 

@@ -355,6 +355,14 @@ pipelines:
               mkdir -p /dev/null && test
               echo "despite mkdir non-zero exit status ($?), this script part will be fine"
             - echo "ok."
+    bash-runner:
+      - step:
+          name: "bash runner"
+          image: ktomk/pipelines:ubuntu-bash
+          script:
+            - echo "$HELLO"
+            - source /etc/os-release
+            - echo "$PRETTY_NAME"
 
 definitions:
   caches:
