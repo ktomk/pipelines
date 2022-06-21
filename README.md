@@ -817,6 +817,8 @@ to use the development version for `pipelines`.
 - [x] Copy local composer cache into container for better
       (offline) usage in PHP projects (see
       [Populate Caches](doc/PIPELINES-CACHES.md#populate-caches))
+- [x] Run scripts with `/bin/bash` if available ([#17]) (*bash-runner*
+      feature)
 - [ ] Support for `BITBUCKET_DOCKER_HOST_INTERNAL` environment variable
       / host.docker.internal hostname within pipelines
 - [ ] Count `BITBUCKET_BUILD_NUMBER` on a per project basis (*build-number*
@@ -857,6 +859,7 @@ to use the development version for `pipelines`.
 - [ ] Override the default image name (`--default-image <name>`; never
   needed this for local run)
 
+[#17]: https://github.com/ktomk/pipelines/issues/17
 [#13]: https://github.com/ktomk/pipelines/issues/13
 
 ## References

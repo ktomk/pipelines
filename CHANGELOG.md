@@ -8,8 +8,19 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- Run step scripts with `/bin/bash` if it is available; disable with
+  `script.bash-runner=false` for previous behaviour (#17)  (thanks
+  [Tim Clephas])
+- `script.runner` configuration parameter to change `/bin/sh`, the
+  default script runner
+### Change
+- `-c <name>=true` and `false` are now supported for boolean configuration
+   parameter `<value>`
 ### Fix
 - Fix cache and data directory creation mode, limit to user access only
+
+[Tim Clephas]: https://github.com/Timple
 
 ## [0.0.65] - 2022-04-24
 ### Add

@@ -132,6 +132,7 @@ class RepositoryTest extends TestCase
 
         $exec->expect('capture', 'docker', 0, 'container id by name');
         $exec->expect('capture', 'docker', 0, 'run container');
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
         $exec->expect('pass', '~^<<\'SCRIPT\' docker exec ~', 0, 'run step script');
         $exec->expect('capture', 'docker', 'kill');
         $exec->expect('capture', 'docker', 'rm');

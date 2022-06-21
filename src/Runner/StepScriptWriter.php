@@ -43,6 +43,7 @@ class StepScriptWriter
     {
         $buffer = "# this /bin/sh script is generated from a pipeline script\n";
         $buffer .= "set -e\n";
+        $buffer .= 'test "$0" = "/bin/bash" && if [ -f ~/.bashrc ]; then source ~/.bashrc; fi' . "\n";
         $buffer .= self::generateScriptBody(
             $script,
             self::getLinePostCommand($scriptExitEarly)

@@ -75,6 +75,7 @@ class ConfigOptions extends Options implements Runnable
     public function parse(Args $args)
     {
         $options = $this->options;
+        $booleans = array('true' => true, 'false' => false);
 
         while (null !== $setting = $args->getOptionArgument('c')) {
             list($name, $value) = explode('=', $setting, 2) + array('undef', null);
@@ -85,6 +86,7 @@ class ConfigOptions extends Options implements Runnable
                 throw new \InvalidArgumentException(sprintf('not a %s: "%s"', $name, $value));
             }
             $type = null === $default ? 'string' : gettype($default);
+            'boolean' === $type && $value = isset($booleans[$value]) ? $booleans[$value] : $value;
             settype($value, $type) && $options->definition[$name] = array($value);
         }
     }

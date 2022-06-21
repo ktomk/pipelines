@@ -97,6 +97,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 0, 'run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0, 'copy deployment /app create')
             ->expect('pass', $this->deploy_copy_cmd_2, 0, 'copy deployment /app copy')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0, 'run step script')
             ->expect('capture', 'docker', 0, 'docker kill')
             ->expect('capture', 'docker', 0, 'docker rm');
@@ -161,6 +162,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
             ->expect('capture', 'docker', 0, 'run the container')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 255);
 
         $this->keepContainerOnErrorExecTest($exec);
@@ -176,6 +178,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', $containerId) # id for name of potential re-use
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 255);
 
         $this->keepContainerOnErrorExecTest($exec, $containerId);
@@ -191,6 +194,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0, 'deploy copy stage 1')
             ->expect('pass', $this->deploy_copy_cmd_2, 0, 'deploy copy stage 1')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', 0, 'docker kill')
             ->expect('capture', 'docker', 0, 'docker rm');
@@ -210,6 +214,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec = new ExecTester($this);
         $exec
             ->expect('capture', 'docker', "123456789\n", 'existing id')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0);
 
         $runner = $this->createTestStepRunner($exec, (Flags::FLAG_DOCKER_KILL | Flags::FLAG_DOCKER_REMOVE) ^ Flags::FLAGS);
@@ -342,6 +347,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->expect('capture', 'docker', $buffer, 'obtain socket bind');
         $exec->expect('capture', 'docker', 0, 'obtain mount bind');
         $exec->expect('capture', 'docker', 0, 'run');
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
         $exec->expect('pass', '~ docker exec ~', 0, 'script');
         $exec->expect('capture', 'docker', 0, 'kill');
         $exec->expect('capture', 'docker', 0, 'rm');
@@ -364,6 +370,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'no id for name of potential re-use')
             ->expect('capture', 'docker', 0, 'run the container')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0, 'run step script')
             ->expect('capture', 'docker', 0, 'kill')
             ->expect('capture', 'docker', 0, 'rm');
@@ -431,6 +438,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec->expect('capture', 'docker', $buffer, 'obtain client bind');
         $exec->expect('capture', 'docker', 0, 'obtain mount bind');
         $exec->expect('capture', 'docker', 0, 'run');
+        $exec->expect('capture', 'docker', 1, 'test for /bin/bash');
         $exec->expect('pass', '~ docker exec ~', 0, 'script');
         $exec->expect('capture', 'docker', 0, 'kill');
         $exec->expect('capture', 'docker', 0, 'rm');
@@ -483,6 +491,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('pass', 'docker exec -w /app \'*dry-run*\' tar c -f - build/foo-package.tgz | tar x -f - -C ' . $tmpProjectDir, 0)
@@ -504,6 +513,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect('capture', 'docker', 0) # docker kill
@@ -527,6 +537,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('pass', $this->deploy_copy_cmd, 0)
             ->expect('pass', $this->deploy_copy_cmd_2, 0)
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~ docker exec ~', 0)
             ->expect('capture', 'docker', './build/foo-package.tgz')
             ->expect(
@@ -571,6 +582,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0, 'docker run step container')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'after-script')
             ->expect('capture', 'docker', 0, 'docker kill')
@@ -591,6 +603,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0, 'docker run step container')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 123, 'after-script')
             ->expect('capture', 'docker', 0, 'docker kill')
@@ -616,6 +629,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0, 'docker run step container')
             ->expect('capture', 'docker', 0, 'run services')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('capture', 'docker', 0, 'docker kill')
             ->expect('capture', 'docker', 0, 'docker rm')
@@ -641,6 +655,7 @@ class StepRunnerTest extends RunnerTestCase
         $exec
             ->expect('capture', 'docker', 1, 'zap')
             ->expect('capture', 'docker', 0, 'docker run step container')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('capture', '~^docker exec ~', 0, 'caches: map path')
             ->expect('capture', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
@@ -676,6 +691,7 @@ class StepRunnerTest extends RunnerTestCase
             ->expect('capture', '~^docker exec ~', 0, 'caches: map path')
             ->expect('capture', '~^docker exec .* mkdir -p ~', 0, 'caches: mkdir in container')
             ->expect('capture', '~<.*/composer\.tar docker cp ~', 0, 'caches: copy in')
+            ->expect('capture', 'docker', 1, 'test for /bin/bash')
             ->expect('pass', '~<<\'SCRIPT\' docker exec ~', 0, 'script')
             ->expect('capture', '~^docker exec ~', 0, 'caches: map path')
             ->expect('capture', '~>.*/composer\.tar docker cp~', 0, 'caches: copy out')
