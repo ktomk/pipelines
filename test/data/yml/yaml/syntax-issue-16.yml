@@ -1,0 +1,4 @@
+# Sf2Yaml has an issue with (indent) multi-line strings
+test-sleep: &test-sleep
+  sleep 10;
+  sleep 20;

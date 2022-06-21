@@ -1,0 +1,15 @@
+.test-sleep: &test-sleep
+  sleep 10; sleep 20;
+
+.test-step: &test-sleep-step
+  step:
+    name: Simple Test
+    script:
+      - date;
+      - *test-sleep
+      - date;
+
+pipelines:
+  default:
+    - parallel:
+        - <<: *test-sleep-step

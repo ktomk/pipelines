@@ -26,6 +26,7 @@ class Sf2YamlTest extends TestCase
 
     /**
      * @param Sf2Yaml $parser
+     *
      * @depends testCreation
      */
     public function testParsing(Sf2Yaml $parser)
@@ -64,6 +65,7 @@ class Sf2YamlTest extends TestCase
      * @depends testCreation
      *
      * @param Sf2Yaml $parser
+     *
      * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::tryParseBuffer
      */
     public function testParseFileError(Sf2Yaml $parser)
@@ -87,7 +89,8 @@ class Sf2YamlTest extends TestCase
      * @depends testCreation
      *
      * @param Sf2Yaml $parser
-     * @covers \Ktomk\Pipelines\Yaml\Sf2Yaml::tryParseBuffer
+     *
+     * @covers  \Ktomk\Pipelines\Yaml\Sf2Yaml::tryParseBuffer
      */
     public function testParseFileError2(Sf2Yaml $parser)
     {
@@ -99,6 +102,26 @@ class Sf2YamlTest extends TestCase
 
         $this->expectException(__NAMESPACE__ . '\ParseException');
         $this->expectExceptionMessage('Malformed inline YAML string ');
+        $parser->parseFile($path);
+    }
+
+    /**
+     * @depends testCreation
+     *
+     * @param Sf2Yaml $parser
+     *
+     * @return void
+     */
+    public function testParseFileError3(Sf2Yaml $parser)
+    {
+        $path = __DIR__ . '/../../data/yml/yaml/syntax-issue-16.yml';
+
+        $struct = $parser->tryParseFile($path);
+
+        self::assertNull($struct);
+
+        $this->expectException(__NAMESPACE__ . '\ParseException');
+        $this->expectExceptionMessage('Unable to parse at line 3 (near "sleep 10;").');
         $parser->parseFile($path);
     }
 }
