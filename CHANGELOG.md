@@ -7,10 +7,12 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+
 ## [0.0.66] - 2022-06-22
 ### Add
 - Run step scripts with `/bin/bash` if it is available; disable with
-  `script.bash-runner=false` for previous behaviour (#17)  (thanks
+  `script.bash-runner=false` for previous behaviour (#17) (thanks
   [Tim Clephas])
 - `script.runner` configuration parameter to change `/bin/sh`, the
   default script runner
