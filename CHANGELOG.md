@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Change
+ - Environment variable definitions in `-e`, `--env`  and `--env-file`
+   parameters with `NUL` character in their value part `<name>=<value>`
+   are invalid now; `NUL` bytes were allowed previously
+ - Environment variable definition errors in `--env-file` give message
+   about the file and line
 
 ## [0.0.66] - 2022-06-22
 ### Add

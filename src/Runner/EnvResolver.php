@@ -8,6 +8,8 @@ use InvalidArgumentException;
 use Ktomk\Pipelines\Cli\Args\Args;
 use Ktomk\Pipelines\Cli\Args\OptionFilterIterator;
 use Ktomk\Pipelines\LibFs;
+use Ktomk\Pipelines\Value\Env\EnvFile;
+use Ktomk\Pipelines\Value\Env\EnvVar;
 use UnexpectedValueException;
 
 /**
@@ -85,22 +87,17 @@ class EnvResolver
     /**
      * add a file (--env-file option)
      *
-     * @param string $file path to file
+     * @param string $path path to file
      *
      * @throws InvalidArgumentException
      *
      * @return void
      */
-    public function addFile($file)
+    public function addFile($path)
     {
-        $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        if (false === $lines) {
-            throw new InvalidArgumentException(sprintf(
-                "File read error: '%s'",
-                $file
-            ));
+        foreach (new EnvFile($path) as $var) {
+            $this->addVar($var);
         }
-        $this->addLines($lines);
     }
 
     /**
@@ -124,22 +121,7 @@ class EnvResolver
     }
 
     /**
-     * @param array $lines
-     *
-     * @throws InvalidArgumentException
-     *
-     * @return void
-     */
-    public function addLines(array $lines)
-    {
-        $definitions = preg_grep('~^(\s*#.*|\s*)$~', $lines, PREG_GREP_INVERT);
-        foreach ($definitions as $definition) {
-            $this->addDefinition($definition);
-        }
-    }
-
-    /**
-     * add a variable definition (-e, --env option)
+     * add a variable definition (-e, --env <definition>)
      *
      * @param string $definition variable definition, either name only or w/ equal sign
      *
@@ -149,19 +131,17 @@ class EnvResolver
      */
     public function addDefinition($definition)
     {
-        $pattern = '~^([^$={}\\x0-\\x20\\x7f-\\xff-]+)(?:=(.*))?$~';
+        $this->addVar(new EnvVar($definition));
+    }
 
-        $result = preg_match($pattern, $definition, $matches);
-        if (0 === $result) {
-            throw new InvalidArgumentException(sprintf(
-                "Variable definition error: '%s'",
-                $definition
-            ));
-        }
-
-        /** @var array{0: string, 1: string, 2: null|string} $matches */
-
-        list(, $name, $value) = $matches + array(2 => null);
+    /**
+     * @param EnvVar $var
+     *
+     * @return void
+     */
+    public function addVar(EnvVar $var)
+    {
+        list($name, $value) = $var->getPair();
 
         if (null === $value && isset($this->environment[$name])) {
             $value = $this->environment[$name];

@@ -9,6 +9,11 @@ namespace Ktomk\Pipelines;
  */
 class LibTest extends TestCase
 {
+    public function testId()
+    {
+        self::assertSame(1, Lib::id(1));
+    }
+
     public function testRSet()
     {
         $ref = 'a';
@@ -107,6 +112,23 @@ class LibTest extends TestCase
     public function testMergeArrayEmpty()
     {
         self::assertSame(array(), Lib::mergeArray(array()));
+    }
+
+    public function testIterEach()
+    {
+        $array = array('a' => 'b');
+        self::assertSame(1, Lib::iterEach(function ($value, $key, $iter) use (&$result) {
+            $result[] = func_get_args();
+        }, $array));
+        list(list($value, $key, $iter)) = $result;
+        self::assertSame($array['a'], $value, 'value');
+        self::assertSame('a', $key, 'key');
+        self::assertSame($array, $iter, 'iter');
+    }
+
+    public function testIterMap()
+    {
+        self::assertSame(array('a', 'b'), Lib::iterMap('trim', array(' a ', ' b ')));
     }
 
     public function testPhpBinary()

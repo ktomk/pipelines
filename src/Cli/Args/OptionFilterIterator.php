@@ -17,7 +17,7 @@ use InvalidArgumentException;
 class OptionFilterIterator extends FilterIterator
 {
     /**
-     * @var array|string[]
+     * @var array|string[]  ['--env', '-e']
      */
     private $options;
 
@@ -25,7 +25,7 @@ class OptionFilterIterator extends FilterIterator
      * OptionFilterIterator constructor.
      *
      * @param Args $args
-     * @param string|string[] $options
+     * @param string|string[] $options ['env', 'e']
      *
      * @throws InvalidArgumentException
      */

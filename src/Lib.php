@@ -6,6 +6,11 @@ namespace Ktomk\Pipelines;
 
 class Lib
 {
+    public static function id($v)
+    {
+        return $v;
+    }
+
     /**
      * @param mixed $v
      * @param mixed $d
@@ -184,6 +189,39 @@ class Lib
         }
 
         return call_user_func_array('array_merge', $parameters);
+    }
+
+    /**
+     * @param callable $callable
+     * @param iterable $iterable
+     *
+     * @return int count of calls
+     */
+    public static function iterEach($callable, $iterable)
+    {
+        $count = 0;
+        foreach ($iterable as $key => $value) {
+            $count++;
+            call_user_func($callable, $value, $key, $iterable);
+        }
+
+        return $count;
+    }
+
+    /**
+     * @param callable $callable
+     * @param iterable $iterable
+     *
+     * @return array
+     */
+    public static function iterMap($callable, $iterable)
+    {
+        $map = array();
+        foreach ($iterable as $key => $value) {
+            $map[$key] = call_user_func($callable, $value);
+        }
+
+        return $map;
     }
 
     /**

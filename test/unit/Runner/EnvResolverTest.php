@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner;
 
 use Ktomk\Pipelines\Cli\Args;
+use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -42,16 +43,15 @@ class EnvResolverTest extends TestCase
         self::assertNull($resolver->getValue('MOCHA'), 'unset, file override');
     }
 
-    public function testAddLines()
+    public function testAddDefinitions()
     {
-        $lines = array(
-            '# comment',
+        $definitions = array(
             'DOCKER_ID_USER',
             'DOCKER_ID_PASSWORD',
             'DOCKER_ID_EMAIL=foo@example.com',
         );
         $resolver = new EnvResolver(array('DOCKER_ID_USER' => 'electra'));
-        $resolver->addLines($lines);
+        Lib::iterEach(array($resolver, 'addDefinition'), $definitions);
 
         $actual = $resolver->getValue('DOCKER_ID_PASSWORD');
         self::assertNull($actual, 'non-existing environment variable');
@@ -105,7 +105,7 @@ class EnvResolverTest extends TestCase
     public function testInvalidDefinition()
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('Variable definition error: \'$\'');
+        $this->expectExceptionMessage('Environment variable error: $');
 
         $resolver = new EnvResolver(array('UID' => '1000'));
         $resolver->addDefinition('$');
