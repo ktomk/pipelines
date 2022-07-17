@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.67] - 2022-07-17
 ### Change
  - Environment variable definitions in `-e`, `--env`  and `--env-file`
    parameters with `NUL` character in their value part `<name>=<value>`
@@ -710,4 +710,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.64]: https://github.com/ktomk/pipelines/releases/tag/0.0.64
 [0.0.65]: https://github.com/ktomk/pipelines/releases/tag/0.0.65
 [0.0.66]: https://github.com/ktomk/pipelines/releases/tag/0.0.66
+[0.0.67]: https://github.com/ktomk/pipelines/releases/tag/0.0.67
 [unreleased]: https://github.com/ktomk/pipelines
