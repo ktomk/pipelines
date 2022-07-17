@@ -78,16 +78,16 @@
         },
         {
             "name": "ktomk/symfony-yaml",
-            "version": "v2.6.13.4",
+            "version": "v2.6.13.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ktomk/yaml.git",
-                "reference": "e62aeffbf80b50040aff9978808f0a68c33dc8aa"
+                "reference": "8458406361d466d55913f6dfdbc5063175421b3f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ktomk/yaml/zipball/e62aeffbf80b50040aff9978808f0a68c33dc8aa",
-                "reference": "e62aeffbf80b50040aff9978808f0a68c33dc8aa",
+                "url": "https://api.github.com/repos/ktomk/yaml/zipball/8458406361d466d55913f6dfdbc5063175421b3f",
+                "reference": "8458406361d466d55913f6dfdbc5063175421b3f",
                 "shasum": ""
             },
             "require": {
@@ -124,9 +124,9 @@
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/ktomk/yaml/tree/v2.6.13.4"
+                "source": "https://github.com/ktomk/yaml/tree/v2.6.13.5"
             },
-            "time": "2022-04-17T19:27:35+00:00"
+            "time": "2022-07-17T18:50:41+00:00"
         }
     ],
     "packages-dev": [

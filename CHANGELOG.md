@@ -14,6 +14,11 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
    are invalid now; `NUL` bytes were allowed previously
  - Environment variable definition errors in `--env-file` give message
    about the file and line
+### Fix
+- Deprecation warning when running pipelines w/ PHP 8.1 w/o the yaml
+  extension (#21) (thanks [Billy Romano])
+
+[Billy Romano]: https://github.com/billyromano
 
 ## [0.0.66] - 2022-06-22
 ### Add
