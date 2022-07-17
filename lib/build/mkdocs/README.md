@@ -180,14 +180,14 @@ this (`gzip -n` or `gzip --no-name`).
 This `gzip(1)` build post-processing is not necessary any longer since
 [Mkdocs Version 1.1.1 (2020-05-12)]. Mkdocs `sitemap.xml.gz` file
 timestamp has support at build time for the [`SOURCE_DATE_EPOCH`
-environment parameter] in [`fa5aa4a2` / #2100] via [`7f30f7b8` / #1010]
-and [`3e10e014` / #939].
+environment parameter][tsgz-1] in [`fa5aa4a2` / #2100][tsgz-2] via [`7f30f7b8` / #1010][tsgz-3]
+and [`3e10e014` / #939][tsgz-4].
 
 [Mkdocs Version 1.1.1 (2020-05-12)]: https://www.mkdocs.org/about/release-notes/#version-111-2020-05-12
-[`SOURCE_DATE_EPOCH` environment parameter]: https://reproducible-builds.org/specs/source-date-epoch/
-[`fa5aa4a2` / #2100]: https://github.com/mkdocs/mkdocs/commit/fa5aa4a26efc2a0dc3878b41920eaa39afc8929b
-[`7f30f7b8` / #1010]: https://github.com/mkdocs/mkdocs/pull/1010/commits/7f30f7b8343d3b241d4e7162093da5ca6642971f
-[`3e10e014` / #939]: https://github.com/mkdocs/mkdocs/commit/3e10e014b63dfcc85a30e6198da00677f7eefb24
+[tsgz-1]: https://reproducible-builds.org/specs/source-date-epoch/
+[tsgz-2]: https://github.com/mkdocs/mkdocs/commit/fa5aa4a26efc2a0dc3878b41920eaa39afc8929b
+[tsgz-3]: https://github.com/mkdocs/mkdocs/pull/1010/commits/7f30f7b8343d3b241d4e7162093da5ca6642971f
+[tsgz-4]: https://github.com/mkdocs/mkdocs/commit/3e10e014b63dfcc85a30e6198da00677f7eefb24
 
 #### Superfluous `<lastmod>` elements in `sitemap.xml`
 
@@ -294,7 +294,7 @@ then and as it started quickly with simple search and replace operations
 it was preferred over redirects.
 
 It has been proven as the right decision as the search engine results
-(SERPS) show. Assumably the redirections would have led to a similar
+(SERPS) show. Assumable the redirections would have led to a similar
 result.
 
 The script to modify the links in all old index.html files uses a

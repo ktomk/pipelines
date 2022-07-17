@@ -44,7 +44,7 @@ set -euo pipefail
 IFS=$' \n\t'
 
 docker_cmd="${1-docker}"
-from="docker.io/squidfunk/mkdocs-material:8.2.9"
+from="docker.io/squidfunk/mkdocs-material:8.3.9"
 tag="docker.io/ktomk/pipelines:mkdocs-material"
 
 echo "build '${tag}' from '${from}' with ${docker_cmd}..."
@@ -55,17 +55,21 @@ ARG FROM
 FROM \$FROM
 RUN set -xe ; \
   apk add --virtual .build-deps gcc libc-dev libxslt-dev ; \
-  python3 -m pip install --user "$(<lib/build/mkdocs/requirements.txt sed -n '/^lxml/p' | tr $'\n' ' ' | sed 's/ *$//; s/ /" "/g')"
+  python3 -m pip install --user "$(<lib/build/mkdocs/requirements.txt sed -n '/^lxml/p' | tr $'\n' ' ' | sed 's/ *$//; s/ /" "/g')" ; \
+  :
 
 FROM \$FROM
 COPY --from=0 /root/.local /root/.local
 RUN set -xe ; \
-  apk add --no-cache bash gzip tar coreutils make php php-json composer; \
-  mkdir -p /root/.local/bin; \
-  PATH="/root/.local/bin:\$PATH"; \
-  python3 -m pip install --upgrade pip; \
+  apk add --no-cache bash gzip tar coreutils make php php-json composer ; \
+  git config --global --add safe.directory /app ; \
+  git config --global --add safe.directory '*' ; \
+  mkdir -p /root/.local/bin ; \
+  PATH="/root/.local/bin:\$PATH" ; \
+  python3 -m pip install --upgrade pip ; \
   python3 -m pip install -q --user "$(<lib/build/mkdocs/requirements.txt tr $'\n' ' ' | sed 's/ *$//; s/ /" "/g')" ; \
-  python3 -m pip freeze | sed '/^##/,\$d'
+  python3 -m pip freeze | sed '/^##/,\$d' ; \
+  :
 ENV PATH="/root/.local/bin:\$PATH"
 DOCKERFILE
 

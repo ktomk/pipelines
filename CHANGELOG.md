@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Change
+- html-docs: Upgrade mkdocs-material to 8.3.9; config; content
 
 ## [0.0.67] - 2022-07-17
 ### Change
