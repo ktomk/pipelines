@@ -122,7 +122,7 @@
     "which-php": "Locate php command"
   },
   "config": {
-    "autoloader-suffix": "pipelines",
+    "autoloader-suffix": "Pipelines",
     "platform-check": false,
     "sort-packages": true
   }
