@@ -1,0 +1,29 @@
+# this file is part of pipelines
+
+clone:
+  depth: 1
+image: ktomk/pipelines:busybox
+
+pipelines:
+  default:
+    - step:
+        name: 'step #1'
+        trigger: automatic
+        script:
+          - printenv | sort
+    - parallel:
+        fail-fast: true
+        steps:
+          - step:
+              name: 'step #2'
+              script:
+                - printenv | sort
+          - step:
+              name: 'step #3'
+              script:
+                - printenv | sort
+    - step:
+        # this step has no name
+        trigger: manual
+        script:
+          - printenv | sort

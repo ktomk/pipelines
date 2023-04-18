@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ## [unreleased]
 ### Change
 - html-docs: Upgrade mkdocs-material to 8.3.9; config; content
+### Fix
+- Error on fail-fast steps (#25) (thanks [Mustafa Ashurex])
+
+[Mustafa Ashurex]: https://github.com/mashurex
 
 ## [0.0.67] - 2022-07-17
 ### Change
