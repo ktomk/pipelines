@@ -79,6 +79,15 @@ class RepositoryTest extends TestCase
         $repository = Repository::create(new Exec(), $directories);
         $repository->resolve(Repository::PKG_TEST);
         $actual = $repository->inject('42-bin-sh');
+
+        // Docker version 23.0.4, build f480fb1:
+        // Error response from daemon: No such container: 42-bin-sh
+        $actual[1] = str_replace(
+            'Error response from daemon: No ',
+            'Error: No ',
+            $actual[1]
+        );
+
         self::assertSame(array(1, "Error: No such container: 42-bin-sh\n"), $actual);
     }
 
