@@ -273,7 +273,8 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
     private function parallel(array $node)
     {
         $group = array();
-        foreach ($node as $step) {
+        $steps = empty($node['steps']) ? $node : $node['steps'];
+        foreach ($steps as $step) {
             if (!(isset($step['step']) && is_array($step['step']))) {
                 throw new ParseException('Parallel step must consist of steps only');
             }
