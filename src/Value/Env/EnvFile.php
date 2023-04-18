@@ -46,11 +46,13 @@ class EnvFile implements \IteratorAggregate, \Countable
         return $pairs;
     }
 
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->env);
     }
 
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->env);
