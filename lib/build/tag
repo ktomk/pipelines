@@ -2,7 +2,14 @@
 #
 # tag and publish the release
 #
-# usage: ./lib/build/tag
+# usage: ./lib/build/tag [--go] [<tag>]
+#
+# example:
+#
+#     # with [unreleased] in CHANGELOG.md, bump next revision with a
+#     # new "prepare $NEXT_TAG release" commit on top.
+#
+#     ./lib/build/tag
 #
 set -euo pipefail
 IFS=$'\n\t'
