@@ -36,6 +36,7 @@ RUN set -ex ; \
 FROM $FROM
 RUN set -ex ; \
   apk add --virtual .build-deps $PHPIZE_DEPS ; \
+  apk add --virtual .build-deps2 --update linux-headers ; \
   pecl install xdebug ; \
   docker-php-ext-enable xdebug ; \
   :
