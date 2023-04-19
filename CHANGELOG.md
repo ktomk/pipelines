@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.68] - 2023-04-19
 ### Change
 - html-docs: Upgrade mkdocs-material to 8.3.9; config; content
 ### Fix
@@ -719,4 +719,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.65]: https://github.com/ktomk/pipelines/releases/tag/0.0.65
 [0.0.66]: https://github.com/ktomk/pipelines/releases/tag/0.0.66
 [0.0.67]: https://github.com/ktomk/pipelines/releases/tag/0.0.67
+[0.0.68]: https://github.com/ktomk/pipelines/releases/tag/0.0.68
 [unreleased]: https://github.com/ktomk/pipelines
