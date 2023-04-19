@@ -37,7 +37,7 @@ if [[ "${TAG}" = "" ]]; then
     exit 1
   fi
 
-  NEXT_TAG="$(git describe --tags --abbrev=0 | awk -F. '{OFS="."; $NF+=1; print $0}')"
+  NEXT_TAG="$(git describe --tags --abbrev=0 --match '0.[0-9]*.[0-9]*' | awk -F. '{OFS="."; $NF+=1; print $0}')"
   sed -i -e 's/^## \[unreleased\].*$/## ['"$NEXT_TAG"'] - '"$(date --utc +%F)"'/' CHANGELOG.md
   git add CHANGELOG.md
   git commit -m "prepare $NEXT_TAG release"
