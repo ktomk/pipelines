@@ -37,7 +37,8 @@ install:
   - echo "${TRAVIS_PHP_VERSION}"
   - ppconf() { ./lib/script/ppconf.sh "$@"; }; ppconf self-test
   - |
-    if [[ "${TRAVIS_PHP_VERSION}" == 8.1*    ]] \
+    if [[ "${TRAVIS_PHP_VERSION}" == 8.2*    ]] \
+    || [[ "${TRAVIS_PHP_VERSION}" == 8.1*    ]] \
     || [[ "${TRAVIS_PHP_VERSION}" == nightly ]] \
     || [[ "${TRAVIS_PHP_VERSION}" == master  ]]; then
       # PHP-CS-Fixer n/a for PHP 8.0 yet, needs php version fake

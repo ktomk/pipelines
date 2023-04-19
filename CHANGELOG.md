@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- PHP 8.2 Alpine based build container
 ### Fix
 - Eager substr_replace() use in updateTimestamps() (thanks [Jan Tvrdík])
 - Fix type annotation and add support for DateTimeImmutable (thanks

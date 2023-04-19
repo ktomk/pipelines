@@ -34,6 +34,8 @@ use PHPUnit\Framework\TestCase as PhpunitTestCase;
  */
 class TestCase extends PhpunitTestCase
 {
+    const PARENT = 'PHPUnit\Framework\TestCase';
+
     /**
      * @var null|string
      */
@@ -50,7 +52,7 @@ class TestCase extends PhpunitTestCase
      */
     public static function assertIsArray($actual, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertIsArray($actual, $message);
 
             return;
@@ -61,7 +63,7 @@ class TestCase extends PhpunitTestCase
 
     public static function assertIsBool($actual, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertIsBool($actual, $message);
 
             return;
@@ -72,7 +74,7 @@ class TestCase extends PhpunitTestCase
 
     public static function assertIsCallable($actual, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertIsCallable($actual, $message);
 
             return;
@@ -83,7 +85,7 @@ class TestCase extends PhpunitTestCase
 
     public static function assertIsInt($actual, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertIsInt($actual, $message);
 
             return;
@@ -94,7 +96,7 @@ class TestCase extends PhpunitTestCase
 
     public static function assertIsString($actual, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertIsString($actual, $message);
 
             return;
@@ -112,7 +114,7 @@ class TestCase extends PhpunitTestCase
      */
     public static function assertMatchesRegularExpression($pattern, $string, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertMatchesRegularExpression($pattern, $string, $message);
 
             return;
@@ -133,7 +135,7 @@ class TestCase extends PhpunitTestCase
      */
     public static function assertStringContainsString($needle, $haystack, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertStringContainsString($needle, $haystack, $message);
 
             return;
@@ -156,7 +158,7 @@ class TestCase extends PhpunitTestCase
      */
     public static function assertStringNotContainsString($needle, $haystack, $message = ''): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::assertStringNotContainsString($needle, $haystack, $message);
 
             return;
@@ -166,7 +168,7 @@ class TestCase extends PhpunitTestCase
     }
 
     /**
-     * Backwards compatible assertions (as far as in use)
+     * Backwards compatible assertions
      *
      * @param string $name
      * @param array $arguments
@@ -199,8 +201,8 @@ class TestCase extends PhpunitTestCase
                 return;
         }
 
-        throw new \BadMethodCallException(
-            sprintf('Testcase %s::%s(%d)', get_class($this), $name, count($arguments))
+        throw new BadMethodCallException(
+            sprintf('Testcase %s::%s(number of arguments: %d)', get_class($this), $name, count($arguments))
         );
     }
 
@@ -256,7 +258,7 @@ class TestCase extends PhpunitTestCase
     {
         $this->expectedException = $exception;
 
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::expectException($exception);
 
             return;
@@ -274,14 +276,14 @@ class TestCase extends PhpunitTestCase
      */
     public function expectExceptionMessage($message): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::expectExceptionMessage($message);
 
             return;
         }
 
         if (null === $this->expectedException) {
-            throw new \BadMethodCallException('Hmm this is message without class *gg* - reflection?');
+            throw new BadMethodCallException(__METHOD__ . ': Exception message without expecting exception');
         }
 
         $this->expectedExceptionMessage = $message;
@@ -297,7 +299,7 @@ class TestCase extends PhpunitTestCase
      */
     public function expectExceptionCode($code): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::expectExceptionCode($code);
 
             return;
@@ -322,7 +324,7 @@ class TestCase extends PhpunitTestCase
      */
     public function expectExceptionMessageMatches($messageRegExp): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::expectExceptionMessageMatches($messageRegExp);
 
             return;
@@ -341,14 +343,14 @@ class TestCase extends PhpunitTestCase
      */
     public function expectExceptionMessageRegExp($messageRegExp): void
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::expectExceptionMessageRegExp($messageRegExp);
 
             return;
         }
 
         if (null === $this->expectedException) {
-            throw new \BadMethodCallException('Hmm this is message-regex without class *gg* - reflection?');
+            throw new BadMethodCallException(__METHOD__ . ': Exception message pattern without expecting exception');
         }
 
         $this->setExpectedExceptionRegExp($this->expectedException, $messageRegExp);
@@ -363,7 +365,7 @@ class TestCase extends PhpunitTestCase
      */
     public function setExpectedException($class, $message = null, $code = null)
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::setExpectedException($class, $message, $code);
 
             return;
@@ -391,7 +393,7 @@ class TestCase extends PhpunitTestCase
      */
     public function setExpectedExceptionRegExp($class, $messageRegExp = '', $code = null)
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             parent::setExpectedExceptionRegExp($class, $messageRegExp, $code);
 
             return;
@@ -424,7 +426,7 @@ class TestCase extends PhpunitTestCase
      */
     protected function createMock($originalClassName): MockObject
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             return parent::createMock($originalClassName);
         }
 
@@ -450,7 +452,7 @@ class TestCase extends PhpunitTestCase
      */
     protected function createConfiguredMock($originalClassName, array $configuration): MockObject
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             return parent::createConfiguredMock($originalClassName, $configuration);
         }
 
@@ -476,7 +478,7 @@ class TestCase extends PhpunitTestCase
      */
     protected function createPartialMock($originalClassName, array $methods): MockObject
     {
-        if (is_callable('parent::' . __FUNCTION__)) {
+        if (is_callable(array(self::PARENT, __FUNCTION__))) {
             return parent::createPartialMock($originalClassName, $methods);
         }
 
