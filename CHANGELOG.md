@@ -8,6 +8,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Fix
+- Misplaced default in pipelines JSON schema
 
 ## [0.0.68] - 2023-04-19
 ### Change
