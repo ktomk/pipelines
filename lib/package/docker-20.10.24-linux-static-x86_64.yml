@@ -1,0 +1,10 @@
+---
+# this file is part of pipelines
+#
+# binary docker client package format
+#
+name: docker-20.10.24-linux-static-x86_64
+uri: https://download.docker.com/linux/static/stable/x86_64/docker-20.10.24.tgz
+sha256: ab91092320a87691a1eaf0225b48585db9c69cff0ed4b0f569f744ff765515e3
+binary: docker/docker
+binary_sha256: 62e57b5535a652f134b939d2b65df8f1251bbe29fa220e65d504be5e5c12cf07

@@ -34,11 +34,14 @@ class Repository implements PackageInterface
      * the test docker client is a fake / stub
      * the previous docker client was in use in the "self-install" example lib/pipelines/docker-client-install.sh
      * the integrate docker client is with #1019 --env-file pr which pipelines benefit from
+     * the pushall docker client is for docker push --all-tags (since docker 2.10.0)
      */
     const PKG_TEST = 'docker-42.42.1-binsh-test-stub';
     const PKG_PREVIOUS = 'docker-17.12.0-ce-linux-static-x86_64';
     const PKG_ATLBBCPP = 'docker-18.09.1-linux-static-x86_64';
     const PKG_INTEGRATE = 'docker-19.03.1-linux-static-x86_64';
+    const PKG_LAST_INTEGRATE = 'docker-19.03.15-linux-static-x86_64';
+    const PKG_PUSHALL = 'docker-20.10.24-linux-static-x86_64';
 
     /**
      * @var Exec
@@ -232,7 +235,7 @@ class Repository implements PackageInterface
     {
         $package = $this->package;
         if (!$package) {
-            $package = $this->resolve(self::PKG_INTEGRATE)->getPackageAsArray();
+            $package = $this->resolve(self::PKG_PUSHALL)->getPackageAsArray();
         }
 
         return $package;

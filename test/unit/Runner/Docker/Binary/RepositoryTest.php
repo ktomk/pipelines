@@ -62,6 +62,8 @@ class RepositoryTest extends TestCase
             Repository::PKG_PREVIOUS,
             Repository::PKG_ATLBBCPP,
             Repository::PKG_INTEGRATE,
+            Repository::PKG_LAST_INTEGRATE,
+            Repository::PKG_PUSHALL,
             Repository::PKG_TEST,
         );
         self::assertSame($expected, $actual);
@@ -146,6 +148,6 @@ class RepositoryTest extends TestCase
         $package = $repo->asPackageArray();
 
         self::assertArrayHasKey('name', $package, 'default package has name');
-        self::assertSame('docker-19.03.1-linux-static-x86_64', $package['name']);
+        self::assertSame(Repository::PKG_PUSHALL, $package['name']);
     }
 }

@@ -176,7 +176,7 @@ class RunnerOptions
      */
     private function parseDockerClient(Args $args)
     {
-        $default = Repository::PKG_INTEGRATE;
+        $default = Repository::PKG_PUSHALL;
         $binaryClient = $args->getStringOptionArgument('docker-client', $default);
         if ($binaryClient !== $default) {
             $repository = self::createRepository();

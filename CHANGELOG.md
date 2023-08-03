@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- New docker client package 20.10.24 (#26) (thanks [Adrian Cederberg])
+- New docker client package 19.03.15, last of 19.03.x
+### Change
+- Default docker client version change from 19.03.1 to 20.10.24
 ### Fix
 - Misplaced default in pipelines JSON schema
 
