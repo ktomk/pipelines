@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.69] - 2023-08-05
 ### Add
 - New docker client package 20.10.24 (#26) (thanks [Adrian Cederberg])
 - New docker client package 19.03.15, last of 19.03.x
@@ -729,4 +729,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.66]: https://github.com/ktomk/pipelines/releases/tag/0.0.66
 [0.0.67]: https://github.com/ktomk/pipelines/releases/tag/0.0.67
 [0.0.68]: https://github.com/ktomk/pipelines/releases/tag/0.0.68
+[0.0.69]: https://github.com/ktomk/pipelines/releases/tag/0.0.69
 [unreleased]: https://github.com/ktomk/pipelines
