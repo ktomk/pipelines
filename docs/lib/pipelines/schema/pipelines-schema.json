@@ -5,8 +5,7 @@
     "type": "object",
     "properties": {
         "image": {
-            "$ref": "#/definitions/image",
-            "default": "atlassian/default-image:latest"
+            "$ref": "#/definitions/image"
         },
         "clone": {
             "$ref": "#/definitions/clone"
@@ -420,6 +419,7 @@
             "type": "string",
             "title": "Name of the Docker image which may or may not include registry URL, tag, and digest value",
             "description": "The Docker container to run your builds.\n\nsee: https://confluence.atlassian.com/x/kYU5Lw for details",
+            "default": "atlassian/default-image:latest",
             "minLength": 1
         },
         "imageWithCustomUser": {
