@@ -74,6 +74,7 @@ final class StepsInfo implements \Countable
         );
     }
 
+    #[\ReturnTypeWillChange]
     public function count()
     {
         return $this->steps ? count($this->steps) : 0;

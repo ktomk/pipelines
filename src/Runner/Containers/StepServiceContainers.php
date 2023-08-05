@@ -72,7 +72,7 @@ class StepServiceContainers
 
         $services = (array)$step->getServices()->getDefinitions();
 
-        foreach ($services as $name => $service) {
+        foreach ($services as $service) {
             $name = NameBuilder::serviceContainerName(
                 $this->runner->getRunOpts()->getPrefix(),
                 $service->getName(),

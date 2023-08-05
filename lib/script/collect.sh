@@ -49,6 +49,14 @@ find . -mindepth 2 -type f -name 'build-pipelines-phar.log' -print | sed 's/^\.\
   done
 } | sort -u | tee build-properties.log
 
+# job summary on microsoft github actions
+if [ -n "${GITHUB_STEP_SUMMARY:-}" ]
+then
+  printf '### build-properties.log\n\n~~~\n' >> $GITHUB_STEP_SUMMARY
+  cat build-properties.log >> $GITHUB_STEP_SUMMARY
+  printf '~~~\n' >> $GITHUB_STEP_SUMMARY
+fi
+
 # verify reproducibility for phar build across all ci builds
 sha_mismatch=0
 for sha in 256 512; do
