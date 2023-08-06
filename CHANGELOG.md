@@ -8,6 +8,13 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Fix
+- Eager substr_replace() use in updateTimestamps() (thanks [Jan Tvrdík])
+- Fix type annotation and add support for DateTimeImmutable (thanks
+  [Jordi Boggiano])
+
+[Jan Tvrdík]: https://github.com/JanTvrdik
+[Jordi Boggiano]: https://github.com/Seldaek
 
 ## [0.0.69] - 2023-08-05
 ### Add
