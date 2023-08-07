@@ -47,7 +47,7 @@ class Timestamps
      *
      * The PHAR signature can then be produced in a reproducible manner.
      *
-     * @param int|\DateTime|string|bool $timestamp Date string or DateTime or unix timestamp to use
+     * @param int|\DateTimeInterface|string $timestamp Date string or DateTime or unix timestamp to use
      *
      * @throws \LogicException
      * @throws \RuntimeException
@@ -56,7 +56,7 @@ class Timestamps
      */
     public function updateTimestamps($timestamp = null)
     {
-        if ($timestamp instanceof \DateTime) {
+        if ($timestamp instanceof \DateTime || $timestamp instanceof \DateTimeInterface) {
             $timestamp = $timestamp->getTimestamp();
         } elseif (is_string($timestamp)) {
             $timestamp = strtotime($timestamp);
@@ -97,7 +97,11 @@ class Timestamps
             $pos += 4;
 
             // update timestamp to a fixed value
-            $this->contents = substr_replace($this->contents, pack('L', $timestamp), $pos, 4);
+            $timeStampBytes = pack('L', $timestamp);
+            $this->contents[$pos/**/] = $timeStampBytes[0];
+            $this->contents[$pos + 1] = $timeStampBytes[1];
+            $this->contents[$pos + 2] = $timeStampBytes[2];
+            $this->contents[$pos + 3] = $timeStampBytes[3];
 
             // skip timestamp, compressed file size and crc32 checksum
             $pos += 3*4;
@@ -110,7 +114,11 @@ class Timestamps
                 // @codeCoverageIgnoreStart
                 $permission = 0644;
                 $compression = $fileFlags & 0xFFFFF000;
-                $this->contents = substr_replace($this->contents, pack('L', $permission | $compression), $pos, 4);
+                $permissionBytes = pack('L', $permission | $compression);
+                $this->contents[$pos/**/] = $permissionBytes[0];
+                $this->contents[$pos + 1] = $permissionBytes[1];
+                $this->contents[$pos + 2] = $permissionBytes[2];
+                $this->contents[$pos + 3] = $permissionBytes[3];
                 // @codeCoverageIgnoreEnd
             }
             $pos += 4;
