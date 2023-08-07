@@ -198,7 +198,7 @@ class LibFs
                 throw new UnexpectedValueException(sprintf('Failed to open directory: %s', $current));
             }
             foreach (array_diff($result, array('.', '..')) as $file) {
-                $path = "${current}/${file}";
+                $path = "{$current}/{$file}";
                 if (is_link($path)) {
                     self::unlink($path);
                 } elseif (is_dir($path)) {

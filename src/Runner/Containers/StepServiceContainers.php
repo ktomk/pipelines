@@ -82,7 +82,7 @@ class StepServiceContainers
             Containers::execShutdownContainer(
                 $this->runner->getExec(),
                 $this->runner->getStreams(),
-                "/${name}",
+                "/{$name}",
                 $status,
                 $this->runner->getFlags(),
                 sprintf('keeping service container %s', $name)

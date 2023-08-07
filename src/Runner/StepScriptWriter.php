@@ -113,7 +113,7 @@ class StepScriptWriter
                 foreach ($line['variables'] as $name => $value) {
                     $buffer .= sprintf(
                         "printf %%s %s; printf '%%s ' %s; printf '\\n' \n",
-                        Lib::quoteArg("  ${name} (${value}): "),
+                        Lib::quoteArg("  {$name} ({$value}): "),
                         $value
                     );
                 }

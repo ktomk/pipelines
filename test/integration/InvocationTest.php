@@ -29,7 +29,7 @@ class InvocationTest extends TestCase
      */
     public function testSuccessfulCommands($command)
     {
-        $this->assert("bin/pipelines ${command}");
+        $this->assert("bin/pipelines {$command}");
     }
 
     private function assert($command)

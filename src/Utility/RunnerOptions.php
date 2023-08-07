@@ -159,7 +159,7 @@ class RunnerOptions
                 sprintf(
                     '--user internal error to resolve id -u / id -g: %d%s',
                     $status,
-                    $err ? " : ${err}" : ''
+                    $err ? " : {$err}" : ''
                 )
             );
         }
@@ -185,7 +185,7 @@ class RunnerOptions
                 $repository->resolve($binaryClient);
             } catch (\InvalidArgumentException $ex) {
                 $message = '--docker-client needs a valid package name, file or docker client binary path;';
-                $message .= " '${binaryClient}' given";
+                $message .= " '{$binaryClient}' given";
                 $message .= "\n  docker client binary packages shipping w/ pipelines:";
                 $message .= "\n    - " . implode("\n    - ", $repository->listPackages());
 

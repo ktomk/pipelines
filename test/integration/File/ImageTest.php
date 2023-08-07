@@ -26,7 +26,7 @@ class ImageTest extends TestCase
      */
     public function testSuccessfulCommands($command)
     {
-        $this->assert("bin/pipelines --file test/data/yml/images.yml ${command}");
+        $this->assert("bin/pipelines --file test/data/yml/images.yml {$command}");
     }
 
     private function assert($command)

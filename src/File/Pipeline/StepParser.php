@@ -89,7 +89,7 @@ class StepParser
     private function parseNamedScript($name, array $script)
     {
         if (!is_array($script[$name]) || !count($script[$name])) {
-            throw new ParseException("'${name}' requires a list of commands");
+            throw new ParseException("'{$name}' requires a list of commands");
         }
 
         foreach ($script[$name] as $index => $line) {

@@ -35,7 +35,7 @@ class LibFsPathTest extends TestCase
     public function testIsAbsolute($path, $expected)
     {
         $actual = LibFsPath::isAbsolute($path);
-        self::assertSame($expected, $actual, "path '${path}' is (not) absolute");
+        self::assertSame($expected, $actual, "path '{$path}' is (not) absolute");
     }
 
     public function provideBasenamePaths()

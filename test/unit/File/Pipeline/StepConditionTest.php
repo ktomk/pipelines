@@ -36,7 +36,7 @@ class StepConditionTest extends TestCase
         foreach ($file->getPipelines()->getPipelines() as $id => $pipeline) {
             foreach ($pipeline->getSteps() as $index => $step) {
                 $condition = $step->getCondition();
-                self::assertNotNull($condition, "${id}: #${index}");
+                self::assertNotNull($condition, "{$id}: #{$index}");
                 self::assertNotEmpty($condition->getIncludePaths());
                 $actual++;
             }

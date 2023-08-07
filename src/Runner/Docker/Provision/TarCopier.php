@@ -50,7 +50,7 @@ class TarCopier
         }
 
         if (!is_dir($source)) {
-            throw new \InvalidArgumentException("not a directory: '${source}'");
+            throw new \InvalidArgumentException("not a directory: '{$source}'");
         }
 
         $tmpDir = DestructibleString::rmDir(LibTmp::tmpDir('pipelines-cp.'));
@@ -60,7 +60,7 @@ class TarCopier
         $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $target));
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
 
-        return $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
+        return $exec->pass("{$cd} && {$tar} | {$dockerCp}", array());
     }
 
     /**
@@ -91,7 +91,7 @@ class TarCopier
         $tar = Lib::cmd('tar', array('c', '-f', '-', '.'));
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':' . $target));
 
-        return $exec->pass("${cd} && ${tar} | ${dockerCp}", array());
+        return $exec->pass("{$cd} && {$tar} | {$dockerCp}", array());
     }
 
     /**

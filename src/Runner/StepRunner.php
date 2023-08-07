@@ -75,8 +75,8 @@ class StepRunner
             if (null === $id) {
                 $streams->out("    container-id...: *failure*\n\n");
                 $streams->err("pipelines: setting up the container failed\n");
-                empty($err) || $streams->err("${err}\n");
-                empty($out) || $streams->out("${out}\n");
+                empty($err) || $streams->err("{$err}\n");
+                empty($out) || $streams->out("{$out}\n");
                 $streams->out(sprintf("exit status: %d\n", $status));
 
                 return $status;
@@ -377,7 +377,7 @@ class StepRunner
         if ($checkMount && $clonePath === $dir && null === $hostDeviceDir) {
             $deviceDir = $this->runner->getEnv()->getValue('PIPELINES_PROJECT_PATH');
             if ($deviceDir === $dir || null === $deviceDir) {
-                $this->runner->getStreams()->err("pipelines: fatal: can not detect ${dir} mount point\n");
+                $this->runner->getStreams()->err("pipelines: fatal: can not detect {$dir} mount point\n");
 
                 return array(null, 1);
             }
@@ -386,7 +386,7 @@ class StepRunner
         // FIXME(tk): Never mount anything not matching /home/[a-zA-Z][a-zA-Z0-9]*/[^.].*/...
         //   + do realpath checking
         //   + prevent dot path injections (logical fix first)
-        return array('-v', "${deviceDir}:${clonePath}");
+        return array('-v', "{$deviceDir}:{$clonePath}");
     }
 
     /**

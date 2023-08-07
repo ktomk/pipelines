@@ -36,7 +36,7 @@ class ProcessManager
             'docker',
             array(
                 'ps', '--no-trunc', '-qa', '--filter',
-                "name=^/\\Q${name}\\E$",
+                "name=^/\\Q{$name}\\E$",
             ),
             $result
         );
@@ -150,7 +150,7 @@ class ProcessManager
             'docker',
             array(
                 'ps', '-q' . ($all ? 'a' : ''), '--no-trunc', '--filter',
-                "name=^/${prefix}[-.]",
+                "name=^/{$prefix}[-.]",
             ),
             $result
         );

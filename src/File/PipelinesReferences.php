@@ -130,7 +130,7 @@ abstract class PipelinesReferences extends Pipelines
 
         # check for direct (non-pattern) match
         if (isset($pipelines->array[$section][$reference])) {
-            return array(true, "${section}/${reference}");
+            return array(true, "{$section}/{$reference}");
         }
 
         return array(false, null);
@@ -158,6 +158,6 @@ abstract class PipelinesReferences extends Pipelines
             }
         }
 
-        return array('' !== $match, "${section}/${match}");
+        return array('' !== $match, "{$section}/{$match}");
     }
 }

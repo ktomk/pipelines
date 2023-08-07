@@ -99,7 +99,7 @@ class FileShowerTest extends TestCase
      */
     public function testShowFileByMethod($path, $method, $expected, $parseExceptionMessage = null)
     {
-        self::assertTrue(method_exists(__NAMESPACE__ . '\FileShower', $method), "FileShower::${method}()");
+        self::assertTrue(method_exists(__NAMESPACE__ . '\FileShower', $method), "FileShower::{$method}()");
         $file = File::createFromFile($path);
         $shower = new FileShower(new Streams(), $file);
 
@@ -178,7 +178,7 @@ TEXT
      */
     public function testShowFileByMethodHappyOutput($path, $method, $expected)
     {
-        self::assertTrue(method_exists(__NAMESPACE__ . '\FileShower', $method), "FileShower::${method}()");
+        self::assertTrue(method_exists(__NAMESPACE__ . '\FileShower', $method), "FileShower::{$method}()");
         $expected = rtrim($expected) . "\n";
 
         list($outHandle) = LibTmp::tmpFile();

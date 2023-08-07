@@ -77,7 +77,7 @@ class StepScriptRunner
         if ($this->runner->getRunOpts()->getBoolOption('script.bash-runner')) {
             $bashRunner = '/bin/bash';
             0 === $exec->capture('docker', array(
-                'exec', $name, '/bin/sh', '-c', "test -f ${bashRunner} && test -x ${bashRunner}",
+                'exec', $name, '/bin/sh', '-c', "test -f {$bashRunner} && test -x {$bashRunner}",
             )) && $scriptRunner = $bashRunner;
         }
 

@@ -100,10 +100,10 @@ class Service
 
         foreach ($variables as $name => $value) {
             if (null === $value) {
-                throw new ParseException("variable ${name} should be a string value (it is currently null or empty)");
+                throw new ParseException("variable {$name} should be a string value (it is currently null or empty)");
             }
             if (is_bool($value)) {
-                throw new ParseException("variable ${name} should be a string (it is currently defined as a boolean)");
+                throw new ParseException("variable {$name} should be a string (it is currently defined as a boolean)");
             }
         }
 

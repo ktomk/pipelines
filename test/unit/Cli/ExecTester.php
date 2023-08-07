@@ -165,7 +165,7 @@ class ExecTester extends Exec
                 $context,
                 $message
                 ) = $current;
-            $messages[] = sprintf('%s: %s%s', $expectedMethod, $expectedCommand, $message ? " // ${message}" : '');
+            $messages[] = sprintf('%s: %s%s', $expectedMethod, $expectedCommand, $message ? " // {$message}" : '');
         }
 
         return $messages;
@@ -207,20 +207,20 @@ class ExecTester extends Exec
         $testCase::assertSame(
             $expectedMethod,
             $method,
-            sprintf("Method on exec mismatch with command '%s'%s", $command, $message ? " // ${message}" : '')
+            sprintf("Method on exec mismatch with command '%s'%s", $command, $message ? " // {$message}" : '')
         );
 
         if ('' !== $expectedCommand && '~' === $expectedCommand[0]) {
             $testCase::assertMatchesRegularExpression(
                 $expectedCommand,
                 $command,
-                sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // ${message}" : '')
+                sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // {$message}" : '')
             );
         } else {
             $testCase::assertSame(
                 $expectedCommand,
                 $command,
-                sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // ${message}" : '')
+                sprintf("Command on exec mismatch with method '%s'%s", $method, $message ? " // {$message}" : '')
             );
         }
 

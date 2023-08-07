@@ -81,8 +81,8 @@ class EnvVarTest extends TestCase
     public function testGetPair($envVar, array $expected)
     {
         $var = new EnvVar($envVar);
-        self::assertSame($expected, $var->getPair(), "EnvVar: ${envVar}");
-        self::assertSame($envVar, (string)$var, "EnvVar (string): ${envVar}");
+        self::assertSame($expected, $var->getPair(), "EnvVar: {$envVar}");
+        self::assertSame($envVar, (string)$var, "EnvVar (string): {$envVar}");
     }
 
     public function testNullByteInValueThrows()

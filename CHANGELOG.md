@@ -11,10 +11,13 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 ### Add
 - PHP 8.2 Alpine based build container
 ### Fix
+- PHP 8.2 Using ${var} in strings deprecations (#24) (thanks
+  [Brad Kent][Brad Kent])
 - Eager substr_replace() use in updateTimestamps() (thanks [Jan Tvrdík])
 - Fix type annotation and add support for DateTimeImmutable (thanks
   [Jordi Boggiano])
 
+[Brad Kent]: https://github.com/bkdotcom
 [Jan Tvrdík]: https://github.com/JanTvrdik
 [Jordi Boggiano]: https://github.com/Seldaek
 

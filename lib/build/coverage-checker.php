@@ -50,7 +50,7 @@ $fCoverage = function (SimpleXMLElement $xml) {
     $fMetrics = function ($s) use ($xml) {
         return array_sum(array_map(
             'intval',
-            $xml->xpath(".//metrics/@${s}elements")
+            $xml->xpath(".//metrics/@{$s}elements")
         ));
     };
 

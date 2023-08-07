@@ -237,7 +237,7 @@ class Pipelines implements Dom\FileNode
         if (!$count && !isset($array['default'])) {
             $middle = implode(', ', array_slice($sections, 0, -1));
 
-            throw new ParseException("'pipelines' requires at least a default, ${middle} or custom section");
+            throw new ParseException("'pipelines' requires at least a default, {$middle} or custom section");
         }
     }
 
@@ -259,7 +259,7 @@ class Pipelines implements Dom\FileNode
         }
 
         if (!is_array($array[$default])) {
-            throw new ParseException("'${default}' requires a list of steps");
+            throw new ParseException("'{$default}' requires a list of steps");
         }
 
         $references[$default] = array($default, null, &$array[$default]);
@@ -285,10 +285,10 @@ class Pipelines implements Dom\FileNode
                 continue; // not a section for references
             }
             if (!is_array($refs)) {
-                throw new ParseException("'${section}' requires a list");
+                throw new ParseException("'{$section}' requires a list");
             }
             foreach ($refs as $pattern => $pipeline) {
-                $references["${section}/${pattern}"] = array(
+                $references["{$section}/{$pattern}"] = array(
                     (string)$section,
                     (string)$pattern,
                     &$array[$section][$pattern],

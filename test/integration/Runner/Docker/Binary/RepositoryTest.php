@@ -64,7 +64,7 @@ class RepositoryTest extends TestCase
         $containerId = '424242-so-long-and-thanks-for-all-the-fish';
         list($status, $message) = $repository->inject($containerId);
         self::assertSame(1, $status);
-        self::assertMatchesRegularExpression("~${containerId}~", $message);
+        self::assertMatchesRegularExpression("~{$containerId}~", $message);
         $this->addToAssertionCount(1);
     }
 

@@ -49,7 +49,7 @@ class Exec
         }
 
         ':' === $buffer ? $status = 0 : passthru($buffer, $status);
-        $this->debug("exit status: ${status}");
+        $this->debug("exit status: {$status}");
 
         return $status;
     }
@@ -80,7 +80,7 @@ class Exec
 
         $proc = new Proc($buffer);
         $status = $proc->run();
-        $this->debug("exit status: ${status}");
+        $this->debug("exit status: {$status}");
         $out = $proc->getStandardOutput();
         $err = $proc->getStandardError();
 

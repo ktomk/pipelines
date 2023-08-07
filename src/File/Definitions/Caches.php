@@ -92,15 +92,15 @@ class Caches
     {
         foreach ($array as $name => $path) {
             if (!is_string($name)) {
-                throw new ParseException("cache definition invalid cache name: ${name}");
+                throw new ParseException("cache definition invalid cache name: {$name}");
             }
 
             if (null === $path) {
-                throw new ParseException("cache '${name}' should be a string value (it is currently null or empty)");
+                throw new ParseException("cache '{$name}' should be a string value (it is currently null or empty)");
             }
 
             if (is_bool($path)) {
-                throw new ParseException("cache '${name}' should be a string (it is currently defined as a boolean)");
+                throw new ParseException("cache '{$name}' should be a string (it is currently defined as a boolean)");
             }
 
             // Fixme(tk): more importantly is that $path is not array or object

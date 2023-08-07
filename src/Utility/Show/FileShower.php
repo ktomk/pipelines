@@ -214,7 +214,7 @@ class FileShower extends FileShowerAbstract
         $return = array();
         foreach ($file->getPipelines()->getPipelines() as $id => $pipeline) {
             foreach (Steps::fullIter($pipeline->getSteps()) as $index => $step) {
-                $return["${id}:/step/${index}"] = $step;
+                $return["{$id}:/step/{$index}"] = $step;
             }
         }
 
@@ -235,7 +235,7 @@ class FileShower extends FileShowerAbstract
         foreach ($this->getAllSteps($file) as $key => $step) {
             $return[$key] = $step;
             foreach ($step->getServices()->getDefinitions() as $name => $service) {
-                $return["${key}/service/${name}"] = $service;
+                $return["{$key}/service/{$name}"] = $service;
             }
         }
 
