@@ -7,7 +7,7 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
-## [unreleased]
+## [0.0.70] - 2023-08-07
 ### Add
 - PHP 8.2 Alpine based build container
 ### Fix
@@ -744,4 +744,5 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [0.0.67]: https://github.com/ktomk/pipelines/releases/tag/0.0.67
 [0.0.68]: https://github.com/ktomk/pipelines/releases/tag/0.0.68
 [0.0.69]: https://github.com/ktomk/pipelines/releases/tag/0.0.69
+[0.0.70]: https://github.com/ktomk/pipelines/releases/tag/0.0.70
 [unreleased]: https://github.com/ktomk/pipelines
