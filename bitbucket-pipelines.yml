@@ -13,7 +13,7 @@ pipelines:
   custom:
     lint-php-5.3:
       - step: &lint-php53
-          image: php:5.3
+          image: ktomk/pipelines:docker.io-php-5.3
           script:
             - lib/script/ppconf.sh downpatch-phpunit-tests
             - lib/pipelines/lint.sh

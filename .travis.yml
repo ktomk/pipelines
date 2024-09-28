@@ -85,7 +85,7 @@ script:
   - bin/pipelines
   - bin/pipelines --pipeline custom/docker
   - bin/pipelines --pipeline custom/unit-tests
-  - travis_retry docker pull php:5.3 | grep 'php:5.3' || true # prefetch
+  - travis_retry docker pull ktomk/pipelines:docker.io-php-5.3 | grep 'ktomk/pipelines:docker.io-php-5.3' || true # prefetch
   - bin/pipelines --deploy mount --pipeline custom/lint-php
   - bin/pipelines --pipeline custom/unit-tests-php-5.3
   #  [5]  shell tests (src)
