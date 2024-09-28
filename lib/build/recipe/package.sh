@@ -6,7 +6,7 @@ set -e
 #
 # example:
 #
-#   $ PKG_VERSION=20.10.24 ib/build/recipe/package.sh
+#   $ PKG_VERSION=20.10.24 lib/build/recipe/package.sh
 #   ...
 #
 #   builds lib/package/docker-20.10.24-linux-static-x86_64.yml from

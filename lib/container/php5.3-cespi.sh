@@ -31,7 +31,7 @@ RUN set -ex ; \
   EXPECTED_SIGNATURE=$(php -r "copy('https://composer.github.io/installer.sig', 'php://stdout');") ; \
   php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" ; \
   ACTUAL_SIGNATURE=$(php -r "echo hash_file('SHA384', 'composer-setup.php');") ; \
-  if [ "$EXPECTED_CHECKSUM" != "$ACTUAL_CHECKSUM" ] ; then \
+  if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ] ; then \
     >&2 echo 'ERROR: Invalid installer checksum' ; \
     exit 1 ; \
   fi ; \

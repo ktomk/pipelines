@@ -18,7 +18,7 @@
 #   this is a try to re-upload the same image to
 # docker hub and try it again on travis. it might
 # be that the images on docker hub are too old
-# (the have no sha256 hashes). this is unknown.
+# (they have no sha256 hashes). this is unknown.
 #
 #   while trying, this also tests the more general
 # docker php image modifications by adding unzip
@@ -43,7 +43,7 @@
 # NOTE: --force-yes in apt-get install was
 #       introduced to work-around the missing gpg
 #       keys and therefore lowers the security
-#       profile file. remove is to make the build
+#       profile. remove is to make the build
 #       fail on missing gpg keys.
 #
 set -euo pipefail

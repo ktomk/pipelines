@@ -31,9 +31,9 @@ class YamlTest extends TestCase
     public function testCreateFromNonExistentFile()
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage('not a readable file: \'xxx\'');
+        $this->expectExceptionMessage('not a readable file: \'xxx.yml\'');
 
-        Yaml::file('xxx');
+        Yaml::file('xxx.yml');
     }
 
     /**

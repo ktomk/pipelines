@@ -34,8 +34,8 @@ class EnvFileTest extends TestCase
     public function testLoadThrowsWithNonExistingFile()
     {
         $this->expectException('InvalidArgumentException');
-        $this->expectExceptionMessage("File read error: 'xxx'");
-        new EnvFile( 'xxx');
+        $this->expectExceptionMessage("File read error: '.env.xxx'");
+        new EnvFile( '.env.xxx');
     }
 
     public function testLoadBrokenFileThrows()

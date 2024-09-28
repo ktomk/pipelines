@@ -588,44 +588,9 @@ hand?
 
 ### User Tests
 
-Successful use on Ubuntu 16.04 LTS, Ubuntu 18.04 LTS, Ubuntu 20.04 LTS and Mac OS
-X Sierra and High Sierra with PHP and Docker installed.
-
-### Known Bugs
-
-- The command "`:`" in pipelines exec layer is never really
-executed but emulated having exit status 0 and no standard or
-error output. It is intended for pipelines testing.
-
-- Brace expansion (used for glob patterns with braces) is known
-to fail in some cases. This *could* affect matching pipelines,
-collecting asset paths and *did* affect building the phar file.
-
-    For the first two, this has *never* been reported nor experienced,
-for building the phar file the workaround was to entail the
-larger parts of the pattern.
-
-- The sf2yaml based parser does not support the backslash at the end
-  of a line to fold without a space with _double quoted strings_.
-
-- The libyaml based parser does not support dots ("`.`") in anchor
-  names.
-
-- The libyaml based parser does not support _folded scalar_ ("`>`") as
-  _block style indicator_. Suggested workaround is to use _literal
-  style_ ("`|`").
-
-- NUL bytes ("`\0`") are not supported verbatim in step-scripts due
-  to defense-in-depth protection on `passthru` in the PHP-runtime to
-  prevent *Null character* injection.
-
-- When the project directory is large (e.g. a couple of GBs) and copying
-it into the pipeline container, it may appear as if pipelines hangs as
-the copying operation is ongoing and taking a long time.
-
-    Pressing <kbd>ctrl</kbd> + <kbd>c</kbd> may stop pipelines but not
-the copying operation. Kill the process of the copy operation (`tar`
-pipe to `docker cp`) to stop the operation.
+Successful use on Ubuntu (16.04 LTS, 18.04 LTS, 20.04 LTS,
+22.04 LTS) and Mac OS X (Sierra and High Sierra) with PHP
+and Docker installed (incl. Rootless).
 
 ### Installation
 
@@ -633,7 +598,7 @@ pipe to `docker cp`) to stop the operation.
 [Composer](#install-with-composer) |
 [Phive](#install-with-phive) |
 [Source (also w/ Phar)](#install-from-source) |
-[Full Project (Development)](#install-full-project-for-development)
+[Project (Development)](#install-the-project-for-development)
 
 Installation is available by downloading the phar archive from
 Github, via Composer/Packagist or with Phive and it should always
@@ -771,7 +736,7 @@ version is used (see [PHP #77022](https://bugs.php.net/bug.php?id=77022)
 and [PHP #79082](https://bugs.php.net/bug.php?id=79082)) and the patch
 state of the timestamps file.
 
-### Install Full Project For Development
+#### Install the Project for Development
 
 When working with `git`, clone the repository and then invoke
 `composer install`. The project is setup for development then.
@@ -795,6 +760,42 @@ issue. Composer tells which individual script did fail.
 
 Follow the instructions in [*Install from Source*](#install-from-source)
 to use the development version for `pipelines`.
+
+### Known Bugs
+
+- The command "`:`" in pipelines exec layer is never really
+  executed but emulated having exit status 0 and no standard or
+  error output. It is intended for pipelines testing.
+
+- Brace expansion (used for glob patterns with braces) is known
+  to fail in some cases. This *could* affect matching pipelines,
+  collecting asset paths and *did* affect building the phar file.
+
+  For the first two, this has *never* been reported nor experienced,
+  for building the phar file the workaround was to entail the
+  larger parts of the pattern.
+
+- The sf2yaml based parser does not support the backslash at the end
+  of a line to fold without a space with _double quoted strings_.
+
+- The libyaml based parser does not support dots ("`.`") in anchor
+  names.
+
+- The libyaml based parser does not support _folded scalar_ ("`>`") as
+  _block style indicator_. Suggested workaround is to use _literal
+  style_ ("`|`").
+
+- NUL bytes ("`\0`") are not supported verbatim in step-scripts due
+  to defense-in-depth protection on `passthru` in the PHP-runtime to
+  prevent *Null character* injection.
+
+- When the project directory is large (e.g. a couple of GBs) and copying
+  it into the pipeline container, it may appear as if pipelines hangs as
+  the copying operation is ongoing and taking a long time.
+
+  Pressing <kbd>ctrl</kbd> + <kbd>c</kbd> may stop pipelines but not
+  the copying operation. Kill the process of the copy operation (`tar`
+  pipe to `docker cp`) to stop the operation.
 
 ### Todo
 

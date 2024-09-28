@@ -6,7 +6,7 @@ file build][PHAR] \[PHAR].
 
 The currently pinned composer version is `2.1.11`, pinning the version
 is mostly important for the phar build as it is not reproducible
-otherwise. In general any version of composer is supported.
+otherwise. In general, any version of composer is supported.
 
 ??? note "Composer 2 Support"
     Composer 2 is the standard in the Pipelines project. Previously it
@@ -15,47 +15,47 @@ otherwise. In general any version of composer is supported.
     Just note that the composer.lock file should be written with the
     pinned composer version.
 
-Currently the `composer.lock` targets a PHP 7.4 system with Phpunit 9
+Currently, the `composer.lock` targets a PHP 7.4 system with Phpunit 9
 for development. It should be similar for PHP 8.0.
 
 ??? note "Xdebug 3 Support"
     [Xdebug 3.0.0][XDEBUG] \[XDEBUG] is supported but _may_ make some
-    tests, especially the PHPT tests, fail (segmentation faults). If so
-    then check you have got the latest Xdebug 3 version. As a fall-back
+    tests, especially the PHPT tests, fail (segmentation faults.) If so,
+    then check you have got the latest Xdebug 3 version. As a fall-back,
     Xdebug 2 can be used for any PHP version below PHP 8.0.
     See [Supported Versions and Compatibility](https://xdebug.org/docs/compat)
     also [for older Xdebug and PHP versions](https://2.xdebug.org/docs/compat)
     .
 
 After checkout run `composer install` to bootstrap and `composer ci`
-for the local CI. It will also run pipelines pipelines, so docker is
+for the local CI. It will also run Pipelines' pipelines, so docker is
 required, the shell tests require bash. Use `composer run-script --list`
 to get a list of all composer scripts.
 
-`composer ci` should run through after checkout and before committing
+`composer ci` should run through after a checkout and before committing
 any changes. while developing, `composer dev` is a good intermediate.
 
 ??? tip "PHP Backwards Compatibility"
-    Even the pipelines project accepts issues/PRs with pseudo-code,
+    Even the Pipelines project accepts issues/PRs with pseudocode;
     when it is about concrete PHP code, the requirement is that it is
-    (backwards) compatible with **PHP 5.3.3** (released Jul 2010). This
+    (backwards) compatible with **PHP 5.3.3** (released Jul 2010.) This
     is not a common requirement and the `pipelines` project tries to
     offer support even in local development (like running the phpunit
     tests under the minimum version as a custom pipeline). If you use
     [Phpstorm][PHPSTORM] \[PHPSTORM] enable the [PHP 5.3 language
     level](https://www.jetbrains.com/help/phpstorm/php.html) for your
-    cloned `pipelines` project. This helps preventing falling into new
-    language syntax unnoticed.
+    cloned `pipelines` project. This helps to prevent falling into
+    backwards incompatible language syntax unnoticed.
 
     In any case don't fear, this is normally easy to sort-out. Just
     leave a comment in case things didn't work for you out of the box
     and share the PHP version in use.
 
-## Support of Different PHP Versions
+## Support for Different PHP Versions
 
 While `pipelines` runs and builds on PHP 5.3.3+, the PHP version when developing `pipelines` may differ.
 
-Please see the following table for a break-down based on PHP versions
+Please refer to the following table for a break-down based on PHP versions
 incl. remarks:
 
 | CAPABILITY   | 5.3 | 5.4 | 5.5 | 5.6 | 7.0 | 7.1 | 7.2 | 7.3 | 7.4 | 8.0 | 8.1 |
@@ -78,19 +78,20 @@ incl. remarks:
     4. [PHP-CS-Fixer][PHP-CS-FIXER] is used in `pipelines` to control
        the code style, so relatively central in the CI pipeline.
        Unfortunately, it does (did) not cover all the PHP versions that
-       `pipelines` supports. Especially with PHP 8.1 it refuses to install
-       with composer. This requires to fake the PHP version (e.g. as
+       `pipelines` supports. Especially with PHP 8.1, it refuses to install
+       with Composer. This requires faking the PHP version (e.g. as
        7.4.99) or to use the `--ignore-platform-reqs` - or more precisely
        `--ignore-platform-req=php` - option of composer to install with
        PHP 8.1.
     5. Xdebug 3 is required for PHP 8 and in tests for all PHP versions
-       it supports. It is somewhat new, segfaults may have been spotted in
-       CI runs (local, on Scrutinizer). Check the version, and then an upgrade. Pipelines uses Xdebug in development for code-coverage and step-debugging. See
-       _Xdebug 3 Support_ above.
-    6. Xdebug 3 support for PHP 7.2 is limited to security support. Same
+       it supports. It is somewhat new; segfaults may have been spotted in
+       CI runs (local, on Scrutinizer). Check the version, and then an upgrade.
+       Pipelines make use of Xdebug in development for code-coverage and
+       step-debugging. See _Xdebug 3 Support_ above.
+    6. Xdebug 3 support for PHP 7.2 is limited to security support. The same
        applies to Xdebug 2.9 for PHP 7.2. No other Xdebug version next
        to 3.0 or 2.9 is supported at all for PHP 7.2. See _Xdebug 3
-       Support_ above. Currently the test-suite does not work for PHP
+       Support_ above. Currently, the test-suite does not work for PHP
        7.2 and Xdebug 3 running on Phpunit 7.
 
 ## PHP Version and Reproducible PHAR Build

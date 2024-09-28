@@ -32,7 +32,7 @@ before_install:
     fi
   - composer self-update 2.1.11 # pin composer version for whole build
 
-## Install fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
+## Install a fitting phpunit version and remove PHP-CS-Fixer dev-dependencies if incompatible
 install:
   - echo "${TRAVIS_PHP_VERSION}"
   - ppconf() { ./lib/script/ppconf.sh "$@"; }; ppconf self-test

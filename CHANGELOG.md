@@ -7,9 +7,11 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Keep a Changelog]: https://keepachangelog.com/en/1.0.0/
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
+## [unreleased]
+
 ## [0.0.70] - 2023-08-07
 ### Add
-- PHP 8.2 Alpine based build container
+- PHP 8.2 Alpine-based build container
 ### Fix
 - PHP 8.2 Using ${var} in strings deprecations (#24) (thanks
   [Brad Kent][Brad Kent])
@@ -84,10 +86,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 - Support digests as an alternative to tags for container images in
   pipeline steps, see [Digest]
 - Support global docker option (#15) (thanks [Adrian Cederberg])
-- PHP 7.4 Alpine based build container
+- PHP 7.4 Alpine-based build container
 ### Change
 - Extract tar-copier for copy deploy-mode
-- PHP 8.1 Alpine based build container upgrade from RC to stable
+- PHP 8.1 Alpine-based build container upgrade from RC to stable
 - html-docs: Upgrade mkdocs-material to 8.2.9
 
 [Digest]: doc/DOCKER-NAME-TAG.md#digest
