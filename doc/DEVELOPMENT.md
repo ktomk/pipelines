@@ -124,21 +124,26 @@ The shell tests and many other scripts when using PHP are respecting the
 ~~~
 $ PHP_BINARY=php5.6 lib/script/ppconf.sh self-test
 ppconf self-test
-bash....: /bin/bash                       	GNU bash, version 4.4.20(1)-release (x86_64-pc-linux-gnu)
-composer: /home/user/bin/composer          	Composer version 1.10.17 2020-10-30 22:31:58 (/home/user/bin/composer.phar)
-find....: /usr/bin/find                   	find (GNU findutils) 4.7.0-git
-gpg.....: /usr/bin/gpg                    	gpg (GnuPG) 2.2.4
-make....: /usr/bin/make                   	GNU Make 4.1
-openssl.: /usr/bin/openssl                	OpenSSL 1.1.1g  21 Apr 2020
+ENV.....: HOME="/home/user"                	~/
+ENV.....: PWD="/home/user/local/pipelines"	./
+ENV.....: PHP_BINARY="php5.6"             	php
+bash....: /usr/bin/bash                   	GNU bash, version 5.1.16(1)-release (x86_64-pc-linux-gnu)
+composer: ~/.local/bin/composer           	Composer version 2.2.24 2024-06-10 22:51:52 (/home/user/.local/bin/composer)
+docker..: /usr/bin/docker                 	Docker version 27.3.1, build ce12230
+find....: /usr/bin/find                   	find (GNU findutils) 4.8.0
+git.....: /usr/bin/git                    	git version 2.34.1
+gpg.....: /usr/bin/gpg                    	gpg (GnuPG) 2.2.27
+make....: /usr/bin/make                   	GNU Make 4.3
+openssl.: /usr/bin/openssl                	OpenSSL 3.0.2 15 Mar 2022 (Library: OpenSSL 3.0.2 15 Mar 2022)
+os......: PRETTY_NAME="Ubuntu 22.04.5 LTS"
 os......: NAME="Ubuntu"
-os......: VERSION="18.04.5 LTS (Bionic Beaver)"
-os......: ID=ubuntu
-php.....: /usr/bin/php5.6                 	PHP 5.6.40-38+ubuntu18.04.1+deb.sury.org+1 (cli)  (/usr/bin/php5.6)
-python..: /usr/bin/python                 	Python 2.7.17
-python3.: /usr/bin/python3                	Python 3.6.9
-sed.....: /bin/sed                        	sed (GNU sed) 4.4
-sh......: /bin/sh                         	/bin/dash
-tar.....: /bin/tar                        	tar (GNU tar) 1.29
+os......: VERSION_ID="22.04"
+php.....: /usr/bin/php5.6                 	PHP 5.6.40-78+ubuntu22.04.1+deb.sury.org+1 (cli)  (/home/user/local/pipelines/.direnv/bin/php)
+python..:                                 	
+python3.: /usr/bin/python3                	Python 3.10.12
+sed.....: /usr/bin/sed                    	sed (GNU sed) 4.8
+sh......: /usr/bin/sh                     	/usr/bin/dash
+tar.....: /usr/bin/tar                    	tar (GNU tar) 1.34
 unzip...: /usr/bin/unzip                  	UnZip 6.00 of 20 April 2009, by Debian. Original by Info-ZIP.
 xdebug..: no
 ~~~

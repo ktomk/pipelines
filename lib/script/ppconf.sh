@@ -22,6 +22,26 @@ f_composer() {
   "${PHP_BINARY}" -f "$(composer which 2>/dev/null)" -- "$@"
 }
 
+### which with display
+which() {
+  buffer=$(command -v "$1")
+  if [ ! "$buffer" ]
+  then
+    printf '%s not found\n' "$1"
+    return 1
+  fi
+  if [ "$PWD/${buffer#"$PWD"/}" = "$buffer" ]
+  then
+    buffer="./${buffer#"$PWD"/}"
+  fi
+  if [ "$HOME/${buffer#"$HOME"/}" = "$buffer" ]
+  then
+    # shellcheck disable=SC2088
+    buffer="~/${buffer#"$HOME"/}"
+  fi
+  printf '%s\n' "${buffer}"
+}
+
 if [ $# -eq 0 ]; then
   set - help
 fi
@@ -53,11 +73,16 @@ while [ $# -gt 0 ]; do
 
     self-test ) ### test-list utils (in-use, additional and system-info)
       printf "ppconf %s\n" "$1"
+      # shellcheck disable=SC2088
+      printf "ENV.....: %-32s\t%s\n"      "HOME=\"$HOME\""              '~/'
+      printf "ENV.....: %-32s\t%s\n"      "PWD=\"$PWD\""                './'
+      printf "ENV.....: %-32s\t%s\n"      "PHP_BINARY=\"$PHP_BINARY\""  'php'
       printf "bash....: %-32s\t%s\n"      "$(which bash         )" "$(bash          --version 2>/dev/null | head -1)"
       printf "composer: %-32s\t%s (%s)\n" "$(which composer     )" "$(composer      --version 2>/dev/null | head -1)" \
                                                                    "$(composer      which               2>/dev/null)"
       printf "docker..: %-32s\t%s\n"      "$(which docker       )" "$(docker        --version 2>/dev/null | head -1)"
       printf "find....: %-32s\t%s\n"      "$(which find         )" "$(find          --version 2>&1        | head -1)"
+      printf "git.....: %-32s\t%s\n"      "$(which git          )" "$(git           --version 2>/dev/null | head -1)"
       printf "gpg.....: %-32s\t%s\n"      "$(which gpg          )" "$(gpg           --version 2>/dev/null | head -1)"
       printf "make....: %-32s\t%s\n"      "$(which make         )" "$(make          --version 2>/dev/null | head -1)"
       printf "openssl.: %-32s\t%s\n"      "$(which openssl      )" "$(openssl         version 2>/dev/null | head -1)"
