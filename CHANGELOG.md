@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 
 ## [unreleased]
 ### Add
+- PHP 8.3 Alpine-based build container
+- PHP 8.3/4 in .travis.yml / .github actions
 - PHP 5.5/4/3 in .travis.yml / .github actions
 ### Fix
 - PHP 5.3 Debian based container image re-tagged on Docker Hub

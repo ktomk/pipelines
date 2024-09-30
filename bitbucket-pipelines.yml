@@ -193,6 +193,46 @@ pipelines:
             - composer -n install --no-progress || composer -n update --no-progress
             - PHP_CS_FIXER_IGNORE_ENV=1 composer ci
           services: [docker]
+    lint-php-8.3-alpine:
+      - step: &lint-php83-alpine
+          image: ktomk/pipelines:php8.3-alpine
+          caches: [ apk ]
+          script:
+            - lib/pipelines/lint.sh
+    unit-tests-php-8.3-alpine:
+      - step:
+          image: ktomk/pipelines:php8.3-alpine
+          caches:
+            - composer
+          script:
+            - composer -n require --no-progress --dev phpunit/phpunit ^9 --update-with-dependencies --ignore-platform-reqs
+            - ./lib/script/ppconf.sh patch-phpunit-tests
+            - vendor/bin/phpunit --migrate-configuration
+            - XDEBUG_MODE=coverage vendor/bin/phpunit --testsuite unit,integration
+          services:
+            - docker
+    ci-php-8.3-alpine:
+      - step:
+          image: ktomk/pipelines:php8.3-alpine
+          caches: [ composer, vendor-php82 ]
+          script:
+            - composer -n install --no-progress || composer -n update --no-progress
+            - PHP_CS_FIXER_IGNORE_ENV=1 composer ci
+          services: [ docker ]
+    build-phar-php-8.3:
+      - step:
+          image: docker.io/ktomk/pipelines:php8.3-alpine
+          caches:
+            - composer-83-build-alpine
+          script:
+            - lib/script/ppconf.sh self-test
+            - composer -n -q update --no-progress
+            - PHP_CS_FIXER_IGNORE_ENV=1 composer dev
+            - git reset --hard HEAD # reset for phar build
+            - bash -c '( set -o pipefail; composer build 2>&1 | tee build/build-pipelines-phar.log; )'
+          artifacts:
+            - build/build-pipelines-phar.log
+            - build/pipelines.phar
     lint-php:
       - step: *lint-php53
       - step: *lint-php74
@@ -200,6 +240,7 @@ pipelines:
       - step: *lint-php80-alpine
       - step: *lint-php81-alpine
       - step: *lint-php82-alpine
+      - step: *lint-php83-alpine
     unit-tests: # run phpunit suite
       - step: *unit-tests-php70
     html-docs:
@@ -396,6 +437,7 @@ definitions:
     apk: /etc/apk/cache
     build-http-cache: ~/.cache/build-http-cache
     composer-53-build-cespi: ~/.composer/cache
+    composer-83-build-alpine: ~/.composer/cache
     vendor-php80: vendor
     vendor-php81: vendor
     vendor-php82: vendor
