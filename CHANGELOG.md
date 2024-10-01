@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog] and Pipelines adheres to
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
 
 ## [unreleased]
+### Add
+- PHP 5.5/4/3 in .travis.yml / .github actions
+### Fix
+- PHP 5.3 Debian based container image re-tagged on Docker Hub
 
 ## [0.0.70] - 2023-08-07
 ### Add

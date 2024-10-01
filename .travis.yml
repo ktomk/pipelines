@@ -51,6 +51,7 @@ install:
   - if [[ "${TRAVIS_PHP_VERSION}" == 7.2*    ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all phpunit ^7; fi
   - if [[ "${TRAVIS_PHP_VERSION}" == 7.[01]* ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^6; fi
   - if [[ "${TRAVIS_PHP_VERSION}" == 5.6     ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^5; fi
+  - if [[ "${TRAVIS_PHP_VERSION}" == 5.[543] ]]; then IGNORE_PLATFORM_REQS=--ignore-platform-reqs; ppconf remove-dev all downpatch-phpunit-tests phpunit ^4; fi
   - echo "IGNORE_PLATFORM_REQS=${IGNORE_PLATFORM_REQS-}"
   - composer install --no-interaction --no-progress ${IGNORE_PLATFORM_REQS-}
   - ppconf self-test | grep ^xdebug | cut -d\  -f 2 | grep '^2\.' && ppconf xdebug2 || true
