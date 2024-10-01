@@ -67,6 +67,7 @@ while [ $# -gt 0 ]; do
       printf "    help                  show usage help\n"
       printf "    self-test             show self/system info\n"
       printf "    disable-tls           http only composer\n"
+      printf "    enable-tls            revert disable-tls composer configuration\n"
       printf "    patch[-phpunit]-tests testsuite phpunit compatibility (phpunit 8 for php 7.4)\n"
       printf "    downpatch[-phpunit]-tests\n"
       printf "                          testsuite phpunit compatibility (phpunit < 8; php 7.4)\n"
@@ -111,9 +112,19 @@ while [ $# -gt 0 ]; do
       shift
       ;;
 
-    disable-tls ) ### use http - not https - in composer (degrades security)
+    disable-tls ) ### use http - not https - in composer (degrades transport security)
       printf "ppconf %s\n" "$1"
-      f_composer config secure-http false && f_composer config disable-tls true
+      f_composer config disable-tls true && f_composer config secure-http false
+      f_composer config repo.packagist composer http://packagist.org
+      shift
+      ;;
+
+    enable-tls ) ### revert disable-tls
+      printf "ppconf %s\n" "$1"
+      f_composer config --unset repo.packagist || true
+      # clean removal of empty repositories member if it came last.
+      ${PHP_BINARY} -r 'file_put_contents("composer.json", str_replace("  },\n  \"repositories\": {\n  }\n", "  }\n", file_get_contents("composer.json"))) ?: exit(1);'
+      f_composer config --unset secure-http ; f_composer config --unset disable-tls
       shift
       ;;
 
