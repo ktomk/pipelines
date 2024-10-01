@@ -15,8 +15,8 @@
     <testsuites>
         <testsuite name="unit">
             <directory>test/unit</directory>
-            <directory suffix=".phpt" phpVersion="5.4.0" phpVersionOperator=">=">test/unit/PharBuild/phpt</directory>
-            <directory suffix=".phpt" phpVersion="5.4.0" phpVersionOperator=">=">test/unit/phpt</directory>
+            <directory suffix=".phpt" phpVersion="5.6.0" phpVersionOperator=">=">test/unit/PharBuild/phpt</directory>
+            <directory suffix=".phpt" phpVersion="5.6.0" phpVersionOperator=">=">test/unit/phpt</directory>
         </testsuite>
         <testsuite name="integration">
             <directory>test/integration</directory>
