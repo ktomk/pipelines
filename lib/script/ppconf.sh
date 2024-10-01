@@ -19,7 +19,17 @@ PHP_BINARY="${PHP_BINARY-php}"
 
 ### run composer with PHP_BINARY/php
 f_composer() {
-  "${PHP_BINARY}" -f "$(composer which 2>/dev/null)" -- "$@"
+  composer_bin_bin="$(composer which 2>/dev/null)"
+  if [ ! "$composer_bin_bin" ]
+  then
+    composer_bin_bin="$(command -v composer)"
+  fi
+  if [ ! "$composer_bin_bin" ]
+  then
+    printf >&2 'composer (php script/phar archive) not found\n'
+    return 1
+  fi
+  "${PHP_BINARY}" -f "$composer_bin_bin" -- "$@"
 }
 
 ### which with display
