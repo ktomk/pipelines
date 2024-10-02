@@ -6,12 +6,25 @@ inputs:
     description: 'commandline, pipelines(1) enabled'
     default: ./bitbucket-pipelines.yml
     required: false
+  github-release:
+      description: 'the github release version to use, defaults to "latest"'
+      default: 'latest'
+      required: false
+
+outputs:
+  version:
+    description: 'pipelines version; pipelines --version'
+    value: ${{ steps.pipelines-runner.outputs.version-id }}
+  php-version:
+    description: 'php version; php --version'
+    value: ${{ steps.pipelines-runner.outputs.php-version-string }}
 
 runs:
   using: composite
 
   steps:
     - name: 'Run ${{ inputs.pipeline }}'
+      id: pipelines-runner
       shell: bash
       run: |
         . "${{ github.action_path }}"/action.bash
@@ -40,10 +53,14 @@ runs:
           printf 'installing pipelines into %s/.local/bin\n' "$HOME"
           printf 'from action path %s\n' "$GITHUB_ACTION_PATH"
           printf 'running in workspace %s\n' "$GITHUB_WORKSPACE"
+          printf 'using composite processing in %s\n' "$(pwd)"
           core_exec "$(command -v php)" --version
           core_exec "$(command -v mkdir)" -p "$HOME/.local/bin"
-          core_exec "$(command -v wget)" -O "$HOME/.local/bin/pipelines" https://github.com/ktomk/pipelines/releases/latest/download/pipelines.phar
+          core_exec "$(command -v wget)" -O "$HOME/.local/bin/pipelines" "https://github.com/ktomk/pipelines/releases/${{ inputs.github-release }}/download/pipelines.phar"
           core_exec "$(command -v chmod)" +x "$HOME/.local/bin/pipelines"
+          core_exec "$(command -v pipelines)" --version
+          printf 'version-id=%s\n' "$(pipelines --version | sed '/^pipelines version / s/^pipelines version //')" >> "$GITHUB_OUTPUT"
+          printf 'php-version-string=%s\n' "$(echo $(php --version))" >> "$GITHUB_OUTPUT"
         core_endGroup
         core_startGroup 'Pipeline ${{ inputs.pipeline }}'
           core_exec "$(command -v execpl)" ${{ inputs.pipeline }}
