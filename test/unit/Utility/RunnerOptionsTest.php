@@ -101,7 +101,7 @@ class RunnerOptionsTest extends TestCase
         $exec->expect('capture', '~^printf ~', 0);
 
         $runOpts = $runnerOptions->run();
-        self::assertIsString($runOpts->getUser());
+        self::assertNull($runOpts->getUser());
 
         $exec->expect('capture', '~^printf ~', 1);
 

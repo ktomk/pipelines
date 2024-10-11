@@ -4,6 +4,7 @@
 
 namespace Ktomk\Pipelines\Runner;
 
+use Ktomk\Pipelines\Runner\Opts\User;
 use Ktomk\Pipelines\Utility\Options;
 use Ktomk\Pipelines\Value\Prefix;
 
@@ -38,7 +39,7 @@ class RunOpts
     private $noManual = false;
 
     /**
-     * @var null|string --user $(id -u):$(id -g)
+     * @var null|non-empty-string --user <uid>[:<gid>]
      */
     private $user;
 
@@ -208,11 +209,11 @@ class RunOpts
     }
 
     /**
-     * @return null|string
+     * @return null|User
      */
     public function getUser()
     {
-        return $this->user;
+        return isset($this->user) ? new User($this->user) : null;
     }
 
     /**
@@ -222,7 +223,10 @@ class RunOpts
      */
     public function setUser($user)
     {
-        $this->user = $user;
+        if ($user instanceof User) {
+            $user = $user->toString();
+        }
+        $this->user = '' === $user ? null : $user;
     }
 
     /**

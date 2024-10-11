@@ -115,9 +115,23 @@ class RunOptsTest extends TestCase
      */
     public function testUser(RunOpts $opts)
     {
-        self::assertNull($opts->getUser());
         $opts->setUser('foo');
-        self::assertSame('foo', $opts->getUser());
+        self::assertSame('foo', $opts->getUser()->toString());
+
+        $opts->setUser('0');
+        self::assertSame('0', $opts->getUser()->toString());
+    }
+
+    /**
+     * @depends testCreation
+     *
+     * @param RunOpts $opts
+     */
+    public function testUserAsUser(RunOpts $opts)
+    {
+        $opts->setUser('foo');
+        $opts->setUser($opts->getUser());
+        self::assertSame('foo', $opts->getUser()->toString());
     }
 
     /**

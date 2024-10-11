@@ -5,6 +5,7 @@
 namespace Ktomk\Pipelines\Runner\Docker\Provision;
 
 use Ktomk\Pipelines\Cli\ExecTester;
+use Ktomk\Pipelines\Runner\Opts\User;
 use Ktomk\Pipelines\TestCase;
 
 /**
@@ -103,5 +104,42 @@ class TarCopierTest extends TestCase
 
         $exec->expect('pass', "~cd /tmp/pipelines-cp\\.[^/]+/\\. && tar c -f - \\./failure | docker  cp - '\\*test-run\\*:/\\.'~", 42);
         self::assertSame(42, TarCopier::extDeployDirectory($exec, '*test-run*', __DIR__, '/failure'));
+    }
+
+    /**
+     * @return void
+     * @covers \Ktomk\Pipelines\Runner\Docker\Provision\TarCopier::ownerOpts
+     */
+    public function testOwnerOptsFallthrough()
+    {
+        self::assertSame(array(), TarCopier::ownerOpts(null));
+    }
+
+    /**
+     * @return void
+     * @covers \Ktomk\Pipelines\Runner\Docker\Provision\TarCopier::ownerOpts
+     */
+    public function testOwnerOptsWithNonNullNonUser()
+    {
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('$user must be a User');
+        /** @noinspection PhpParamsInspection intended */
+        TarCopier::ownerOpts(false);
+    }
+
+    /**
+     * @return void
+     * @covers \Ktomk\Pipelines\Runner\Docker\Provision\TarCopier::ownerOpts
+     */
+    public function testOwnerOptsWithUser()
+    {
+        self::assertSame(
+            array(
+                '--numeric-owner',
+                '--owner=:1000',
+                '--group=:1000',
+            ),
+            TarCopier::ownerOpts(new User('1000:1000'))
+        );
     }
 }

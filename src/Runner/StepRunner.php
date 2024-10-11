@@ -232,7 +232,8 @@ class StepRunner
 
         $clonePath = $this->runner->getRunOpts()->getOption('step.clone-path');
 
-        $status = TarCopier::extDeployDirectory($exec, $id, $dir, $clonePath);
+        $tarFlags = TarCopier::ownerOpts($this->runner->getRunOpts()->getUser());
+        $status = TarCopier::extDeployDirectory($exec, $id, $dir, $clonePath, $tarFlags);
         if (0 !== $status) {
             return $status;
         }

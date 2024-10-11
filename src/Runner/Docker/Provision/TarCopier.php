@@ -8,6 +8,7 @@ use Ktomk\Pipelines\Cli\Exec;
 use Ktomk\Pipelines\Lib;
 use Ktomk\Pipelines\LibFs;
 use Ktomk\Pipelines\LibTmp;
+use Ktomk\Pipelines\Runner\Opts\User;
 use Ktomk\Pipelines\Value\SideEffect\DestructibleString;
 
 /**
@@ -36,10 +37,11 @@ class TarCopier
      * @param string $id container id
      * @param string $source directory to obtain file-properties from (user, group)
      * @param string $target directory to create within container with those properties
+     * @param array $tarFlags flags for tar, optional
      *
      * @return int status
      */
-    public static function extMakeEmptyDirectory(Exec $exec, $id, $source, $target)
+    public static function extMakeEmptyDirectory(Exec $exec, $id, $source, $target, array $tarFlags = array())
     {
         if ('/' === $target) {
             return 0;
@@ -57,7 +59,7 @@ class TarCopier
         LibFs::symlinkWithParents($source, $tmpDir . $target);
 
         $cd = Lib::cmd('cd', array($tmpDir . '/.'));
-        $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', '.' . $target));
+        $tar = Lib::cmd('tar', array('c', '-h', '-f', '-', '--no-recursion', $tarFlags, '.' . $target));
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':/.'));
 
         return $exec->pass("{$cd} && {$tar} | {$dockerCp}", array());
@@ -78,17 +80,18 @@ class TarCopier
      * @param string $id container id
      * @param string $source directory
      * @param string $target directory to create within container
+     * @param array $tarFlags flags for tar, optional
      *
      * @return int status
      */
-    public static function extCopyDirectory(Exec $exec, $id, $source, $target)
+    public static function extCopyDirectory(Exec $exec, $id, $source, $target, array $tarFlags = array())
     {
         if ('' === $source) {
             throw new \InvalidArgumentException('empty source');
         }
 
         $cd = Lib::cmd('cd', array($source . '/.'));
-        $tar = Lib::cmd('tar', array('c', '-f', '-', '.'));
+        $tar = Lib::cmd('tar', array('c', '-f', '-', $tarFlags, '.'));
         $dockerCp = Lib::cmd('docker ', array('cp', '-', $id . ':' . $target));
 
         return $exec->pass("{$cd} && {$tar} | {$dockerCp}", array());
@@ -106,16 +109,37 @@ class TarCopier
      * @param string $id container id
      * @param string $source directory
      * @param string $target directory to create within container
+     * @param array $tarFlags flags for tar, optional
      *
      * @return int
      */
-    public static function extDeployDirectory(Exec $exec, $id, $source, $target)
+    public static function extDeployDirectory(Exec $exec, $id, $source, $target, array $tarFlags = array())
     {
-        $status = self::extMakeEmptyDirectory($exec, $id, $source, $target);
+        $status = self::extMakeEmptyDirectory($exec, $id, $source, $target, $tarFlags);
         if (0 !== $status) {
             return $status;
         }
 
-        return self::extCopyDirectory($exec, $id, $source, $target);
+        return self::extCopyDirectory($exec, $id, $source, $target, $tarFlags);
+    }
+
+    /**
+     * @param null|User $user
+     *
+     * @return array
+     */
+    public static function ownerOpts($user)
+    {
+        if (null === $user) {
+            return array();
+        }
+
+        if (!($user instanceof User)) {
+            throw new \InvalidArgumentException('$user must be a User');
+        }
+
+        list($uid, $gid) = $user->toUidGidArray();
+
+        return Lib::merge('--numeric-owner', sprintf('--owner=:%d', $uid), isset($gid) ? sprintf('--group=:%d', $gid) : null);
     }
 }

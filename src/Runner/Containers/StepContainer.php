@@ -198,7 +198,7 @@ class StepContainer
             return $userOpts;
         }
 
-        $userOpts = array('--user', $user);
+        $userOpts = array('--user', $user->toString());
 
         if (LibFs::isReadableFile('/etc/passwd') && LibFs::isReadableFile('/etc/group')) {
             $userOpts[] = '-v';
