@@ -22,7 +22,10 @@ class RunnerTest extends RunnerTestCase
         $runner = Runner::createEx(
             RunOpts::create('foo'),
             new Directories($_SERVER, $this->getTestProject()),
-            $this->createMock('Ktomk\Pipelines\Cli\Exec')
+            $this->createMock('Ktomk\Pipelines\Cli\Exec'),
+            new Flags(),
+            Env::createEx(),
+            Streams::create()
         );
         self::assertInstanceOf('Ktomk\Pipelines\Runner\Runner', $runner);
     }

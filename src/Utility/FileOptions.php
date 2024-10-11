@@ -65,7 +65,7 @@ class FileOptions implements Runnable
      */
     public function run()
     {
-        $shower = $this->shower();
+        $shower = $this->shower($this->file);
 
         $this->args->mapOption(
             array(
@@ -100,16 +100,12 @@ class FileOptions implements Runnable
     }
 
     /**
-     * @param null|File $file [optional]
+     * @param File $file
      *
      * @return FileShower
      */
-    private function shower(File $file = null)
+    private function shower(File $file)
     {
-        if (null === $file) {
-            $file = $this->file;
-        }
-
         return new FileShower($this->output, $file);
     }
 }

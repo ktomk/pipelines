@@ -45,16 +45,12 @@ class Steps implements \ArrayAccess, \Countable, \IteratorAggregate
      *
      * Gracefully handles null for steps.
      *
-     * @param null|Steps $steps
+     * @param Steps $steps
      *
      * @return StepsIterator
      */
-    public static function fullIter(Steps $steps = null)
+    public static function fullIter(Steps $steps)
     {
-        if (null === $steps) {
-            return new StepsIterator(new \ArrayIterator(array()));
-        }
-
         $iter = $steps->getIterator();
         $iter->setNoManual(true);
 

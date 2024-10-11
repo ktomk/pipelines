@@ -59,10 +59,10 @@ class Env
      *
      * @return Env
      */
-    public static function createEx(array $inherit = null)
+    public static function createEx(array $inherit = array())
     {
         $env = new self();
-        $env->initDefaultVars((array)$inherit);
+        $env->initDefaultVars($inherit);
 
         return $env;
     }

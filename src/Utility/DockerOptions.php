@@ -126,7 +126,7 @@ class DockerOptions
 
         $status = $this->runKill($status, $count, $hasKill, $prefix);
 
-        $status = $this->runClean($status, $count, $hasClean, $ids);
+        $status = $this->runClean($status, $count, $hasClean, (array)$ids);
 
         if ($count) {
             throw new StatusException('', $status);
@@ -214,7 +214,7 @@ class DockerOptions
      *
      * @return int
      */
-    private function runClean($status, &$count, $hasClean, array $ids = null)
+    private function runClean($status, &$count, $hasClean, array $ids)
     {
         if ($status || !$hasClean) {
             return $status;

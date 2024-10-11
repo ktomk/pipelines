@@ -215,8 +215,6 @@ class StepsTest extends TestCase
 
     public function testFullIter()
     {
-        self::assertNotNull(Steps::fullIter(null));
-
         $steps = $this->createConfiguredMock('Ktomk\Pipelines\File\Pipeline\Steps', array(
             'getIterator' => $this->createMock('Ktomk\Pipelines\File\Pipeline\StepsIterator'),
         ));

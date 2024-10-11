@@ -65,14 +65,10 @@ class Runner
         RunOpts $runOpts,
         Directories $directories,
         Exec $exec,
-        Flags $flags = null,
-        Env $env = null,
-        Streams $streams = null
+        Flags $flags,
+        Env $env,
+        Streams $streams
     ) {
-        $flags = null === $flags ? new Flags() : $flags;
-        $env = null === $env ? Env::createEx() : $env;
-        $streams = null === $streams ? Streams::create() : $streams;
-
         return new self($runOpts, $directories, $exec, $flags, $env, $streams);
     }
 

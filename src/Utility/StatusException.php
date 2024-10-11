@@ -16,29 +16,26 @@ class StatusException extends Exception
      *
      * @param string $message
      * @param int $code
-     * @param null|Exception $previous
      *
      * @throws StatusException
      */
-    public static function fatal($message = '', $code = 1, Exception $previous = null)
+    public static function fatal($message = '', $code = 1)
     {
         if ('' === $message) {
             $message = 'fatal abort';
         }
 
-        throw new self($message, $code, $previous);
+        throw new self($message, $code);
     }
 
     /**
      * ok (success, zero)
      *
-     * @param null|Exception $previous
-     *
      * @throws StatusException
      */
-    public static function ok(Exception $previous = null)
+    public static function ok()
     {
-        throw new self('', 0, $previous);
+        throw new self('', 0);
     }
 
     /**
@@ -46,9 +43,8 @@ class StatusException extends Exception
      *
      * @param string $message
      * @param int|string $code
-     * @param null|Exception $previous
      */
-    public function __construct($message = '', $code = 0, Exception $previous = null)
+    public function __construct($message = '', $code = 0)
     {
         if (!is_int($code) || $code < 0 || $code > 255) {
             throw new \InvalidArgumentException(sprintf(
@@ -57,6 +53,6 @@ class StatusException extends Exception
             ));
         }
 
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code);
     }
 }
