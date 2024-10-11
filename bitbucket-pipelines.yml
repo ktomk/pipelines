@@ -393,12 +393,12 @@ pipelines:
     git-runner:
       - step:
           name: "git runner"
-          image: debian:bookworm-slim
+          image: ktomk/pipelines:debian-git
           script:
-            - git --version || (apt-get update && apt-get install -y git)
             - git --version
             - stat "$PWD"
             - id -a
+            - ls -lah /app | head -n 12
             - git rev-parse --show-toplevel
             - git config --global --unset-all safe.directory
             - git rev-parse --show-toplevel || true
